@@ -8,7 +8,8 @@ public class Project_LD : ModuleRules
 {
 	public Project_LD(ReadOnlyTargetRules Target) : base(Target)
 	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+        CppStandard = CppStandardVersion.Cpp17;
 
         PublicIncludePaths.AddRange
            (
@@ -17,6 +18,9 @@ public class Project_LD : ModuleRules
                         Path.Combine(ModuleDirectory, "Public"),
                         Path.Combine(ModuleDirectory, "Public/Framework"),
                         Path.Combine(ModuleDirectory, "Public/Widget"),
+                        Path.Combine(ModuleDirectory, "Public/Network"),
+                        Path.Combine(ModuleDirectory, "Public/Protobuf/Handler"),
+                        Path.Combine(ModuleDirectory, "Public/Protobuf/Packet"),
                }
            );
 
@@ -42,7 +46,8 @@ public class Project_LD : ModuleRules
                             "OnlineSubsystemUtils",
                             "HeadMountedDisplay",
                             "NavigationSystem",
-                            "AIModule"
+                            "AIModule",
+                            "ProtobufLibrary"
                 }
             );
 
@@ -62,5 +67,8 @@ public class Project_LD : ModuleRules
                     // ... add any modules that your module loads dynamically here ...
                 }
             );
-	}
+
+        bEnableUndefinedIdentifierWarnings = false;
+        bEnableExceptions = true;
+    }
 }
