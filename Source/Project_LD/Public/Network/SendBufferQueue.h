@@ -4,23 +4,29 @@
 
 #include "CoreMinimal.h"
 #include <Containers/CircularBuffer.h>
-#include <Network/SendBuffer.h>
 
 /**
  * 
  */
-class PROJECT_LD_API USendBufferQueue
+
+class FSendBuffer;
+using SendBufferPtr = TSharedPtr<class FSendBuffer>;
+
+class PROJECT_LD_API FSendBufferQueue
 {
-	//GENERATED_BODY()
+	enum class Default
+	{
+		MAX_QUEUE_SIZE = 0x400,
+	};
 
 public:
-	USendBufferQueue(const FObjectInitializer& init);
-	USendBufferQueue(const uint32 inQueueSize = 0x400);
-	~USendBufferQueue();
+	FSendBufferQueue();
+	FSendBufferQueue(const uint32 inQueueSize);
+	~FSendBufferQueue();
 
 public:
-	void		Push(SendBufferPtr sendBuffer);
-	void		PopAll(TArray<SendBufferPtr>& sendBuffers);
+	void		Push(SendBufferPtr FSendBuffer);
+	void		PopAll(TArray<SendBufferPtr>& FSendBuffers);
 	bool		IsEmpty();
 	bool		IsFull();
 

@@ -3,14 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <string>
 #include "UObject/NoExportTypes.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(NETWORK_LOG, Log, All);
 
 #include "NetworkUtils.generated.h"
 
+class UNetworkUtils;
+
+#define __FUNC__ __FUNCTION__
+#define NetworkDetailLog (									\
+TEXT(" [ FILE : ") + FString(__FILE__)		+ TEXT(" ] ") +	\
+TEXT(" [ FUNC : ") + FString(__FUNC__)		+ TEXT(" ] ") +	\
+TEXT(" [ LINE : ") + FString(__LINE__)		+ TEXT(" ] "))
+
 UENUM(BlueprintType)
-enum class ETestEnum : uint8
+enum class ELogLevel : uint8
 {
 	Fatal UMETA(DisplayName = "Fatal"),
 	Error UMETA(DisplayName = "Error"),
@@ -34,5 +43,7 @@ public:
 	static void NetworkScreenLog(const FString& inDebugLog);
 
 	UFUNCTION(BlueprintCallable, Category = "Utils")
-		static void NetworkConsoleLog(const FString& inConsoleLog, const ETestEnum& level);
+		static void NetworkConsoleLog(const FString& inConsoleLog, const ELogLevel& level);
+
+	static std::string ConvertString(const FString& str);
 };

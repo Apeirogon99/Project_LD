@@ -10,33 +10,38 @@ void UNetworkUtils::NetworkScreenLog(const FString& inScreenLog)
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("[NETWORK_LOG] : %s"), *inScreenLog));
 }
 
-void UNetworkUtils::NetworkConsoleLog(const FString& inConsoleLog, const ETestEnum& level)
+void UNetworkUtils::NetworkConsoleLog(const FString& inConsoleLog, const ELogLevel& level)
 {
 	switch (level)
 	{
-	case ETestEnum::Fatal:
+	case ELogLevel::Fatal:
 		UE_LOG(NETWORK_LOG, Fatal, TEXT("%s"), *inConsoleLog);
 		break;
-	case ETestEnum::Error:
+	case ELogLevel::Error:
 		UE_LOG(NETWORK_LOG, Error, TEXT("%s"), *inConsoleLog);
 		break;
-	case ETestEnum::Warning:
+	case ELogLevel::Warning:
 		UE_LOG(NETWORK_LOG, Warning, TEXT("%s"), *inConsoleLog);
 		break;
-	case ETestEnum::Display:
+	case ELogLevel::Display:
 		UE_LOG(NETWORK_LOG, Display, TEXT("%s"), *inConsoleLog);
 		break;
-	case ETestEnum::Log:
+	case ELogLevel::Log:
 		UE_LOG(NETWORK_LOG, Log, TEXT("%s"), *inConsoleLog);
 		break;
-	case ETestEnum::Verbose:
+	case ELogLevel::Verbose:
 		UE_LOG(NETWORK_LOG, Verbose, TEXT("%s"), *inConsoleLog);
 		break;
-	case ETestEnum::VeryVerbose:
+	case ELogLevel::VeryVerbose:
 		UE_LOG(NETWORK_LOG, VeryVerbose, TEXT("%s"), *inConsoleLog);
 		break;
 	default:
 		break;
 	}
 
+}
+
+std::string UNetworkUtils::ConvertString(const FString& str)
+{
+	return TCHAR_TO_UTF8(*str);
 }

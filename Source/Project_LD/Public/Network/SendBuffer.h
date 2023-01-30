@@ -8,13 +8,17 @@
 /**
  * 
  */
-class PROJECT_LD_API USendBuffer
+
+class FSendBuffer;
+using FSendBufferPtr = TSharedPtr<class FSendBuffer>;
+
+class PROJECT_LD_API FSendBuffer
 {
 
 public:
-	USendBuffer();
-	USendBuffer(const BYTE* buffer, const uint32 size);
-	~USendBuffer();
+	FSendBuffer();
+	FSendBuffer(const uint32 size);
+	~FSendBuffer();
 
 	BYTE*	GetData();
 	uint32	GetAllocatedSize();
@@ -22,5 +26,3 @@ public:
 private:
 	TArray<BYTE> mBuffer;
 };
-
-using SendBufferPtr = TSharedPtr<class USendBuffer>;

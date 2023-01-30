@@ -12,6 +12,9 @@
 /**
  * 
  */
+
+class FNetworkSession;
+
 UCLASS()
 class PROJECT_LD_API UNetworkService : public UGameInstanceSubsystem, public FTickableGameObject
 {
@@ -27,16 +30,26 @@ public:
 	virtual void Deinitialize() override;
 
 	//TickableGameObject
+	virtual bool IsTickableWhenPaused() const override;
+	virtual bool IsTickableInEditor() const override;
+	virtual UWorld* GetTickableGameObjectWorld() const override;
+
 	virtual void Tick(float DeltaTime) override;
-	virtual bool IsTickableInEditor() const override { return false; }
-	virtual bool IsTickableWhenPaused() const override { return true; }
-	virtual bool IsAllowedToTick() const override final;
 	virtual ETickableTickType GetTickableTickType() const override;
-	virtual TStatId GetStatId() const override;
 	virtual bool IsTickable() const override;
+	virtual bool IsAllowedToTick() const override final;
+	virtual TStatId GetStatId() const override;
 
 public:
+	void Connect(const FString& inAddr, const uint16 inPort);
+	void KeepConnect();
+	bool IsConnected();
+
+	void Disconnect(const FString& cause);
+	void NetworkLevelTravel(const FName& inLevel);
 
 private:
-
+	FNetworkSession*		mNetworkSession;
+	bool					mbIsCreateOnRunning;
+	uint32					mLastTickFrame;
 };
