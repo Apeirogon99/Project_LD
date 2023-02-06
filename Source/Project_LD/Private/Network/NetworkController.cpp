@@ -16,6 +16,15 @@ ANetworkController::~ANetworkController()
 {
 }
 
+void ANetworkController::BeginPlay()
+{
+	UE_LOG(LogTemp, Warning, TEXT("PLAYER CONTROLLER GUID = %s"), *this->GetActorGuid().ToString());
+}
+
+void ANetworkController::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+}
+
 bool ANetworkController::IsConnectedToSession()
 {
 	bool isValid = mNetworkSession.IsValid();

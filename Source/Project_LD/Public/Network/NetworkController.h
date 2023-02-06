@@ -35,6 +35,10 @@ public:
 	ANetworkController();
 	virtual ~ANetworkController();
 
+protected:
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 public:
 	bool IsConnectedToSession();
 	bool ConnectToSession(FNetworkSessionPtr session, FPossessCallBack inPossessCallBack);

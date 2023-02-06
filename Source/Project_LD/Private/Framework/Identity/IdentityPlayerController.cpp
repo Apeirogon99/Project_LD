@@ -21,8 +21,6 @@ void AIdentityPlayerController::BeginPlay()
 	Super::BeginPlay();
 	SetInputMode(FInputModeUIOnly());
 	SetShowMouseCursor(true);
-
-	UE_LOG(LogTemp, Warning, TEXT("PLAYER CONTROLLER = %s"), *this->GetActorGuid().ToString());
 }
 
 bool AIdentityPlayerController::OnRecvPacket(BYTE* buffer, const uint32 len)
