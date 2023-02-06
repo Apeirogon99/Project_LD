@@ -24,13 +24,13 @@ public:
 	AClientHUD();
 
 	UFUNCTION(BlueprintCallable)
-	UUserWidget*	GetWidgetFromName(const FString& widgetName);
+	UUserWidget*	GetWidgetFromName(const FString& inWidgetName);
 
 	UFUNCTION(BlueprintCallable)
-	void			ShowWidgetFromName(const FString& widgetName);
+	void			ShowWidgetFromName(const FString& inWidgetName);
 
 	UFUNCTION(BlueprintCallable)
-	void			CleanWidgetFromName(const FString& widgetName);
+	void			CleanWidgetFromName(const FString& inWidgetName);
 
 	UFUNCTION(BlueprintCallable)
 	void			AllCleanWidget();
@@ -42,6 +42,12 @@ public:
 	void			AllSelfHitTestInvisibleWidget();
 
 	UFUNCTION(BlueprintCallable)
+	void			AllCollapsedButOneWidget(const FString& inWidgetName);
+
+	UFUNCTION(BlueprintCallable)
+	void			AllSelfHitTestInvisibleButOneWidget(const FString& inWidgetName);
+
+	UFUNCTION(BlueprintCallable)
 	bool			IsInit();
 
 protected:
@@ -49,6 +55,9 @@ protected:
 	virtual void DrawHUD() override;
 
 public:
+	UPROPERTY(EditAnywhere)
+		TArray<TSubclassOf<UUserWidget>> mCommonUIWidgets;
+
 	UPROPERTY(EditAnywhere)
 		TArray<TSubclassOf<UUserWidget>> mAllUIWidgets;
 

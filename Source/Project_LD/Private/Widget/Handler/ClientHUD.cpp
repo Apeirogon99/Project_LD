@@ -14,48 +14,48 @@ AClientHUD::AClientHUD()
 	mZorder.Store(0);
 }
 
-UUserWidget* AClientHUD::GetWidgetFromName(const FString& widgetName)
+UUserWidget* AClientHUD::GetWidgetFromName(const FString& inWidgetName)
 {
 	if (false == mIsInit)
 	{
 		return nullptr;
 	}
 
-	const int32 findPos = mWidgetNames.Find(widgetName);
+	const int32 findPos = mWidgetNames.Find(inWidgetName);
 	if (findPos == INDEX_NONE)
 	{
-		HUD_LOG(TEXT("Can't find widget : %s"), *widgetName);
+		HUD_LOG(TEXT("Can't find widget : %s"), *inWidgetName);
 		return nullptr;
 	}
 
 	UUserWidget* findWidget = mWidgets[findPos];
 	if (nullptr == findWidget)
 	{
-		HUD_LOG(TEXT("Invalid widget : %s "), *widgetName);
+		HUD_LOG(TEXT("Invalid widget : %s "), *inWidgetName);
 		return nullptr;
 	}
 
 	return findWidget;
 }
 
-void AClientHUD::ShowWidgetFromName(const FString& widgetName)
+void AClientHUD::ShowWidgetFromName(const FString& inWidgetName)
 {
 	if (false == mIsInit)
 	{
 		return;
 	}
 
-	const int32 findPos = mWidgetNames.Find(widgetName);
+	const int32 findPos = mWidgetNames.Find(inWidgetName);
 	if (findPos == INDEX_NONE)
 	{
-		HUD_LOG(TEXT("Can't find widget : %s"), *widgetName);
+		HUD_LOG(TEXT("Can't find widget : %s"), *inWidgetName);
 		return;
 	}
 
 	UUserWidget* findWidget = mWidgets[findPos];
 	if (nullptr == findWidget)
 	{
-		HUD_LOG(TEXT("Invalid widget : %s "), *widgetName);
+		HUD_LOG(TEXT("Invalid widget : %s "), *inWidgetName);
 		return;
 	}
 
@@ -66,24 +66,24 @@ void AClientHUD::ShowWidgetFromName(const FString& widgetName)
 	}	
 }
 
-void AClientHUD::CleanWidgetFromName(const FString& widgetName)
+void AClientHUD::CleanWidgetFromName(const FString& inWidgetName)
 {
 	if (false == mIsInit)
 	{
 		return;
 	}
 
-	const int32 findPos = mWidgetNames.Find(widgetName);
+	const int32 findPos = mWidgetNames.Find(inWidgetName);
 	if (findPos == INDEX_NONE)
 	{
-		HUD_LOG(TEXT("Can't find widget : %s"), *widgetName);
+		HUD_LOG(TEXT("Can't find widget : %s"), *inWidgetName);
 		return;
 	}
 
 	UUserWidget* findWidget = mWidgets[findPos];
 	if (nullptr == findWidget)
 	{
-		HUD_LOG(TEXT("Invalid widget : %s "), *widgetName);
+		HUD_LOG(TEXT("Invalid widget : %s "), *inWidgetName);
 		return;
 	}
 
@@ -95,6 +95,11 @@ void AClientHUD::CleanWidgetFromName(const FString& widgetName)
 
 void AClientHUD::AllCleanWidget()
 {
+	if (false == mIsInit)
+	{
+		return;
+	}
+
 	for (UUserWidget* widget : mWidgets)
 	{
 		if (widget->IsInViewport())
@@ -106,6 +111,11 @@ void AClientHUD::AllCleanWidget()
 
 void AClientHUD::AllCollapsedWidget()
 {
+	if (false == mIsInit)
+	{
+		return;
+	}
+
 	for (UUserWidget* widget : mWidgets)
 	{
 		if (widget->IsInViewport())
@@ -117,6 +127,11 @@ void AClientHUD::AllCollapsedWidget()
 
 void AClientHUD::AllSelfHitTestInvisibleWidget()
 {
+	if (false == mIsInit)
+	{
+		return;
+	}
+
 	for (UUserWidget* widget : mWidgets)
 	{
 		if (widget->IsInViewport())
@@ -124,6 +139,32 @@ void AClientHUD::AllSelfHitTestInvisibleWidget()
 			widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}
 	}
+}
+
+void AClientHUD::AllCollapsedButOneWidget(const FString& inWidgetName)
+{
+	if (false == mIsInit)
+	{
+		return;
+	}
+
+	AllCollapsedWidget();
+
+	ShowWidgetFromName(inWidgetName);
+
+}
+
+void AClientHUD::AllSelfHitTestInvisibleButOneWidget(const FString& inWidgetName)
+{
+	if (false == mIsInit)
+	{
+		return;
+	}
+
+	CleanWidgetFromName(inWidgetName);
+
+	AllSelfHitTestInvisibleWidget();
+
 }
 
 bool AClientHUD::IsInit()
@@ -138,13 +179,19 @@ void AClientHUD::BeginPlay()
 	AGameModeBase* gameMode = GetWorld()->GetAuthGameMode();
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
 
-	const int32 maxWidgetNum = mAllUIWidgets.Num();
-	if (maxWidgetNum < 0)
+	//Base
+	for (TSubclassOf<UUserWidget> widgetClass : mCommonUIWidgets)
 	{
-		networkGameMode->ProcessClientHUD(false);
-		return;
+		UUserWidget* newWidget = CreateWidget<UUserWidget>(GetWorld(), widgetClass);
+		mWidgets.Add(newWidget);
+
+		FString newWidgetName = newWidget->GetClass()->GetName();
+		newWidgetName.RemoveAt(0, 3);
+		newWidgetName.RemoveAt(newWidgetName.Len() - 2, newWidgetName.Len());
+		mWidgetNames.Add(newWidgetName);
 	}
 
+	//Driven
 	for (TSubclassOf<UUserWidget> widgetClass : mAllUIWidgets)
 	{
 		UUserWidget* newWidget = CreateWidget<UUserWidget>(GetWorld(), widgetClass);

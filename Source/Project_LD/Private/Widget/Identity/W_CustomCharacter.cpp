@@ -3,7 +3,7 @@
 
 #include "Widget/Identity/W_CustomCharacter.h"
 #include <Widget/Common/W_EditBox.h>
-#include <Protobuf/Handler/IdentityClientPacketHandler.h>
+#include <Protobuf/Handler/FIdentityPacketHandler.h>
 
 void UW_CustomCharacter::NativeConstruct()
 {
