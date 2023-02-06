@@ -62,7 +62,7 @@ void UW_Singin::Click_Singin()
 	ANetworkController* networkController = Cast<ANetworkController>(owningController);
 
 	AClientHUD* clientHUD = Cast<AClientHUD>(owningController->GetHUD());
-	clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->AllCollapsedButOneWidget(TEXT("LoadingServer"));
 
 	std::string id = UNetworkUtils::ConvertString(mID);
 	std::string password = UNetworkUtils::ConvertString(mPassword);

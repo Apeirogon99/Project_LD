@@ -34,6 +34,12 @@ public:
 		UTextBlock* mReconfirmText;
 
 	UPROPERTY(Meta = (BindWidget))
+		UTextBlock* mConfirmButtonText;
+
+	UPROPERTY(Meta = (BindWidget))
+		UTextBlock* mCancleButtonText;
+
+	UPROPERTY(Meta = (BindWidget))
 		UButton* mConfirmButton;
 
 	UPROPERTY(Meta = (BindWidget))
@@ -45,6 +51,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void SetReconfirmText(const FString& inReconfirm);
+
+	UFUNCTION(BlueprintCallable)
+		void SetConfirmButtonText(const FString& inButtonText);
+
+	UFUNCTION(BlueprintCallable)
+		void SetCancleButtonText(const FString& inButtonText);
 
 public:
 	UFUNCTION()

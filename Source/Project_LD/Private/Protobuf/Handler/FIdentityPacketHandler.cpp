@@ -16,18 +16,9 @@
 #include <Widget/Common/W_Notification.h>
 #include <Widget/Common/W_EditBox.h>
 
-#include <Framework/Identity/IdentityGameMode.h>
-#include <Framework/Identity/IdentityPlayerController.h>
-
 bool Handle_S2C_EnterServer(ANetworkController* controller, Protocol::S2C_EnterServer& pkt)
 {
-	AIdentityPlayerController* identityController = Cast<AIdentityPlayerController>(controller);
-	if (nullptr == controller)
-	{
-		return false;
-	}
-
-	AGameModeBase* gameMode = identityController->GetWorld()->GetAuthGameMode();
+	AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
 	if (nullptr == networkGameMode)
 	{
@@ -46,12 +37,6 @@ bool Handle_S2C_LeaveServer(ANetworkController* controller, Protocol::S2C_LeaveS
 
 bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt)
 {
-	AIdentityPlayerController* identityController = Cast<AIdentityPlayerController>(controller);
-	if (nullptr == controller)
-	{
-		return false;
-	}
-
 	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
 	if (nullptr == gameInstance)
 	{
@@ -76,10 +61,10 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CleanWidgetFromName("Notification");
+				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
 			});
 
-		clientHUD->ShowWidgetFromName("Notification");
+		clientHUD->ShowWidgetFromName(TEXT("Notification"));
 	}
 	else
 	{
@@ -87,7 +72,7 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 		gameInstance->mTicket = ticket;
 
 		clientHUD->ShowWidgetFromName(TEXT("SelectServer"));
-		clientHUD->CleanWidgetFromName(TEXT("Singin"));
+		clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Singin"));
 	}
 
 	return true;
@@ -95,12 +80,6 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 
 bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt)
 {
-	AIdentityPlayerController* identityController = Cast<AIdentityPlayerController>(controller);
-	if (nullptr == controller)
-	{
-		return false;
-	}
-
 	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
 	if (nullptr == gameInstance)
 	{
@@ -114,6 +93,7 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 	}
 
 	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
 	int32 error = pkt.error();
 	if (error != 0)
 	{
@@ -124,10 +104,10 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CleanWidgetFromName("Notification");
+				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
 			});
 
-		clientHUD->ShowWidgetFromName("Notification");
+		clientHUD->ShowWidgetFromName(TEXT("Notification"));
 	}
 	else
 	{
@@ -138,13 +118,13 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 
 		editBox->mConfirmDelegate.BindLambda([=](const FString& inCertifiedEmail)
 			{
-				clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
+				clientHUD->AllCollapsedButOneWidget(TEXT("LoadingServer"));
 
-		Protocol::C2S_EmailVerified emailVerifiedPacket;
-		std::string verfiedStr = UNetworkUtils::ConvertString(inCertifiedEmail);
-		emailVerifiedPacket.set_verified(verfiedStr);
-		SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, emailVerifiedPacket);
-		controller->Send(pakcetBuffer);
+				Protocol::C2S_EmailVerified emailVerifiedPacket;
+				std::string verfiedStr = UNetworkUtils::ConvertString(inCertifiedEmail);
+				emailVerifiedPacket.set_verified(verfiedStr);
+				SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, emailVerifiedPacket);
+				controller->Send(pakcetBuffer);
 			});
 
 		clientHUD->ShowWidgetFromName(TEXT("EditBox"));
@@ -155,12 +135,6 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 
 bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_EmailVerified& pkt)
 {
-	AIdentityPlayerController* identityController = Cast<AIdentityPlayerController>(controller);
-	if (nullptr == controller)
-	{
-		return false;
-	}
-
 	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
 	if (nullptr == gameInstance)
 	{
@@ -185,7 +159,8 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CleanWidgetFromName("Notification");
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				clientHUD->CleanWidgetFromName(TEXT("EditBox"));
 			});
 
 		clientHUD->ShowWidgetFromName("Notification");
@@ -199,9 +174,10 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CleanWidgetFromName("Notification");
-		clientHUD->CleanWidgetFromName("Singup");
-		clientHUD->ShowWidgetFromName("Singin");
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				clientHUD->CleanWidgetFromName(TEXT("Singup"));
+				clientHUD->CleanWidgetFromName(TEXT("EditBox"));
+				clientHUD->ShowWidgetFromName(TEXT("Singin"));
 			});
 
 		clientHUD->ShowWidgetFromName("Notification");

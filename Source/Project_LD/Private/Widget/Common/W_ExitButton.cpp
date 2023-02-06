@@ -36,6 +36,8 @@ void UW_ExitButton::Click_Exit()
 	UW_Reconfirm* reconfirm = Cast<UW_Reconfirm>(clientHUD->GetWidgetFromName(TEXT("Reconfirm")));
 	reconfirm->SetTitleText(TEXT("게임 종료"));
 	reconfirm->SetReconfirmText(TEXT("정말 게임을 종료하시겠습니까?"));
+	reconfirm->SetConfirmButtonText(TEXT("게임 종료"));
+	reconfirm->SetCancleButtonText(TEXT("취소"));
 	reconfirm->mReConfirmDelegate.BindUFunction(this, FName("ExitGame"));
 	reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleExitGame"));
 	clientHUD->AllCollapsedButOneWidget(TEXT("Reconfirm"));

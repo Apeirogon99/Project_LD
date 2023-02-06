@@ -11,7 +11,6 @@ DEFINE_LOG_CATEGORY(CLIENT_HUD);
 AClientHUD::AClientHUD()
 {
 	mIsInit = false;
-	mZorder.Store(0);
 }
 
 UUserWidget* AClientHUD::GetWidgetFromName(const FString& inWidgetName)
@@ -40,56 +39,57 @@ UUserWidget* AClientHUD::GetWidgetFromName(const FString& inWidgetName)
 
 void AClientHUD::ShowWidgetFromName(const FString& inWidgetName)
 {
-	if (false == mIsInit)
+	UUserWidget* widget = GetWidgetFromName(inWidgetName);
+	if (nullptr == widget)
 	{
 		return;
 	}
 
-	const int32 findPos = mWidgetNames.Find(inWidgetName);
-	if (findPos == INDEX_NONE)
+	if (false == widget->IsInViewport())
 	{
-		HUD_LOG(TEXT("Can't find widget : %s"), *inWidgetName);
-		return;
-	}
-
-	UUserWidget* findWidget = mWidgets[findPos];
-	if (nullptr == findWidget)
-	{
-		HUD_LOG(TEXT("Invalid widget : %s "), *inWidgetName);
-		return;
-	}
-
-	int32 oldZorder = mZorder.AddExchange(1);
-	if (false == findWidget->IsInViewport())
-	{
-		findWidget->AddToPlayerScreen();
+		widget->AddToPlayerScreen();
 	}	
 }
 
 void AClientHUD::CleanWidgetFromName(const FString& inWidgetName)
 {
-	if (false == mIsInit)
+	UUserWidget* widget = GetWidgetFromName(inWidgetName);
+	if (nullptr == widget)
 	{
 		return;
 	}
 
-	const int32 findPos = mWidgetNames.Find(inWidgetName);
-	if (findPos == INDEX_NONE)
+	if (true == widget->IsInViewport())
 	{
-		HUD_LOG(TEXT("Can't find widget : %s"), *inWidgetName);
+		widget->RemoveFromViewport();
+	}
+}
+
+void AClientHUD::CollapsedWidgetFromName(const FString& inWidgetName)
+{
+	UUserWidget* widget = GetWidgetFromName(inWidgetName);
+	if (nullptr == widget)
+	{
 		return;
 	}
 
-	UUserWidget* findWidget = mWidgets[findPos];
-	if (nullptr == findWidget)
+	if (true == widget->IsInViewport())
 	{
-		HUD_LOG(TEXT("Invalid widget : %s "), *inWidgetName);
+		widget->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void AClientHUD::SelfHitTestInvisibleWidgetFromName(const FString& inWidgetName)
+{
+	UUserWidget* widget = GetWidgetFromName(inWidgetName);
+	if (nullptr == widget)
+	{
 		return;
 	}
 
-	if (true == findWidget->IsInViewport())
+	if (true == widget->IsInViewport())
 	{
-		findWidget->RemoveFromViewport();
+		widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 }
 
@@ -102,9 +102,12 @@ void AClientHUD::AllCleanWidget()
 
 	for (UUserWidget* widget : mWidgets)
 	{
-		if (widget->IsInViewport())
+		if (nullptr != widget)
 		{
-			widget->RemoveFromViewport();
+			if (true == widget->IsInViewport())
+			{
+				widget->RemoveFromViewport();
+			}
 		}
 	}
 }
@@ -118,9 +121,29 @@ void AClientHUD::AllCollapsedWidget()
 
 	for (UUserWidget* widget : mWidgets)
 	{
-		if (widget->IsInViewport())
+		if (nullptr != widget)
 		{
-			widget->SetVisibility(ESlateVisibility::Collapsed);
+			if (true == widget->GetIsVisible())
+			{
+				ESlateVisibility visible =  widget->GetVisibility();
+				switch (visible)
+				{
+				case ESlateVisibility::Collapsed:
+				case ESlateVisibility::Hidden:
+					break;
+				case ESlateVisibility::Visible:
+					widget->SetVisibility(ESlateVisibility::Collapsed);
+					break;
+				case ESlateVisibility::HitTestInvisible:
+					widget->SetVisibility(ESlateVisibility::Collapsed);
+					break;
+				case ESlateVisibility::SelfHitTestInvisible:
+					widget->SetVisibility(ESlateVisibility::Collapsed);
+					break;
+				default:
+					break;
+				}
+			}
 		}
 	}
 }
@@ -134,20 +157,33 @@ void AClientHUD::AllSelfHitTestInvisibleWidget()
 
 	for (UUserWidget* widget : mWidgets)
 	{
-		if (widget->IsInViewport())
+		if (nullptr != widget)
 		{
-			widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			if (widget->GetIsVisible())
+			{
+				ESlateVisibility visible = widget->GetVisibility();
+				switch (visible)
+				{
+				case ESlateVisibility::Visible:
+				case ESlateVisibility::HitTestInvisible:
+				case ESlateVisibility::SelfHitTestInvisible:
+					break;
+				case ESlateVisibility::Collapsed:
+					widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+					break;
+				case ESlateVisibility::Hidden:
+					widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+					break;
+				default:
+					break;
+				}
+			}
 		}
 	}
 }
 
 void AClientHUD::AllCollapsedButOneWidget(const FString& inWidgetName)
 {
-	if (false == mIsInit)
-	{
-		return;
-	}
-
 	AllCollapsedWidget();
 
 	ShowWidgetFromName(inWidgetName);
@@ -156,15 +192,9 @@ void AClientHUD::AllCollapsedButOneWidget(const FString& inWidgetName)
 
 void AClientHUD::AllSelfHitTestInvisibleButOneWidget(const FString& inWidgetName)
 {
-	if (false == mIsInit)
-	{
-		return;
-	}
-
 	CleanWidgetFromName(inWidgetName);
 
 	AllSelfHitTestInvisibleWidget();
-
 }
 
 bool AClientHUD::IsInit()

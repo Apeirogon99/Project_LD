@@ -60,7 +60,7 @@ void UW_Singup::Click_Singup()
 	ANetworkController* networkController = Cast<ANetworkController>(owningController);
 
 	AClientHUD* clientHUD = Cast<AClientHUD>(owningController->GetHUD());
-	clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->AllCollapsedButOneWidget(TEXT("LoadingServer"));
 
 	std::string id = UNetworkUtils::ConvertString(mID);
 	std::string email = UNetworkUtils::ConvertString(mEmail);

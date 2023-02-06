@@ -33,6 +33,12 @@ public:
 	void			CleanWidgetFromName(const FString& inWidgetName);
 
 	UFUNCTION(BlueprintCallable)
+	void			CollapsedWidgetFromName(const FString& inWidgetName);
+
+	UFUNCTION(BlueprintCallable)
+	void			SelfHitTestInvisibleWidgetFromName(const FString& inWidgetName);
+
+	UFUNCTION(BlueprintCallable)
 	void			AllCleanWidget();
 
 	UFUNCTION(BlueprintCallable)
@@ -65,5 +71,4 @@ private:
 	TArray<UUserWidget*>	mWidgets;
 	TArray<FString>			mWidgetNames;
 	bool					mIsInit;
-	TAtomic<int32>			mZorder;
 };
