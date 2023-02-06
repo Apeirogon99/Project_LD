@@ -2,7 +2,7 @@
 
 
 #include "Framework/Identity/IdentityPlayerController.h"
-#include <Protobuf/Handler/IdentityClientPacketHandler.h>
+#include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Network/RecvBuffer.h>
 #include <Network/NetworkUtils.h>
 
@@ -27,8 +27,9 @@ void AIdentityPlayerController::BeginPlay()
 
 bool AIdentityPlayerController::OnRecvPacket(BYTE* buffer, const uint32 len)
 {
+	ANetworkController* controller = Cast<ANetworkController>(this);
 	bool result = false;
-	result = FIdentityClientPacketHandler::HandlePacket(this, buffer, len);
+	result = FClientPacketHandler::HandlePacket(controller, buffer, len);
 	if (false == result)
 	{
 		UNetworkUtils::NetworkConsoleLog("Failed to handle packet", ELogLevel::Error);
