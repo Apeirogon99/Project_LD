@@ -6,7 +6,7 @@
 #include <Components/Button.h>
 #include <Network/NetworkUtils.h>
 #include <Network/NetworkController.h>
-#include <Protobuf/Handler/IdentityClientPacketHandler.h>
+#include <Protobuf/Handler/FIdentityPacketHandler.h>
 #include <Widget/Handler/ClientHUD.h>
 
 void UW_Singup::NativeConstruct()
@@ -59,6 +59,9 @@ void UW_Singup::Click_Singup()
 	APlayerController* owningController = GetOwningPlayer();
 	ANetworkController* networkController = Cast<ANetworkController>(owningController);
 
+	AClientHUD* clientHUD = Cast<AClientHUD>(owningController->GetHUD());
+	clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
+
 	std::string id = UNetworkUtils::ConvertString(mID);
 	std::string email = UNetworkUtils::ConvertString(mEmail);
 	std::string password = UNetworkUtils::ConvertString(mPassword);
@@ -68,7 +71,7 @@ void UW_Singup::Click_Singup()
 	singupPacket.set_email(email);
 	singupPacket.set_password(password);
 
-	SendBufferPtr sendBuffer = FIdentityClientPacketHandler::MakeSendBuffer(networkController, singupPacket);
+	SendBufferPtr sendBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, singupPacket);
 
 	networkController->Send(sendBuffer);
 	
@@ -102,8 +105,9 @@ void UW_Singup::Committed_Email(const FText& inEmail)
 	}
 	else
 	{
-		mEmail = emailTemp.Mid(0, find);
-		mEmailDomain = emailTemp.Mid(find + 1, emailTemp.Len());
+		mEmail = inEmail.ToString();
+		//mEmail = emailTemp.Mid(0, find);
+		//mEmailDomain = emailTemp.Mid(find + 1, emailTemp.Len());
 	}
 
 	EnableSingupButton();

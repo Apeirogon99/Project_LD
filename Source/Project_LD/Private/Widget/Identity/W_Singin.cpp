@@ -7,8 +7,9 @@
 #include <Components/CheckBox.h>
 #include <Network/NetworkUtils.h>
 #include <Network/NetworkController.h>
-#include <Protobuf/Handler/IdentityClientPacketHandler.h>
+#include <Protobuf/Handler/FIdentityPacketHandler.h>
 #include <Widget/Handler/ClientHUD.h>
+#include <Widget/Common/W_Notification.h>
 
 void UW_Singin::NativeConstruct()
 {
@@ -60,6 +61,9 @@ void UW_Singin::Click_Singin()
 	APlayerController* owningController = GetOwningPlayer();
 	ANetworkController* networkController = Cast<ANetworkController>(owningController);
 
+	AClientHUD* clientHUD = Cast<AClientHUD>(owningController->GetHUD());
+	clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
+
 	std::string id = UNetworkUtils::ConvertString(mID);
 	std::string password = UNetworkUtils::ConvertString(mPassword);
 
@@ -67,7 +71,7 @@ void UW_Singin::Click_Singin()
 	singinPacket.set_id(id);
 	singinPacket.set_password(password);
 
-	SendBufferPtr sendBuffer = FIdentityClientPacketHandler::MakeSendBuffer(networkController, singinPacket);
+	SendBufferPtr sendBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, singinPacket);
 
 	networkController->Send(sendBuffer);
 }

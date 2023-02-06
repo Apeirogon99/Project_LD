@@ -1,10 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Widget/Common/W_EditBox.h"
 #include <Components/EditableTextBox.h>
 #include <Components/TextBlock.h>
 #include <Components/Button.h>
+#include <Widget/Handler/ClientHUD.h>
 
 void UW_EditBox::NativeConstruct()
 {
@@ -34,6 +35,8 @@ void UW_EditBox::NativeDestruct()
 	{
 		return;
 	}
+
+	mConfirmDelegate.Unbind();
 }
 
 void UW_EditBox::Committed_Editbox(const FText& inEditValue)
@@ -42,37 +45,35 @@ void UW_EditBox::Committed_Editbox(const FText& inEditValue)
 	EnableButton();
 }
 
-void UW_EditBox::SetEditHint(const FText& inHint)
+void UW_EditBox::SetEditHint(const FString& inHint)
 {
 	if (mEditbox != nullptr)
 	{
-		mEditbox->SetHintText(inHint);
+		FText editHint = FText::FromString(inHint);
+		mEditbox->SetHintText(editHint);
 	}
 }
 
-void UW_EditBox::SetEditTitleText(const FText& inTitle)
+void UW_EditBox::SetEditTitleText(const FString& inTitle)
 {
 	if (mTitleText != nullptr)
 	{
-		mTitleText->SetText(inTitle);
+		FText editTitle = FText::FromString(inTitle);
+		mTitleText->SetText(editTitle);
 	}
 }
 
-void UW_EditBox::SetConfrimButtonText(const FText& inButtonText)
+void UW_EditBox::SetConfrimButtonText(const FString& inButtonText)
 {
 	if (mConfirmButtonText != nullptr)
 	{
-		mConfirmButtonText->SetText(inButtonText);
+		FText buttonText = FText::FromString(inButtonText);
+		mConfirmButtonText->SetText(buttonText);
 	}
 }
 
 void UW_EditBox::Click_Confirm()
 {
-	bool isBound = mConfirmDelegate.IsBound();
-	if (false == isBound)
-	{
-		return;
-	}
 
 	bool isEmpty = mEditValue.IsEmpty();
 	if (true == isEmpty)
@@ -80,7 +81,14 @@ void UW_EditBox::Click_Confirm()
 		return;
 	}
 
-	mConfirmDelegate.Execute(mEditValue);
+	bool isBound = mConfirmDelegate.IsBound();
+	if (true == isBound)
+	{
+		mConfirmDelegate.Execute(mEditValue);
+	}
+
+	//AClientHUD* clientHUD = Cast<AClientHUD>(GetOwningPlayer()->GetHUD());
+	//clientHUD->CleanWidgetFromName("EditBox");
 
 }
 

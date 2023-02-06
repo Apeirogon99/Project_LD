@@ -1,21 +1,20 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "W_EditBox.generated.h"
+#include "W_Notification.generated.h"
 
-DECLARE_DELEGATE_OneParam(FButtonDelegate, const FString&);
+DECLARE_DELEGATE(FNotificationDelegate);
 
-class UEditableTextBox;
 class UTextBlock;
 class UButton;
 /**
  * 
  */
 UCLASS()
-class PROJECT_LD_API UW_EditBox : public UUserWidget
+class PROJECT_LD_API UW_Notification : public UUserWidget
 {
 	GENERATED_BODY()
 
@@ -25,50 +24,37 @@ public:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
-	
+
 public:
 	UPROPERTY(Meta = (BindWidget))
 		UTextBlock* mTitleText;
 
 	UPROPERTY(Meta = (BindWidget))
-		UTextBlock* mConfirmButtonText;
+		UTextBlock* mNotificationText;
 
 	UPROPERTY(Meta = (BindWidget))
-		UEditableTextBox* mEditbox;
+		UTextBlock* mConfirmButtonText;
 
 	UPROPERTY(Meta = (BindWidget))
 		UButton* mConfirmButton;
 
 public:
 	UFUNCTION(BlueprintCallable)
-		void SetEditHint(const FString& inHint);
+		void SetNotification(const FString& inNotification);
 
 	UFUNCTION(BlueprintCallable)
-		void SetEditTitleText(const FString& inTitle);
+		void SetTitle(const FString& inTitle);
 
 	UFUNCTION(BlueprintCallable)
-		void SetConfrimButtonText(const FString& inButtonText);
+		void SetButtonText(const FString& inButtonText);
 
 public:
-
-	UFUNCTION()
-		void Committed_Editbox(const FText& inEditValue);
-
 	UFUNCTION()
 		void Click_Confirm();
-
-	UFUNCTION()
-		void EnableButton();
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Default")
 		FLinearColor mButtonActiveColor;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Default")
-		FLinearColor mButtonDeactivationColor;
-
-	UPROPERTY()
-		FString mEditValue;
-
-	FButtonDelegate mConfirmDelegate;
+	FNotificationDelegate mNotificationDelegate;
 };

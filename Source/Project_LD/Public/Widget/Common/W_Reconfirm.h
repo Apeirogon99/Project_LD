@@ -4,71 +4,56 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "W_EditBox.generated.h"
+#include "W_Reconfirm.generated.h"
 
-DECLARE_DELEGATE_OneParam(FButtonDelegate, const FString&);
+DECLARE_DELEGATE(FCancleButtonDelegate);
+DECLARE_DELEGATE(FConfirmButtonDelegate);
 
-class UEditableTextBox;
 class UTextBlock;
 class UButton;
 /**
  * 
  */
 UCLASS()
-class PROJECT_LD_API UW_EditBox : public UUserWidget
+class PROJECT_LD_API UW_Reconfirm : public UUserWidget
 {
 	GENERATED_BODY()
-
+	
 public:
 	//virtual void NativeOnInitialized() override;
 	//virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
-	
+
 public:
 	UPROPERTY(Meta = (BindWidget))
 		UTextBlock* mTitleText;
 
 	UPROPERTY(Meta = (BindWidget))
-		UTextBlock* mConfirmButtonText;
-
-	UPROPERTY(Meta = (BindWidget))
-		UEditableTextBox* mEditbox;
+		UTextBlock* mReconfirmText;
 
 	UPROPERTY(Meta = (BindWidget))
 		UButton* mConfirmButton;
 
-public:
-	UFUNCTION(BlueprintCallable)
-		void SetEditHint(const FString& inHint);
-
-	UFUNCTION(BlueprintCallable)
-		void SetEditTitleText(const FString& inTitle);
-
-	UFUNCTION(BlueprintCallable)
-		void SetConfrimButtonText(const FString& inButtonText);
+	UPROPERTY(Meta = (BindWidget))
+		UButton* mCancleButton;
 
 public:
+	UFUNCTION(BlueprintCallable)
+		void SetTitleText(const FString& inTitle);
 
-	UFUNCTION()
-		void Committed_Editbox(const FText& inEditValue);
+	UFUNCTION(BlueprintCallable)
+		void SetReconfirmText(const FString& inReconfirm);
 
+public:
 	UFUNCTION()
 		void Click_Confirm();
 
 	UFUNCTION()
-		void EnableButton();
+		void Click_Cancle();
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category = "Default")
-		FLinearColor mButtonActiveColor;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Default")
-		FLinearColor mButtonDeactivationColor;
-
-	UPROPERTY()
-		FString mEditValue;
-
-	FButtonDelegate mConfirmDelegate;
+	FCancleButtonDelegate mCancleDelegate;
+	FConfirmButtonDelegate mReConfirmDelegate;
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Widget/Identity/W_CustomCharacter.h"
@@ -13,11 +13,11 @@ void UW_CustomCharacter::NativeConstruct()
 	{
 		mEditNickNameBox = CreateWidget<UUserWidget>(GetWorld(), mEditBoxClass);
 		UW_EditBox* editBox = Cast<UW_EditBox>(mEditNickNameBox);
-		editBox->SetEditTitleText(FText::FromString(TEXT("Ä³¸¯ÅÍ ÀÌ¸§")));
-		editBox->SetEditHint(FText::FromString(TEXT("ÀÌ¸§")));
-		editBox->SetConfrimButtonText(FText::FromString(TEXT("È®ÀÎ")));
+		editBox->SetEditTitleText(TEXT("ìºë¦­í„° ì´ë¦„"));
+		editBox->SetEditHint(TEXT("ì´ë¦„"));
+		editBox->SetConfrimButtonText(TEXT("í™•ì¸"));
 		editBox->mConfirmDelegate.BindUFunction(this, FName("SendNickName"));
-		mEditNickNameBox->AddToPlayerScreen();
+		editBox->AddToPlayerScreen();
 	}
 }
 

@@ -1,8 +1,9 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Widget/Handler/ClientHUD.h"
 #include <UMG/Public/Blueprint/WidgetLayoutLibrary.h>
+#include <Network/NetworkGameMode.h>
 #include "Blueprint/UserWidget.h"
 
 DEFINE_LOG_CATEGORY(CLIENT_HUD);
@@ -62,10 +63,7 @@ void AClientHUD::ShowWidgetFromName(const FString& widgetName)
 	if (false == findWidget->IsInViewport())
 	{
 		findWidget->AddToPlayerScreen();
-	}
-
-	//findWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-	
+	}	
 }
 
 void AClientHUD::CleanWidgetFromName(const FString& widgetName)
@@ -93,19 +91,38 @@ void AClientHUD::CleanWidgetFromName(const FString& widgetName)
 	{
 		findWidget->RemoveFromViewport();
 	}
-
-	//findWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void AClientHUD::AllCleanWidget()
 {
 	for (UUserWidget* widget : mWidgets)
 	{
-		//if (widget->IsInViewport())
-		//{
-		//	widget->RemoveFromViewport();
-		//}
-		widget->SetVisibility(ESlateVisibility::Collapsed);
+		if (widget->IsInViewport())
+		{
+			widget->RemoveFromViewport();
+		}
+	}
+}
+
+void AClientHUD::AllCollapsedWidget()
+{
+	for (UUserWidget* widget : mWidgets)
+	{
+		if (widget->IsInViewport())
+		{
+			widget->SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
+}
+
+void AClientHUD::AllSelfHitTestInvisibleWidget()
+{
+	for (UUserWidget* widget : mWidgets)
+	{
+		if (widget->IsInViewport())
+		{
+			widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		}
 	}
 }
 
@@ -118,17 +135,19 @@ void AClientHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
+	AGameModeBase* gameMode = GetWorld()->GetAuthGameMode();
+	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
+
 	const int32 maxWidgetNum = mAllUIWidgets.Num();
 	if (maxWidgetNum < 0)
 	{
+		networkGameMode->ProcessClientHUD(false);
 		return;
 	}
 
 	for (TSubclassOf<UUserWidget> widgetClass : mAllUIWidgets)
 	{
 		UUserWidget* newWidget = CreateWidget<UUserWidget>(GetWorld(), widgetClass);
-		//newWidget->AddToPlayerScreen(0);
-		//newWidget->SetVisibility(ESlateVisibility::Collapsed);
 		mWidgets.Add(newWidget);
 
 		FString newWidgetName = newWidget->GetClass()->GetName();
@@ -138,10 +157,12 @@ void AClientHUD::BeginPlay()
 	}
 	
 	mIsInit = true;
+	networkGameMode->ProcessClientHUD(true);
 	HUD_LOG(TEXT("ClientHUD Init : %d"), mWidgets.Num());
 }
 
 void AClientHUD::DrawHUD()
 {
 	Super::DrawHUD();
+
 }
