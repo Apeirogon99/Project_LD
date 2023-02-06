@@ -33,14 +33,12 @@ void UW_ExitButton::Click_Exit()
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
 	
-	clientHUD->AllCollapsedWidget();
-
 	UW_Reconfirm* reconfirm = Cast<UW_Reconfirm>(clientHUD->GetWidgetFromName(TEXT("Reconfirm")));
 	reconfirm->SetTitleText(TEXT("게임 종료"));
 	reconfirm->SetReconfirmText(TEXT("정말 게임을 종료하시겠습니까?"));
 	reconfirm->mReConfirmDelegate.BindUFunction(this, FName("ExitGame"));
 	reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleExitGame"));
-	clientHUD->ShowWidgetFromName(TEXT("Reconfirm"));
+	clientHUD->AllCollapsedButOneWidget(TEXT("Reconfirm"));
 }
 
 void UW_ExitButton::ExitGame()
@@ -60,7 +58,5 @@ void UW_ExitButton::CancleExitGame()
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
 
-	clientHUD->AllSelfHitTestInvisibleWidget();
-
-	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
+	clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Reconfirm"));
 }
