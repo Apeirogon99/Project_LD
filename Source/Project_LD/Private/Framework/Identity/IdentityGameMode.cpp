@@ -14,7 +14,19 @@ AIdentityGameMode::~AIdentityGameMode()
 {
 }
 
-NetworkControllerPtr AIdentityGameMode::CreateDefaultPlayerController()
+void AIdentityGameMode::BeginPlay()
 {
-	return NetworkControllerPtr();
+	Super::BeginPlay();
+}
+
+void AIdentityGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+}
+
+void AIdentityGameMode::BeginNetwork()
+{
+	Super::BeginNetwork();
+
+
 }

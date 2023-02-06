@@ -4,22 +4,26 @@
 
 #include "CoreMinimal.h"
 #include "Network/NetworkGameMode.h"
-#include "IdentityGameMode.generated.h"
+#include "GM_LoginScreen.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_LD_API AIdentityGameMode : public ANetworkGameMode
+class PROJECT_LD_API AGM_LoginScreen : public ANetworkGameMode
 {
 	GENERATED_BODY()
-
+	
 public:
-	AIdentityGameMode();
-	virtual ~AIdentityGameMode();
+	AGM_LoginScreen();
+	virtual ~AGM_LoginScreen();
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void BeginNetwork() override;
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "DefaultClass")
+	TSubclassOf<class AHUD> mDefaultHUDClass;
 };
