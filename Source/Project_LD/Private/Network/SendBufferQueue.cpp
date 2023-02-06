@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Network/SendBufferQueue.h"
@@ -18,6 +18,16 @@ FSendBufferQueue::FSendBufferQueue(const uint32 inQueueSize) : mSendBufferQueue(
 
 FSendBufferQueue::~FSendBufferQueue()
 {
+}
+
+void FSendBufferQueue::Clear()
+{
+	FRWScopeLock lock(mLock, SLT_Write);
+	while (mHead != mTail)
+	{
+		mSendBufferQueue[mTail].Reset();
+		mTail = mSendBufferQueue.GetNextIndex(mTail);
+	}
 }
 
 void FSendBufferQueue::Push(SendBufferPtr FSendBuffer)

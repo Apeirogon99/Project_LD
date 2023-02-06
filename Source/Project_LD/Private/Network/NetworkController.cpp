@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Network/NetworkController.h"
@@ -18,21 +18,57 @@ ANetworkController::~ANetworkController()
 
 bool ANetworkController::IsConnectedToSession()
 {
-	return mNetworkSession != nullptr ? true : false;
+	bool isValid = mNetworkSession.IsValid();
+	return isValid == true ? true : false;
 }
 
-void ANetworkController::ConnectToSession(FNetworkSession* session)
+bool ANetworkController::ConnectToSession(FNetworkSessionPtr session, FPossessCallBack inPossessCallBack)
 {
+	if (nullptr == session)
+	{
+		UNetworkUtils::NetworkConsoleLog("[ANetworkController::ConnectToSession] : Invalid session", ELogLevel::Error);
+		return false;
+	}
+
 	mNetworkSession = session;
+
+	if (false == inPossessCallBack.IsBound())
+	{
+		UNetworkUtils::NetworkConsoleLog("[ANetworkController::ConnectToSession] : Invalid possess call back", ELogLevel::Error);
+		return false;
+	}
+
+	mPossessCallBack = inPossessCallBack;
+	mPossessCallBack.Execute(true);
+
+	return true;
 }
 
-void ANetworkController::DisconnectToSession()
+bool ANetworkController::DisconnectToSession(FUnPossessCallBack inUnPossessCallback)
 {
+	if (false == mNetworkSession.IsValid())
+	{
+		UNetworkUtils::NetworkConsoleLog("[ANetworkController::DisconnectToSession] : Invalid session", ELogLevel::Error);
+		return false;
+	}
+
+	mNetworkSession.Reset();
+
+	if (false == inUnPossessCallback.IsBound())
+	{
+		UNetworkUtils::NetworkConsoleLog("[ANetworkController::DisconnectToSession] : Invalid unpossess call back", ELogLevel::Error);
+		return false;
+	}
+
+	mUnPossessCallBack = inUnPossessCallback;
+	mUnPossessCallBack.Execute(true);
+
+	return true;
 }
 
 void ANetworkController::Send(SendBufferPtr FSendBuffer)
 {
-	if (mNetworkSession)
+	if (mNetworkSession.IsValid())
 	{
 		mNetworkSession->Send(FSendBuffer);
 	}
@@ -68,8 +104,6 @@ bool ANetworkController::OnRecv(FRecvBuffer* buffer, int32 len)
 		{
 			return false;
 		}
-
-		//buffer->MoveFront(packetSize);
 
 		processLen += packetSize;
 	}

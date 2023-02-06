@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -46,4 +46,6 @@ public:
 		static void NetworkConsoleLog(const FString& inConsoleLog, const ELogLevel& level);
 
 	static std::string ConvertString(const FString& str);
+	static FString ConvertFString(const std::string& str);
+	static FText ConvertFText(const FString& str);
 };

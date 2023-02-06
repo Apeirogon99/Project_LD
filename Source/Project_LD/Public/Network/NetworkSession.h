@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -7,6 +7,11 @@
 /**
  * 
  */
+
+DECLARE_DELEGATE_OneParam(FConnectCallBack, bool)
+DECLARE_DELEGATE_OneParam(FDisconnectCallBack, bool)
+DECLARE_DELEGATE_OneParam(FPossessCallBack, bool)
+DECLARE_DELEGATE_OneParam(FUnPossessCallBack, bool)
 
 class FSocket;
 class ISocketSubsystem;
@@ -19,7 +24,7 @@ class ANetworkController;
 
 using SendBufferPtr = TSharedPtr<class FSendBuffer>;
 
-class PROJECT_LD_API FNetworkSession
+class PROJECT_LD_API FNetworkSession : public TSharedFromThis<FNetworkSession>
 {
 	enum class Default
 	{
@@ -27,6 +32,8 @@ class PROJECT_LD_API FNetworkSession
 		MAX_SEND_QUEUE = 0x400,
 		SESSION_IS_SENDING = 1,
 		SESSION_IS_RECVING = 1,
+		SESSION_IS_CONNECT = 1,
+		SESSION_IS_POSSESS = 1,
 		SESSION_IS_FREE = 0,
 	};
 	
@@ -39,12 +46,12 @@ public:
 	void Prepare(UNetworkService* service);
 	void Shutdown();
 
-	void Possess(ANetworkController* controller);
-	void UnPossess();
-	bool IsPossess();
+	void PossessToController(ANetworkController* controller, FPossessCallBack inPossessCallback);
+	void UnPossessToController(FUnPossessCallBack inUnPossessCallBack);
+	bool IsPossessController();
 
-	void RegisterConnect(const FString& inAddr, const uint16 inPort);
-	void RegisterDisconnect(const FString& inCause);
+	bool RegisterConnect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack);
+	bool RegisterDisconnect(const FString& inCause);
 	void RegisterSend();
 	void RegisterRecv();
 
@@ -53,16 +60,18 @@ public:
 	void ProcessSend(int32 numOfBytes);
 	void ProcessRecv(int32 numOfBytes);
 
-	bool IsCanRecv();
-	void Connect(const FString& inAddr, const uint16 inPort);
+	bool CanRecv();
+	void Connect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack);
+	void KeepConnect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack);
 	void Disconnect(const FString& inCause);
 	void Send(SendBufferPtr FSendBuffer);
 
 public:
 	bool IsConnected() const;
+	bool GetHasData();
 
 protected:
-	bool GetHasData();
+	bool ClearBuffer();
 
 private:
 
@@ -75,8 +84,13 @@ private:
 
 	TAtomic<bool>			mIsSending;
 	TAtomic<bool>			mIsRecving;
-	bool					mIsConnect;
+	TAtomic<bool>			mIsConnect;
+	TAtomic<bool>			mIsPossess;
 
 	UNetworkService*		mService;
 	ANetworkController*		mController;
+
+private:
+	FConnectCallBack		mConnectCallBack;
+	FDisconnectCallBack		mDisconnectCallBack;
 };

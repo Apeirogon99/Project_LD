@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Network/NetworkUtils.h"
@@ -44,4 +44,14 @@ void UNetworkUtils::NetworkConsoleLog(const FString& inConsoleLog, const ELogLev
 std::string UNetworkUtils::ConvertString(const FString& str)
 {
 	return TCHAR_TO_UTF8(*str);
+}
+
+FString UNetworkUtils::ConvertFString(const std::string& str)
+{
+	return *FString(str.c_str());
+}
+
+FText UNetworkUtils::ConvertFText(const FString& str)
+{
+	return FText::FromString(str);
 }

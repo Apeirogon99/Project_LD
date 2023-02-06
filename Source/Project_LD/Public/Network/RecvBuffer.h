@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -23,7 +23,7 @@ public:
 	int32			GetMaxReadBytes(const uint32 inPendingDataSize);
 
 public:
-	void			Claer();
+	void			Clear();
 	void			MoveRear(const uint32 size);
 	void			MoveFront(const uint32 len);
 	uint32			Enqueue(const BYTE* data, const uint32 size);

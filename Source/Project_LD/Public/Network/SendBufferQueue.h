@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -25,6 +25,7 @@ public:
 	~FSendBufferQueue();
 
 public:
+	void		Clear();
 	void		Push(SendBufferPtr FSendBuffer);
 	void		PopAll(TArray<SendBufferPtr>& FSendBuffers);
 	bool		IsEmpty();

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Network/RecvBuffer.h"
@@ -55,7 +55,7 @@ int32 FRecvBuffer::GetMaxReadBytes(const uint32 inPendingDataSize)
 	return inPendingDataSize;
 }
 
-void FRecvBuffer::Claer()
+void FRecvBuffer::Clear()
 {
 	::memset(mBuffer, NULL, mBufferSize);
 	mWritePos = 0;

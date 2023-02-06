@@ -1,19 +1,19 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Network/NetworkService.h"
 #include <Network/NetworkUtils.h>
 #include <Network/NetworkSession.h>
 #include <Network/NetworkController.h>
 #include <Network/NetworkGameMode.h>
-#include <Protobuf/Handler/IdentityClientPacketHandler.h>
+#include <Protobuf/Handler/FClientPacketHandler.h>
 
 using NetworkControllerPtr = TSharedPtr<class ANetworkController>;
 
 UNetworkService::UNetworkService() : mNetworkSession(nullptr)
 {
-	//Templete TickÀ» ¸·±âÀ§ÇÔ
+	//Templete Tickì„ ë§‰ê¸°ìœ„í•¨
 	mLastTickFrame = INDEX_NONE;
-	//Tick¸ÕÀú µ¹¾Æ°¡Áö ¾Ê±â À§ÇÑ°Í
+	//Tickë¨¼ì € ëŒì•„ê°€ì§€ ì•Šê¸° ìœ„í•œê²ƒ
 	mbIsCreateOnRunning = GIsRunning;
 }
 
@@ -25,9 +25,9 @@ void UNetworkService::Initialize(FSubsystemCollectionBase& Collection)
 {
 	UNetworkUtils::NetworkConsoleLog("Initialize network service",ELogLevel::Warning);
 
-	FIdentityClientPacketHandler::Init();
+	FClientPacketHandler::Init();
 
-	mNetworkSession = new FNetworkSession();
+	mNetworkSession = MakeShared<FNetworkSession>();
 	mNetworkSession->Prepare(this);
 }
 
@@ -35,10 +35,8 @@ void UNetworkService::Deinitialize()
 {
 	UNetworkUtils::NetworkConsoleLog("Deinitialize network service", ELogLevel::Warning);
 
-	if (nullptr != mNetworkSession)
-	{
-		delete mNetworkSession;
-	}
+
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("NetworkSession count : %d"), mNetworkSession.GetSharedReferenceCount()), ELogLevel::Warning);
 }
 
 void UNetworkService::Tick(float DeltaTime)
@@ -88,82 +86,15 @@ TStatId UNetworkService::GetStatId() const
 
 bool UNetworkService::IsTickable() const
 {
-	//ÀÌ°Ô ConditionalÀ» ÅëÇØ¼­ Æ½À» »ç¿ëÇÒ°ÍÀÎÁö ÆÇ´ÜÇÏ´Â °ÍÀÎµ¥
-	//Á»´õ ÀÀ¿ëÀ» ÇÑ´Ù¸é HasPendingÀ» ÅëÇØ¼­ °ªÀÌ ÀÖÀ»¶§¸¸
-	//TickÀÌ µ¹°Ô ÇÏ´Â°Íµµ ³ª»ÚÁö´Â ¾Ê¾Æº¸ÀÓ
-
-	if (nullptr == mNetworkSession)
+	if (false == mNetworkSession.IsValid())
 	{
 		return false;
 	}
 
-	return mbIsCreateOnRunning && mNetworkSession->IsCanRecv();
+	return mbIsCreateOnRunning && mNetworkSession->CanRecv();
 }
 
-void UNetworkService::Connect(const FString& inAddr, const uint16 inPort)
+FNetworkSessionPtr UNetworkService::GetNetworkSession()
 {
-	if (nullptr == mNetworkSession)
-	{
-		return;
-	}
-
-	mNetworkSession->RegisterConnect(inAddr, inPort);
-
-	ANetworkController* localController = Cast<ANetworkController>(GetWorld()->GetFirstPlayerController());
-	mNetworkSession->Possess(localController);
-
-}
-
-void UNetworkService::KeepConnect()
-{
-	if (nullptr == mNetworkSession)
-	{
-		return;
-	}
-
-	mNetworkSession->UnPossess();
-
-	ANetworkController* localController = Cast<ANetworkController>(GetWorld()->GetFirstPlayerController());
-	mNetworkSession->Possess(localController);
-}
-
-bool UNetworkService::IsConnected()
-{
-	if (nullptr == mNetworkSession)
-	{
-		return false;
-	}
-
-	bool isPoccess = mNetworkSession->IsPossess();
-	if (false == isPoccess)
-	{
-		return false;
-	}
-
-	bool isConnected = mNetworkSession->IsConnected();
-	if (false == isConnected)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-void UNetworkService::Disconnect(const FString& cause)
-{
-	if (nullptr == mNetworkSession)
-	{
-		return;
-	}
-
-	mNetworkSession->RegisterDisconnect(cause);
-
-	mNetworkSession->UnPossess();
-}
-
-void UNetworkService::NetworkLevelTravel(const FName& inLevel)
-{
-	//¸¸¾à¿¡ ÀÌ°Ô ¾ÈµÇ¸é ºùÀÇ Ç®°í ´Ù½Ã ÇØ¾ßÇÒµí
-	const FString url = inLevel.ToString();
-	GetWorld()->ServerTravel(url);
+	return mNetworkSession;
 }

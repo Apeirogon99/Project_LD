@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -13,7 +13,7 @@
  * 
  */
 
-class FNetworkSession;
+using FNetworkSessionPtr = TSharedPtr<class FNetworkSession>;
 
 UCLASS()
 class PROJECT_LD_API UNetworkService : public UGameInstanceSubsystem, public FTickableGameObject
@@ -41,15 +41,10 @@ public:
 	virtual TStatId GetStatId() const override;
 
 public:
-	void Connect(const FString& inAddr, const uint16 inPort);
-	void KeepConnect();
-	bool IsConnected();
-
-	void Disconnect(const FString& cause);
-	void NetworkLevelTravel(const FName& inLevel);
+	FNetworkSessionPtr	GetNetworkSession();
 
 private:
-	FNetworkSession*		mNetworkSession;
-	bool					mbIsCreateOnRunning;
-	uint32					mLastTickFrame;
+	FNetworkSessionPtr	mNetworkSession;
+	bool				mbIsCreateOnRunning;
+	uint32				mLastTickFrame;
 };

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -16,11 +16,15 @@ struct PacketHeader
  * 
  */
 
+DECLARE_DELEGATE_OneParam(FPossessCallBack, bool)
+DECLARE_DELEGATE_OneParam(FUnPossessCallBack, bool)
+
 class FRecvBuffer;
 class FSendBuffer;
 class FNetworkSession;
 
 using SendBufferPtr = TSharedPtr<FSendBuffer>;
+using FNetworkSessionPtr = TSharedPtr<class FNetworkSession>;
 
 UCLASS(Abstract)
 class PROJECT_LD_API ANetworkController : public APlayerController
@@ -33,11 +37,11 @@ public:
 
 public:
 	bool IsConnectedToSession();
-	void ConnectToSession(FNetworkSession* session);
-	void DisconnectToSession();
+	bool ConnectToSession(FNetworkSessionPtr session, FPossessCallBack inPossessCallBack);
+	bool DisconnectToSession(FUnPossessCallBack inUnPossessCallback);
 
 public:
-	FNetworkSession* GetNetworkSession() { return mNetworkSession; }
+	FNetworkSessionPtr GetNetworkSession() { return mNetworkSession; }
 	void Send(SendBufferPtr FSendBuffer);
 
 public:
@@ -49,5 +53,9 @@ public:
 	virtual bool	OnDisconnect() { return true; };
 
 private:
-	FNetworkSession* mNetworkSession;
+	FNetworkSessionPtr	mNetworkSession;
+	FPossessCallBack	mPossessCallBack;
+	FUnPossessCallBack	mUnPossessCallBack;
+
+	//BYTE				mPacketBuffer[1024];
 };

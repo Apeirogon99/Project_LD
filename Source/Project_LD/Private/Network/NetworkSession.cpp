@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Network/NetworkSession.h"
 #include <Interfaces/IPv4/IPv4Address.h>
@@ -20,17 +20,22 @@ FNetworkSession::FNetworkSession() : mRecvBuffer(nullptr), mSendBufferQueue(null
 
 	mIsSending = static_cast<bool>(Default::SESSION_IS_FREE);
 	mIsRecving = static_cast<bool>(Default::SESSION_IS_FREE);
+	mIsConnect = static_cast<bool>(Default::SESSION_IS_FREE);
+	mIsPossess = static_cast<bool>(Default::SESSION_IS_FREE);
 
-	mIsConnect = false;
 	mSocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
 	mSocket = mSocketSubsystem->CreateSocket(NAME_Stream, TEXT("NetworkSession"), false);
+
+	mSocket->SetNoDelay(true);
+	//mSocket->SetLinger()
+	
 }
 
 FNetworkSession::~FNetworkSession()
 {
 	if (true == IsConnected())
 	{
-		Disconnect("Destructor network session");
+		RegisterDisconnect("Destructor network session");
 	}
 
 	if (nullptr != mRecvBuffer)
@@ -52,7 +57,7 @@ FNetworkSession::~FNetworkSession()
 
 void FNetworkSession::NetworkLoop()
 {
-	if (false == mIsConnect)
+	if (false == IsConnected())
 	{
 		return;
 	}
@@ -63,7 +68,7 @@ void FNetworkSession::NetworkLoop()
 	}
 
 	bool oldRecving = static_cast<bool>(Default::SESSION_IS_RECVING);
-	mIsSending.CompareExchange(oldRecving, static_cast<bool>(Default::SESSION_IS_FREE));
+	mIsRecving.CompareExchange(oldRecving, static_cast<bool>(Default::SESSION_IS_FREE));
 
 	if (oldRecving == static_cast<LONG>(Default::SESSION_IS_FREE))
 	{
@@ -81,43 +86,88 @@ void FNetworkSession::Shutdown()
 	
 }
 
-void FNetworkSession::Possess(ANetworkController* controller)
-{
-	UnPossess();
-
-	mController = controller;
-	mController->ConnectToSession(this);
-}
-
-void FNetworkSession::UnPossess()
+void FNetworkSession::PossessToController(ANetworkController* controller, FPossessCallBack inPossessCallback)
 {
 	if (mController)
 	{
-		mController->DisconnectToSession();
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::PossessToController] : Already possess controller", ELogLevel::Error);
+		return;
 	}
+
+	bool isConnectController;
+	mController = controller;
+	isConnectController = mController->ConnectToSession(SharedThis(this), inPossessCallback);
+	mIsPossess.Store(isConnectController);
+}
+
+void FNetworkSession::UnPossessToController(FUnPossessCallBack inUnPossessCallBack)
+{
+	if (nullptr == mController)
+	{
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::UnPossessToController] : Invalid possess controller", ELogLevel::Error);
+	}
+
+	bool isDisconnectController;
+	isDisconnectController = mController->DisconnectToSession(inUnPossessCallBack);
+	mIsPossess.Store(!isDisconnectController);
 	mController = nullptr;
 }
 
-bool FNetworkSession::IsPossess()
+bool FNetworkSession::IsPossessController()
 {
-	if (mController)
-	{
-		return true;
-	}
-	else
+	if (nullptr == mController)
 	{
 		return false;
 	}
+
+	bool isConnect = mController->IsConnectedToSession();
+	bool isPossess = mIsPossess.Load();
+
+	return isConnect && isPossess;
 }
 
-void FNetworkSession::RegisterConnect(const FString& inAddr, const uint16 inPort)
+bool FNetworkSession::RegisterConnect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack)
 {
-	Connect(inAddr, inPort);
+	if (nullptr == mSocket)
+	{
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Invalid FSocket", ELogLevel::Error);
+		return false;
+	}
+
+	ClearBuffer();
+
+	if (inAddr.IsEmpty() || inPort < 0)
+	{
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Invalid IP or Port", ELogLevel::Error);
+		return false;
+	}
+
+	FIPv4Address pareIp;
+	FIPv4Address::Parse(inAddr, pareIp);
+
+	TSharedRef<FInternetAddr> newIpAddr = mSocketSubsystem->CreateInternetAddr();
+	newIpAddr->SetIp(pareIp.Value);
+	newIpAddr->SetPort(inPort);
+
+	bool connRet = mSocket->Connect(newIpAddr.Get());
+	if (false == connRet)
+	{
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Failed Connect", ELogLevel::Error);
+		return false;
+	}
+
+	return true;
 }
 
-void FNetworkSession::RegisterDisconnect(const FString& inCause)
+bool FNetworkSession::RegisterDisconnect(const FString& inCause)
 {
-	Disconnect(inCause);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[FNetworkSession::Disconnect] : %s"), *inCause), ELogLevel::Error);
+
+	mSocket->Shutdown(ESocketShutdownMode::ReadWrite);
+
+	mSocket->Close();
+
+	return true;
 }
 
 void FNetworkSession::RegisterSend()
@@ -141,19 +191,21 @@ void FNetworkSession::RegisterSend()
 			bool ret = mSocket->Send(buffer->GetData(), bufferSize - processLen, byteSent);
 			if (false == ret)
 			{
-				Disconnect("failed to send");
+				RegisterDisconnect("failed to send");
 				return;
 			}
 
 			if (0 >= byteSent)
 			{
-				Disconnect("send 0");
+				RegisterDisconnect("send 0");
 				return;
 			}
 
 			processLen += byteSent;
 		}
 	}
+
+	mIsSending.Store(static_cast<bool>(Default::SESSION_IS_FREE));
 }
 
 void FNetworkSession::RegisterRecv()
@@ -161,7 +213,7 @@ void FNetworkSession::RegisterRecv()
 	bool ret;
 	if (nullptr == mSocket)
 	{
-		Disconnect("Invalid Socket");
+		RegisterDisconnect("Invalid Socket");
 		return;
 	}
 
@@ -173,13 +225,13 @@ void FNetworkSession::RegisterRecv()
 	ret = mSocket->Recv(mRecvBuffer->GetWriteBuffer(), maxReadBytes, byteRead, ESocketReceiveFlags::Type::None);
 	if (false == ret)
 	{
-		Disconnect("failed to recv");
+		RegisterDisconnect("failed to recv");
 		return;
 	}
 
 	if (0 >= byteRead)
 	{
-		Disconnect("read 0");
+		RegisterDisconnect("read 0");
 		return;
 	}
 
@@ -216,7 +268,7 @@ void FNetworkSession::ProcessRecv(int32 numOfBytes)
 {
 	if (numOfBytes == 0)
 	{
-		Disconnect(L"Recv 0");
+		RegisterDisconnect(L"Recv 0");
 		return;
 	}
 
@@ -225,7 +277,7 @@ void FNetworkSession::ProcessRecv(int32 numOfBytes)
 		bool recvResult = mController->OnRecv(mRecvBuffer, mRecvBuffer->GetUsedSize());
 		if (false == recvResult)
 		{
-			Disconnect(L"OnRecv Overflow");
+			RegisterDisconnect(L"OnRecv Overflow");
 			return;
 		}
 	}
@@ -240,55 +292,114 @@ void FNetworkSession::ProcessRecv(int32 numOfBytes)
 	}
 }
 
-bool FNetworkSession::IsCanRecv()
+bool FNetworkSession::CanRecv()
 {
-	bool HasData = GetHasData();
-	bool CanRecv = mIsRecving.Load() == static_cast<bool>(Default::SESSION_IS_FREE) ? true : false;
 
-	return HasData && CanRecv;
+	bool IsData		= GetHasData();
+	bool IsRecv		= mIsRecving.Load() == static_cast<bool>(Default::SESSION_IS_FREE) ? true : false;
+	bool IsPossess	= IsPossessController();
+
+	return IsData && IsRecv && IsPossess;
+
 }
 
-void FNetworkSession::Connect(const FString& inAddr, const uint16 inPort)
+void FNetworkSession::Connect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack)
 {
-	if (true == IsConnected())
+	if (false == inConnectCallBack.IsBound() || false == inDisconnectCallBack.IsBound())
+	{
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Invalid CallBack", ELogLevel::Error);
+		return;
+	}
+
+	mConnectCallBack = inConnectCallBack;
+	mDisconnectCallBack = inDisconnectCallBack;
+
+	bool oldConnect = static_cast<bool>(Default::SESSION_IS_CONNECT);
+	mIsConnect.CompareExchange(oldConnect, static_cast<bool>(Default::SESSION_IS_FREE));
+
+	if (oldConnect == static_cast<LONG>(Default::SESSION_IS_CONNECT))
 	{
 		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Already Connect", ELogLevel::Error);
 		return;
 	}
 
-	if (nullptr == mSocket)
+	bool isConnect = RegisterConnect(inAddr, inPort, inConnectCallBack, inDisconnectCallBack);
+
+	mIsConnect.Store(isConnect);
+	mConnectCallBack.Execute(isConnect);
+}
+
+void FNetworkSession::KeepConnect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack)
+{
+	if (false == inConnectCallBack.IsBound() || false == inDisconnectCallBack.IsBound())
 	{
-		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Invalid FSocket", ELogLevel::Error);
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::KeepConnect] : Invalid CallBack", ELogLevel::Error);
 		return;
 	}
 
+	mConnectCallBack = inConnectCallBack;
+	mDisconnectCallBack = inDisconnectCallBack;
+
+	bool oldConnect = static_cast<bool>(Default::SESSION_IS_CONNECT);
+	mIsConnect.CompareExchange(oldConnect, static_cast<bool>(Default::SESSION_IS_FREE));
+
+	if (oldConnect == static_cast<LONG>(Default::SESSION_IS_FREE))
+	{
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::KeepConnect] : No connection", ELogLevel::Error);
+		return;
+	}
+
+	ClearBuffer();
+
+	TSharedRef<FInternetAddr> CurrentAddr = mSocketSubsystem->CreateInternetAddr();
+	mSocket->GetPeerAddress(*CurrentAddr);
+
 	FIPv4Address pareIp;
 	FIPv4Address::Parse(inAddr, pareIp);
-	
 	TSharedRef<FInternetAddr> newIpAddr = mSocketSubsystem->CreateInternetAddr();
 	newIpAddr->SetIp(pareIp.Value);
 	newIpAddr->SetPort(inPort);
 
-	bool connRet = mSocket->Connect(newIpAddr.Get());
-	if (false == connRet)
+	bool isEqualEndPoint = CurrentAddr->CompareEndpoints(*newIpAddr);
+	if (false == isEqualEndPoint)
 	{
-		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Failed Connect", ELogLevel::Error);
-		return;
+		uint32 curIp, newIp = 0;
+		int32 curPort, newPort = 0;
+		CurrentAddr->GetIp(curIp);
+		CurrentAddr->GetPort(curPort);
+		newIpAddr->GetIp(newIp);
+		newIpAddr->GetPort(newPort);
+
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::KeepConnect] : Diffrent connection info", ELogLevel::Error);
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Current] : %ld, %d"), curIp, curPort), ELogLevel::Error);
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[  New  ] : %ld, %d"), newIp, newPort), ELogLevel::Error);
 	}
 
-	mIsConnect = true;
-	
+	mIsConnect.Store(isEqualEndPoint);
+	mConnectCallBack.Execute(isEqualEndPoint);
 }
 
 void FNetworkSession::Disconnect(const FString& inCause)
 {
-	mIsConnect = false;
+	bool oldDisconnect= static_cast<bool>(Default::SESSION_IS_FREE);
+	mIsConnect.CompareExchange(oldDisconnect, static_cast<bool>(Default::SESSION_IS_CONNECT));
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[FNetworkSession::Disconnect] : %s"), *inCause), ELogLevel::Error);
-	mSocket->Shutdown(ESocketShutdownMode::Read);
-	mSocket->Close();
+	if (oldDisconnect == static_cast<LONG>(Default::SESSION_IS_FREE))
+	{
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Disconnect] : Already Disconnect", ELogLevel::Error);
+		return;
+	}
 
-	//Disconnected call back
+	bool isDisconnect = RegisterDisconnect(inCause);
+	mIsConnect.Store(!isDisconnect);
+
+	if (false == mDisconnectCallBack.IsBound())
+	{
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Disconnect] : Invalid Disconnect call back", ELogLevel::Error);
+		return;
+	}
+
+	mDisconnectCallBack.Execute(isDisconnect);
 }
 
 void FNetworkSession::Send(SendBufferPtr FSendBuffer)
@@ -312,7 +423,8 @@ void FNetworkSession::Send(SendBufferPtr FSendBuffer)
 
 bool FNetworkSession::IsConnected() const
 {
-	return mIsConnect == true ? true : false;
+	bool isConnect = mIsConnect.Load();
+	return isConnect == true ? true : false;
 }
 
 bool FNetworkSession::GetHasData()
@@ -320,4 +432,28 @@ bool FNetworkSession::GetHasData()
 	uint32 pendingDataSize = 0;
 	bool hasData = mSocket->HasPendingData(pendingDataSize);
 	return hasData;
+}
+
+bool FNetworkSession::ClearBuffer()
+{
+	if (nullptr == mRecvBuffer || nullptr == mSendBufferQueue)
+	{
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Invalid Buffer", ELogLevel::Error);
+		return false;
+	}
+
+	if (true == GetHasData())
+	{
+		uint32 PendingDataSize = 0;
+		mSocket->HasPendingData(PendingDataSize);
+
+		int32 byteRead = 0;
+		const int32 maxReadBytes = mRecvBuffer->GetMaxReadBytes(PendingDataSize);
+		mSocket->Recv(mRecvBuffer->GetWriteBuffer(), maxReadBytes, byteRead, ESocketReceiveFlags::Type::None);
+	}
+
+	mRecvBuffer->Clear();
+	mSendBufferQueue->Clear();
+
+	return true;
 }
