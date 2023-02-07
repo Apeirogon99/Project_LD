@@ -22,8 +22,4 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void BeginNetwork() override;
-
-public:
-	UPROPERTY(EditDefaultsOnly, Category = "DefaultClass")
-	TSubclassOf<class AHUD> mDefaultHUDClass;
 };

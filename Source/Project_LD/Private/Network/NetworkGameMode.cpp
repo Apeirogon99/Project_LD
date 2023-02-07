@@ -20,6 +20,12 @@ ANetworkGameMode::ANetworkGameMode()
 	mIsConnect = false;
 	mIsPossess = false;
 	mIsHUD = false;
+
+	if (mDefaultHUDClass)
+	{
+		this->HUDClass = mDefaultHUDClass->StaticClass();
+	}
+
 }
 
 ANetworkGameMode::~ANetworkGameMode()

@@ -8,11 +8,6 @@
 AGM_LoginScreen::AGM_LoginScreen()
 {
 	this->PlayerControllerClass = AIdentityPlayerController::StaticClass();
-
-	if (mDefaultHUDClass)
-	{
-		this->HUDClass = mDefaultHUDClass->StaticClass();
-	}
 }
 
 AGM_LoginScreen::~AGM_LoginScreen()

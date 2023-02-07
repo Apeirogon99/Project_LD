@@ -97,6 +97,9 @@ public:
 	TSubclassOf<class UUserWidget> mNetworkNotificationWidgetClass;
 	class UW_Notification* mNetworkNotificationWidget;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Default")
+	TSubclassOf<class AHUD> mDefaultHUDClass;
+
 protected:
 	AClientHUD* mClientHUD;
 
