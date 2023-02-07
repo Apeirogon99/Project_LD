@@ -32,7 +32,16 @@ bool Handle_S2C_EnterServer(ANetworkController* controller, Protocol::S2C_EnterS
 
 bool Handle_S2C_LeaveServer(ANetworkController* controller, Protocol::S2C_LeaveServer& pkt)
 {
-	return false;
+	AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
+	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
+	if (nullptr == networkGameMode)
+	{
+		return false;
+	}
+
+	networkGameMode->RequestExitGame();
+
+	return true;
 }
 
 bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt)
@@ -71,8 +80,18 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 		FString ticket = UNetworkUtils::ConvertFString(pkt.id_token());
 		gameInstance->mTicket = ticket;
 
-		clientHUD->ShowWidgetFromName(TEXT("SelectServer"));
-		clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Singin"));
+		AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
+		ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
+		if (nullptr == networkGameMode)
+		{
+			return false;
+		}
+
+		networkGameMode->RequestTravelLevel(TEXT("L_SelectCharacter"));
+
+		//서버 선택창
+		//clientHUD->ShowWidgetFromName(TEXT("SelectServer"));
+		//clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Singin"));
 	}
 
 	return true;
@@ -160,7 +179,6 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
 				clientHUD->CleanWidgetFromName(TEXT("Notification"));
-				clientHUD->CleanWidgetFromName(TEXT("EditBox"));
 			});
 
 		clientHUD->ShowWidgetFromName("Notification");
@@ -174,9 +192,9 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CleanWidgetFromName(TEXT("Notification"));
 				clientHUD->CleanWidgetFromName(TEXT("Singup"));
 				clientHUD->CleanWidgetFromName(TEXT("EditBox"));
+				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
 				clientHUD->ShowWidgetFromName(TEXT("Singin"));
 			});
 
@@ -188,5 +206,59 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 
 bool Handle_S2C_Nickname(ANetworkController* controller, Protocol::S2C_Nickname& pkt)
 {
-	return false;
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return false;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return false;
+	}
+
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+	int32 error = pkt.error();
+	if (error != 0)
+	{
+		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
+		notification->SetTitle(TEXT("닉네임 중복"));
+		notification->SetNotification(TEXT("이미 사용중인 닉네임 입니다"));
+		notification->SetButtonText(TEXT("확인"));
+
+		notification->mNotificationDelegate.BindLambda([=]()
+			{
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+			});
+
+		clientHUD->ShowWidgetFromName("Notification");
+	}
+	else
+	{
+		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
+		notification->SetTitle(TEXT("생성 완료"));
+		notification->SetNotification(TEXT("축하합니다 캐릭터를 생성하셨습니다"));
+		notification->SetButtonText(TEXT("생성하기"));
+
+
+		AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
+		ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
+		if (nullptr == networkGameMode)
+		{
+			return false;
+		}
+
+		notification->mNotificationDelegate.BindLambda([=]()
+			{
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				networkGameMode->RequestTravelLevel(TEXT("L_SelectCharacter"));
+
+			});
+
+		clientHUD->ShowWidgetFromName("Notification");
+	}
+
+	return true;
 }
