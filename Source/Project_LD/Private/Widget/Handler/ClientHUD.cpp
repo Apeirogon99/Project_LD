@@ -47,7 +47,8 @@ void AClientHUD::ShowWidgetFromName(const FString& inWidgetName)
 
 	if (false == widget->IsInViewport())
 	{
-		widget->AddToPlayerScreen();
+		widget->AddToViewport();
+		//widget->AddToPlayerScreen();
 	}	
 }
 
