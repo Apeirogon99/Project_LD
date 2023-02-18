@@ -7,6 +7,9 @@
 #include "W_SelectCharacter.generated.h"
 
 class UW_SelectCharacterButton;
+struct FCharacterDatas;
+enum class EClickMode : uint8;
+
 /**
  * 
  */
@@ -24,12 +27,42 @@ public:
 
 public:
 	UFUNCTION()
-		void LoadCharacterInfo(int32 inNumber, const FString& inLevel, const FString& inName);
+		void LoadCharacterInfo(const FCharacterDatas& inCharacterDatas);
 
 protected:
+	UFUNCTION()
 	void LoadChild();
+
+	UFUNCTION()
+		void OnAppearanceButton();
+
+	UFUNCTION()
+		void OnDeleteButton();
+
+	UFUNCTION()
+		void OnReviseNameButton();
+
+	UFUNCTION()
+		void PreviousAllButtonMode();
+
+	void ChangeAllButtonMode(EClickMode inClickMode);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	TArray<UWidget*>	mCharacterButtonWidgets;
+
+	UPROPERTY()
+		UWidget* mBackButton;
+
+	UPROPERTY()
+		UWidget* mAppearanceButton;
+
+	UPROPERTY()
+		UWidget* mDeleteButton;
+
+	UPROPERTY()
+		UWidget* mReviseNameButton;
+
+
+	EClickMode mCurrentClickMode;
 };

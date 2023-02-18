@@ -11,6 +11,17 @@ class UTextBlock;
 class UAnimationAsset;
 class AC_Dummy;
 
+UENUM(BlueprintType)
+enum class EClickMode : uint8
+{
+	None			UMETA(DisplayName = "None"),
+	Create 			UMETA(DisplayName = "Create"),
+	Start			UMETA(DisplayName = "Start"),
+	Appearance		UMETA(DisplayName = "Appearance"),
+	Delete			UMETA(DisplayName = "Delete"),
+	ReviseName		UMETA(DisplayName = "ReviseName"),
+};
+
 /**
  * 
  */
@@ -20,7 +31,7 @@ class PROJECT_LD_API UW_SelectCharacterButton : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	//virtual void NativeOnInitialized() override;
+	virtual void NativeOnInitialized() override;
 	//virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	//virtual void NativeDestruct() override;
@@ -42,7 +53,13 @@ public:
 
 public:
 	UFUNCTION()
-	void SetCharacterInfo(const FString& inLevel, const FString& inName);
+	void SetCharacterInfo(const FCharacterDatas& inCharacterDatas);
+
+	UFUNCTION()
+	void SetClickMode(EClickMode inClickMode);
+
+	UFUNCTION()
+	void PreviousClickMode();
 
 protected:
 	UFUNCTION()
@@ -52,7 +69,16 @@ protected:
 		void CreateCharacter();
 
 	UFUNCTION()
-		void CancleExitGame();
+		void AppearanceCharacter();
+
+	UFUNCTION()
+		void DeleteCharacter();
+
+	UFUNCTION()
+		void ReviseNameCharacter();
+
+	UFUNCTION()
+		void CancleButton();
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Default")
@@ -74,8 +100,10 @@ public:
 	UAnimationAsset* mSelectCharacterAnimation;
 
 private:
-	bool mIsInfo;
 
 	UPROPERTY()
 	AC_Dummy* character;
+
+	UPROPERTY()
+	EClickMode mClickMode;
 };

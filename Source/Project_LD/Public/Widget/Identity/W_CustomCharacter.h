@@ -6,6 +6,12 @@
 #include "Blueprint/UserWidget.h"
 #include "W_CustomCharacter.generated.h"
 
+class UButton;
+class UTextBlock;
+class UW_ColorPicker;
+class AC_Dummy;
+enum class EPart : uint8;
+enum class ETribe : uint8;
 /**
  * 
  */
@@ -19,19 +25,76 @@ public:
 	//virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+public:
+	UPROPERTY(Meta = (BindWidget))
+	UTextBlock* mClassText;
+
+	UPROPERTY(Meta = (BindWidget))
+	UButton* mCreateButton;
+
+	UPROPERTY(Meta = (BindWidget))
+	UButton* mTribeButton;
+
+	UPROPERTY(Meta = (BindWidget))
+	UButton* mSkinButton;
+
+	UPROPERTY(Meta = (BindWidget))
+	UButton* mHairButton;
+
+	UPROPERTY(Meta = (BindWidget))
+	UButton* mEyeButton;
+
+	UPROPERTY(Meta = (BindWidget))
+	UButton* mEyebrowButton;
+
+public:
+	UFUNCTION()
+		void Click_Create();
 	
+	UFUNCTION()
+		void Click_Tribe();
+
+	UFUNCTION()
+		void Click_Skin();
+
+	UFUNCTION()
+		void Click_Hair();
+
+	UFUNCTION()
+		void Click_Eye();
+
+	UFUNCTION()
+		void Click_Eyebrow();
+
 public:
 	UFUNCTION()
-		void SendNickName(const FString& inNickName);
+		bool CanUpdate();
 
 	UFUNCTION()
-		void ResultNickName(const bool inResult);
+		void ToggleColorPicker(EPart inDummyPart);
+
+	UFUNCTION()
+		void UpdateDummyCharacterPartColor();
+
+	UFUNCTION()
+		void SetClassText();
 
 public:
-	UPROPERTY(EditAnywhere)
-		TSubclassOf<UUserWidget> mEditBoxClass;
 
-private:
-	UUserWidget* mEditNickNameBox;
+	UPROPERTY()
+	UWidget* mBackButton;
+
+	UPROPERTY()
+	UWidget* mTribeSelectWidget;
+
+	UPROPERTY()
+	UW_ColorPicker* mColorPicker;
+
+	UPROPERTY()
+	EPart mCurrentDummyPart;
+
+	UPROPERTY()
+	AC_Dummy* mCurrentDummyCharacter;
 };
