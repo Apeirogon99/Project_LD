@@ -34,23 +34,18 @@ void UW_BackButton::SetBackText(const FString& inText)
 
 void UW_BackButton::SetBackButton(const FString& inLevel)
 {
-	mLevel = FName(*inLevel);
+	mLevel = inLevel;
 }
 
 void UW_BackButton::Click_Back()
 {
-	if (true == mLevel.IsNone())
+	if (true == mLevel.IsEmpty())
 	{
 		return;
 	}
 
 	AGameModeBase* gameMode = GetWorld()->GetAuthGameMode();
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
-
-	//bool travelResult = networkGameMode->();
-	//if (false == travelResult)
-	//{
-	//	return;
-	//}
+	networkGameMode->RequestTravelLevel(mLevel);
 
 }

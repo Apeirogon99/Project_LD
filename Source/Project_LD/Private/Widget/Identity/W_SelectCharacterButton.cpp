@@ -9,6 +9,17 @@
 #include <Widget/Handler/ClientHUD.h>
 
 #include <Framework/Identity/C_Dummy.h>
+#include <Network/NetworkGameMode.h>
+#include <Framework/Gameinstance/LDGameInstance.h>
+#include <Protobuf/Handler/FClientPacketHandler.h>
+#include <Protobuf/Handler/FIdentityPacketHandler.h>
+
+void UW_SelectCharacterButton::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	SetClickMode(EClickMode::Create);
+}
 
 void UW_SelectCharacterButton::NativeConstruct()
 {
@@ -17,8 +28,6 @@ void UW_SelectCharacterButton::NativeConstruct()
 	mCharacterButton	= Cast<UButton>(GetWidgetFromName(TEXT("mCharacterButton")));
 	mCharacterInfoText	= Cast<UTextBlock>(GetWidgetFromName(TEXT("mCharacterInfoText")));
 	mButtonText			= Cast<UTextBlock>(GetWidgetFromName(TEXT("mButtonText")));
-
-	mIsInfo = false;
 
 	if (mCharacterButton != nullptr)
 	{
@@ -31,53 +40,131 @@ void UW_SelectCharacterButton::Click_Character()
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
 
-	if (nullptr != character)
+	UW_Reconfirm* reconfirm = Cast<UW_Reconfirm>(clientHUD->GetWidgetFromName(TEXT("Reconfirm")));
+	if (mClickMode == EClickMode::Start)
 	{
-		UW_Reconfirm* reconfirm = Cast<UW_Reconfirm>(clientHUD->GetWidgetFromName(TEXT("Reconfirm")));
+
+		character->SetAnimation(mSelectCharacterAnimation);
+
 		reconfirm->SetTitleText(TEXT("게임 시작"));
 		reconfirm->SetReconfirmText(TEXT("해당 캐릭터로 시작하시겠습니까?"));
 		reconfirm->SetConfirmButtonText(TEXT("시작"));
 		reconfirm->SetCancleButtonText(TEXT("취소"));
 		reconfirm->mReConfirmDelegate.BindUFunction(this, FName("StartCharacter"));
-		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleExitGame"));
-		clientHUD->ShowWidgetFromName(TEXT("Reconfirm"));
+		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleButton"));
 	}
-	else
+	else if (mClickMode == EClickMode::Create)
 	{
-		UW_Reconfirm* reconfirm = Cast<UW_Reconfirm>(clientHUD->GetWidgetFromName(TEXT("Reconfirm")));
 		reconfirm->SetTitleText(TEXT("캐릭터 생성"));
 		reconfirm->SetReconfirmText(TEXT("캐릭터를 생성하시겠습니까?"));
 		reconfirm->SetConfirmButtonText(TEXT("생성"));
 		reconfirm->SetCancleButtonText(TEXT("취소"));
 		reconfirm->mReConfirmDelegate.BindUFunction(this, FName("CreateCharacter"));
-		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleExitGame"));
-		clientHUD->ShowWidgetFromName(TEXT("Reconfirm"));
+		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleButton"));
 	}
-}
-
-void UW_SelectCharacterButton::SetCharacterInfo(const FString& inLevel, const FString& inName)
-{
-
-	if (inLevel.IsEmpty() || inName.IsEmpty())
+	else if (mClickMode == EClickMode::Appearance)
 	{
-		mIsInfo = false;
+		reconfirm->SetTitleText(TEXT("외형 변경"));
+		reconfirm->SetReconfirmText(TEXT("외형 변경을 하시겠습니까?"));
+		reconfirm->SetConfirmButtonText(TEXT("변경"));
+		reconfirm->SetCancleButtonText(TEXT("취소"));
+		reconfirm->mReConfirmDelegate.BindUFunction(this, FName("AppearanceCharacter"));
+		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleButton"));
+	}
+	else if (mClickMode == EClickMode::Delete)
+	{
+		reconfirm->SetTitleText(TEXT("캐릭터 삭제"));
+		reconfirm->SetReconfirmText(TEXT("해당 캐릭터를 삭제하겠습니까?"));
+		reconfirm->SetConfirmButtonText(TEXT("삭제"));
+		reconfirm->SetCancleButtonText(TEXT("취소"));
+		reconfirm->mReConfirmDelegate.BindUFunction(this, FName("DeleteCharacter"));
+		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleButton"));
+	}
+	else if (mClickMode == EClickMode::ReviseName)
+	{
+		reconfirm->SetTitleText(TEXT("닉네임 변경"));
+		reconfirm->SetReconfirmText(TEXT("닉네임을 변경하시겠습니까?"));
+		reconfirm->SetConfirmButtonText(TEXT("변경"));
+		reconfirm->SetCancleButtonText(TEXT("취소"));
+		reconfirm->mReConfirmDelegate.BindUFunction(this, FName("ReviseNameCharacter"));
+		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleButton"));
+	}
+	else
+	{
 		return;
 	}
 
-	FText characterTitle = FText::FromString(FString::Printf(TEXT("Lv.%s %s"), *inLevel, *inName));
-	mCharacterInfoText->SetText(characterTitle);
+	clientHUD->ShowWidgetFromName(TEXT("Reconfirm"));
+}
 
-	FString buttonText = FString(TEXT(""));
-	mButtonText->SetText(FText::FromString(buttonText));
+void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterDatas& inCharacterDatas)
+{
+	FText characterTitle = FText::FromString(FString::Printf(TEXT("Lv.%ld %s"), inCharacterDatas.mLevel, *inCharacterDatas.mName));
+	mCharacterInfoText->SetText(characterTitle);
 
 	FActorSpawnParameters spawnParams;
 	spawnParams.Owner = GetOwningPlayer();
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	character = GetWorld()->SpawnActor<AC_Dummy>(mDummyCharacterClass, mCharacterLocation, mCharacterRotation, spawnParams);
+	character->SetCharacterDatas(inCharacterDatas);
+	character->SetAnimation(mDefaultCharacterAnimation);
 
-	mIsInfo = true;
-	
+	SetClickMode(EClickMode::Start);
+}
+
+void UW_SelectCharacterButton::SetClickMode(EClickMode inClickMode)
+{
+	mClickMode = inClickMode;
+
+	FString buttonText = FString(TEXT(""));
+
+	if (character)
+	{
+		switch (mClickMode)
+		{
+		case EClickMode::None:
+			buttonText = FString(TEXT("Error"));
+			break;
+		case EClickMode::Start:
+			buttonText = FString(TEXT(""));
+			break;
+		case EClickMode::Appearance:
+			buttonText = FString(TEXT("?"));
+			break;
+		case EClickMode::Delete:
+			buttonText = FString(TEXT("-"));
+			break;
+		case EClickMode::ReviseName:
+			buttonText = FString(TEXT("*"));
+			break;
+		default:
+			buttonText = FString(TEXT("Error"));
+			break;
+		}
+	}
+	else
+	{
+		mClickMode = EClickMode::Create;
+		buttonText = FString(TEXT("+"));
+	}
+
+	mButtonText->SetText(FText::FromString(buttonText));
+}
+
+void UW_SelectCharacterButton::PreviousClickMode()
+{
+	EClickMode previousClickMode = EClickMode::None;
+	if (character)
+	{
+		previousClickMode = EClickMode::Start;
+	}
+	else
+	{
+		previousClickMode = EClickMode::Create;
+	}
+
+	SetClickMode(previousClickMode);
 }
 
 void UW_SelectCharacterButton::StartCharacter()
@@ -95,12 +182,42 @@ void UW_SelectCharacterButton::CreateCharacter()
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
 	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
+
+	ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+	if (gameinstance)
+	{
+		gameinstance->mCharacterDatas.mPosition = mCharacterButtonNumber;
+	}
+
+	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
+	networkGameMode->RequestTravelLevel(TEXT("L_SelectClass"));
+	
 }
 
-void UW_SelectCharacterButton::CancleExitGame()
+void UW_SelectCharacterButton::AppearanceCharacter()
+{
+
+}
+
+void UW_SelectCharacterButton::DeleteCharacter()
+{
+
+}
+
+void UW_SelectCharacterButton::ReviseNameCharacter()
+{
+
+}
+
+void UW_SelectCharacterButton::CancleButton()
 {
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
-
 	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
+
+	if (character)
+	{
+		character->SetAnimation(mDefaultCharacterAnimation);
+	}
+
 }

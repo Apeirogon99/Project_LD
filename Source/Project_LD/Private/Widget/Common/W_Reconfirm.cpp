@@ -47,25 +47,37 @@ void UW_Reconfirm::NativeDestruct()
 void UW_Reconfirm::SetTitleText(const FString& inTitle)
 {
 	FText title = FText::FromString(inTitle);
-	mTitleText->SetText(title);
+	if (nullptr != mTitleText)
+	{
+		mTitleText->SetText(title);
+	}
 }
 
 void UW_Reconfirm::SetReconfirmText(const FString& inReconfirm)
 {
 	FText reconfirm = FText::FromString(inReconfirm);
-	mReconfirmText->SetText(reconfirm);
+	if (nullptr != mReconfirmText)
+	{
+		mReconfirmText->SetText(reconfirm);
+	}
 }
 
 void UW_Reconfirm::SetConfirmButtonText(const FString& inButtonText)
 {
 	FText buttonText = FText::FromString(inButtonText);
-	mConfirmButtonText->SetText(buttonText);
+	if (nullptr != mConfirmButtonText)
+	{
+		mConfirmButtonText->SetText(buttonText);
+	}
 }
 
 void UW_Reconfirm::SetCancleButtonText(const FString& inButtonText)
 {
 	FText buttonText = FText::FromString(inButtonText);
-	mCancleButtonText->SetText(buttonText);
+	if (nullptr != mCancleButtonText)
+	{
+		mCancleButtonText->SetText(buttonText);
+	}
 }
 
 void UW_Reconfirm::Click_Confirm()

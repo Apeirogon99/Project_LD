@@ -3,30 +3,66 @@
 
 #include "Widget/Identity/W_SelectCharacter.h"
 #include <Widget/Identity/W_SelectCharacterButton.h>
+
 #include <Blueprint/WidgetTree.h>
+#include <Widget/Common/W_BackButton.h>
+#include <Widget/Common/W_Button.h>
+
+#include <CharacterDatas.h>
 
 void UW_SelectCharacter::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	mBackButton = this->WidgetTree->FindWidget(FName(TEXT("BW_BackButton")));
+	if (mBackButton != nullptr)
+	{
+		UW_BackButton* backButton = Cast<UW_BackButton>(mBackButton);
+		backButton->SetBackText(TEXT("로그인 화면"));
+		backButton->SetBackButton(TEXT("L_LoginScreen"));
+	}
+
+	mAppearanceButton = this->WidgetTree->FindWidget(FName(TEXT("BW_AppearanceButton")));
+	if (mAppearanceButton != nullptr)
+	{
+		UW_Button* appearanceButton = Cast<UW_Button>(mAppearanceButton);
+		appearanceButton->mButtonDelegate.BindUFunction(this, FName(TEXT("OnAppearanceButton")));
+	}
+
+	mDeleteButton = this->WidgetTree->FindWidget(FName(TEXT("BW_DeleteCharacterButton")));
+	if (mDeleteButton != nullptr)
+	{
+		UW_Button* deleteButton = Cast<UW_Button>(mDeleteButton);
+		deleteButton->mButtonDelegate.BindUFunction(this, FName(TEXT("OnDeleteButton")));
+	}
+
+	mReviseNameButton = this->WidgetTree->FindWidget(FName(TEXT("BW_NicknameEditButton")));
+	if (mReviseNameButton != nullptr)
+	{
+		UW_Button* reviseNameButton = Cast<UW_Button>(mReviseNameButton);
+		reviseNameButton->mButtonDelegate.BindUFunction(this, FName(TEXT("OnReviseNameButton")));
+	}
+
+	mCurrentClickMode = EClickMode::None;
 }
 
-void UW_SelectCharacter::LoadCharacterInfo(int32 inNumber, const FString& inLevel, const FString& inName)
+void UW_SelectCharacter::LoadCharacterInfo(const FCharacterDatas& inCharacterDatas)
 {
 	if (mCharacterButtonWidgets.Num() == 0)
 	{
 		LoadChild();
 	}
 
-	if (!(0 <= inNumber && inNumber < mCharacterButtonWidgets.Num()))
+	int32 positon = inCharacterDatas.mPosition;
+	if (!(0 <= positon && positon < mCharacterButtonWidgets.Num()))
 	{
 		return;
 	}
 
-	UW_SelectCharacterButton* characterButton = Cast<UW_SelectCharacterButton>(mCharacterButtonWidgets[inNumber]);
+	UW_SelectCharacterButton* characterButton = Cast<UW_SelectCharacterButton>(mCharacterButtonWidgets[positon]);
 	if (characterButton)
 	{
-		characterButton->SetCharacterInfo(inLevel, inName);
+		characterButton->SetCharacterInfo(inCharacterDatas);
 	}
 }
 
@@ -47,4 +83,82 @@ void UW_SelectCharacter::LoadChild()
 	//		mCharacterButtonWidgets.Add(button);
 	//	}
 	//}
+}
+
+void UW_SelectCharacter::OnAppearanceButton()
+{
+	if (mCharacterButtonWidgets.Num() == 0)
+	{
+		LoadChild();
+	}
+
+	if (mCurrentClickMode == EClickMode::Appearance)
+	{
+		PreviousAllButtonMode();
+		return;
+	}
+
+	mCurrentClickMode = EClickMode::Appearance;
+	ChangeAllButtonMode(EClickMode::Appearance);
+}
+
+void UW_SelectCharacter::OnDeleteButton()
+{
+	if (mCharacterButtonWidgets.Num() == 0)
+	{
+		LoadChild();
+	}
+
+	if (mCurrentClickMode == EClickMode::Delete)
+	{
+		PreviousAllButtonMode();
+		return;
+	}
+
+	mCurrentClickMode = EClickMode::Delete;
+	ChangeAllButtonMode(EClickMode::Delete);
+
+}
+
+void UW_SelectCharacter::OnReviseNameButton()
+{
+	if (mCharacterButtonWidgets.Num() == 0)
+	{
+		LoadChild();
+	}
+
+	if (mCurrentClickMode == EClickMode::ReviseName)
+	{
+		PreviousAllButtonMode();
+		return;
+	}
+
+	mCurrentClickMode = EClickMode::ReviseName;
+	ChangeAllButtonMode(EClickMode::ReviseName);
+
+}
+
+void UW_SelectCharacter::PreviousAllButtonMode()
+{
+	for (UWidget* widget : mCharacterButtonWidgets)
+	{
+		UW_SelectCharacterButton* characterButton = Cast<UW_SelectCharacterButton>(widget);
+		if (characterButton)
+		{
+			characterButton->PreviousClickMode();
+		}
+	}
+	mCurrentClickMode = EClickMode::None;
+}
+
+void UW_SelectCharacter::ChangeAllButtonMode(EClickMode inClickMode)
+{
+	for (UWidget* widget : mCharacterButtonWidgets)
+	{
+		UW_SelectCharacterButton* characterButton = Cast<UW_SelectCharacterButton>(widget);
+		if (characterButton)
+		{
+			characterButton->SetClickMode(inClickMode);
+		}
+	}
 }

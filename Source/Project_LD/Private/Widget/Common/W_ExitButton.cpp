@@ -8,6 +8,8 @@
 #include <Widget/Common/W_Reconfirm.h>
 #include <Widget/Handler/ClientHUD.h>
 
+#include <Protobuf/Handler/FIdentityPacketHandler.h>
+
 void UW_ExitButton::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -45,14 +47,8 @@ void UW_ExitButton::Click_Exit()
 
 void UW_ExitButton::ExitGame()
 {
-	AGameModeBase* gameMode = GetWorld()->GetAuthGameMode();
-	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
-
-	bool exitResult = networkGameMode->RequestExitGame();
-	if (false == exitResult)
-	{
-		return;
-	}
+	//LeaveServer
+	//Protocol::C2S_LeaveServer levalPacket;
 }
 
 void UW_ExitButton::CancleExitGame()
