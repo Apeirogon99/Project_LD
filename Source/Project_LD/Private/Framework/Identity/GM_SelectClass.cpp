@@ -1,20 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Framework/Identity/GM_LoginScreen.h"
+#include "Framework/Identity/GM_SelectClass.h"
 #include <Framework/Identity/IdentityPlayerController.h>
 #include <Widget/Handler/ClientHUD.h>
 
-AGM_LoginScreen::AGM_LoginScreen()
+AGM_SelectClass::AGM_SelectClass()
 {
 	this->PlayerControllerClass = AIdentityPlayerController::StaticClass();
 }
 
-AGM_LoginScreen::~AGM_LoginScreen()
+AGM_SelectClass::~AGM_SelectClass()
 {
 }
 
-void AGM_LoginScreen::BeginPlay()
+void AGM_SelectClass::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -34,12 +34,12 @@ void AGM_LoginScreen::BeginPlay()
 	}
 }
 
-void AGM_LoginScreen::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void AGM_SelectClass::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 }
 
-void AGM_LoginScreen::BeginNetwork()
+void AGM_SelectClass::BeginNetwork()
 {
 	Super::BeginNetwork();
 
@@ -48,7 +48,5 @@ void AGM_LoginScreen::BeginNetwork()
 		return;
 	}
 
-	mClientHUD->ShowWidgetFromName(TEXT("LoginScreen"));
-	mClientHUD->ShowWidgetFromName(TEXT("Singin"));
-
+	mClientHUD->ShowWidgetFromName(TEXT("SelectClass"));
 }

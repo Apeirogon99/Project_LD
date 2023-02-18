@@ -3,3 +3,10 @@
 
 #include "Framework/Gameinstance/LDGameInstance.h"
 
+ULDGameInstance::ULDGameInstance()
+{
+}
+
+ULDGameInstance::~ULDGameInstance()
+{
+}

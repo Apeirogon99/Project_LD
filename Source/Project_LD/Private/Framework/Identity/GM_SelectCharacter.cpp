@@ -2,11 +2,16 @@
 
 
 #include "Framework/Identity/GM_SelectCharacter.h"
-#include <Framework/Identity/IdentityPlayerController.h>
-#include <Widget/Handler/ClientHUD.h>
 
+#include <Network/NetworkController.h>
+#include <Framework/Identity/IdentityPlayerController.h>
+
+#include <Widget/Handler/ClientHUD.h>
 #include <Widget/Identity/W_SelectCharacter.h>
 #include <Widget/Identity/W_SelectCharacterButton.h>
+
+#include <Protobuf/Handler/FClientPacketHandler.h>
+#include <Protobuf/Handler/FIdentityPacketHandler.h>
 
 AGM_SelectCharacter::AGM_SelectCharacter()
 {
@@ -21,9 +26,19 @@ void AGM_SelectCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (false == RequestKeepConnectServer(TEXT("127.0.0.1"), 9000))
+	if (true == IsConnectedServer())
 	{
+		if (false == RequestKeepConnectServer(TEXT("127.0.0.1"), 9000))
+		{
 
+		}
+	}
+	else
+	{
+		if (false == RequestConnectServer(TEXT("127.0.0.1"), 9000))
+		{
+
+		}
 	}
 }
 
@@ -41,12 +56,13 @@ void AGM_SelectCharacter::BeginNetwork()
 		return;
 	}
 
-	APlayerController* playerControll = GetWorld()->GetFirstPlayerController();
-	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
-	UW_SelectCharacter* sewidget = Cast<UW_SelectCharacter>(clientHUD->GetWidgetFromName(TEXT("SelectCharacter")));
-	sewidget->LoadCharacterInfo(0, TEXT("32"), TEXT("테스트1"));
-	sewidget->LoadCharacterInfo(1, TEXT("1"), TEXT("테스트2"));
-	sewidget->LoadCharacterInfo(2, TEXT("50"), TEXT("테스트3"));
-	sewidget->LoadCharacterInfo(3, TEXT("100"), TEXT("테스트4"));
-	mClientHUD->ShowWidgetFromName(TEXT("SelectCharacter"));
+	mClientHUD->ShowWidgetFromName("LoadingServer");
+
+	ANetworkController* networkController = GetNetworkController();
+	if (networkController)
+	{
+		Protocol::C2S_LoadCharacters loadCharactersPacket;
+		SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, loadCharactersPacket);
+		networkController->Send(pakcetBuffer);
+	}
 }
