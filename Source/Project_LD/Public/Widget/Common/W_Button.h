@@ -4,7 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "W_BackButton.generated.h"
+#include "W_Button.generated.h"
+
+DECLARE_DELEGATE(FButtonClickDelegate);
 
 class UButton;
 class UTextBlock;
@@ -12,7 +14,7 @@ class UTextBlock;
  * 
  */
 UCLASS()
-class PROJECT_LD_API UW_BackButton : public UUserWidget
+class PROJECT_LD_API UW_Button : public UUserWidget
 {
 	GENERATED_BODY()
 	
@@ -20,28 +22,24 @@ public:
 	//virtual void NativeOnInitialized() override;
 	//virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
-	//virtual void NativeDestruct() override;
+	virtual void NativeDestruct() override;
 	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
 
 public:
 	UPROPERTY(Meta = (BindWidget))
-		UButton* mBackButton;
+		UButton* mButton;
 
 	UPROPERTY(Meta = (BindWidget))
-		UTextBlock* mBackText;
+		UTextBlock* mButtonText;
 
 public:
 	UFUNCTION(BlueprintCallable)
-		void SetBackText(const FString& inText);
-
-	UFUNCTION(BlueprintCallable)
-		void SetBackButton(const FString& inLevel);
+		void SetText(const FString& inText);
 
 public:
 	UFUNCTION()
-		void Click_Back();
+		void Click_Button();
 
 public:
-	UPROPERTY()
-		FString mLevel;
+	FButtonClickDelegate mButtonDelegate;
 };
