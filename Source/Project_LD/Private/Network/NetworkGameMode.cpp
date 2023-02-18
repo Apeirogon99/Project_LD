@@ -229,6 +229,61 @@ bool ANetworkGameMode::IsNetworkInit()
 	return true;
 }
 
+bool ANetworkGameMode::IsConnectedServer()
+{
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return false;
+	}
+
+	UNetworkService* networkService = gameInstance->GetSubsystem<UNetworkService>();
+	if (nullptr == networkService)
+	{
+		return false;
+	}
+
+	FNetworkSessionPtr networkSession = networkService->GetNetworkSession();
+	if (false == networkSession.IsValid())
+	{
+		return false;
+	}
+
+	bool connect = networkSession->IsConnected();
+
+	return connect;
+}
+
+ANetworkController* ANetworkGameMode::GetNetworkController()
+{
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return nullptr;
+	}
+
+	UNetworkService* networkService = gameInstance->GetSubsystem<UNetworkService>();
+	if (nullptr == networkService)
+	{
+		return nullptr;
+	}
+
+	FNetworkSessionPtr networkSession = networkService->GetNetworkSession();
+	if (false == networkSession.IsValid())
+	{
+		return nullptr;
+	}
+
+	if (false == networkSession->IsPossessController())
+	{
+		return nullptr;
+	}
+
+	ANetworkController* controller = networkSession->GetNetworkController();
+
+	return controller;
+}
+
 void ANetworkGameMode::BeginNetwork()
 {
 	

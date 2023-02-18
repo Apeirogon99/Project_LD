@@ -16,6 +16,8 @@
 #include <Widget/Common/W_Notification.h>
 #include <Widget/Common/W_EditBox.h>
 
+#include <Widget/Identity/W_SelectCharacter.h>
+
 bool Handle_S2C_EnterServer(ANetworkController* controller, Protocol::S2C_EnterServer& pkt)
 {
 	AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
@@ -77,7 +79,7 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 	}
 	else
 	{
-		FString ticket = UNetworkUtils::ConvertFString(pkt.id_token());
+		FString ticket = UNetworkUtils::ConvertFString(pkt.ticket());
 		gameInstance->mTicket = ticket;
 
 		AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
@@ -204,7 +206,60 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 	return true;
 }
 
-bool Handle_S2C_Nickname(ANetworkController* controller, Protocol::S2C_Nickname& pkt)
+bool Handle_S2C_LoadServer(ANetworkController* controller, Protocol::S2C_LoadServer& pkt)
+{
+	return false;
+}
+
+bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_LoadCharacters& pkt)
+{
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return false;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return false;
+	}
+
+	UW_SelectCharacter* selectCharacterWidget = Cast<UW_SelectCharacter>(clientHUD->GetWidgetFromName(TEXT("SelectCharacter")));
+	if (nullptr == selectCharacterWidget) return false;
+
+	for (int i = 0; i < pkt.character_size(); ++i)
+	{
+		const Protocol::SCharacterData& character = pkt.character(i);
+
+		FCharacterDatas characterDatas;
+
+		characterDatas.mName		= UNetworkUtils::ConvertFString(character.name());
+		characterDatas.mClass		= character.job();
+		characterDatas.mTribe		= character.tribe();
+		characterDatas.mLevel		= character.level();
+		characterDatas.mPosition	= character.position();
+
+		characterDatas.mSkin		= character.skin();
+		characterDatas.mHair		= character.hair();
+		characterDatas.mEye			= character.eye();
+		characterDatas.mEyebrow		= character.eyebrow();
+
+		selectCharacterWidget->LoadCharacterInfo(characterDatas);
+	}
+
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->ShowWidgetFromName(TEXT("SelectCharacter"));
+
+	return true;
+}
+
+bool Handle_S2C_SelectServer(ANetworkController* controller, Protocol::S2C_SelectServer& pkt)
+{
+	return false;
+}
+
+bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_CreateCharacter& pkt)
 {
 	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
 	if (nullptr == gameInstance)
@@ -254,11 +309,15 @@ bool Handle_S2C_Nickname(ANetworkController* controller, Protocol::S2C_Nickname&
 			{
 				clientHUD->CleanWidgetFromName(TEXT("Notification"));
 				networkGameMode->RequestTravelLevel(TEXT("L_SelectCharacter"));
-
 			});
 
 		clientHUD->ShowWidgetFromName("Notification");
 	}
 
 	return true;
+}
+
+bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_TravelServer& pkt)
+{
+	return false;
 }

@@ -113,6 +113,11 @@ void FNetworkSession::UnPossessToController(FUnPossessCallBack inUnPossessCallBa
 	mController = nullptr;
 }
 
+ANetworkController* FNetworkSession::GetNetworkController()
+{
+	return mController;
+}
+
 bool FNetworkSession::IsPossessController()
 {
 	if (nullptr == mController)
