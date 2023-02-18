@@ -48,6 +48,7 @@ public:
 
 	void PossessToController(ANetworkController* controller, FPossessCallBack inPossessCallback);
 	void UnPossessToController(FUnPossessCallBack inUnPossessCallBack);
+	ANetworkController* GetNetworkController();
 	bool IsPossessController();
 
 	bool RegisterConnect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack);

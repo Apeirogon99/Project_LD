@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include <Struct/Game/CharacterDatas.h>
 #include "LDGameInstance.generated.h"
 
 /**
@@ -15,10 +16,14 @@ class PROJECT_LD_API ULDGameInstance : public UGameInstance
 	GENERATED_BODY()
 	
 public:
-
+	ULDGameInstance();
+	~ULDGameInstance();
 
 public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Network")
 		FString mTicket;
+
+	UPROPERTY()
+	FCharacterDatas mCharacterDatas;
 };

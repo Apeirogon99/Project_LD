@@ -23,6 +23,7 @@ public class Project_LD : ModuleRules
                         Path.Combine(ModuleDirectory, "Public/Network"),
                         Path.Combine(ModuleDirectory, "Public/Protobuf/Handler"),
                         Path.Combine(ModuleDirectory, "Public/Protobuf/Packet"),
+                        Path.Combine(ModuleDirectory, "Public/Struct/Game"),
                }
            );
 
@@ -72,5 +73,21 @@ public class Project_LD : ModuleRules
 
         bEnableUndefinedIdentifierWarnings = false;
         bEnableExceptions = true;
+
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+
+            PublicIncludePaths.Add(@"P:\ApeirogonEngine\ApeirogonEngine\CommonLibrary\");
+
+            PublicAdditionalLibraries.Add(@"P:\ApeirogonEngine\ApeirogonEngine\ApeirogonBuilds\Debug\CommonLibrary.lib");
+            //if (true == IsDebug(Target.Configuration))
+            //{
+            //    PublicAdditionalLibraries.Add(@"P:\ApeirogonEngine\ApeirogonEngine\ApeirogonBuilds\Debug\CommonLibrary.lib");
+            //}
+            //else
+            //{
+            //    PublicAdditionalLibraries.Add(@"P:\ApeirogonEngine\ApeirogonEngine\ApeirogonBuilds\Release\CommonLibrary.lib");
+            //}
+        }
     }
 }

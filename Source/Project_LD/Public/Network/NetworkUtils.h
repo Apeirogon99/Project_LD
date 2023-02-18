@@ -45,7 +45,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utils")
 		static void NetworkConsoleLog(const FString& inConsoleLog, const ELogLevel& level);
 
-	static std::string ConvertString(const FString& str);
-	static FString ConvertFString(const std::string& str);
-	static FText ConvertFText(const FString& str);
+	static std::string	ConvertString(const FString& str);
+	static FString		ConvertFString(const std::string& str);
+	static FString		ConvertFString(const int32 value);
+	static FText		ConvertFText(const FString& str);
+
+	static FLinearColor ConverLinearColor(const uint32 value);
+	static uint32		ConverLinerColorToInt(FLinearColor value);
 };

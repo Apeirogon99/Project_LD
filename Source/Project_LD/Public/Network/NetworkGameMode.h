@@ -61,6 +61,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Utils")
 	bool IsNetworkInit();
 
+	UFUNCTION(BlueprintCallable, Category = "Utils")
+	bool IsConnectedServer();
+
+	UFUNCTION()
+	ANetworkController* GetNetworkController();
+
 public:
 	UFUNCTION()
 	void ProcessClientHUD(bool inInitHUD);
