@@ -27,7 +27,7 @@ public class ProtobufLibrary : ModuleRules
         }
         else
         {
-            ProtobufLibraryPath += "Release/lib/";
+            ProtobufLibraryPath += "release/lib/";
             PublicAdditionalLibraries.Add(Path.Combine(ProtobufLibraryPath, "libprotobuf.lib"));
             PublicAdditionalLibraries.Add(Path.Combine(ProtobufLibraryPath, "libprotobuf-lite.lib"));
             PublicAdditionalLibraries.Add(Path.Combine(ProtobufLibraryPath, "libprotoc.lib"));
