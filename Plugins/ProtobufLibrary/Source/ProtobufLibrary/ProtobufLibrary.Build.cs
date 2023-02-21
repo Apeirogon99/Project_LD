@@ -16,7 +16,7 @@ public class ProtobufLibrary : ModuleRules
 
         PublicDefinitions.Add("WITH_PROTOBUFLIBRARY=1");
 
-        Console.WriteLine("Configuration = " + Target.Configuration + "Platform = " + Target.Platform);
+        Console.WriteLine("Start Protobuf Plugin [" + Target.Configuration + "Platform = " + Target.Platform + "]");
 
         if (true == IsDebug(Target.Configuration))
         {
