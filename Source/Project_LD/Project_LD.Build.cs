@@ -50,7 +50,8 @@ public class Project_LD : ModuleRules
                             "HeadMountedDisplay",
                             "NavigationSystem",
                             "AIModule",
-                            "ProtobufLibrary"
+                            "ProtobufLibrary",
+                            "CommonLibrary"
                 }
             );
 
@@ -74,20 +75,5 @@ public class Project_LD : ModuleRules
         bEnableUndefinedIdentifierWarnings = false;
         bEnableExceptions = true;
 
-        if (Target.Platform == UnrealTargetPlatform.Win64)
-        {
-
-            PublicIncludePaths.Add(@"P:\ApeirogonEngine\ApeirogonEngine\CommonLibrary\");
-
-            PublicAdditionalLibraries.Add(@"P:\ApeirogonEngine\ApeirogonEngine\ApeirogonBuilds\Debug\CommonLibrary.lib");
-            //if (true == IsDebug(Target.Configuration))
-            //{
-            //    PublicAdditionalLibraries.Add(@"P:\ApeirogonEngine\ApeirogonEngine\ApeirogonBuilds\Debug\CommonLibrary.lib");
-            //}
-            //else
-            //{
-            //    PublicAdditionalLibraries.Add(@"P:\ApeirogonEngine\ApeirogonEngine\ApeirogonBuilds\Release\CommonLibrary.lib");
-            //}
-        }
     }
 }

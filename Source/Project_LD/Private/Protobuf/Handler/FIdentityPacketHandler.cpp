@@ -67,7 +67,7 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 	{
 		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
 		notification->SetTitle(TEXT("로그인 실패"));
-		notification->SetNotification(TEXT("아이디 혹은 패스워드가 틀렸습니다"));
+		notification->SetNotification(UNetworkUtils::GetNetworkErrorToString(error));
 		notification->SetButtonText(TEXT("확인"));
 
 		notification->mNotificationDelegate.BindLambda([=]()
@@ -196,8 +196,8 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 			{
 				clientHUD->CleanWidgetFromName(TEXT("Singup"));
 				clientHUD->CleanWidgetFromName(TEXT("EditBox"));
-				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
 				clientHUD->ShowWidgetFromName(TEXT("Singin"));
+				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
 			});
 
 		clientHUD->ShowWidgetFromName("Notification");

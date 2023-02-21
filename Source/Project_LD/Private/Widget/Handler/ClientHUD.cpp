@@ -47,9 +47,9 @@ void AClientHUD::ShowWidgetFromName(const FString& inWidgetName)
 
 	if (false == widget->IsInViewport())
 	{
-		widget->AddToViewport();
-		//widget->AddToPlayerScreen();
-	}	
+		//widget->AddToViewport();
+		widget->AddToPlayerScreen();
+	}
 }
 
 void AClientHUD::CleanWidgetFromName(const FString& inWidgetName)
@@ -76,7 +76,24 @@ void AClientHUD::CollapsedWidgetFromName(const FString& inWidgetName)
 
 	if (true == widget->IsInViewport())
 	{
-		widget->SetVisibility(ESlateVisibility::Collapsed);
+		ESlateVisibility visible =  widget->GetVisibility();
+		switch (visible)
+		{
+		case ESlateVisibility::Collapsed:
+		case ESlateVisibility::Hidden:
+			break;
+		case ESlateVisibility::Visible:
+			widget->SetVisibility(ESlateVisibility::Collapsed);
+			break;
+		case ESlateVisibility::HitTestInvisible:
+			widget->SetVisibility(ESlateVisibility::Collapsed);
+			break;
+		case ESlateVisibility::SelfHitTestInvisible:
+			widget->SetVisibility(ESlateVisibility::Collapsed);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -90,7 +107,22 @@ void AClientHUD::SelfHitTestInvisibleWidgetFromName(const FString& inWidgetName)
 
 	if (true == widget->IsInViewport())
 	{
-		widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		ESlateVisibility visible = widget->GetVisibility();
+		switch (visible)
+		{
+		case ESlateVisibility::Visible:
+		case ESlateVisibility::HitTestInvisible:
+		case ESlateVisibility::SelfHitTestInvisible:
+			break;
+		case ESlateVisibility::Collapsed:
+			widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			break;
+		case ESlateVisibility::Hidden:
+			widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -120,32 +152,9 @@ void AClientHUD::AllCollapsedWidget()
 		return;
 	}
 
-	for (UUserWidget* widget : mWidgets)
+	for (FString widgetName : mWidgetNames)
 	{
-		if (nullptr != widget)
-		{
-			if (true == widget->GetIsVisible())
-			{
-				ESlateVisibility visible =  widget->GetVisibility();
-				switch (visible)
-				{
-				case ESlateVisibility::Collapsed:
-				case ESlateVisibility::Hidden:
-					break;
-				case ESlateVisibility::Visible:
-					widget->SetVisibility(ESlateVisibility::Collapsed);
-					break;
-				case ESlateVisibility::HitTestInvisible:
-					widget->SetVisibility(ESlateVisibility::Collapsed);
-					break;
-				case ESlateVisibility::SelfHitTestInvisible:
-					widget->SetVisibility(ESlateVisibility::Collapsed);
-					break;
-				default:
-					break;
-				}
-			}
-		}
+		CollapsedWidgetFromName(widgetName);
 	}
 }
 
@@ -156,30 +165,9 @@ void AClientHUD::AllSelfHitTestInvisibleWidget()
 		return;
 	}
 
-	for (UUserWidget* widget : mWidgets)
+	for (FString widgetName : mWidgetNames)
 	{
-		if (nullptr != widget)
-		{
-			if (widget->GetIsVisible())
-			{
-				ESlateVisibility visible = widget->GetVisibility();
-				switch (visible)
-				{
-				case ESlateVisibility::Visible:
-				case ESlateVisibility::HitTestInvisible:
-				case ESlateVisibility::SelfHitTestInvisible:
-					break;
-				case ESlateVisibility::Collapsed:
-					widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-					break;
-				case ESlateVisibility::Hidden:
-					widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-					break;
-				default:
-					break;
-				}
-			}
-		}
+		SelfHitTestInvisibleWidgetFromName(widgetName);
 	}
 }
 

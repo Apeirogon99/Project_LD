@@ -52,4 +52,6 @@ public:
 
 	static FLinearColor ConverLinearColor(const uint32 value);
 	static uint32		ConverLinerColorToInt(FLinearColor value);
+
+	static FString		GetNetworkErrorToString(int32 inError);
 };

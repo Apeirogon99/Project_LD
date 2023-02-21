@@ -7,6 +7,8 @@
 #include <stringapiset.h>
 #include "Windows/HideWindowsPlatformTypes.h"
 
+#include <DatabaseErrorTypes.h>
+
 DEFINE_LOG_CATEGORY(NETWORK_LOG);
 
 void UNetworkUtils::NetworkScreenLog(const FString& inScreenLog)
@@ -108,4 +110,10 @@ uint32 UNetworkUtils::ConverLinerColorToInt(FLinearColor inValue)
 	FColor color = inValue.ToFColor(true);
 	uint32 packed = color.ToPackedRGBA();
 	return packed;
+}
+
+FString UNetworkUtils::GetNetworkErrorToString(int32 inError)
+{
+	std::string errorStr = GetDatabaseError(inError);
+	return ConvertFString(errorStr);
 }
