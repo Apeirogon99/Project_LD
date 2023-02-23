@@ -26,11 +26,17 @@ UENUM()
 enum class EPart : uint8
 {
 	None			UMETA(DisplayName = "None"),
-	Body			UMETA(DisplayName = "Body"),
+	Boots			UMETA(DisplayName = "Boots"),
+	Bracers			UMETA(DisplayName = "Bracers"),
+	Chest			UMETA(DisplayName = "Chest"),
+	Feet			UMETA(DisplayName = "Feet"),
+	Hands			UMETA(DisplayName = "Hands"),
 	Head			UMETA(DisplayName = "Head"),
 	Hair			UMETA(DisplayName = "Hair"),
 	Eye				UMETA(DisplayName = "Eye"),
 	Eyebrow			UMETA(DisplayName = "Eyebrow"),
+	Ears			UMETA(DisplayName = "Ears"),
+	Pants			UMETA(DisplayName = "Pants"),
 };
 
 USTRUCT(Atomic)

@@ -121,11 +121,16 @@ void ANetworkCharacter::UpdateCharacterData(const FCharacterDatas& InCharacterDa
 
 void ANetworkCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance)
 {	
-	SetSkeletalPartColor(EPart::Body,		InCharacterAppearance.mBodyColor);
+	SetSkeletalPartColor(EPart::Boots,		InCharacterAppearance.mBodyColor);
+	SetSkeletalPartColor(EPart::Bracers,	InCharacterAppearance.mBodyColor);
+	SetSkeletalPartColor(EPart::Chest,		InCharacterAppearance.mBodyColor);
+	SetSkeletalPartColor(EPart::Feet,		InCharacterAppearance.mBodyColor);
+	SetSkeletalPartColor(EPart::Hands,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Head,		InCharacterAppearance.mBodyColor);
-	SetSkeletalPartColor(EPart::Eye,		InCharacterAppearance.mEyeColor);
-	SetSkeletalPartColor(EPart::Eyebrow,	InCharacterAppearance.mEyeColor);
 	SetSkeletalPartColor(EPart::Hair,		InCharacterAppearance.mHairColor);
+	SetSkeletalPartColor(EPart::Eyebrow,	InCharacterAppearance.mEyeColor);
+	SetSkeletalPartColor(EPart::Ears,		InCharacterAppearance.mEyeColor);
+	SetSkeletalPartColor(EPart::Pants,		InCharacterAppearance.mBodyColor);
 
 	USkeletalMeshComponent* meshRoot = GetMesh();
 	int32 maxChild = meshRoot->GetNumChildrenComponents();
@@ -198,30 +203,60 @@ bool ANetworkCharacter::GetPartInformation(const EPart InPart, USkeletalMeshComp
 
 	switch (InPart)
 	{
-	case EPart::Body:
-		MeshPart = GetMesh();
+	case EPart::Boots:
+		MeshPart = mBoots;
+		ParamterName = TEXT("BaseColor");
+		Index = 0;
+		break;
+	case EPart::Bracers:
+		MeshPart = mBracers;
+		ParamterName = TEXT("BaseColor");
+		Index = 0;
+		break;
+	case EPart::Chest:
+		MeshPart = mChest;
+		ParamterName = TEXT("BaseColor");
+		Index = 0;
+		break;
+	case EPart::Feet:
+		MeshPart = mFeet;
+		ParamterName = TEXT("BaseColor");
+		Index = 0;
+		break;
+	case EPart::Hands:
+		MeshPart = mHands;
 		ParamterName = TEXT("BaseColor");
 		Index = 0;
 		break;
 	case EPart::Head:
 		MeshPart = GetMesh();
 		ParamterName = TEXT("BaseColor");
-		Index = (currentTribe == ETribe::Woman ? 3 : 1);
-		break;
-	case EPart::Eye:
-		MeshPart = GetMesh();
-		ParamterName = TEXT("BaseColor");
-		Index = (currentTribe == ETribe::Woman ? 1 : 2);
-		break;
-	case EPart::Eyebrow:
-		MeshPart = GetMesh();
-		ParamterName = TEXT("BaseColor");
-		Index = (currentTribe == ETribe::Woman ? 2 : 2);
+		Index = (currentTribe == ETribe::Woman ? 2 : 0);
 		break;
 	case EPart::Hair:
 		MeshPart = mHair;
 		ParamterName = TEXT("BaseColor");
-		Index = 2;
+		Index = 0;
+		break;
+	case EPart::Eye:
+		MeshPart = GetMesh();
+		ParamterName = TEXT("BaseColor");
+		Index = (currentTribe == ETribe::Woman ? 1 : 1);
+		break;
+	case EPart::Eyebrow:
+		MeshPart = GetMesh();
+		ParamterName = TEXT("BaseColor");
+		Index = (currentTribe == ETribe::Woman ? 0 : 1);
+		break;
+	case EPart::Ears:
+		MeshPart = mEars;
+		ParamterName = TEXT("BaseColor");
+		Index = 0;
+		break;
+	case EPart::Pants:
+		MeshPart = mLegs;
+		ParamterName = TEXT("BaseColor");
+		Index = 0;
 		break;
 	default:
 		break;
