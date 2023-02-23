@@ -84,6 +84,9 @@ ANetworkCharacter::ANetworkCharacter()
 		mWeapon_R->SetupAttachment(meshRoot);
 		mHip_L->SetupAttachment(meshRoot);
 		mHip_R->SetupAttachment(meshRoot);
+
+		int32 maxChild = meshRoot->GetNumChildrenComponents();
+		mCharacterAppearance.mMeshs.SetNum(maxChild);
 	}
 }
 
@@ -108,10 +111,11 @@ void ANetworkCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 }
 
-void ANetworkCharacter::InitializeCharacterData(const FCharacterDatas& InCharacterDatas, const FCharacterAppearance& InCharacterAppearance)
+void ANetworkCharacter::InitializeCharacter(const FCharacterDatas& InCharacterDatas, const FCharacterAppearance& InCharacterAppearance)
 {
 	UpdateCharacterData(InCharacterDatas);
-	UpdateCharacterAppearnce(InCharacterAppearance);
+	//UpdateCharacterAppearnce(InCharacterAppearance);
+	UpdateCharacterVisual(InCharacterAppearance);
 }
 
 void ANetworkCharacter::UpdateCharacterData(const FCharacterDatas& InCharacterDatas)
@@ -119,18 +123,28 @@ void ANetworkCharacter::UpdateCharacterData(const FCharacterDatas& InCharacterDa
 	mCharacterData = InCharacterDatas;
 }
 
-void ANetworkCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance)
-{	
+void ANetworkCharacter::UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance)
+{
 	SetSkeletalPartColor(EPart::Boots,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Bracers,	InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Chest,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Feet,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Hands,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Head,		InCharacterAppearance.mBodyColor);
-	SetSkeletalPartColor(EPart::Hair,		InCharacterAppearance.mHairColor);
+	//SetSkeletalPartColor(EPart::Hair,		InCharacterAppearance.mHairColor);
+	SetSkeletalPartColor(EPart::Eye,		InCharacterAppearance.mEyeColor);
 	SetSkeletalPartColor(EPart::Eyebrow,	InCharacterAppearance.mEyeColor);
-	SetSkeletalPartColor(EPart::Ears,		InCharacterAppearance.mEyeColor);
+	SetSkeletalPartColor(EPart::Ears,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Pants,		InCharacterAppearance.mBodyColor);
+
+	mCharacterAppearance.mBodyColor = InCharacterAppearance.mBodyColor;
+	mCharacterAppearance.mHairColor = InCharacterAppearance.mHairColor;
+	mCharacterAppearance.mEyeColor = InCharacterAppearance.mEyeColor;
+
+}
+
+void ANetworkCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance)
+{	
 
 	USkeletalMeshComponent* meshRoot = GetMesh();
 	int32 maxChild = meshRoot->GetNumChildrenComponents();
@@ -143,9 +157,9 @@ void ANetworkCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InC
 			USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
 			SetSkeletalPartMesh(partMesh, newMesh);
 		}
-	}
 
-	mCharacterAppearance = InCharacterAppearance;
+		mCharacterAppearance.mMeshs[indexNumber] = InCharacterAppearance.mMeshs[indexNumber];
+	}
 
 	//SetSkeletalPartMesh(mEars,				InCharacterAppearance.mEars);
 	//SetSkeletalPartMesh(mFeet,				InCharacterAppearance.mFeet);
@@ -183,12 +197,24 @@ void ANetworkCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InC
 	//SetSkeletalPartMesh(mHip_R,				InCharacterAppearance.mHip_R);
 }
 
-bool ANetworkCharacter::GetPartInformation(const EPart InPart, USkeletalMeshComponent* outMeshPart, FString OutParamterName, int32 OutIndex)
+void ANetworkCharacter::UpdateAnimationAsset(UAnimationAsset* InAnimationAsset)
 {
-	USkeletalMeshComponent* MeshPart = nullptr;
-	FString					ParamterName = TEXT("");
-	int32					Index = 0;
+	USkeletalMeshComponent* meshRoot = GetMesh();
+	int32 maxChild = meshRoot->GetNumChildrenComponents();
+	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
+	{
+		USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
+		if (partMesh)
+		{
+			partMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+			partMesh->SetAnimation(InAnimationAsset);
+		}
+	}
+}
 
+USkeletalMeshComponent* ANetworkCharacter::GetPartInformation(const EPart InPart, FString& OutParamterName, int32& OutIndex)
+{
+	USkeletalMeshComponent* outMeshPart = nullptr;
 	if (InPart == EPart::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Part is None"), ELogLevel::Error);
@@ -199,79 +225,76 @@ bool ANetworkCharacter::GetPartInformation(const EPart InPart, USkeletalMeshComp
 	if (currentTribe == ETribe::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
+		return false;
 	}
 
 	switch (InPart)
 	{
 	case EPart::Boots:
-		MeshPart = mBoots;
-		ParamterName = TEXT("BaseColor");
-		Index = 0;
+		outMeshPart = mBoots;
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = 0;
 		break;
 	case EPart::Bracers:
-		MeshPart = mBracers;
-		ParamterName = TEXT("BaseColor");
-		Index = 0;
+		outMeshPart = mBracers;
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = 0;
 		break;
 	case EPart::Chest:
-		MeshPart = mChest;
-		ParamterName = TEXT("BaseColor");
-		Index = 0;
+		outMeshPart = mChest;
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = 0;
 		break;
 	case EPart::Feet:
-		MeshPart = mFeet;
-		ParamterName = TEXT("BaseColor");
-		Index = 0;
+		outMeshPart = mFeet;
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = 0;
 		break;
 	case EPart::Hands:
-		MeshPart = mHands;
-		ParamterName = TEXT("BaseColor");
-		Index = 0;
+		outMeshPart = mHands;
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = 0;
 		break;
 	case EPart::Head:
-		MeshPart = GetMesh();
-		ParamterName = TEXT("BaseColor");
-		Index = (currentTribe == ETribe::Woman ? 2 : 0);
+		outMeshPart = GetMesh();
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = (currentTribe == ETribe::Woman ? 2 : 0);
 		break;
 	case EPart::Hair:
-		MeshPart = mHair;
-		ParamterName = TEXT("BaseColor");
-		Index = 0;
+		outMeshPart = mHair;
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = 0;
 		break;
 	case EPart::Eye:
-		MeshPart = GetMesh();
-		ParamterName = TEXT("BaseColor");
-		Index = (currentTribe == ETribe::Woman ? 1 : 1);
+		outMeshPart = GetMesh();
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = (currentTribe == ETribe::Woman ? 1 : 1);
 		break;
 	case EPart::Eyebrow:
-		MeshPart = GetMesh();
-		ParamterName = TEXT("BaseColor");
-		Index = (currentTribe == ETribe::Woman ? 0 : 1);
+		outMeshPart = GetMesh();
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = (currentTribe == ETribe::Woman ? 0 : 1);
 		break;
 	case EPart::Ears:
-		MeshPart = mEars;
-		ParamterName = TEXT("BaseColor");
-		Index = 0;
+		outMeshPart = mEars;
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = 0;
 		break;
 	case EPart::Pants:
-		MeshPart = mLegs;
-		ParamterName = TEXT("BaseColor");
-		Index = 0;
+		outMeshPart = mLegs;
+		OutParamterName = TEXT("BaseColor");
+		OutIndex = 0;
 		break;
 	default:
 		break;
 	}
 
-	if (nullptr == MeshPart)
+	if (nullptr == outMeshPart)
 	{
-		return false;
+		return nullptr;
 	}
 
-	outMeshPart = MeshPart;
-	OutParamterName = ParamterName;
-	OutIndex = Index;
-
-	return true;
+	return outMeshPart;
 }
 
 void ANetworkCharacter::SetSkeletalPartColor(const EPart InPart, uint32 InColor)
@@ -281,25 +304,35 @@ void ANetworkCharacter::SetSkeletalPartColor(const EPart InPart, uint32 InColor)
 	int32					Index = 0;
 
 	FLinearColor partColor = UNetworkUtils::ConverLinearColor(InColor);
-	if (GetStaticPartColor(InPart) == partColor)
+	if (GetPartColor(InPart) == partColor)
 	{
 		return;
 	}
 
-	GetPartInformation(InPart, MeshPart, ParamterName, Index);
+	MeshPart = GetPartInformation(InPart, ParamterName, Index);
+	if (nullptr == MeshPart)
+	{
+		return;
+	}
 
 	UMaterialInstanceDynamic* materialDynamic = MeshPart->CreateDynamicMaterialInstance(Index);
 	materialDynamic->SetVectorParameterValue(FName(*ParamterName), partColor);
+
+	
 }
 
-FLinearColor ANetworkCharacter::GetStaticPartColor(const EPart InPart)
+FLinearColor ANetworkCharacter::GetPartColor(const EPart InPart)
 {
 	USkeletalMeshComponent* MeshPart = nullptr;
 	FString					ParamterName = TEXT("");
 	int32					Index = 0;
 	FLinearColor			PartColor;
 
-	GetPartInformation(InPart, MeshPart, ParamterName, Index);
+	MeshPart = GetPartInformation(InPart, ParamterName, Index);
+	if (nullptr == MeshPart)
+	{
+		return PartColor;
+	}
 
 	UMaterialInstanceDynamic* materialDynamic = MeshPart->CreateDynamicMaterialInstance(Index);
 	materialDynamic->GetVectorParameterValue(FName(*ParamterName), PartColor);
@@ -320,7 +353,7 @@ void ANetworkCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, 
 	}
 
 	//TEMP
-	USkeletalMesh* NewMesh = mSkeletalMeshs[InMeshIndex];
+	USkeletalMesh* NewMesh = nullptr; // = mSkeletalMeshs[InMeshIndex];
 	if (nullptr == NewMesh)
 	{
 		return;

@@ -9,7 +9,8 @@
 class UButton;
 class UTextBlock;
 class UW_ColorPicker;
-class AC_Dummy;
+class ANetworkCharacter;
+struct FCharacterAppearance;
 enum class EPart : uint8;
 enum class ETribe : uint8;
 /**
@@ -95,6 +96,8 @@ public:
 	UPROPERTY()
 	EPart mCurrentDummyPart;
 
+	FCharacterAppearance* mCharacterAppearance;
+
 	UPROPERTY()
-	AC_Dummy* mCurrentDummyCharacter;
+	ANetworkCharacter* mCurrentDummyCharacter;
 };

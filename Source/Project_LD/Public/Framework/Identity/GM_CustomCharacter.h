@@ -6,7 +6,7 @@
 #include "Network/NetworkGameMode.h"
 #include "GM_CustomCharacter.generated.h"
 
-class AC_Dummy;
+class ANetworkCharacter;
 /**
  * 
  */
@@ -23,10 +23,14 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void BeginNetwork() override;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void CreateNewDummyCharacter(int32 InTribe);
 	
 public:
 	UPROPERTY(EditAnywhere, Category = "DummyClass")
-	TArray<TSubclassOf<AC_Dummy>> mDummyCharacterClass;
+	TArray<TSubclassOf<ANetworkCharacter>> mDummyCharacterClass;
 
-	AC_Dummy* mDummyCharacter;
+	ANetworkCharacter* mDummyCharacter;
 };

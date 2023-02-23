@@ -59,18 +59,15 @@ public:
 
 	UPROPERTY()
 	int32 mTribe;
+};
 
-	UPROPERTY()
-	uint32 mSkin;
+USTRUCT(Atomic)
+struct FCharacterStatus
+{
+	GENERATED_BODY()
 
-	UPROPERTY()
-	uint32 mHair;
+public:
 
-	UPROPERTY()
-	uint32 mEye;
-
-	UPROPERTY()
-	uint32 mEyebrow;
 };
 
 USTRUCT(Atomic)

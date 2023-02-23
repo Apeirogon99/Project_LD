@@ -4,7 +4,7 @@
 #include "Framework/Identity/GM_CustomCharacter.h"
 #include <Framework/Identity/IdentityPlayerController.h>
 #include <Framework/Gameinstance/LDGameInstance.h>
-#include <Framework/Identity/C_Dummy.h>
+#include <Network/NetworkCharacter.h>
 #include <Widget/Handler/ClientHUD.h>
 
 AGM_CustomCharacter::AGM_CustomCharacter()
@@ -56,10 +56,31 @@ void AGM_CustomCharacter::BeginNetwork()
 		return;
 	}
 
-	FCharacterDatas& datas = gameinstance->mCharacterDatas;
+	FCharacterDatas	characterDatas = gameinstance->mCharacterDatas;
+	CreateNewDummyCharacter(characterDatas.mTribe);
 
-	TSubclassOf<AC_Dummy> dummyClass = mDummyCharacterClass[datas.mClass];
-	if (dummyClass)
+	mClientHUD->ShowWidgetFromName(TEXT("CustomCharacter"));
+}
+
+void AGM_CustomCharacter::CreateNewDummyCharacter(int32 InTribe)
+{
+	ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+	if (nullptr == gameinstance)
+	{
+		return;
+	}
+	FCharacterDatas& characterDatas = gameinstance->mCharacterDatas;
+	characterDatas.mTribe = InTribe;
+
+	FCharacterAppearance characterVisual;
+	if (mDummyCharacter)
+	{
+		characterVisual = mDummyCharacter->mCharacterAppearance;
+		mDummyCharacter->Destroy();
+	}
+
+	TSubclassOf<ANetworkCharacter> dummyTribe = mDummyCharacterClass[InTribe];
+	if (dummyTribe)
 	{
 		FActorSpawnParameters spawnParams;
 		spawnParams.Owner = this;
@@ -68,8 +89,8 @@ void AGM_CustomCharacter::BeginNetwork()
 		FVector CharacterLocation(100.0f, 0.0f, 505.0f);
 		FRotator CharacterRotation(0.0f, -180.0f, 0.0f);
 
-		mDummyCharacter = GetWorld()->SpawnActor<AC_Dummy>(dummyClass, CharacterLocation, CharacterRotation, spawnParams);
+		mDummyCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(dummyTribe, CharacterLocation, CharacterRotation, spawnParams);
+		mDummyCharacter->UpdateCharacterData(characterDatas);
+		mDummyCharacter->UpdateCharacterVisual(characterVisual);
 	}
-
-	mClientHUD->ShowWidgetFromName(TEXT("CustomCharacter"));
 }

@@ -15,7 +15,7 @@
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FIdentityPacketHandler.h>
 
-#include <Identity/C_Dummy.h>
+#include <Network/NetworkCharacter.h>
 #include <Kismet/GameplayStatics.h>
 #include <Framework/Gameinstance/LDGameInstance.h>
 #include <Struct/Game/CharacterDatas.h>
@@ -127,13 +127,13 @@ void UW_CustomCharacter::Click_Create()
 			if (mCurrentDummyCharacter)
 			{
 				createCharacter->set_name(nicknameStr);
-				createCharacter->set_job(static_cast<int32>(mCurrentDummyCharacter->GetClass()));
-				createCharacter->set_tribe(static_cast<int32>(mCurrentDummyCharacter->GetTribe()));
+				createCharacter->set_job(mCurrentDummyCharacter->mCharacterData.mClass);
+				createCharacter->set_tribe(mCurrentDummyCharacter->mCharacterData.mTribe);
 
-				createCharacter->set_skin(mCurrentDummyCharacter->GetPartColorToInt((EPart::Body), 0));
-				createCharacter->set_hair(mCurrentDummyCharacter->GetPartColorToInt((EPart::Hair), 0));
-				createCharacter->set_eye(mCurrentDummyCharacter->GetPartColorToInt((EPart::Eye), 0));
-				createCharacter->set_eyebrow(mCurrentDummyCharacter->GetPartColorToInt((EPart::Eyebrow), 0));
+				createCharacter->set_skin(mCurrentDummyCharacter->mCharacterAppearance.mBodyColor);
+				createCharacter->set_hair(mCurrentDummyCharacter->mCharacterAppearance.mHairColor);
+				createCharacter->set_eye(mCurrentDummyCharacter->mCharacterAppearance.mEyeColor);
+				createCharacter->set_eyebrow(mCurrentDummyCharacter->mCharacterAppearance.mEyeColor);
 			}
 
 			ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
@@ -164,20 +164,17 @@ void UW_CustomCharacter::Click_Tribe()
 
 void UW_CustomCharacter::Click_Skin()
 {
-	ToggleColorPicker(EPart::Body);
-
+	ToggleColorPicker(EPart::Head);
 }
 
 void UW_CustomCharacter::Click_Hair()
 {
 	ToggleColorPicker(EPart::Hair);
-
 }
 
 void UW_CustomCharacter::Click_Eye()
 {
 	ToggleColorPicker(EPart::Eye);
-
 }
 
 void UW_CustomCharacter::Click_Eyebrow()
@@ -210,8 +207,8 @@ void UW_CustomCharacter::ToggleColorPicker(EPart inDummyPart)
 		case EPart::None:
 			colorPickerTarget = "NONE";
 			break;
-		case EPart::Body:
-			colorPickerTarget = TEXT("피부");
+		case EPart::Head:
+			colorPickerTarget = TEXT("몸");
 			break;
 		case EPart::Hair:
 			colorPickerTarget = TEXT("머리카락");
@@ -226,14 +223,14 @@ void UW_CustomCharacter::ToggleColorPicker(EPart inDummyPart)
 			break;
 		}
 
-		AActor* dummy = nullptr;
-		dummy = UGameplayStatics::GetActorOfClass(GetWorld(), AC_Dummy::StaticClass());
-		mCurrentDummyCharacter = Cast<AC_Dummy>(dummy);
+		AActor* newDummyCharacter = nullptr;
+		newDummyCharacter = UGameplayStatics::GetActorOfClass(GetWorld(), ANetworkCharacter::StaticClass());
+		mCurrentDummyCharacter = Cast<ANetworkCharacter>(newDummyCharacter);
 
 		if (mColorPicker)
 		{
 			mColorPicker->SetPickerTarget(colorPickerTarget);
-			mColorPicker->OnUsed(mCurrentDummyCharacter->GetPartColor(mCurrentDummyPart, 0));
+			mColorPicker->OnUsed(mCurrentDummyCharacter->GetPartColor(inDummyPart));
 		}
 	}
 }
@@ -242,8 +239,34 @@ void UW_CustomCharacter::UpdateDummyCharacterPartColor()
 {
 	if (mColorPicker && mCurrentDummyCharacter)
 	{
-		FLinearColor color = mColorPicker->GetLinearColor();
-		mCurrentDummyCharacter->SetPartColor(mCurrentDummyPart, color, 0);
+		int32 color = UNetworkUtils::ConverLinerColorToInt(mColorPicker->GetLinearColor());
+
+		switch (mCurrentDummyPart)
+		{
+		case EPart::None:
+			break;
+		case EPart::Boots:
+		case EPart::Bracers:
+		case EPart::Chest:
+		case EPart::Feet:
+		case EPart::Hands:
+		case EPart::Head:
+		case EPart::Pants:
+		case EPart::Ears:
+			mCharacterAppearance->mBodyColor = color;
+			break;
+		case EPart::Eye:
+		case EPart::Eyebrow:
+			mCharacterAppearance->mEyeColor = color;
+			break;
+		case EPart::Hair:
+			mCharacterAppearance->mHairColor = color;
+			break;
+		default:
+			break;
+		}
+		
+		mCurrentDummyCharacter->UpdateCharacterVisual(*mCharacterAppearance);
 	}
 }
 

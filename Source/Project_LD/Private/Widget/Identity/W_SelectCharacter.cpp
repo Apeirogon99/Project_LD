@@ -46,7 +46,7 @@ void UW_SelectCharacter::NativeConstruct()
 	mCurrentClickMode = EClickMode::None;
 }
 
-void UW_SelectCharacter::LoadCharacterInfo(const FCharacterDatas& inCharacterDatas)
+void UW_SelectCharacter::LoadCharacterInfo(const FCharacterDatas& inCharacterDatas, const FCharacterAppearance& inCharacterAppearance)
 {
 	if (mCharacterButtonWidgets.Num() == 0)
 	{
@@ -62,7 +62,7 @@ void UW_SelectCharacter::LoadCharacterInfo(const FCharacterDatas& inCharacterDat
 	UW_SelectCharacterButton* characterButton = Cast<UW_SelectCharacterButton>(mCharacterButtonWidgets[positon]);
 	if (characterButton)
 	{
-		characterButton->SetCharacterInfo(inCharacterDatas);
+		characterButton->SetCharacterInfo(inCharacterDatas, inCharacterAppearance);
 	}
 }
 

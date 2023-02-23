@@ -233,19 +233,19 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 		const Protocol::SCharacterData& character = pkt.character(i);
 
 		FCharacterDatas characterDatas;
+		characterDatas.mName			= UNetworkUtils::ConvertFString(character.name());
+		characterDatas.mClass			= character.job();
+		characterDatas.mTribe			= character.tribe();
+		characterDatas.mLevel			= character.level();
+		characterDatas.mPosition		= character.position();
 
-		characterDatas.mName		= UNetworkUtils::ConvertFString(character.name());
-		characterDatas.mClass		= character.job();
-		characterDatas.mTribe		= character.tribe();
-		characterDatas.mLevel		= character.level();
-		characterDatas.mPosition	= character.position();
+		FCharacterAppearance characterAppearance;
+		characterAppearance.mBodyColor	= character.skin();
+		characterAppearance.mHairColor	= character.hair();
+		characterAppearance.mEyeColor	= character.eye();
+		characterAppearance.mEyeColor	= character.eyebrow();
 
-		characterDatas.mSkin		= character.skin();
-		characterDatas.mHair		= character.hair();
-		characterDatas.mEye			= character.eye();
-		characterDatas.mEyebrow		= character.eyebrow();
-
-		selectCharacterWidget->LoadCharacterInfo(characterDatas);
+		selectCharacterWidget->LoadCharacterInfo(characterDatas, characterAppearance);
 	}
 
 	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));

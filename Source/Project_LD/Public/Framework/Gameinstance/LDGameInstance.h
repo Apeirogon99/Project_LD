@@ -26,4 +26,7 @@ public:
 
 	UPROPERTY()
 	FCharacterDatas mCharacterDatas;
+
+	UPROPERTY()
+	FCharacterAppearance mCharacterAppearance;
 };

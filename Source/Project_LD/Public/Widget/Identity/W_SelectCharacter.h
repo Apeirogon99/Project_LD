@@ -8,6 +8,7 @@
 
 class UW_SelectCharacterButton;
 struct FCharacterDatas;
+struct FCharacterAppearance;
 enum class EClickMode : uint8;
 
 /**
@@ -27,7 +28,7 @@ public:
 
 public:
 	UFUNCTION()
-		void LoadCharacterInfo(const FCharacterDatas& inCharacterDatas);
+		void LoadCharacterInfo(const FCharacterDatas& inCharacterDatas, const FCharacterAppearance& inCharacterAppearance);
 
 protected:
 	UFUNCTION()

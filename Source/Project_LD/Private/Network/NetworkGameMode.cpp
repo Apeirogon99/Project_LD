@@ -199,6 +199,7 @@ bool ANetworkGameMode::RequestUnPossessController()
 
 void ANetworkGameMode::RequestTravelLevel(const FString& inLevel)
 {
+	mServerLoadingWidget->AddToPlayerScreen();
 	mTravelLevel = inLevel;
 	RequestUnPossessController();
 }

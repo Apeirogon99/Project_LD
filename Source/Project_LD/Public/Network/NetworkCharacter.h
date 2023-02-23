@@ -23,19 +23,20 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	virtual void InitializeCharacterData(const FCharacterDatas& InCharacterDatas, const FCharacterAppearance& InCharacterAppearance);
-	
-protected:
+	void InitializeCharacter(const FCharacterDatas& InCharacterDatas, const FCharacterAppearance& InCharacterAppearance);
 	void UpdateCharacterData(const FCharacterDatas& InCharacterDatas);
+	void UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance);
 	void UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance);
+	void UpdateAnimationAsset(UAnimationAsset* InAnimationAsset);
+	FLinearColor GetPartColor(const EPart InPart);
 
-	bool GetPartInformation(const EPart InPart, USkeletalMeshComponent* OutMeshPart, FString OutParamterName, int32 OutIndex);
+protected:
+	USkeletalMeshComponent* GetPartInformation(const EPart InPart, FString& OutParamterName, int32& OutIndex);
 	void SetSkeletalPartColor(const EPart InPart, uint32 InColor);
-	FLinearColor GetStaticPartColor(const EPart InPart);
-
 	void SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, int32 InMeshIndex);
 
-protected:
+
+public:
 	FCharacterDatas			mCharacterData;
 	FCharacterAppearance	mCharacterAppearance;
 

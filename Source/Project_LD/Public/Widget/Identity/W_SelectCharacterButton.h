@@ -9,7 +9,9 @@
 class UButton;
 class UTextBlock;
 class UAnimationAsset;
-class AC_Dummy;
+class ANetworkCharacter;
+struct FCharacterAppearance;
+struct FCharacterDatas;
 
 UENUM(BlueprintType)
 enum class EClickMode : uint8
@@ -53,7 +55,7 @@ public:
 
 public:
 	UFUNCTION()
-	void SetCharacterInfo(const FCharacterDatas& inCharacterDatas);
+	void SetCharacterInfo(const FCharacterDatas& inCharacterDatas, const FCharacterAppearance& inCharacterAppearance);
 
 	UFUNCTION()
 	void SetClickMode(EClickMode inClickMode);
@@ -91,18 +93,12 @@ public:
 	FRotator mCharacterRotation;
 
 	UPROPERTY(EditAnywhere, Category = "Default")
-	TSubclassOf<AC_Dummy> mDummyCharacterClass;
-
-	UPROPERTY(EditAnywhere, Category = "Default")
-	UAnimationAsset* mDefaultCharacterAnimation;
-
-	UPROPERTY(EditAnywhere, Category = "Default")
-	UAnimationAsset* mSelectCharacterAnimation;
+	TSubclassOf<ANetworkCharacter> mDummyCharacterClass;
 
 private:
 
 	UPROPERTY()
-	AC_Dummy* character;
+	ANetworkCharacter* mCharacter;
 
 	UPROPERTY()
 	EClickMode mClickMode;

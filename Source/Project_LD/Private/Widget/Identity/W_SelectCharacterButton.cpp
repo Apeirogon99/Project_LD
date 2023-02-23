@@ -8,8 +8,8 @@
 #include <Widget/Common/W_Reconfirm.h>
 #include <Widget/Handler/ClientHUD.h>
 
-#include <Framework/Identity/C_Dummy.h>
 #include <Network/NetworkGameMode.h>
+#include <Network/NetworkCharacter.h>
 #include <Framework/Gameinstance/LDGameInstance.h>
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FIdentityPacketHandler.h>
@@ -44,7 +44,7 @@ void UW_SelectCharacterButton::Click_Character()
 	if (mClickMode == EClickMode::Start)
 	{
 
-		character->SetAnimation(mSelectCharacterAnimation);
+		//mCharacter->UpdateAnimationAsset(mSelectCharacterAnimation);
 
 		reconfirm->SetTitleText(TEXT("게임 시작"));
 		reconfirm->SetReconfirmText(TEXT("해당 캐릭터로 시작하시겠습니까?"));
@@ -97,7 +97,7 @@ void UW_SelectCharacterButton::Click_Character()
 	clientHUD->ShowWidgetFromName(TEXT("Reconfirm"));
 }
 
-void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterDatas& inCharacterDatas)
+void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterDatas& inCharacterDatas, const FCharacterAppearance& inCharacterAppearance)
 {
 	FText characterTitle = FText::FromString(FString::Printf(TEXT("Lv.%ld %s"), inCharacterDatas.mLevel, *inCharacterDatas.mName));
 	mCharacterInfoText->SetText(characterTitle);
@@ -106,9 +106,9 @@ void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterDatas& inCharact
 	spawnParams.Owner = GetOwningPlayer();
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	character = GetWorld()->SpawnActor<AC_Dummy>(mDummyCharacterClass, mCharacterLocation, mCharacterRotation, spawnParams);
-	character->SetCharacterDatas(inCharacterDatas);
-	character->SetAnimation(mDefaultCharacterAnimation);
+	mCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(mDummyCharacterClass, mCharacterLocation, mCharacterRotation, spawnParams);
+	mCharacter->InitializeCharacter(inCharacterDatas, inCharacterAppearance);
+	//mCharacter->UpdateAnimationAsset(mDefaultCharacterAnimation);
 
 	SetClickMode(EClickMode::Start);
 }
@@ -119,7 +119,7 @@ void UW_SelectCharacterButton::SetClickMode(EClickMode inClickMode)
 
 	FString buttonText = FString(TEXT(""));
 
-	if (character)
+	if (mCharacter)
 	{
 		switch (mClickMode)
 		{
@@ -155,7 +155,7 @@ void UW_SelectCharacterButton::SetClickMode(EClickMode inClickMode)
 void UW_SelectCharacterButton::PreviousClickMode()
 {
 	EClickMode previousClickMode = EClickMode::None;
-	if (character)
+	if (mCharacter)
 	{
 		previousClickMode = EClickMode::Start;
 	}
@@ -215,9 +215,9 @@ void UW_SelectCharacterButton::CancleButton()
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
 	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
 
-	if (character)
+	if (mCharacter)
 	{
-		character->SetAnimation(mDefaultCharacterAnimation);
+		//mCharacter->UpdateAnimationAsset(mDefaultCharacterAnimation);
 	}
 
 }
