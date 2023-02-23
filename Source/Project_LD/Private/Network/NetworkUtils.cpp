@@ -64,6 +64,11 @@ std::string UNetworkUtils::ConvertString(const FString& str)
 	return outStr;
 }
 
+int32 UNetworkUtils::ConvertStringToInt(const FString& str)
+{
+	return FCString::Atoi(*str);
+}
+
 FString UNetworkUtils::ConvertFString(const std::string& str)
 {
 	const char* tempStr = str.c_str();

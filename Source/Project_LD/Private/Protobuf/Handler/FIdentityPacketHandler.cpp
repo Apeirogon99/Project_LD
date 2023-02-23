@@ -231,7 +231,6 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 	for (int i = 0; i < pkt.character_size(); ++i)
 	{
 		const Protocol::SCharacterData& character = pkt.character(i);
-
 		FCharacterDatas characterDatas;
 		characterDatas.mName			= UNetworkUtils::ConvertFString(character.name());
 		characterDatas.mClass			= character.job();
@@ -239,11 +238,46 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 		characterDatas.mLevel			= character.level();
 		characterDatas.mPosition		= character.position();
 
+		const Protocol::SCharacterAppearance& appearance = pkt.appearance(i);
 		FCharacterAppearance characterAppearance;
-		characterAppearance.mBodyColor	= character.skin();
-		characterAppearance.mHairColor	= character.hair();
-		characterAppearance.mEyeColor	= character.eye();
-		characterAppearance.mEyeColor	= character.eyebrow();
+		characterAppearance.mMeshs.Init(0, 33);
+		characterAppearance.mBodyColor	= appearance.body_color();
+		characterAppearance.mHairColor	= appearance.hair_color();
+		characterAppearance.mEyeColor	= appearance.eye_color();
+
+		characterAppearance.mMeshs[0]	= appearance.head();
+		characterAppearance.mMeshs[1]	= appearance.ears();
+		characterAppearance.mMeshs[2]	= appearance.feet();
+		characterAppearance.mMeshs[3]	= appearance.hair();
+		characterAppearance.mMeshs[4]	= appearance.facials_01();
+		characterAppearance.mMeshs[5]	= appearance.facials_02();
+		characterAppearance.mMeshs[6]	= appearance.helmet();
+		characterAppearance.mMeshs[7]	= appearance.shoulders();
+		characterAppearance.mMeshs[8]	= appearance.skirt();
+		characterAppearance.mMeshs[9]	= appearance.legs();
+		characterAppearance.mMeshs[10]	= appearance.legs_add();
+		characterAppearance.mMeshs[11]	= appearance.hands();
+		characterAppearance.mMeshs[12]	= appearance.hands_add();
+		characterAppearance.mMeshs[13]	= appearance.chest();
+		characterAppearance.mMeshs[14]	= appearance.chest_add();
+		characterAppearance.mMeshs[15]	= appearance.cape();
+		characterAppearance.mMeshs[16]	= appearance.bracers();
+		characterAppearance.mMeshs[17]	= appearance.bracers_add();
+		characterAppearance.mMeshs[18]	= appearance.boots();
+		characterAppearance.mMeshs[19]	= appearance.belt();
+		characterAppearance.mMeshs[20]	= appearance.tabard();
+		characterAppearance.mMeshs[21]	= appearance.back_2hl();
+		characterAppearance.mMeshs[22]	= appearance.back_shield();
+		characterAppearance.mMeshs[23]	= appearance.back_weapon_l();
+		characterAppearance.mMeshs[24]	= appearance.back_weapon_r();
+		characterAppearance.mMeshs[25]	= appearance.back_bow();
+		characterAppearance.mMeshs[26]	= appearance.quiver();
+		characterAppearance.mMeshs[27]	= appearance.weapon_r_arrow();
+		characterAppearance.mMeshs[28]	= appearance.weapon_shield();
+		characterAppearance.mMeshs[29]	= appearance.weapon_l();
+		characterAppearance.mMeshs[30]	= appearance.weapon_r();
+		characterAppearance.mMeshs[31]	= appearance.hip_l();
+		characterAppearance.mMeshs[32]	= appearance.hip_r();
 
 		selectCharacterWidget->LoadCharacterInfo(characterDatas, characterAppearance);
 	}
@@ -315,6 +349,21 @@ bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_Cr
 	}
 
 	return true;
+}
+
+bool Handle_S2C_AppearanceCharacter(ANetworkController* controller, Protocol::S2C_AppearanceCharacter& pkt)
+{
+	return false;
+}
+
+bool Handle_S2C_DeleteCharacter(ANetworkController* controller, Protocol::S2C_DeleteCharacter& pkt)
+{
+	return false;
+}
+
+bool Handle_S2C_UpdateNickName(ANetworkController* controller, Protocol::S2C_UpdateNickName& pkt)
+{
+	return false;
 }
 
 bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_TravelServer& pkt)

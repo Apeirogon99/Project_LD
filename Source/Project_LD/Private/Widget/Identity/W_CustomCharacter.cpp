@@ -117,20 +117,32 @@ void UW_CustomCharacter::Click_Create()
 			Protocol::C2S_CreateCharacter createCharacterPacket;
 			std::string nicknameStr = UNetworkUtils::ConvertString(inNickName);
 
-			Protocol::SCharacterData* createCharacter = createCharacterPacket.mutable_character();
+			Protocol::SCharacterData* createData = createCharacterPacket.mutable_data();
+			Protocol::SCharacterAppearance* createAppearance = createCharacterPacket.mutable_appearance();
 			if (mCurrentDummyCharacter)
 			{
 				FCharacterDatas characterDatas = mCurrentDummyCharacter->mCharacterData;
-				createCharacter->set_name(nicknameStr);
-				createCharacter->set_job(characterDatas.mClass);
-				createCharacter->set_tribe(characterDatas.mTribe);
-				createCharacter->set_position(characterDatas.mPosition);
+				createData->set_name(nicknameStr);
+				createData->set_job(characterDatas.mClass);
+				createData->set_tribe(characterDatas.mTribe);
+				createData->set_position(characterDatas.mPosition);
 
 				FCharacterAppearance characterAppearance = mCurrentDummyCharacter->mCharacterAppearance;
-				createCharacter->set_skin(characterAppearance.mBodyColor);
-				createCharacter->set_hair(characterAppearance.mHairColor);
-				createCharacter->set_eye(characterAppearance.mEyeColor);
-				createCharacter->set_eyebrow(characterAppearance.mEyeColor);
+				createAppearance->set_body_color(characterAppearance.mBodyColor);
+				createAppearance->set_hair_color(characterAppearance.mHairColor);
+				createAppearance->set_eye_color(characterAppearance.mEyeColor);
+
+				createAppearance->set_head(characterAppearance.mMeshs[0]);
+				createAppearance->set_ears(characterAppearance.mMeshs[1]);
+				createAppearance->set_feet(characterAppearance.mMeshs[2]);
+				createAppearance->set_hair(characterAppearance.mMeshs[3]);
+				createAppearance->set_facials_02(characterAppearance.mMeshs[5]);
+				createAppearance->set_legs(characterAppearance.mMeshs[9]);
+				createAppearance->set_hands(characterAppearance.mMeshs[11]);
+				createAppearance->set_chest(characterAppearance.mMeshs[13]);
+				createAppearance->set_bracers(characterAppearance.mMeshs[16]);
+				createAppearance->set_boots(characterAppearance.mMeshs[18]);
+
 			}
 
 			SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, createCharacterPacket);

@@ -85,8 +85,6 @@ ANetworkCharacter::ANetworkCharacter()
 		mHip_L->SetupAttachment(meshRoot);
 		mHip_R->SetupAttachment(meshRoot);
 
-		int32 maxChild = meshRoot->GetNumChildrenComponents();
-		mCharacterAppearance.mMeshs.SetNum(maxChild);
 	}
 }
 
@@ -94,7 +92,6 @@ ANetworkCharacter::ANetworkCharacter()
 void ANetworkCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -114,7 +111,7 @@ void ANetworkCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void ANetworkCharacter::InitializeCharacter(const FCharacterDatas& InCharacterDatas, const FCharacterAppearance& InCharacterAppearance)
 {
 	UpdateCharacterData(InCharacterDatas);
-	//UpdateCharacterAppearnce(InCharacterAppearance);
+	UpdateCharacterAppearnce(InCharacterAppearance);
 	UpdateCharacterVisual(InCharacterAppearance);
 }
 
@@ -130,10 +127,10 @@ void ANetworkCharacter::UpdateCharacterVisual(const FCharacterAppearance& InChar
 	SetSkeletalPartColor(EPart::Chest,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Feet,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Hands,		InCharacterAppearance.mBodyColor);
-	//SetSkeletalPartColor(EPart::Head,		InCharacterAppearance.mBodyColor);
+	SetSkeletalPartColor(EPart::Head,		InCharacterAppearance.mBodyColor);
 	//SetSkeletalPartColor(EPart::Hair,		InCharacterAppearance.mHairColor);
-	//SetSkeletalPartColor(EPart::Eye,		InCharacterAppearance.mEyeColor);
-	//SetSkeletalPartColor(EPart::Eyebrow,	InCharacterAppearance.mEyeColor);
+	SetSkeletalPartColor(EPart::Eye,		InCharacterAppearance.mEyeColor);
+	SetSkeletalPartColor(EPart::Eyebrow,	InCharacterAppearance.mEyeColor);
 	SetSkeletalPartColor(EPart::Ears,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Pants,		InCharacterAppearance.mBodyColor);
 
@@ -147,14 +144,23 @@ void ANetworkCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InC
 {	
 
 	USkeletalMeshComponent* meshRoot = GetMesh();
-	int32 maxChild = meshRoot->GetNumChildrenComponents();
+	int32 maxChild = meshRoot->GetNumChildrenComponents() + 1;
+
 	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
 	{
 		int32 oldMesh = mCharacterAppearance.mMeshs[indexNumber];
 		int32 newMesh = InCharacterAppearance.mMeshs[indexNumber];
 		if (oldMesh != newMesh)
 		{
-			USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
+			USkeletalMeshComponent* partMesh = nullptr;
+			if (indexNumber == 0)
+			{
+				partMesh = meshRoot;
+			}
+			else
+			{
+				partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
+			}
 			SetSkeletalPartMesh(partMesh, newMesh);
 		}
 
@@ -347,7 +353,7 @@ void ANetworkCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, 
 		return;
 	}
 
-	if (0 < InMeshIndex || InMeshIndex < mSkeletalMeshs.Num())
+	if (0 <= InMeshIndex || InMeshIndex < mCharacterAppearance.mMeshs.Num())
 	{
 		return;
 	}
@@ -360,5 +366,43 @@ void ANetworkCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, 
 	}
 
 	InMeshPart->SetSkeletalMesh(NewMesh);
+}
+
+void ANetworkCharacter::ConstructCharacter()
+{
+	USkeletalMeshComponent* meshRoot = GetMesh();
+	int32 maxChild = meshRoot->GetNumChildrenComponents() + 1;
+	mCharacterAppearance.mMeshs.Init(0, maxChild);
+
+	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
+	{
+
+		USkeletalMeshComponent* partMesh = nullptr;
+		if (indexNumber == 0)
+		{
+			partMesh = meshRoot;
+		}
+		else
+		{
+			partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber - 1));
+		}
+
+		int32 itemCode = 0;
+		if (partMesh->SkeletalMesh)
+		{
+			FString outMeshName = partMesh->SkeletalMesh->GetName();
+
+			int32 findIndex = 0;
+			outMeshName.FindLastChar('_', findIndex);
+			if (findIndex != INDEX_NONE)
+			{
+				outMeshName.RemoveAt(0, findIndex + 1);
+				itemCode = UNetworkUtils::ConvertStringToInt(outMeshName);
+			}
+
+		}
+
+		mCharacterAppearance.mMeshs[indexNumber] = itemCode;
+	}
 }
 

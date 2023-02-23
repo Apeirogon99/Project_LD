@@ -24,8 +24,14 @@ enum class EPakcetID: uint16
 	S2C_SelectServer = 1015,
 	C2S_CreateCharacter = 1016,
 	S2C_CreateCharacter = 1017,
-	C2S_TravelServer = 1018,
-	S2C_TravelServer = 1019,
+	C2S_AppearanceCharacter = 1018,
+	S2C_AppearanceCharacter = 1019,
+	C2S_DeleteCharacter = 1020,
+	S2C_DeleteCharacter = 1021,
+	C2S_UpdateNickName = 1022,
+	S2C_UpdateNickName = 1023,
+	C2S_TravelServer = 1024,
+	S2C_TravelServer = 1025,
 };
 
 // Custom Handlers
@@ -38,6 +44,9 @@ bool Handle_S2C_LoadServer(ANetworkController* controller, Protocol::S2C_LoadSer
 bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_LoadCharacters& pkt);
 bool Handle_S2C_SelectServer(ANetworkController* controller, Protocol::S2C_SelectServer& pkt);
 bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_CreateCharacter& pkt);
+bool Handle_S2C_AppearanceCharacter(ANetworkController* controller, Protocol::S2C_AppearanceCharacter& pkt);
+bool Handle_S2C_DeleteCharacter(ANetworkController* controller, Protocol::S2C_DeleteCharacter& pkt);
+bool Handle_S2C_UpdateNickName(ANetworkController* controller, Protocol::S2C_UpdateNickName& pkt);
 bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_TravelServer& pkt);
 
 class FIdentityPacketHandler
@@ -54,6 +63,9 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_LoadCharacters)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_LoadCharacters>(Handle_S2C_LoadCharacters, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_SelectServer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_SelectServer>(Handle_S2C_SelectServer, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_CreateCharacter)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_CreateCharacter>(Handle_S2C_CreateCharacter, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearanceCharacter)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearanceCharacter>(Handle_S2C_AppearanceCharacter, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DeleteCharacter)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DeleteCharacter>(Handle_S2C_DeleteCharacter, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_UpdateNickName)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_UpdateNickName>(Handle_S2C_UpdateNickName, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_TravelServer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_TravelServer>(Handle_S2C_TravelServer, controller, buffer, len); };
 	}
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_EnterServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_EnterServer)); }
@@ -65,6 +77,9 @@ public:
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LoadCharacters& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LoadCharacters)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_SelectServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_SelectServer)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_CreateCharacter& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_CreateCharacter)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_AppearanceCharacter& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_AppearanceCharacter)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_DeleteCharacter& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_DeleteCharacter)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_UpdateNickName& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_UpdateNickName)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_TravelServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_TravelServer)); }
 
 };

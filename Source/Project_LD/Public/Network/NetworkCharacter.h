@@ -24,6 +24,8 @@ public:
 
 public:
 	void InitializeCharacter(const FCharacterDatas& InCharacterDatas, const FCharacterAppearance& InCharacterAppearance);
+	void ConstructCharacter();
+
 	void UpdateCharacterData(const FCharacterDatas& InCharacterDatas);
 	void UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance);
 	void UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance);
@@ -35,14 +37,9 @@ protected:
 	void SetSkeletalPartColor(const EPart InPart, uint32 InColor);
 	void SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, int32 InMeshIndex);
 
-
 public:
 	FCharacterDatas			mCharacterData;
 	FCharacterAppearance	mCharacterAppearance;
-
-public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
-		TArray<USkeletalMesh*> mSkeletalMeshs;
 
 //Appearance Skin
 public:

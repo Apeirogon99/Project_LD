@@ -87,6 +87,7 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(int32 InTribe)
 
 		NewDummyCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(dummyTribe, CharacterLocation, CharacterRotation, spawnParams);
 		NewDummyCharacter->UpdateCharacterData(characterDatas);
+		NewDummyCharacter->ConstructCharacter();
 	}
 
 	if (mDummyCharacter)

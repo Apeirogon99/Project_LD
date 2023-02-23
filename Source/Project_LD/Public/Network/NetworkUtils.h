@@ -46,6 +46,7 @@ public:
 		static void NetworkConsoleLog(const FString& inConsoleLog, const ELogLevel& level);
 
 	static std::string	ConvertString(const FString& str);
+	static int32		ConvertStringToInt(const FString& str);
 	static FString		ConvertFString(const std::string& str);
 	static FString		ConvertFString(const int32 value);
 	static FText		ConvertFText(const FString& str);

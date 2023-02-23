@@ -107,6 +107,7 @@ void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterDatas& inCharact
 	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	mCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(mDummyCharacterClass, mCharacterLocation, mCharacterRotation, spawnParams);
+	mCharacter->ConstructCharacter();
 	mCharacter->InitializeCharacter(inCharacterDatas, inCharacterAppearance);
 	//mCharacter->UpdateAnimationAsset(mDefaultCharacterAnimation);
 
