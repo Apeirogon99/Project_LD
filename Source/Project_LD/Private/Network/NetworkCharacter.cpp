@@ -130,10 +130,10 @@ void ANetworkCharacter::UpdateCharacterVisual(const FCharacterAppearance& InChar
 	SetSkeletalPartColor(EPart::Chest,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Feet,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Hands,		InCharacterAppearance.mBodyColor);
-	SetSkeletalPartColor(EPart::Head,		InCharacterAppearance.mBodyColor);
+	//SetSkeletalPartColor(EPart::Head,		InCharacterAppearance.mBodyColor);
 	//SetSkeletalPartColor(EPart::Hair,		InCharacterAppearance.mHairColor);
-	SetSkeletalPartColor(EPart::Eye,		InCharacterAppearance.mEyeColor);
-	SetSkeletalPartColor(EPart::Eyebrow,	InCharacterAppearance.mEyeColor);
+	//SetSkeletalPartColor(EPart::Eye,		InCharacterAppearance.mEyeColor);
+	//SetSkeletalPartColor(EPart::Eyebrow,	InCharacterAppearance.mEyeColor);
 	SetSkeletalPartColor(EPart::Ears,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Pants,		InCharacterAppearance.mBodyColor);
 

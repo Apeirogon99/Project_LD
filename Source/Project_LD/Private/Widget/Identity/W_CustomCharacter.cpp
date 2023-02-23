@@ -18,7 +18,6 @@
 #include <Network/NetworkCharacter.h>
 #include <Kismet/GameplayStatics.h>
 #include <Framework/Gameinstance/LDGameInstance.h>
-#include <Struct/Game/CharacterDatas.h>
 
 void UW_CustomCharacter::NativeConstruct()
 {
@@ -32,11 +31,6 @@ void UW_CustomCharacter::NativeConstruct()
 	mHairButton		= Cast<UButton>(GetWidgetFromName(TEXT("mHairButton")));
 	mEyeButton		= Cast<UButton>(GetWidgetFromName(TEXT("mEyeButton")));
 	mEyebrowButton	= Cast<UButton>(GetWidgetFromName(TEXT("mEyebrowButton")));
-
-	if (mClassText != nullptr)
-	{
-		SetClassText();
-	}
 
 	if (mCreateButton != nullptr)
 	{
@@ -126,21 +120,17 @@ void UW_CustomCharacter::Click_Create()
 			Protocol::SCharacterData* createCharacter = createCharacterPacket.mutable_character();
 			if (mCurrentDummyCharacter)
 			{
+				FCharacterDatas characterDatas = mCurrentDummyCharacter->mCharacterData;
 				createCharacter->set_name(nicknameStr);
-				createCharacter->set_job(mCurrentDummyCharacter->mCharacterData.mClass);
-				createCharacter->set_tribe(mCurrentDummyCharacter->mCharacterData.mTribe);
+				createCharacter->set_job(characterDatas.mClass);
+				createCharacter->set_tribe(characterDatas.mTribe);
+				createCharacter->set_position(characterDatas.mPosition);
 
-				createCharacter->set_skin(mCurrentDummyCharacter->mCharacterAppearance.mBodyColor);
-				createCharacter->set_hair(mCurrentDummyCharacter->mCharacterAppearance.mHairColor);
-				createCharacter->set_eye(mCurrentDummyCharacter->mCharacterAppearance.mEyeColor);
-				createCharacter->set_eyebrow(mCurrentDummyCharacter->mCharacterAppearance.mEyeColor);
-			}
-
-			ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-			if (gameinstance)
-			{
-				int32 positon = gameinstance->mCharacterDatas.mPosition;
-				createCharacter->set_position(positon);
+				FCharacterAppearance characterAppearance = mCurrentDummyCharacter->mCharacterAppearance;
+				createCharacter->set_skin(characterAppearance.mBodyColor);
+				createCharacter->set_hair(characterAppearance.mHairColor);
+				createCharacter->set_eye(characterAppearance.mEyeColor);
+				createCharacter->set_eyebrow(characterAppearance.mEyeColor);
 			}
 
 			SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, createCharacterPacket);
@@ -227,6 +217,10 @@ void UW_CustomCharacter::ToggleColorPicker(EPart inDummyPart)
 		newDummyCharacter = UGameplayStatics::GetActorOfClass(GetWorld(), ANetworkCharacter::StaticClass());
 		mCurrentDummyCharacter = Cast<ANetworkCharacter>(newDummyCharacter);
 
+		mTempCharacterAppearance.mBodyColor = UNetworkUtils::ConverLinerColorToInt(mCurrentDummyCharacter->GetPartColor(EPart::Head));
+		//mTempCharacterAppearance.mHairColor = UNetworkUtils::ConverLinerColorToInt(mCurrentDummyCharacter->GetPartColor(EPart::Hair));
+		mTempCharacterAppearance.mEyeColor = UNetworkUtils::ConverLinerColorToInt(mCurrentDummyCharacter->GetPartColor(EPart::Eye));
+
 		if (mColorPicker)
 		{
 			mColorPicker->SetPickerTarget(colorPickerTarget);
@@ -237,6 +231,7 @@ void UW_CustomCharacter::ToggleColorPicker(EPart inDummyPart)
 
 void UW_CustomCharacter::UpdateDummyCharacterPartColor()
 {
+
 	if (mColorPicker && mCurrentDummyCharacter)
 	{
 		int32 color = UNetworkUtils::ConverLinerColorToInt(mColorPicker->GetLinearColor());
@@ -253,47 +248,47 @@ void UW_CustomCharacter::UpdateDummyCharacterPartColor()
 		case EPart::Head:
 		case EPart::Pants:
 		case EPart::Ears:
-			mCharacterAppearance->mBodyColor = color;
+			mTempCharacterAppearance.mBodyColor = color;
 			break;
 		case EPart::Eye:
+			mTempCharacterAppearance.mEyeColor = color;
+			break;
 		case EPart::Eyebrow:
-			mCharacterAppearance->mEyeColor = color;
+			mTempCharacterAppearance.mEyeColor = color;
 			break;
 		case EPart::Hair:
-			mCharacterAppearance->mHairColor = color;
+			mTempCharacterAppearance.mHairColor = color;
 			break;
 		default:
 			break;
 		}
 		
-		mCurrentDummyCharacter->UpdateCharacterVisual(*mCharacterAppearance);
+		mCurrentDummyCharacter->UpdateCharacterVisual(mTempCharacterAppearance);
 	}
 }
 
-void UW_CustomCharacter::SetClassText()
+void UW_CustomCharacter::SetClassText(const int32 inClass)
 {
-	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	if (gameInstance)
-	{
-		FString classStr;
-		EClass gameClass = static_cast<EClass>(gameInstance->mCharacterDatas.mClass);
-		switch (gameClass)
-		{
-		case EClass::None:
-			classStr = TEXT("None");
-			break;
-		case EClass::Warrior:
-			classStr = TEXT("전사");
-			break;
-		case EClass::Wizard:
-			classStr = TEXT("마법사");
-			break;
-		default:
-			classStr = TEXT("None");
-			break;
-		}
 
-		FText text = FText::FromString(classStr);
-		mClassText->SetText(text);
+	FString classStr;
+	EClass gameClass = static_cast<EClass>(inClass);
+	switch (gameClass)
+	{
+	case EClass::None:
+		classStr = TEXT("None");
+		break;
+	case EClass::Warrior:
+		classStr = TEXT("전사");
+		break;
+	case EClass::Wizard:
+		classStr = TEXT("마법사");
+		break;
+	default:
+		classStr = TEXT("None");
+		break;
 	}
+
+	FText text = FText::FromString(classStr);
+	mClassText->SetText(text);
+	
 }

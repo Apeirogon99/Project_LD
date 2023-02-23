@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include <Struct/Game/CharacterDatas.h>
 #include "W_CustomCharacter.generated.h"
 
 class UButton;
@@ -80,7 +81,7 @@ public:
 		void UpdateDummyCharacterPartColor();
 
 	UFUNCTION()
-		void SetClassText();
+		void SetClassText(const int32 inClass);
 
 public:
 
@@ -96,8 +97,8 @@ public:
 	UPROPERTY()
 	EPart mCurrentDummyPart;
 
-	FCharacterAppearance* mCharacterAppearance;
-
 	UPROPERTY()
 	ANetworkCharacter* mCurrentDummyCharacter;
+
+	FCharacterAppearance mTempCharacterAppearance;
 };

@@ -6,6 +6,7 @@
 #include <Framework/Gameinstance/LDGameInstance.h>
 #include <Network/NetworkCharacter.h>
 #include <Widget/Handler/ClientHUD.h>
+#include <Widget/Identity/W_CustomCharacter.h>
 
 AGM_CustomCharacter::AGM_CustomCharacter()
 {
@@ -56,9 +57,10 @@ void AGM_CustomCharacter::BeginNetwork()
 		return;
 	}
 
-	FCharacterDatas	characterDatas = gameinstance->mCharacterDatas;
-	CreateNewDummyCharacter(characterDatas.mTribe);
+	CreateNewDummyCharacter(StaticCast<int32>(ETribe::Man));
 
+	UW_CustomCharacter* customWidget = Cast<UW_CustomCharacter>(mClientHUD->GetWidgetFromName(TEXT("CustomCharacter")));
+	customWidget->SetClassText(gameinstance->mCharacterDatas.mClass);
 	mClientHUD->ShowWidgetFromName(TEXT("CustomCharacter"));
 }
 
@@ -69,16 +71,10 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(int32 InTribe)
 	{
 		return;
 	}
-	FCharacterDatas& characterDatas = gameinstance->mCharacterDatas;
+	FCharacterDatas characterDatas = gameinstance->mCharacterDatas;
 	characterDatas.mTribe = InTribe;
 
-	FCharacterAppearance characterVisual;
-	if (mDummyCharacter)
-	{
-		characterVisual = mDummyCharacter->mCharacterAppearance;
-		mDummyCharacter->Destroy();
-	}
-
+	ANetworkCharacter* NewDummyCharacter = nullptr;
 	TSubclassOf<ANetworkCharacter> dummyTribe = mDummyCharacterClass[InTribe];
 	if (dummyTribe)
 	{
@@ -86,11 +82,18 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(int32 InTribe)
 		spawnParams.Owner = this;
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		FVector CharacterLocation(100.0f, 0.0f, 505.0f);
+		FVector CharacterLocation(100.0f, 0.0f, 520.0f);
 		FRotator CharacterRotation(0.0f, -180.0f, 0.0f);
 
-		mDummyCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(dummyTribe, CharacterLocation, CharacterRotation, spawnParams);
-		mDummyCharacter->UpdateCharacterData(characterDatas);
-		mDummyCharacter->UpdateCharacterVisual(characterVisual);
+		NewDummyCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(dummyTribe, CharacterLocation, CharacterRotation, spawnParams);
+		NewDummyCharacter->UpdateCharacterData(characterDatas);
 	}
+
+	if (mDummyCharacter)
+	{
+		mDummyCharacter->Destroy();
+	}
+
+	mDummyCharacter = NewDummyCharacter;
+
 }
