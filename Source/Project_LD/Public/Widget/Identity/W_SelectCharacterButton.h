@@ -10,6 +10,7 @@ class UButton;
 class UTextBlock;
 class UAnimationAsset;
 class ANetworkCharacter;
+class UImage;
 struct FCharacterAppearance;
 struct FCharacterDatas;
 
@@ -47,7 +48,7 @@ public:
 	UTextBlock* mCharacterInfoText;
 
 	UPROPERTY(Meta = (BindWidget))
-	UTextBlock* mButtonText;
+	UImage* mButtonImage;
 
 public:
 	UFUNCTION()
@@ -94,6 +95,18 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Default")
 	TSubclassOf<ANetworkCharacter> mDummyCharacterClass;
+
+	UPROPERTY(EditAnywhere, Category = "Default")
+	UTexture2D* mCreateTexture;
+
+	UPROPERTY(EditAnywhere, Category = "Default")
+	UTexture2D* mAppearanceTexture;
+
+	UPROPERTY(EditAnywhere, Category = "Default")
+	UTexture2D* mDeleteTexture;
+
+	UPROPERTY(EditAnywhere, Category = "Default")
+	UTexture2D* mReviseNameTexture;
 
 private:
 

@@ -4,6 +4,7 @@
 #include "Widget/Identity/W_SelectCharacterButton.h"
 #include <Components/Button.h>
 #include <Components/TextBlock.h>
+#include <Components/Image.h>
 
 #include <Widget/Common/W_Reconfirm.h>
 #include <Widget/Handler/ClientHUD.h>
@@ -27,7 +28,7 @@ void UW_SelectCharacterButton::NativeConstruct()
 
 	mCharacterButton	= Cast<UButton>(GetWidgetFromName(TEXT("mCharacterButton")));
 	mCharacterInfoText	= Cast<UTextBlock>(GetWidgetFromName(TEXT("mCharacterInfoText")));
-	mButtonText			= Cast<UTextBlock>(GetWidgetFromName(TEXT("mButtonText")));
+	mButtonImage		= Cast<UImage>(GetWidgetFromName(TEXT("mButtonImage")));
 
 	if (mCharacterButton != nullptr)
 	{
@@ -117,40 +118,49 @@ void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterDatas& inCharact
 void UW_SelectCharacterButton::SetClickMode(EClickMode inClickMode)
 {
 	mClickMode = inClickMode;
-
-	FString buttonText = FString(TEXT(""));
+	
+	UTexture2D* texture = nullptr;
 
 	if (mCharacter)
 	{
 		switch (mClickMode)
 		{
 		case EClickMode::None:
-			buttonText = FString(TEXT("Error"));
+			texture = nullptr;
 			break;
 		case EClickMode::Start:
-			buttonText = FString(TEXT(""));
+			texture = nullptr;
 			break;
 		case EClickMode::Appearance:
-			buttonText = FString(TEXT("?"));
+			texture = mAppearanceTexture;
 			break;
 		case EClickMode::Delete:
-			buttonText = FString(TEXT("-"));
+			texture = mDeleteTexture;
 			break;
 		case EClickMode::ReviseName:
-			buttonText = FString(TEXT("*"));
+			texture = mReviseNameTexture;
 			break;
 		default:
-			buttonText = FString(TEXT("Error"));
+			texture = nullptr;
 			break;
 		}
 	}
 	else
 	{
 		mClickMode = EClickMode::Create;
-		buttonText = FString(TEXT("+"));
+		texture = mCreateTexture;
 	}
 
-	mButtonText->SetText(FText::FromString(buttonText));
+	if (texture == nullptr)
+	{
+		mButtonImage->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else
+	{
+		mButtonImage->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		mButtonImage->SetBrushFromTexture(texture);
+	}
+
 }
 
 void UW_SelectCharacterButton::PreviousClickMode()

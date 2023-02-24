@@ -330,7 +330,7 @@ void ANetworkCharacter::SetSkeletalPartColor(const EPart InPart, uint32 InColor)
 	UMaterialInstanceDynamic* materialDynamic = MeshPart->CreateDynamicMaterialInstance(Index);
 	materialDynamic->SetVectorParameterValue(FName(*ParamterName), partColor);
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("색칠 : %s - %d"), *MeshPart->GetFName().ToString(), InColor), ELogLevel::Warning);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("색칠 : %s - %d"), *MeshPart->GetFName().ToString(), InColor), ELogLevel::Warning);
 }
 
 FLinearColor ANetworkCharacter::GetPartColor(const EPart InPart)
@@ -383,7 +383,7 @@ void ANetworkCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, 
 		return;
 	}
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("장착 : %s - %s"), *InMeshPart->GetFName().ToString(), *NewMesh->GetFName().ToString()), ELogLevel::Warning);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("장착 : %s - %s"), *InMeshPart->GetFName().ToString(), *NewMesh->GetFName().ToString()), ELogLevel::Warning);
 	InMeshPart->SetSkeletalMesh(NewMesh);
 }
 
