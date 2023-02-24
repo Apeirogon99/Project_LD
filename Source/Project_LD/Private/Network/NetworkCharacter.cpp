@@ -3,6 +3,8 @@
 
 #include "Network/NetworkCharacter.h"
 #include <Network/NetworkUtils.h>
+#include <Framework/Gameinstance/LDGameInstance.h>
+#include <Struct/Game/GameDatas.h>
 
 // Sets default values
 ANetworkCharacter::ANetworkCharacter()
@@ -128,7 +130,7 @@ void ANetworkCharacter::UpdateCharacterVisual(const FCharacterAppearance& InChar
 	SetSkeletalPartColor(EPart::Feet,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Hands,		InCharacterAppearance.mBodyColor);
 	SetSkeletalPartColor(EPart::Head,		InCharacterAppearance.mBodyColor);
-	//SetSkeletalPartColor(EPart::Hair,		InCharacterAppearance.mHairColor);
+	SetSkeletalPartColor(EPart::Hair,		InCharacterAppearance.mHairColor);
 	SetSkeletalPartColor(EPart::Eye,		InCharacterAppearance.mEyeColor);
 	SetSkeletalPartColor(EPart::Eyebrow,	InCharacterAppearance.mEyeColor);
 	SetSkeletalPartColor(EPart::Ears,		InCharacterAppearance.mBodyColor);
@@ -150,18 +152,22 @@ void ANetworkCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InC
 	{
 		int32 oldMesh = mCharacterAppearance.mMeshs[indexNumber];
 		int32 newMesh = InCharacterAppearance.mMeshs[indexNumber];
+
 		if (oldMesh != newMesh)
 		{
 			USkeletalMeshComponent* partMesh = nullptr;
+
 			if (indexNumber == 0)
 			{
 				partMesh = meshRoot;
 			}
 			else
 			{
-				partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
+				partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber - 1));
 			}
+
 			SetSkeletalPartMesh(partMesh, newMesh);
+
 		}
 
 		mCharacterAppearance.mMeshs[indexNumber] = InCharacterAppearance.mMeshs[indexNumber];
@@ -295,7 +301,7 @@ USkeletalMeshComponent* ANetworkCharacter::GetPartInformation(const EPart InPart
 		break;
 	}
 
-	if (nullptr == outMeshPart)
+	if (nullptr == outMeshPart || nullptr == outMeshPart->SkeletalMesh)
 	{
 		return nullptr;
 	}
@@ -324,7 +330,7 @@ void ANetworkCharacter::SetSkeletalPartColor(const EPart InPart, uint32 InColor)
 	UMaterialInstanceDynamic* materialDynamic = MeshPart->CreateDynamicMaterialInstance(Index);
 	materialDynamic->SetVectorParameterValue(FName(*ParamterName), partColor);
 
-	
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("색칠 : %s - %d"), *MeshPart->GetFName().ToString(), InColor), ELogLevel::Warning);
 }
 
 FLinearColor ANetworkCharacter::GetPartColor(const EPart InPart)
@@ -353,18 +359,31 @@ void ANetworkCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, 
 		return;
 	}
 
-	if (0 <= InMeshIndex || InMeshIndex < mCharacterAppearance.mMeshs.Num())
+	if (0 >= InMeshIndex)
+	{
+		return;
+	}
+
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return;
+	}
+
+	FItemData* itemData = gameInstance->GetItemData(InMeshIndex);
+	if (nullptr == itemData)
 	{
 		return;
 	}
 
 	//TEMP
-	USkeletalMesh* NewMesh = nullptr; // = mSkeletalMeshs[InMeshIndex];
+	USkeletalMesh* NewMesh = itemData->mesh;
 	if (nullptr == NewMesh)
 	{
 		return;
 	}
 
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("장착 : %s - %s"), *InMeshPart->GetFName().ToString(), *NewMesh->GetFName().ToString()), ELogLevel::Warning);
 	InMeshPart->SetSkeletalMesh(NewMesh);
 }
 

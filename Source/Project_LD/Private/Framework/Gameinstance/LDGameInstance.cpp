@@ -2,6 +2,7 @@
 
 
 #include "Framework/Gameinstance/LDGameInstance.h"
+#include <Struct/Game/GameDatas.h>
 #include <Engine/StreamableManager.h>
 
 ULDGameInstance::ULDGameInstance()
@@ -12,22 +13,7 @@ ULDGameInstance::~ULDGameInstance()
 {
 }
 
-void ULDGameInstance::Init()
+FItemData* ULDGameInstance::GetItemData(int32 inCode)
 {
-	Super::Init();
-
-	//FStreamableManager& StreamableManager = mAssetManager.GetStreamableManager();
-
-	//TArray<FName> names;
-	//FPrimaryAssetId itemAssetsId = FPrimaryAssetId(FPrimaryAssetType(FName("SkeletalMeshItems")), FName("SkeletalMeshItems"));
-
-	//mAssetManager.LoadPrimaryAsset(itemAssetsId, names, FStreamableDelegate::CreateUObject(this, &ULDGameInstance::OnCompleteItemAssetsLoad));
-}
-
-void ULDGameInstance::OnCompleteItemAssetsLoad()
-{
-	//FStreamableManager& StreamableManager = mAssetManager.GetStreamableManager();
-	//FPrimaryAssetId itemAssetsId = FPrimaryAssetId(FPrimaryAssetType(FName("SkeletalMeshItems")), FName("SkeletalMeshItems"));
-	//FStringAssetReference referencePath = mAssetManager.GetPrimaryAssetPath(itemAssetsId);
-	//StreamableManager.Unload(referencePath);
+	return mGameItemDataTable->FindRow<FItemData>(*FString::FromInt(inCode), TEXT(""));
 }

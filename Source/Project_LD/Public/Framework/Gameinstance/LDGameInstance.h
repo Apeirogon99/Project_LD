@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include <Struct/Game/CharacterDatas.h>
-#include <Engine/AssetManager.h>
 #include "LDGameInstance.generated.h"
+
+class UDataTable;
+struct FItemData;
 
 /**
  * 
@@ -20,10 +22,6 @@ public:
 	ULDGameInstance();
 	~ULDGameInstance();
 
-protected:
-	virtual void Init() override;
-	void OnCompleteItemAssetsLoad();
-
 public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Network")
@@ -36,6 +34,9 @@ public:
 	FCharacterAppearance mCharacterAppearance;
 
 public:
-	//UAssetManager mAssetManager;
-	//TArray<USkeletalMesh> mItemPaths;
+	FItemData* GetItemData(int32 inCode);
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UDataTable* mGameItemDataTable;
 };
