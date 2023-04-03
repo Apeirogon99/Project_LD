@@ -3,9 +3,9 @@
 #define WIN32_LEAN_AND_MEAN
 
 #ifdef _DEBUG
-#pragma comment(lib, "ApeirogonBuilds\\Debug\\ApeirogonLibrary.lib")
+#pragma comment(lib, "Builds\\debug\\ApeirogonLibrary.lib")
 #else
-#pragma comment(lib, "ApeirogonBuilds\\Release\\ApeirogonLibrary.lib")
+#pragma comment(lib, "Builds\\release\\ApeirogonLibrary.lib")
 #endif
 
 #include "ApeirogonLibrary.h"

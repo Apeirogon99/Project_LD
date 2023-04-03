@@ -17,6 +17,7 @@ enum class EDBErrorType
 	EMAIL_NOT_VERIFY = 1004,
 	ALREADY_EMAIL_VERIFY = 1005,
 	NOT_SAME_VERIFY = 1006,
+	TEMP_VERIFY = 1007,
 
 	CHARACTER_MAX = 2001,
 	POSTION_DISTINCT = 2002,
@@ -59,6 +60,9 @@ static std::string GetDatabaseError(int32 error)
 		break;
 	case EDBErrorType::NOT_SAME_VERIFY:
 		return std::string("인증 번호가 다릅니다.");
+		break;
+	case EDBErrorType::TEMP_VERIFY:
+		return std::string("임시 임증되었습니다");
 		break;
 	case EDBErrorType::CHARACTER_MAX:
 		return std::string("생성할 수 있는 캐릭터를 초과하였습니다.");
