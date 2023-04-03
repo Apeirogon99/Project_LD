@@ -57,26 +57,25 @@ void AGM_CustomCharacter::BeginNetwork()
 		return;
 	}
 
-	CreateNewDummyCharacter(StaticCast<int32>(ETribe::Man));
+	CreateNewDummyCharacter(StaticCast<int32>(ERace::Male));
 
 	UW_CustomCharacter* customWidget = Cast<UW_CustomCharacter>(mClientHUD->GetWidgetFromName(TEXT("CustomCharacter")));
-	customWidget->SetClassText(gameinstance->mCharacterDatas.mClass);
+	customWidget->SetClassText(gameinstance->mCharacterAppearance.mCharacterClass);
 	mClientHUD->ShowWidgetFromName(TEXT("CustomCharacter"));
 }
 
-void AGM_CustomCharacter::CreateNewDummyCharacter(int32 InTribe)
+void AGM_CustomCharacter::CreateNewDummyCharacter(int32 InRace)
 {
 	ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	if (nullptr == gameinstance)
 	{
 		return;
 	}
-	FCharacterDatas characterDatas = gameinstance->mCharacterDatas;
-	characterDatas.mTribe = InTribe;
+	gameinstance->mCharacterAppearance.mRace = InRace;
 
 	ANetworkCharacter* NewDummyCharacter = nullptr;
-	TSubclassOf<ANetworkCharacter> dummyTribe = mDummyCharacterClass[InTribe];
-	if (dummyTribe)
+	TSubclassOf<ANetworkCharacter> raceClass = mDummyCharacterClass[InRace];
+	if (raceClass)
 	{
 		FActorSpawnParameters spawnParams;
 		spawnParams.Owner = this;
@@ -85,9 +84,11 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(int32 InTribe)
 		FVector CharacterLocation(100.0f, 0.0f, 520.0f);
 		FRotator CharacterRotation(0.0f, -180.0f, 0.0f);
 
-		NewDummyCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(dummyTribe, CharacterLocation, CharacterRotation, spawnParams);
-		NewDummyCharacter->UpdateCharacterData(characterDatas);
-		NewDummyCharacter->ConstructCharacter();
+		NewDummyCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(raceClass, CharacterLocation, CharacterRotation, spawnParams);
+		NewDummyCharacter->mCharacterAppearance = gameinstance->mCharacterAppearance;
+		NewDummyCharacter->UpdateCharacterEquipment(FCharacterEquipment());
+		//NewDummyCharacter->UpdateCharacterAppearnce(characterAppearance);
+		//NewDummyCharacter->ConstructCharacter();
 	}
 
 	if (mDummyCharacter)

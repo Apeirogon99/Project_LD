@@ -38,7 +38,7 @@ public:
 
 protected:
 	UFUNCTION()
-		void SelectClass(const FString& inClass, EClass inClassNum);
+		void SelectClass(const FString& inClass, ECharacterClass inClassNum);
 
 
 	UPROPERTY()

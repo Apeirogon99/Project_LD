@@ -20,7 +20,7 @@ void UW_ExitButton::NativeConstruct()
 
 	if (mExitButton != nullptr)
 	{
-		mExitButton->OnClicked.AddDynamic(this, &UW_ExitButton::Click_Exit);
+		mExitButton->OnClicked.AddUniqueDynamic(this, &UW_ExitButton::Click_Exit);
 	}	
 }
 
@@ -42,7 +42,9 @@ void UW_ExitButton::Click_Exit()
 	reconfirm->SetCancleButtonText(TEXT("취소"));
 	reconfirm->mReConfirmDelegate.BindUFunction(this, FName("ExitGame"));
 	reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleExitGame"));
-	clientHUD->AllCollapsedButOneWidget(TEXT("Reconfirm"));
+
+	//clientHUD->AllCollapsedButOneWidget(TEXT("Reconfirm"));
+	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Reconfirm"));
 }
 
 void UW_ExitButton::ExitGame()
@@ -56,5 +58,6 @@ void UW_ExitButton::CancleExitGame()
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
 
-	clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Reconfirm"));
+	//clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Reconfirm"));
+	clientHUD->CollapsedWidgetFromName(TEXT("Reconfirm"));
 }

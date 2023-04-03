@@ -68,8 +68,8 @@ void UW_Singin::Click_Singin()
 	std::string password = UNetworkUtils::ConvertString(mPassword);
 
 	Protocol::C2S_Singin singinPacket;
-	singinPacket.set_id(id);
-	singinPacket.set_password(password);
+	singinPacket.set_user_id(id);
+	singinPacket.set_user_password(password);
 
 	SendBufferPtr sendBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, singinPacket);
 
@@ -82,9 +82,9 @@ void UW_Singin::Click_Singup()
 
 	AClientHUD* HUD = Cast<AClientHUD>(owningController->GetHUD());
 
-	HUD->ShowWidgetFromName("Singup");
+	HUD->SelfHitTestInvisibleWidgetFromName("Singup");
 
-	HUD->CleanWidgetFromName("Singin");
+	HUD->CollapsedWidgetFromName("Singin");
 }
 
 void UW_Singin::Committed_ID(const FText& inId)

@@ -25,10 +25,10 @@ public:
 public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Network")
-		FString mTicket;
+		FString mToken;
 
 	UPROPERTY()
-	FCharacterDatas mCharacterDatas;
+	FCharacterEquipment mCharacterEquipment;
 
 	UPROPERTY()
 	FCharacterAppearance mCharacterAppearance;

@@ -26,7 +26,7 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void CreateNewDummyCharacter(int32 InTribe);
+	void CreateNewDummyCharacter(int32 InRace);
 	
 public:
 	UPROPERTY(EditAnywhere, Category = "DummyClass")

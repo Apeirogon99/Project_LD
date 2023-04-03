@@ -12,7 +12,7 @@ class UTextBlock;
 class UW_ColorPicker;
 class ANetworkCharacter;
 struct FCharacterAppearance;
-enum class EPart : uint8;
+enum class EEquipment : uint8;
 enum class ETribe : uint8;
 /**
  * 
@@ -75,7 +75,7 @@ public:
 		bool CanUpdate();
 
 	UFUNCTION()
-		void ToggleColorPicker(EPart inDummyPart);
+		void ToggleColorPicker(EAppearance inDummyPart);
 
 	UFUNCTION()
 		void UpdateDummyCharacterPartColor();
@@ -95,7 +95,7 @@ public:
 	UW_ColorPicker* mColorPicker;
 
 	UPROPERTY()
-	EPart mCurrentDummyPart;
+	EAppearance mCurrentDummyAppearance;
 
 	UPROPERTY()
 	ANetworkCharacter* mCurrentDummyCharacter;

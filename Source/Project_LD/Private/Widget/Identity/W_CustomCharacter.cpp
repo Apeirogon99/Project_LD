@@ -34,32 +34,32 @@ void UW_CustomCharacter::NativeConstruct()
 
 	if (mCreateButton != nullptr)
 	{
-		mCreateButton->OnClicked.AddDynamic(this, &UW_CustomCharacter::Click_Create);
+		mCreateButton->OnClicked.AddUniqueDynamic(this, &UW_CustomCharacter::Click_Create);
 	}
 
 	if (mTribeButton != nullptr)
 	{
-		mTribeButton->OnClicked.AddDynamic(this, &UW_CustomCharacter::Click_Tribe);
+		mTribeButton->OnClicked.AddUniqueDynamic(this, &UW_CustomCharacter::Click_Tribe);
 	}
 
 	if (mSkinButton != nullptr)
 	{
-		mSkinButton->OnClicked.AddDynamic(this, &UW_CustomCharacter::Click_Skin);
+		mSkinButton->OnClicked.AddUniqueDynamic(this, &UW_CustomCharacter::Click_Skin);
 	}
 
 	if (mHairButton != nullptr)
 	{
-		mHairButton->OnClicked.AddDynamic(this, &UW_CustomCharacter::Click_Hair);
+		mHairButton->OnClicked.AddUniqueDynamic(this, &UW_CustomCharacter::Click_Hair);
 	}
 
 	if (mEyeButton != nullptr)
 	{
-		mEyeButton->OnClicked.AddDynamic(this, &UW_CustomCharacter::Click_Eye);
+		mEyeButton->OnClicked.AddUniqueDynamic(this, &UW_CustomCharacter::Click_Eye);
 	}
 
 	if (mEyebrowButton != nullptr)
 	{
-		mEyebrowButton->OnClicked.AddDynamic(this, &UW_CustomCharacter::Click_Eyebrow);
+		mEyebrowButton->OnClicked.AddUniqueDynamic(this, &UW_CustomCharacter::Click_Eyebrow);
 	}
 
 	mBackButton = this->WidgetTree->FindWidget(FName(TEXT("BW_BackButton")));
@@ -110,46 +110,37 @@ void UW_CustomCharacter::Click_Create()
 	editBox->SetEditHint(TEXT("캐릭터 닉네임을 설정하세요"));
 	editBox->SetConfrimButtonText(TEXT("설정"));
 
-	editBox->mConfirmDelegate.BindLambda([=](const FString& inNickName)
+	editBox->mConfirmDelegate.BindLambda([=](const FString& inName)
 		{
-			clientHUD->AllCollapsedButOneWidget(TEXT("LoadingServer"));
+			clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("LoadingServer"));
 
 			Protocol::C2S_CreateCharacter createCharacterPacket;
-			std::string nicknameStr = UNetworkUtils::ConvertString(inNickName);
+			std::string name = UNetworkUtils::ConvertString(inName);
 
-			Protocol::SCharacterData* createData = createCharacterPacket.mutable_data();
-			Protocol::SCharacterAppearance* createAppearance = createCharacterPacket.mutable_appearance();
+			createCharacterPacket.set_name(name);
+			createCharacterPacket.set_server_id(1);
+			//createCharacterPacket.set_remote_id();
+
+			Protocol::SCharacterAppearance* newCharacterAppearance = createCharacterPacket.mutable_appearance();
 			if (mCurrentDummyCharacter)
 			{
-				FCharacterDatas characterDatas = mCurrentDummyCharacter->mCharacterData;
-				createData->set_name(nicknameStr);
-				createData->set_job(characterDatas.mClass);
-				createData->set_tribe(characterDatas.mTribe);
-				createData->set_position(characterDatas.mPosition);
-
-				FCharacterAppearance characterAppearance = mCurrentDummyCharacter->mCharacterAppearance;
-				createAppearance->set_body_color(characterAppearance.mBodyColor);
-				createAppearance->set_hair_color(characterAppearance.mHairColor);
-				createAppearance->set_eye_color(characterAppearance.mEyeColor);
-
-				createAppearance->set_head(characterAppearance.mMeshs[0]);
-				createAppearance->set_ears(characterAppearance.mMeshs[1]);
-				createAppearance->set_feet(characterAppearance.mMeshs[2]);
-				createAppearance->set_hair(characterAppearance.mMeshs[3]);
-				createAppearance->set_facials_02(characterAppearance.mMeshs[5]);
-				createAppearance->set_legs(characterAppearance.mMeshs[9]);
-				createAppearance->set_hands(characterAppearance.mMeshs[11]);
-				createAppearance->set_chest(characterAppearance.mMeshs[13]);
-				createAppearance->set_bracers(characterAppearance.mMeshs[16]);
-				createAppearance->set_boots(characterAppearance.mMeshs[18]);
-
+				FCharacterAppearance appearance = mCurrentDummyCharacter->mCharacterAppearance;
+				newCharacterAppearance->set_race(static_cast<Protocol::ERace>(appearance.mRace));
+				newCharacterAppearance->set_character_class(static_cast<Protocol::ECharacterClass>(appearance.mCharacterClass));
+				newCharacterAppearance->set_seat(appearance.mSeat);
+				newCharacterAppearance->set_skin_color(appearance.mSkin_Color);
+				newCharacterAppearance->set_hair_color(appearance.mHair_Color);
+				newCharacterAppearance->set_eye_color(appearance.mEye_Color);
+				newCharacterAppearance->set_eyebrow_color(appearance.mEyebrow_Color);
 			}
 
 			SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, createCharacterPacket);
 			controller->Send(pakcetBuffer);
+
+			clientHUD->CollapsedWidgetFromName(TEXT("EditBox"));
 		});
 
-	clientHUD->ShowWidgetFromName(TEXT("EditBox"));
+	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("EditBox"));
 }
 
 void UW_CustomCharacter::Click_Tribe()
@@ -166,77 +157,77 @@ void UW_CustomCharacter::Click_Tribe()
 
 void UW_CustomCharacter::Click_Skin()
 {
-	ToggleColorPicker(EPart::Head);
+	ToggleColorPicker(EAppearance::Body);
 }
 
 void UW_CustomCharacter::Click_Hair()
 {
-	ToggleColorPicker(EPart::Hair);
+	ToggleColorPicker(EAppearance::Hair);
 }
 
 void UW_CustomCharacter::Click_Eye()
 {
-	ToggleColorPicker(EPart::Eye);
+	ToggleColorPicker(EAppearance::Eye);
 }
 
 void UW_CustomCharacter::Click_Eyebrow()
 {
-	ToggleColorPicker(EPart::Eyebrow);
+	ToggleColorPicker(EAppearance::Eyebrow);
 }
 
 bool UW_CustomCharacter::CanUpdate()
 {
 	return (mCurrentDummyCharacter && mColorPicker->GetVisibility() == ESlateVisibility::SelfHitTestInvisible) ? true : false;
-	
 }
 
-void UW_CustomCharacter::ToggleColorPicker(EPart inDummyPart)
+void UW_CustomCharacter::ToggleColorPicker(EAppearance inDummyAppearance)
 {
-	if (mCurrentDummyPart == inDummyPart)
+	if (mCurrentDummyAppearance == inDummyAppearance)
 	{
 		mColorPicker->SetVisibility(ESlateVisibility::Collapsed);
-		mCurrentDummyPart = EPart::None;
+		mCurrentDummyAppearance = EAppearance::None;
 		mCurrentDummyCharacter = nullptr;
 	}
 	else
 	{
-		mCurrentDummyPart = inDummyPart;
+		mCurrentDummyAppearance = inDummyAppearance;
 		mColorPicker->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
-		
-		FString colorPickerTarget;
-		switch (inDummyPart)
-		{
-		case EPart::None:
-			colorPickerTarget = "NONE";
-			break;
-		case EPart::Head:
-			colorPickerTarget = TEXT("몸");
-			break;
-		case EPart::Hair:
-			colorPickerTarget = TEXT("머리카락");
-			break;
-		case EPart::Eye:
-			colorPickerTarget = TEXT("눈");
-			break;
-		case EPart::Eyebrow:
-			colorPickerTarget = TEXT("눈썹");
-			break;
-		default:
-			break;
-		}
 
 		AActor* newDummyCharacter = nullptr;
 		newDummyCharacter = UGameplayStatics::GetActorOfClass(GetWorld(), ANetworkCharacter::StaticClass());
 		mCurrentDummyCharacter = Cast<ANetworkCharacter>(newDummyCharacter);
-
-		mTempCharacterAppearance.mBodyColor = UNetworkUtils::ConverLinerColorToInt(mCurrentDummyCharacter->GetPartColor(EPart::Head));
-		//mTempCharacterAppearance.mHairColor = UNetworkUtils::ConverLinerColorToInt(mCurrentDummyCharacter->GetPartColor(EPart::Hair));
-		mTempCharacterAppearance.mEyeColor = UNetworkUtils::ConverLinerColorToInt(mCurrentDummyCharacter->GetPartColor(EPart::Eye));
+		
+		FString colorPickerTarget;
+		switch (inDummyAppearance)
+		{
+		case EAppearance::None:
+			colorPickerTarget = TEXT("NONE");
+			break;
+		case EAppearance::Body:
+			colorPickerTarget = TEXT("몸");
+			mTempCharacterAppearance.mSkin_Color = UNetworkUtils::ConverLinerColorToInt(mCurrentDummyCharacter->GetMeshColor(EAppearance::Body));
+			break;
+		case EAppearance::Hair:
+			colorPickerTarget = TEXT("머리카락");
+			mTempCharacterAppearance.mHair_Color = UNetworkUtils::ConverLinerColorToInt(mCurrentDummyCharacter->GetMeshColor(EAppearance::Hair));
+			break;
+		case EAppearance::Eye:
+			colorPickerTarget = TEXT("눈");
+			mTempCharacterAppearance.mEye_Color = UNetworkUtils::ConverLinerColorToInt(mCurrentDummyCharacter->GetMeshColor(EAppearance::Eye));
+			break;
+		case EAppearance::Eyebrow:
+			colorPickerTarget = TEXT("눈썹");
+			mTempCharacterAppearance.mEyebrow_Color = UNetworkUtils::ConverLinerColorToInt(mCurrentDummyCharacter->GetMeshColor(EAppearance::Eye));
+			break;
+		default:
+			colorPickerTarget = TEXT("ERROR");
+			break;
+		}
 
 		if (mColorPicker)
 		{
 			mColorPicker->SetPickerTarget(colorPickerTarget);
-			mColorPicker->OnUsed(mCurrentDummyCharacter->GetPartColor(inDummyPart));
+			mColorPicker->OnUsed(mCurrentDummyCharacter->GetMeshColor(inDummyAppearance));
 		}
 	}
 }
@@ -248,34 +239,27 @@ void UW_CustomCharacter::UpdateDummyCharacterPartColor()
 	{
 		int32 color = UNetworkUtils::ConverLinerColorToInt(mColorPicker->GetLinearColor());
 
-		switch (mCurrentDummyPart)
+		switch (mCurrentDummyAppearance)
 		{
-		case EPart::None:
+		case EAppearance::None:
 			break;
-		case EPart::Boots:
-		case EPart::Bracers:
-		case EPart::Chest:
-		case EPart::Feet:
-		case EPart::Hands:
-		case EPart::Head:
-		case EPart::Pants:
-		case EPart::Ears:
-			mTempCharacterAppearance.mBodyColor = color;
+		case EAppearance::Body:
+			mTempCharacterAppearance.mSkin_Color = color;
 			break;
-		case EPart::Eye:
-			mTempCharacterAppearance.mEyeColor = color;
+		case EAppearance::Eye:
+			mTempCharacterAppearance.mEye_Color = color;
 			break;
-		case EPart::Eyebrow:
-			mTempCharacterAppearance.mEyeColor = color;
+		case EAppearance::Eyebrow:
+			mTempCharacterAppearance.mEyebrow_Color = color;
 			break;
-		case EPart::Hair:
-			mTempCharacterAppearance.mHairColor = color;
+		case EAppearance::Hair:
+			mTempCharacterAppearance.mHair_Color = color;
 			break;
 		default:
 			break;
 		}
 		
-		mCurrentDummyCharacter->UpdateCharacterVisual(mTempCharacterAppearance);
+		mCurrentDummyCharacter->UpdateCharacterAppearnce(mTempCharacterAppearance);
 	}
 }
 
@@ -283,16 +267,16 @@ void UW_CustomCharacter::SetClassText(const int32 inClass)
 {
 
 	FString classStr;
-	EClass gameClass = static_cast<EClass>(inClass);
+	ECharacterClass gameClass = static_cast<ECharacterClass>(inClass);
 	switch (gameClass)
 	{
-	case EClass::None:
+	case ECharacterClass::None:
 		classStr = TEXT("None");
 		break;
-	case EClass::Warrior:
+	case ECharacterClass::Warrior:
 		classStr = TEXT("전사");
 		break;
-	case EClass::Wizard:
+	case ECharacterClass::Wizard:
 		classStr = TEXT("마법사");
 		break;
 	default:

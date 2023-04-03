@@ -95,21 +95,27 @@ void UW_SelectCharacterButton::Click_Character()
 		return;
 	}
 
-	clientHUD->ShowWidgetFromName(TEXT("Reconfirm"));
+	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Reconfirm"));
 }
 
-void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterDatas& inCharacterDatas, const FCharacterAppearance& inCharacterAppearance)
+void UW_SelectCharacterButton::SetCharacterInfo(const FString& name, const FCharacterAppearance& inCharacterAppearance, const FCharacterEquipment& inCharacterEquipment)
 {
-	FText characterTitle = FText::FromString(FString::Printf(TEXT("Lv.%ld %s"), inCharacterDatas.mLevel, *inCharacterDatas.mName));
+	FText characterTitle = FText::FromString(FString::Printf(TEXT("%s"), *name));
 	mCharacterInfoText->SetText(characterTitle);
 
-	FActorSpawnParameters spawnParams;
-	spawnParams.Owner = GetOwningPlayer();
-	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	ANetworkCharacter* NewDummyCharacter = nullptr;
+	TSubclassOf<ANetworkCharacter> raceClass = mDummyCharacterClass[inCharacterAppearance.mRace];
+	if (raceClass)
+	{
+		FActorSpawnParameters spawnParams;
+		spawnParams.Owner = GetOwningPlayer();
+		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	mCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(mDummyCharacterClass, mCharacterLocation, mCharacterRotation, spawnParams);
-	mCharacter->ConstructCharacter();
-	mCharacter->InitializeCharacter(inCharacterDatas, inCharacterAppearance);
+		mCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(raceClass, mCharacterLocation, mCharacterRotation, spawnParams);
+
+		mCharacter->InitializeCharacter(inCharacterAppearance, inCharacterEquipment);
+		mCharacter->ConstructCharacter();
+	}
 	//mCharacter->UpdateAnimationAsset(mDefaultCharacterAnimation);
 
 	SetClickMode(EClickMode::Start);
@@ -184,7 +190,7 @@ void UW_SelectCharacterButton::StartCharacter()
 	//게임 모드 불러오셈
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
-	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
+	clientHUD->CollapsedWidgetFromName(TEXT("Reconfirm"));
 }
 
 void UW_SelectCharacterButton::CreateCharacter()
@@ -192,12 +198,12 @@ void UW_SelectCharacterButton::CreateCharacter()
 	//커스텀 쪽으로 레벨이동
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
-	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
+	clientHUD->CollapsedWidgetFromName(TEXT("Reconfirm"));
 
 	ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	if (gameinstance)
 	{
-		gameinstance->mCharacterDatas.mPosition = mCharacterButtonNumber;
+		gameinstance->mCharacterAppearance.mSeat = mCharacterButtonNumber;
 	}
 
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
@@ -224,7 +230,7 @@ void UW_SelectCharacterButton::CancleButton()
 {
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
-	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
+	clientHUD->CollapsedWidgetFromName(TEXT("Reconfirm"));
 
 	if (mCharacter)
 	{

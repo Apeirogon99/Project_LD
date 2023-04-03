@@ -63,13 +63,13 @@ void UW_Singup::Click_Singup()
 	clientHUD->AllCollapsedButOneWidget(TEXT("LoadingServer"));
 
 	std::string id = UNetworkUtils::ConvertString(mID);
-	std::string email = UNetworkUtils::ConvertString(mEmail);
 	std::string password = UNetworkUtils::ConvertString(mPassword);
+	std::string email = UNetworkUtils::ConvertString(mEmail);
 
 	Protocol::C2S_Singup singupPacket;
-	singupPacket.set_id(id);
-	singupPacket.set_email(email);
-	singupPacket.set_password(password);
+	singupPacket.set_user_id(id);
+	singupPacket.set_user_password(password);
+	singupPacket.set_user_email(email);
 
 	SendBufferPtr sendBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, singupPacket);
 
@@ -83,9 +83,9 @@ void UW_Singup::Click_Exit()
 
 	AClientHUD* HUD = Cast<AClientHUD>(owningController->GetHUD());
 
-	HUD->ShowWidgetFromName("Singin");
+	HUD->SelfHitTestInvisibleWidgetFromName("Singin");
 
-	HUD->CleanWidgetFromName("Singup");
+	HUD->CollapsedWidgetFromName("Singup");
 }
 
 void UW_Singup::Committed_ID(const FText& inId)

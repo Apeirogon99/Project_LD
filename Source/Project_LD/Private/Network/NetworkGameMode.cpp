@@ -199,7 +199,7 @@ bool ANetworkGameMode::RequestUnPossessController()
 
 void ANetworkGameMode::RequestTravelLevel(const FString& inLevel)
 {
-	mServerLoadingWidget->AddToPlayerScreen();
+	mServerLoadingWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	mTravelLevel = inLevel;
 	RequestUnPossessController();
 }
@@ -223,7 +223,7 @@ bool ANetworkGameMode::IsNetworkInit()
 		return false;
 	}
 
-	mServerLoadingWidget->RemoveFromParent();
+	mServerLoadingWidget->SetVisibility(ESlateVisibility::Collapsed);
 
 	BeginNetwork();
 

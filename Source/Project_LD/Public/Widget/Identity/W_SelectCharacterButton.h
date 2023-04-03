@@ -56,7 +56,7 @@ public:
 
 public:
 	UFUNCTION()
-	void SetCharacterInfo(const FCharacterDatas& inCharacterDatas, const FCharacterAppearance& inCharacterAppearance);
+	void SetCharacterInfo(const FString& name, const FCharacterAppearance& inCharacterAppearance, const FCharacterEquipment& inCharacterEquipment);
 
 	UFUNCTION()
 	void SetClickMode(EClickMode inClickMode);
@@ -94,7 +94,7 @@ public:
 	FRotator mCharacterRotation;
 
 	UPROPERTY(EditAnywhere, Category = "Default")
-	TSubclassOf<ANetworkCharacter> mDummyCharacterClass;
+	TArray<TSubclassOf<ANetworkCharacter>> mDummyCharacterClass;
 
 	UPROPERTY(EditAnywhere, Category = "Default")
 	UTexture2D* mCreateTexture;

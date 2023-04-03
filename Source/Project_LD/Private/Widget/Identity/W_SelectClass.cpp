@@ -44,15 +44,15 @@ void UW_SelectClass::NativeConstruct()
 
 void UW_SelectClass::Click_Warrior()
 {
-	SelectClass(TEXT("전사"), EClass::Warrior);
+	SelectClass(TEXT("전사"), ECharacterClass::Warrior);
 }
 
 void UW_SelectClass::Click_Wizard()
 {
-	SelectClass(TEXT("마법사"), EClass::Wizard);
+	SelectClass(TEXT("마법사"), ECharacterClass::Wizard);
 }
 
-void UW_SelectClass::SelectClass(const FString& inClass, EClass inClassNum)
+void UW_SelectClass::SelectClass(const FString& inClass, ECharacterClass inClassNum)
 {
 	AClientHUD* clientHUD = Cast<AClientHUD>(GetOwningPlayer()->GetHUD());
 	if (nullptr == clientHUD)
@@ -92,15 +92,15 @@ void UW_SelectClass::SelectClass(const FString& inClass, EClass inClassNum)
 
 	reconfirm->mReConfirmDelegate.BindLambda([=]()
 		{
-			gameInstance->mCharacterDatas.mClass = static_cast<int32>(inClassNum);
+			gameInstance->mCharacterAppearance.mCharacterClass = static_cast<int32>(inClassNum);
 
 			networkGameMode->RequestTravelLevel(TEXT("L_CustomCharacter"));
 		});
 
 	reconfirm->mCancleDelegate.BindLambda([=]()
 		{
-			clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Reconfirm"));
+			clientHUD->CollapsedWidgetFromName(TEXT("Reconfirm"));
 		});
 
-	clientHUD->AllCollapsedButOneWidget(TEXT("Reconfirm"));
+	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Reconfirm"));
 }
