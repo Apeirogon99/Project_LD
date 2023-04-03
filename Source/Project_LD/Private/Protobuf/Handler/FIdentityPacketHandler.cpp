@@ -18,7 +18,7 @@
 
 #include <Widget/Identity/W_SelectCharacter.h>
 
-bool Handle_S2C_EnterServer(ANetworkController* controller, Protocol::S2C_EnterServer& pkt)
+bool Handle_S2C_EnterIdentityServer(ANetworkController* controller, Protocol::S2C_EnterIdentityServer& pkt)
 {
 	AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
@@ -32,7 +32,7 @@ bool Handle_S2C_EnterServer(ANetworkController* controller, Protocol::S2C_EnterS
 	return true;
 }
 
-bool Handle_S2C_LeaveServer(ANetworkController* controller, Protocol::S2C_LeaveServer& pkt)
+bool Handle_S2C_LeaveIdentityServer(ANetworkController* controller, Protocol::S2C_LeaveIdentityServer& pkt)
 {
 	AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
@@ -60,7 +60,7 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 		return false;
 	}
 
-	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
 
 	int32 error = pkt.error();
 	if (error != 0)
@@ -75,12 +75,12 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
 			});
 
-		clientHUD->ShowWidgetFromName(TEXT("Notification"));
+		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
 	}
 	else
 	{
-		FString ticket = UNetworkUtils::ConvertFString(pkt.ticket());
-		gameInstance->mTicket = ticket;
+		FString token = UNetworkUtils::ConvertFString(pkt.token());
+		gameInstance->mToken = token;
 
 		AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
 		ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
@@ -113,7 +113,7 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 		return false;
 	}
 
-	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
 
 	int32 error = pkt.error();
 	if (error != 0)
@@ -128,7 +128,7 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
 			});
 
-		clientHUD->ShowWidgetFromName(TEXT("Notification"));
+		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
 	}
 	else
 	{
@@ -143,12 +143,12 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 
 				Protocol::C2S_EmailVerified emailVerifiedPacket;
 				std::string verfiedStr = UNetworkUtils::ConvertString(inCertifiedEmail);
-				emailVerifiedPacket.set_verified(verfiedStr);
+				emailVerifiedPacket.set_verified_code(verfiedStr);
 				SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, emailVerifiedPacket);
 				controller->Send(pakcetBuffer);
 			});
 
-		clientHUD->ShowWidgetFromName(TEXT("EditBox"));
+		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("EditBox"));
 	}
 
 	return true;
@@ -168,7 +168,7 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 		return false;
 	}
 
-	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
 
 	int32 error = pkt.error();
 	if (error != 0)
@@ -180,10 +180,10 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				clientHUD->CollapsedWidgetFromName(TEXT("Notification"));
 			});
 
-		clientHUD->ShowWidgetFromName("Notification");
+		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
 	}
 	else
 	{
@@ -194,13 +194,11 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CleanWidgetFromName(TEXT("Singup"));
-				clientHUD->CleanWidgetFromName(TEXT("EditBox"));
-				clientHUD->ShowWidgetFromName(TEXT("Singin"));
-				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
+				clientHUD->AllCollapsedButOneWidget(TEXT("Singin"));
+				clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("LoginScreen"));
 			});
 
-		clientHUD->ShowWidgetFromName("Notification");
+		clientHUD->CollapsedWidgetFromName(TEXT("Notification"));
 	}
 
 	return true;
@@ -228,69 +226,25 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 	UW_SelectCharacter* selectCharacterWidget = Cast<UW_SelectCharacter>(clientHUD->GetWidgetFromName(TEXT("SelectCharacter")));
 	if (nullptr == selectCharacterWidget) return false;
 
-	for (int i = 0; i < pkt.character_size(); ++i)
+	for (int index = 0; index < pkt.appearance_size(); ++index)
 	{
-		const Protocol::SCharacterData& character = pkt.character(i);
-		FCharacterDatas characterDatas;
-		characterDatas.mName			= UNetworkUtils::ConvertFString(character.name());
-		characterDatas.mClass			= character.job();
-		characterDatas.mTribe			= character.tribe();
-		characterDatas.mLevel			= character.level();
-		characterDatas.mPosition		= character.position();
-
-		const Protocol::SCharacterAppearance& appearance = pkt.appearance(i);
+		FString name = UNetworkUtils::ConvertFString(pkt.name().Get(index));
+		
+		const Protocol::SCharacterAppearance& appearance = pkt.appearance(index);
 		FCharacterAppearance characterAppearance;
-		characterAppearance.mMeshs.Init(0, 33);
-		characterAppearance.mBodyColor	= appearance.body_color();
-		characterAppearance.mHairColor	= appearance.hair_color();
-		characterAppearance.mEyeColor	= appearance.eye_color();
+		characterAppearance.UpdateAppearance(appearance);
 
-		characterAppearance.mMeshs[0]	= appearance.head();
-		characterAppearance.mMeshs[1]	= appearance.ears();
-		characterAppearance.mMeshs[2]	= appearance.feet();
-		characterAppearance.mMeshs[3]	= appearance.hair();
-		characterAppearance.mMeshs[4]	= appearance.facials_01();
-		characterAppearance.mMeshs[5]	= appearance.facials_02();
-		characterAppearance.mMeshs[6]	= appearance.helmet();
-		characterAppearance.mMeshs[7]	= appearance.shoulders();
-		characterAppearance.mMeshs[8]	= appearance.skirt();
-		characterAppearance.mMeshs[9]	= appearance.legs();
-		characterAppearance.mMeshs[10]	= appearance.legs_add();
-		characterAppearance.mMeshs[11]	= appearance.hands();
-		characterAppearance.mMeshs[12]	= appearance.hands_add();
-		characterAppearance.mMeshs[13]	= appearance.chest();
-		characterAppearance.mMeshs[14]	= appearance.chest_add();
-		characterAppearance.mMeshs[15]	= appearance.cape();
-		characterAppearance.mMeshs[16]	= appearance.bracers();
-		characterAppearance.mMeshs[17]	= appearance.bracers_add();
-		characterAppearance.mMeshs[18]	= appearance.boots();
-		characterAppearance.mMeshs[19]	= appearance.belt();
-		characterAppearance.mMeshs[20]	= appearance.tabard();
-		characterAppearance.mMeshs[21]	= appearance.back_2hl();
-		characterAppearance.mMeshs[22]	= appearance.back_shield();
-		characterAppearance.mMeshs[23]	= appearance.back_weapon_l();
-		characterAppearance.mMeshs[24]	= appearance.back_weapon_r();
-		characterAppearance.mMeshs[25]	= appearance.back_bow();
-		characterAppearance.mMeshs[26]	= appearance.quiver();
-		characterAppearance.mMeshs[27]	= appearance.weapon_r_arrow();
-		characterAppearance.mMeshs[28]	= appearance.weapon_shield();
-		characterAppearance.mMeshs[29]	= appearance.weapon_l();
-		characterAppearance.mMeshs[30]	= appearance.weapon_r();
-		characterAppearance.mMeshs[31]	= appearance.hip_l();
-		characterAppearance.mMeshs[32]	= appearance.hip_r();
+		const Protocol::SCharacterEqipment& eqipment = pkt.eqipment(index);
+		FCharacterEquipment characterEquipment;
+		characterEquipment.UpdateEquipments(eqipment);
 
-		selectCharacterWidget->LoadCharacterInfo(characterDatas, characterAppearance);
+		selectCharacterWidget->LoadCharacterInfo(name, characterAppearance, characterEquipment);
 	}
 
-	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
-	clientHUD->ShowWidgetFromName(TEXT("SelectCharacter"));
+	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("SelectCharacter"));
 
 	return true;
-}
-
-bool Handle_S2C_SelectServer(ANetworkController* controller, Protocol::S2C_SelectServer& pkt)
-{
-	return false;
 }
 
 bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_CreateCharacter& pkt)
@@ -307,7 +261,7 @@ bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_Cr
 		return false;
 	}
 
-	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
 
 	int32 error = pkt.error();
 	if (error != 0)
@@ -319,10 +273,10 @@ bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_Cr
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				clientHUD->CollapsedWidgetFromName(TEXT("Notification"));
 			});
 
-		clientHUD->ShowWidgetFromName("Notification");
+		clientHUD->SelfHitTestInvisibleWidgetFromName("Notification");
 	}
 	else
 	{
@@ -341,17 +295,17 @@ bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_Cr
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				clientHUD->CollapsedWidgetFromName(TEXT("Notification"));
 				networkGameMode->RequestTravelLevel(TEXT("L_SelectCharacter"));
 			});
 
-		clientHUD->ShowWidgetFromName("Notification");
+		clientHUD->SelfHitTestInvisibleWidgetFromName("Notification");
 	}
 
 	return true;
 }
 
-bool Handle_S2C_AppearanceCharacter(ANetworkController* controller, Protocol::S2C_AppearanceCharacter& pkt)
+bool Handle_S2C_UpdateAppearance(ANetworkController* controller, Protocol::S2C_UpdateAppearance& pkt)
 {
 	return false;
 }
