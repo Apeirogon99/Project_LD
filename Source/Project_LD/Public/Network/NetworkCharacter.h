@@ -23,23 +23,23 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	void InitializeCharacter(const FCharacterDatas& InCharacterDatas, const FCharacterAppearance& InCharacterAppearance);
+	void InitializeCharacter(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& InCharacterEquipment);
 	void ConstructCharacter();
 
-	void UpdateCharacterData(const FCharacterDatas& InCharacterDatas);
-	void UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance);
+	//void UpdateCharacterData(const FCharacterDatas& InCharacterDatas);
+	void UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment);
 	void UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance);
 	void UpdateAnimationAsset(UAnimationAsset* InAnimationAsset);
-	FLinearColor GetPartColor(const EPart InPart);
+	FLinearColor GetMeshColor(const EAppearance InAppearance);
 
 protected:
-	USkeletalMeshComponent* GetPartInformation(const EPart InPart, FString& OutParamterName, int32& OutIndex);
-	void SetSkeletalPartColor(const EPart InPart, uint32 InColor);
+	USkeletalMeshComponent* GetPartInformation(const EEquipment InPart, FString& OutParamterName, int32& OutIndex);
+	void SetSkeletalPartColor(USkeletalMeshComponent* inMesh, const FString& inParamterName, int32 inIndex, uint32 inColor);
 	void SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, int32 InMeshIndex);
 
 public:
-	FCharacterDatas			mCharacterData;
 	FCharacterAppearance	mCharacterAppearance;
+	FCharacterEquipment		mChracterEquipment;
 
 //Appearance Skin
 public:
@@ -49,59 +49,65 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
 		USkeletalMeshComponent* mFeet;								  
 																	  
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Equipment")
 		USkeletalMeshComponent* mHair;								  
 																	  
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
-		USkeletalMeshComponent* mFacials_01;						   
+/*	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+		USkeletalMeshComponent* mFacials_01;		*/				   
 																	   
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
-		USkeletalMeshComponent* mFacials_02;						   
+		USkeletalMeshComponent* mFacials;						   
 																	   
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Equipment")
 		USkeletalMeshComponent* mHelmet;							   
 																	   
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Equipment")
 		USkeletalMeshComponent* mShoulders;							   
 																	   
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+	//	USkeletalMeshComponent* mSkirt;		
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
-		USkeletalMeshComponent* mSkirt;								  
+		USkeletalMeshComponent* mPants;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Equipment")
+		USkeletalMeshComponent* mPantsAdd;
 																	  
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
 		USkeletalMeshComponent* mLegs;								   
 																	   
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
-		USkeletalMeshComponent* mLegsAdd;							   
+/*	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+		USkeletalMeshComponent* mLegsAdd;	*/						   
 																	   
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
 		USkeletalMeshComponent* mHands;								  
 																	  
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Equipment")
 		USkeletalMeshComponent* mHandsAdd;							   
 																	   
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
 		USkeletalMeshComponent* mChest;								   
 																	   
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Equipment")
 		USkeletalMeshComponent* mChestAdd;							  
 																	  
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
-		USkeletalMeshComponent* mCape;								  
+/*	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+		USkeletalMeshComponent* mCape;		*/						  
 																	  
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
 		USkeletalMeshComponent* mBracers;							  
 																	  
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Equipment")
 		USkeletalMeshComponent* mBracersAdd;						  
 																	  
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Equipment")
 		USkeletalMeshComponent* mBoots;								   
 																	   
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
-		USkeletalMeshComponent* mBelt;								   
+/*	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+		USkeletalMeshComponent* mBelt;		*/						   
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
-		USkeletalMeshComponent* mTabard;
+	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Skin")
+	//	USkeletalMeshComponent* mTabard;
 
 //Appearance Weapon
 public:

@@ -13,26 +13,25 @@ ANetworkCharacter::ANetworkCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//Appearance
+	//GetMesh() == 머리
+	mFacials		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mFacials"));		//얼굴 장식 == 오크 해당
 	mEars			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mEars"));
-	mFeet			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mFeet"));
-	mHair			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mHair"));
-	mFacials_01		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mFacials_01"));
-	mFacials_02		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mFacials_02"));
-	mHelmet			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mHelmet"));
-	mShoulders		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mShoulders"));
-	mSkirt			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mSkirt"));
-	mLegs			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mLegs"));
-	mLegsAdd		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mLegsAdd"));
-	mHands			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mHands"));
-	mHandsAdd		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mHandsAdd"));
 	mChest			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mChest"));
-	mChestAdd		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mChestAdd"));
-	mCape			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mCape"));
 	mBracers		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mBracers"));
+	mHands			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mHands"));
+	mPants			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mPants"));
+	mLegs			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mLegs"));
+	mFeet			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mFeet"));
+
+	//Equipment
+	mHelmet			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mHelmet"));
+	mHair			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mHair"));
+	mShoulders		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mShoulders"));
+	mChestAdd		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mChestAdd"));
 	mBracersAdd		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mBracersAdd"));
+	mHandsAdd		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mHandsAdd"));
+	mPantsAdd		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mPantsAdd"));
 	mBoots			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mBoots"));
-	mBelt			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mBelt"));
-	mTabard			= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mTabard"));
 
 	//Weapon
 	mBack_2HL		= CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("mBack_2HL"));
@@ -51,27 +50,27 @@ ANetworkCharacter::ANetworkCharacter()
 	USkeletalMeshComponent* meshRoot = GetMesh();
 	if (meshRoot)
 	{
-		//Appearance
-		mEars->SetupAttachment(meshRoot);
-		mFeet->SetupAttachment(meshRoot);
+		//EEquipment하고 순서 같게 해야함 (None으로 인해서 -1은 해야함)
+		//Appearance & Equipment
+		//1. Head
 		mHair->SetupAttachment(meshRoot);
-		mFacials_01->SetupAttachment(meshRoot);
-		mFacials_02->SetupAttachment(meshRoot);
+		mFacials->SetupAttachment(meshRoot);
+		mEars->SetupAttachment(meshRoot);
 		mHelmet->SetupAttachment(meshRoot);
+
 		mShoulders->SetupAttachment(meshRoot);
-		mSkirt->SetupAttachment(meshRoot);
-		mLegs->SetupAttachment(meshRoot);
-		mLegsAdd->SetupAttachment(meshRoot);
-		mHands->SetupAttachment(meshRoot);
-		mHandsAdd->SetupAttachment(meshRoot);
 		mChest->SetupAttachment(meshRoot);
 		mChestAdd->SetupAttachment(meshRoot);
-		mCape->SetupAttachment(meshRoot);
 		mBracers->SetupAttachment(meshRoot);
 		mBracersAdd->SetupAttachment(meshRoot);
+		mHands->SetupAttachment(meshRoot);
+		mHandsAdd->SetupAttachment(meshRoot);
+
+		mPants->SetupAttachment(meshRoot);
+		mPantsAdd->SetupAttachment(meshRoot);
+		mLegs->SetupAttachment(meshRoot);
 		mBoots->SetupAttachment(meshRoot);
-		mBelt->SetupAttachment(meshRoot);
-		mTabard->SetupAttachment(meshRoot);
+		mFeet->SetupAttachment(meshRoot);
 
 		//Weapon
 		mBack_2HL->SetupAttachment(meshRoot);
@@ -110,103 +109,145 @@ void ANetworkCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 }
 
-void ANetworkCharacter::InitializeCharacter(const FCharacterDatas& InCharacterDatas, const FCharacterAppearance& InCharacterAppearance)
+void ANetworkCharacter::InitializeCharacter(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& InCharacterEquipment)
 {
-	UpdateCharacterData(InCharacterDatas);
+	mCharacterAppearance = InCharacterAppearance;
+	mChracterEquipment = InCharacterEquipment;
+
+	UpdateCharacterEquipment(InCharacterEquipment);
 	UpdateCharacterAppearnce(InCharacterAppearance);
-	UpdateCharacterVisual(InCharacterAppearance);
-}
-
-void ANetworkCharacter::UpdateCharacterData(const FCharacterDatas& InCharacterDatas)
-{
-	mCharacterData = InCharacterDatas;
-}
-
-void ANetworkCharacter::UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance)
-{
-	SetSkeletalPartColor(EPart::Boots,		InCharacterAppearance.mBodyColor);
-	SetSkeletalPartColor(EPart::Bracers,	InCharacterAppearance.mBodyColor);
-	SetSkeletalPartColor(EPart::Chest,		InCharacterAppearance.mBodyColor);
-	SetSkeletalPartColor(EPart::Feet,		InCharacterAppearance.mBodyColor);
-	SetSkeletalPartColor(EPart::Hands,		InCharacterAppearance.mBodyColor);
-	SetSkeletalPartColor(EPart::Head,		InCharacterAppearance.mBodyColor);
-	SetSkeletalPartColor(EPart::Hair,		InCharacterAppearance.mHairColor);
-	SetSkeletalPartColor(EPart::Eye,		InCharacterAppearance.mEyeColor);
-	SetSkeletalPartColor(EPart::Eyebrow,	InCharacterAppearance.mEyeColor);
-	SetSkeletalPartColor(EPart::Ears,		InCharacterAppearance.mBodyColor);
-	SetSkeletalPartColor(EPart::Pants,		InCharacterAppearance.mBodyColor);
-
-	mCharacterAppearance.mBodyColor = InCharacterAppearance.mBodyColor;
-	mCharacterAppearance.mHairColor = InCharacterAppearance.mHairColor;
-	mCharacterAppearance.mEyeColor = InCharacterAppearance.mEyeColor;
-
 }
 
 void ANetworkCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance)
-{	
-
-	USkeletalMeshComponent* meshRoot = GetMesh();
-	int32 maxChild = meshRoot->GetNumChildrenComponents() + 1;
-
-	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
+{
+	ERace currentRace = StaticCast<ERace>(InCharacterAppearance.mRace);
+	if (currentRace == ERace::None)
 	{
-		int32 oldMesh = mCharacterAppearance.mMeshs[indexNumber];
-		int32 newMesh = InCharacterAppearance.mMeshs[indexNumber];
-
-		if (oldMesh != newMesh)
-		{
-			USkeletalMeshComponent* partMesh = nullptr;
-
-			if (indexNumber == 0)
-			{
-				partMesh = meshRoot;
-			}
-			else
-			{
-				partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber - 1));
-			}
-
-			SetSkeletalPartMesh(partMesh, newMesh);
-
-		}
-
-		mCharacterAppearance.mMeshs[indexNumber] = InCharacterAppearance.mMeshs[indexNumber];
+		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
+		return;
 	}
 
-	//SetSkeletalPartMesh(mEars,				InCharacterAppearance.mEars);
-	//SetSkeletalPartMesh(mFeet,				InCharacterAppearance.mFeet);
-	//SetSkeletalPartMesh(mHair,				InCharacterAppearance.mHair);
-	//SetSkeletalPartMesh(mFacials_01,			InCharacterAppearance.mFacials_01);
-	//SetSkeletalPartMesh(mFacials_02,			InCharacterAppearance.mFacials_02);
-	//SetSkeletalPartMesh(mHelmet,				InCharacterAppearance.mHelmet);
-	//SetSkeletalPartMesh(mShoulders,			InCharacterAppearance.mShoulders);
-	//SetSkeletalPartMesh(mSkirt,				InCharacterAppearance.mSkirt);
-	//SetSkeletalPartMesh(mLegs,				InCharacterAppearance.mLegs);
-	//SetSkeletalPartMesh(mLegsAdd,				InCharacterAppearance.mLegsAdd);
-	//SetSkeletalPartMesh(mHands,				InCharacterAppearance.mHands);
-	//SetSkeletalPartMesh(mHandsAdd,			InCharacterAppearance.mHandsAdd);
-	//SetSkeletalPartMesh(mChest,				InCharacterAppearance.mChest);
-	//SetSkeletalPartMesh(mChestAdd,			InCharacterAppearance.mChestAdd);
-	//SetSkeletalPartMesh(mCape,				InCharacterAppearance.mCape);
-	//SetSkeletalPartMesh(mBracers,				InCharacterAppearance.mBracers);
-	//SetSkeletalPartMesh(mBracersAdd,			InCharacterAppearance.mBracersAdd);
-	//SetSkeletalPartMesh(mBoots,				InCharacterAppearance.mBoots);
-	//SetSkeletalPartMesh(mBelt,				InCharacterAppearance.mBelt);
-	//SetSkeletalPartMesh(mTabard,				InCharacterAppearance.mTabard);
+	uint32 skinColor = StaticCast<uint32>(InCharacterAppearance.mSkin_Color);
+	uint32 hairColor = StaticCast<uint32>(InCharacterAppearance.mHair_Color);
+	uint32 eyeColor = StaticCast<uint32>(InCharacterAppearance.mEye_Color);
+	uint32 eyebrowColor = StaticCast<uint32>(InCharacterAppearance.mEyebrow_Color);
+
+	SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), (currentRace == ERace::Female ? 2 : 0), skinColor);		//머리
+	SetSkeletalPartColor(mHair,		TEXT("BaseColor"), 0, hairColor);		//헤어
+	SetSkeletalPartColor(mEars,		TEXT("BaseColor"), 0, skinColor);		//귀
+	SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), (currentRace == ERace::Female ? 1 : 1), eyeColor);		//눈
+	SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), (currentRace == ERace::Female ? 0 : 1), eyebrowColor);	//눈썹
+	SetSkeletalPartColor(mBracers,	TEXT("BaseColor"), 0, skinColor);		//팔
+	SetSkeletalPartColor(mChest,	TEXT("BaseColor"), 0, skinColor);		//가슴
+	SetSkeletalPartColor(mHands,	TEXT("BaseColor"), 0, skinColor);		//손
+	SetSkeletalPartColor(mPants,	TEXT("BaseColor"), 0, skinColor);		//하의
+	SetSkeletalPartColor(mLegs,		TEXT("BaseColor"), 0, skinColor);		//다리
+	SetSkeletalPartColor(mFeet,		TEXT("BaseColor"), 0, skinColor);		//발
+
+	SetSkeletalPartColor(mChestAdd, TEXT("BaseColor"), (currentRace == ERace::Orc ? 1 : 0), skinColor);
+	SetSkeletalPartColor(mBoots,	TEXT("BaseColor"), (currentRace == ERace::Orc ? 0 : 1), skinColor);
+
+	mCharacterAppearance.mSkin_Color = InCharacterAppearance.mSkin_Color;
+	mCharacterAppearance.mHair_Color = InCharacterAppearance.mHair_Color;
+	mCharacterAppearance.mEye_Color = InCharacterAppearance.mEye_Color;
+	mCharacterAppearance.mEyebrow_Color = InCharacterAppearance.mEyebrow_Color;
+}
+
+void ANetworkCharacter::UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment)
+{
+
+	//USkeletalMeshComponent* meshRoot = GetMesh();
+	//int32 maxChild = meshRoot->GetNumChildrenComponents() + 1;
+
+	
+
+	//for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
+	//{
+	//	int32 oldMesh = mCharacterAppearance.mMeshs[indexNumber];
+	//	int32 newMesh = InCharacterAppearance.mMeshs[indexNumber];
+
+	//	if (oldMesh != newMesh)
+	//	{
+	//		USkeletalMeshComponent* partMesh = nullptr;
+
+	//		if (indexNumber == 0)
+	//		{
+	//			partMesh = meshRoot;
+	//		}
+	//		else
+	//		{
+	//			partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber - 1));
+	//		}
+
+	//		SetSkeletalPartMesh(partMesh, newMesh);
+
+	//	}
+
+	//	mCharacterAppearance.mMeshs[indexNumber] = InCharacterAppearance.mMeshs[indexNumber];
+	//}
+
+	ERace currentRace = StaticCast<ERace>(mCharacterAppearance.mRace);
+	if (currentRace == ERace::None)
+	{
+		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
+		return;
+	}
+
+	SetSkeletalPartMesh(mHair,			InCharacterEquipment.mHair);
+	SetSkeletalPartMesh(mHelmet,		InCharacterEquipment.mHelmet);
+	SetSkeletalPartMesh(mShoulders,		InCharacterEquipment.mShoulders);
+	SetSkeletalPartMesh(mChestAdd,		InCharacterEquipment.mChestAdd);
+	SetSkeletalPartMesh(mBracersAdd,	InCharacterEquipment.mBracersAdd);
+	SetSkeletalPartMesh(mHandsAdd,		InCharacterEquipment.mHandsAdd);
+
+	if (InCharacterEquipment.mPantsAdd == 0)
+	{
+		switch (currentRace)
+		{
+		case ERace::Male:
+			SetSkeletalPartMesh(mPantsAdd, 130);
+			break;
+		case ERace::Female:
+			SetSkeletalPartMesh(mPantsAdd, 100);
+			break;
+		case ERace::Orc:
+			SetSkeletalPartMesh(mPantsAdd, 160);
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		SetSkeletalPartMesh(mPantsAdd, InCharacterEquipment.mPantsAdd);
+	}
+	SetSkeletalPartMesh(mBoots,			InCharacterEquipment.mBoots);
+
+	SetSkeletalPartMesh(mWeapon_L,		InCharacterEquipment.mWeapon_L);
+	SetSkeletalPartMesh(mWeapon_R,		InCharacterEquipment.mWeapon_R);
+
+	mChracterEquipment = InCharacterEquipment;
+
+	//SetSkeletalPartMesh(mEars,				InCharacterEquipment.mEars);
+	//SetSkeletalPartMesh(mFacials_01,		InCharacterEquipment.mFacials_01);
+	//SetSkeletalPartMesh(mSkirt,				InCharacterEquipment.mSkirt);
+	//SetSkeletalPartMesh(mLegsAdd,			InCharacterEquipment.mLegsAdd);
+	//SetSkeletalPartMesh(mCape,				InCharacterEquipment.mCape);
+	//SetSkeletalPartMesh(mBracers,			InCharacterEquipment.mBracers);
+	//SetSkeletalPartMesh(mBelt,				InCharacterEquipment.mBelt);
+	//SetSkeletalPartMesh(mTabard,			InCharacterEquipment.mTabard);
 
 
-	//SetSkeletalPartMesh(mBack_2HL,			InCharacterAppearance.mBack_2HL);
-	//SetSkeletalPartMesh(mBack_Shield,			InCharacterAppearance.mBack_Shield);
-	//SetSkeletalPartMesh(mBack_WeaponL,		InCharacterAppearance.mBack_WeaponL);
-	//SetSkeletalPartMesh(mBack_WeaponR,		InCharacterAppearance.mBack_WeaponR);
-	//SetSkeletalPartMesh(mBack_Bow,			InCharacterAppearance.mBack_Bow);
-	//SetSkeletalPartMesh(mQuiver,				InCharacterAppearance.mQuiver);
-	//SetSkeletalPartMesh(mWeapon_R_Arrow,		InCharacterAppearance.mWeapon_R_Arrow);
-	//SetSkeletalPartMesh(mWeapon_Shield,		InCharacterAppearance.mWeapon_Shield);
-	//SetSkeletalPartMesh(mWeapon_L,			InCharacterAppearance.mWeapon_L);
-	//SetSkeletalPartMesh(mWeapon_R,			InCharacterAppearance.mWeapon_R);
-	//SetSkeletalPartMesh(mHip_L,				InCharacterAppearance.mHip_L);
-	//SetSkeletalPartMesh(mHip_R,				InCharacterAppearance.mHip_R);
+	//SetSkeletalPartMesh(mBack_2HL,		InCharacterAppearance.mBack_2HL);
+	//SetSkeletalPartMesh(mBack_Shield,		InCharacterAppearance.mBack_Shield);
+	//SetSkeletalPartMesh(mBack_WeaponL,	InCharacterAppearance.mBack_WeaponL);
+	//SetSkeletalPartMesh(mBack_WeaponR,	InCharacterAppearance.mBack_WeaponR);
+	//SetSkeletalPartMesh(mBack_Bow,		InCharacterAppearance.mBack_Bow);
+	//SetSkeletalPartMesh(mQuiver,			InCharacterAppearance.mQuiver);
+	//SetSkeletalPartMesh(mWeapon_R_Arrow,	InCharacterAppearance.mWeapon_R_Arrow);
+	//SetSkeletalPartMesh(mWeapon_Shield,	InCharacterAppearance.mWeapon_Shield);
+	//SetSkeletalPartMesh(mHip_L,			InCharacterAppearance.mHip_L);
+	//SetSkeletalPartMesh(mHip_R,			InCharacterAppearance.mHip_R);
 }
 
 void ANetworkCharacter::UpdateAnimationAsset(UAnimationAsset* InAnimationAsset)
@@ -224,132 +265,74 @@ void ANetworkCharacter::UpdateAnimationAsset(UAnimationAsset* InAnimationAsset)
 	}
 }
 
-USkeletalMeshComponent* ANetworkCharacter::GetPartInformation(const EPart InPart, FString& OutParamterName, int32& OutIndex)
+FLinearColor ANetworkCharacter::GetMeshColor(const EAppearance InAppearance)
 {
-	USkeletalMeshComponent* outMeshPart = nullptr;
-	if (InPart == EPart::None)
-	{
-		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Part is None"), ELogLevel::Error);
-		return false;	
-	}
+	USkeletalMeshComponent* mesh;
+	int32					index;
+	FLinearColor			meshColor;
+	FString					paramterName = TEXT("BaseColor");
 
-	ETribe currentTribe = StaticCast<ETribe>(mCharacterData.mTribe);
-	if (currentTribe == ETribe::None)
+	ERace currentTribe = StaticCast<ERace>(mCharacterAppearance.mRace);
+	if (currentTribe == ERace::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
-		return false;
+		return FLinearColor();
 	}
 
-	switch (InPart)
+	switch (InAppearance)
 	{
-	case EPart::Boots:
-		outMeshPart = mBoots;
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = 0;
+	case EAppearance::None:
+		return FLinearColor();
 		break;
-	case EPart::Bracers:
-		outMeshPart = mBracers;
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = 0;
+	case EAppearance::Body:
+		mesh = GetMesh();
+		index = (currentTribe == ERace::Female ? 2 : 0);
 		break;
-	case EPart::Chest:
-		outMeshPart = mChest;
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = 0;
+	case EAppearance::Eye:
+		mesh = GetMesh();
+		index = (currentTribe == ERace::Female ? 1 : 1);
 		break;
-	case EPart::Feet:
-		outMeshPart = mFeet;
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = 0;
+	case EAppearance::Eyebrow:
+		mesh = GetMesh();
+		index = (currentTribe == ERace::Female ? 0 : 1);
 		break;
-	case EPart::Hands:
-		outMeshPart = mHands;
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = 0;
-		break;
-	case EPart::Head:
-		outMeshPart = GetMesh();
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = (currentTribe == ETribe::Woman ? 2 : 0);
-		break;
-	case EPart::Hair:
-		outMeshPart = mHair;
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = 0;
-		break;
-	case EPart::Eye:
-		outMeshPart = GetMesh();
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = (currentTribe == ETribe::Woman ? 1 : 1);
-		break;
-	case EPart::Eyebrow:
-		outMeshPart = GetMesh();
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = (currentTribe == ETribe::Woman ? 0 : 1);
-		break;
-	case EPart::Ears:
-		outMeshPart = mEars;
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = 0;
-		break;
-	case EPart::Pants:
-		outMeshPart = mLegs;
-		OutParamterName = TEXT("BaseColor");
-		OutIndex = 0;
+	case EAppearance::Hair:
+		mesh = mHair;
+		index = 0;
 		break;
 	default:
+		return FLinearColor();
 		break;
 	}
 
-	if (nullptr == outMeshPart || nullptr == outMeshPart->SkeletalMesh)
+	UMaterialInstanceDynamic* materialDynamic = mesh->CreateDynamicMaterialInstance(index);
+	if (materialDynamic == nullptr)
 	{
-		return nullptr;
+		return FLinearColor();
 	}
+	materialDynamic->GetVectorParameterValue(FName(*paramterName), meshColor);
 
-	return outMeshPart;
+	return meshColor;
 }
 
-void ANetworkCharacter::SetSkeletalPartColor(const EPart InPart, uint32 InColor)
+void ANetworkCharacter::SetSkeletalPartColor(USkeletalMeshComponent* inMesh, const FString& inParamterName, int32 inIndex, uint32 inColor)
 {
-	USkeletalMeshComponent* MeshPart = nullptr;
-	FString					ParamterName = TEXT("");
-	int32					Index = 0;
+	USkeletalMeshComponent*			meshPart = inMesh;
+	FString							paramterName = inParamterName;
+	int32							index = inIndex;
+	uint32							color = inColor;
 
-	FLinearColor partColor = UNetworkUtils::ConverLinearColor(InColor);
-	if (GetPartColor(InPart) == partColor)
+	if (nullptr == meshPart->SkeletalMesh)
 	{
 		return;
 	}
 
-	MeshPart = GetPartInformation(InPart, ParamterName, Index);
-	if (nullptr == MeshPart)
+	FLinearColor meshColor = UNetworkUtils::ConverLinearColor(color);
+	UMaterialInstanceDynamic* materialDynamic = meshPart->CreateDynamicMaterialInstance(index);
+	if (materialDynamic)
 	{
-		return;
+		materialDynamic->SetVectorParameterValue(FName(*paramterName), meshColor);
 	}
-
-	UMaterialInstanceDynamic* materialDynamic = MeshPart->CreateDynamicMaterialInstance(Index);
-	materialDynamic->SetVectorParameterValue(FName(*ParamterName), partColor);
-
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("색칠 : %s - %d"), *MeshPart->GetFName().ToString(), InColor), ELogLevel::Warning);
-}
-
-FLinearColor ANetworkCharacter::GetPartColor(const EPart InPart)
-{
-	USkeletalMeshComponent* MeshPart = nullptr;
-	FString					ParamterName = TEXT("");
-	int32					Index = 0;
-	FLinearColor			PartColor;
-
-	MeshPart = GetPartInformation(InPart, ParamterName, Index);
-	if (nullptr == MeshPart)
-	{
-		return PartColor;
-	}
-
-	UMaterialInstanceDynamic* materialDynamic = MeshPart->CreateDynamicMaterialInstance(Index);
-	materialDynamic->GetVectorParameterValue(FName(*ParamterName), PartColor);
-
-	return PartColor;
 }
 
 void ANetworkCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, int32 InMeshIndex)
@@ -389,39 +372,39 @@ void ANetworkCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, 
 
 void ANetworkCharacter::ConstructCharacter()
 {
-	USkeletalMeshComponent* meshRoot = GetMesh();
-	int32 maxChild = meshRoot->GetNumChildrenComponents() + 1;
-	mCharacterAppearance.mMeshs.Init(0, maxChild);
+	//USkeletalMeshComponent* meshRoot = GetMesh();
+	//int32 maxChild = meshRoot->GetNumChildrenComponents() + 1;
+	//mCharacterAppearance.mMeshs.Init(0, maxChild);
 
-	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
-	{
+	//for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
+	//{
 
-		USkeletalMeshComponent* partMesh = nullptr;
-		if (indexNumber == 0)
-		{
-			partMesh = meshRoot;
-		}
-		else
-		{
-			partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber - 1));
-		}
+	//	USkeletalMeshComponent* partMesh = nullptr;
+	//	if (indexNumber == 0)
+	//	{
+	//		partMesh = meshRoot;
+	//	}
+	//	else
+	//	{
+	//		partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber - 1));
+	//	}
 
-		int32 itemCode = 0;
-		if (partMesh->SkeletalMesh)
-		{
-			FString outMeshName = partMesh->SkeletalMesh->GetName();
+	//	int32 itemCode = 0;
+	//	if (partMesh->SkeletalMesh)
+	//	{
+	//		FString outMeshName = partMesh->SkeletalMesh->GetName();
 
-			int32 findIndex = 0;
-			outMeshName.FindLastChar('_', findIndex);
-			if (findIndex != INDEX_NONE)
-			{
-				outMeshName.RemoveAt(0, findIndex + 1);
-				itemCode = UNetworkUtils::ConvertStringToInt(outMeshName);
-			}
+	//		int32 findIndex = 0;
+	//		outMeshName.FindLastChar('_', findIndex);
+	//		if (findIndex != INDEX_NONE)
+	//		{
+	//			outMeshName.RemoveAt(0, findIndex + 1);
+	//			itemCode = UNetworkUtils::ConvertStringToInt(outMeshName);
+	//		}
 
-		}
+	//	}
 
-		mCharacterAppearance.mMeshs[indexNumber] = itemCode;
-	}
+	//	mCharacterAppearance.mMeshs[indexNumber] = itemCode;
+	//}
 }
 
