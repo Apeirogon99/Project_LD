@@ -82,7 +82,7 @@ static std::string GetDatabaseError(int32 error)
 	}
 }
 
-static int32 GetDatabaseErrorToInt(EDBErrorType inError)
+static int32 GetDatabaseErrorToInt(const EDBErrorType& inErrorType)
 {
-	return static_cast<int32>(inError);
+	return static_cast<int32>(inErrorType);
 }

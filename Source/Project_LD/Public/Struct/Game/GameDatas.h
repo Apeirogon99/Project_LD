@@ -32,10 +32,10 @@ public:
 		int32	tier_id;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-		FString	description;
+		FString	name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-		FString	name;
+		FString	description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		int32	cost;
@@ -51,6 +51,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		int32	size_y;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+		int32	rotation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+		USkeletalMesh* icro;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		USkeletalMesh* mesh;

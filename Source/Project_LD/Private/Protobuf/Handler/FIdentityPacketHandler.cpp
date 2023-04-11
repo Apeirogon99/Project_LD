@@ -18,6 +18,8 @@
 
 #include <Widget/Identity/W_SelectCharacter.h>
 
+#include <DatabaseErrorTypes.h>
+
 bool Handle_S2C_EnterIdentityServer(ANetworkController* controller, Protocol::S2C_EnterIdentityServer& pkt)
 {
 	AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
@@ -63,7 +65,7 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
 
 	int32 error = pkt.error();
-	if (error != 0)
+	if (error != GetDatabaseErrorToInt(EDBErrorType::SUCCESS))
 	{
 		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
 		notification->SetTitle(TEXT("로그인 실패"));
@@ -72,7 +74,7 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
-				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
+				clientHUD->CollapsedWidgetFromName(TEXT("Notification"));
 			});
 
 		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
@@ -116,16 +118,45 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
 
 	int32 error = pkt.error();
-	if (error != 0)
+	if (error == GetDatabaseErrorToInt(EDBErrorType::ID_DISTINCT))
 	{
 		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
 		notification->SetTitle(TEXT("회원가입 실패"));
-		notification->SetNotification(TEXT("이미 아이디 또는 이메일이 존재합니다"));
-		notification->SetButtonText(TEXT("확인"));
+		notification->SetNotification(TEXT("이미 아이디가 존재합니다"));
+		notification->SetButtonText(TEXT("다시 입력"));
 
 		notification->mNotificationDelegate.BindLambda([=]()
 			{
 				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
+			});
+
+		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
+	}
+	else if (error == GetDatabaseErrorToInt(EDBErrorType::ALREADY_EMAIL_VERIFY))
+	{
+		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
+		notification->SetTitle(TEXT("회원가입 실패"));
+		notification->SetNotification(TEXT("이미 이메일이 존재합니다"));
+		notification->SetButtonText(TEXT("다시 입력"));
+
+		notification->mNotificationDelegate.BindLambda([=]()
+			{
+				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
+			});
+
+		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
+	}
+	else if (error == GetDatabaseErrorToInt(EDBErrorType::TEMP_VERIFY))
+	{
+		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
+		notification->SetTitle(TEXT("회원가입 성공"));
+		notification->SetNotification(TEXT("임시 인증을 성공하였습니다"));
+		notification->SetButtonText(TEXT("확인"));
+
+		notification->mNotificationDelegate.BindLambda([=]()
+			{
+				//clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
+				clientHUD->AllCollapsedButOneWidget(TEXT("Singin"));
 			});
 
 		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
@@ -264,11 +295,11 @@ bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_Cr
 	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
 
 	int32 error = pkt.error();
-	if (error != 0)
+	if (error != GetDatabaseErrorToInt(EDBErrorType::SUCCESS))
 	{
 		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
 		notification->SetTitle(TEXT("닉네임 중복"));
-		notification->SetNotification(TEXT("이미 사용중인 닉네임 입니다"));
+		notification->SetNotification(UNetworkUtils::GetNetworkErrorToString(error));
 		notification->SetButtonText(TEXT("확인"));
 
 		notification->mNotificationDelegate.BindLambda([=]()
