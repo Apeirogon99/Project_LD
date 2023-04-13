@@ -7,6 +7,7 @@
 #include "GM_CustomCharacter.generated.h"
 
 class ANetworkCharacter;
+class AAppearanceCharacter;
 /**
  * 
  */
@@ -26,11 +27,11 @@ protected:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void CreateNewDummyCharacter(int32 InRace);
+	void CreateNewDummyCharacter(const ECharacterRace InRace);
 	
 public:
 	UPROPERTY(EditAnywhere, Category = "DummyClass")
-	TArray<TSubclassOf<ANetworkCharacter>> mDummyCharacterClass;
+	TArray<TSubclassOf<AAppearanceCharacter>> mDummyCharacterClass;
 
-	ANetworkCharacter* mDummyCharacter;
+	AAppearanceCharacter* mDummyCharacter;
 };

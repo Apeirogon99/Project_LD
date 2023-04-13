@@ -10,9 +10,10 @@ class UButton;
 class UTextBlock;
 class UAnimationAsset;
 class ANetworkCharacter;
+class AAppearanceCharacter;
 class UImage;
 struct FCharacterAppearance;
-struct FCharacterDatas;
+struct FCharacterData;
 
 UENUM(BlueprintType)
 enum class EClickMode : uint8
@@ -56,7 +57,7 @@ public:
 
 public:
 	UFUNCTION()
-	void SetCharacterInfo(const FString& name, const FCharacterAppearance& inCharacterAppearance, const FCharacterEquipment& inCharacterEquipment);
+	void SetCharacterInfo(const FCharacterData& inCharacterData);
 
 	UFUNCTION()
 	void SetClickMode(EClickMode inClickMode);
@@ -94,7 +95,7 @@ public:
 	FRotator mCharacterRotation;
 
 	UPROPERTY(EditAnywhere, Category = "Default")
-	TArray<TSubclassOf<ANetworkCharacter>> mDummyCharacterClass;
+	TArray<TSubclassOf<AAppearanceCharacter>> mDummyCharacterClass;
 
 	UPROPERTY(EditAnywhere, Category = "Default")
 	UTexture2D* mCreateTexture;
@@ -111,7 +112,7 @@ public:
 private:
 
 	UPROPERTY()
-	ANetworkCharacter* mCharacter;
+	AAppearanceCharacter* mCharacter;
 
 	UPROPERTY()
 	EClickMode mClickMode;

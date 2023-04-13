@@ -28,7 +28,7 @@ public:
 
 public:
 	UFUNCTION()
-		void LoadCharacterInfo(const FString& name, const FCharacterAppearance& inCharacterAppearance, const FCharacterEquipment& inCharacterEquipment);
+		void CreateCharacter(const FCharacterData& inCharacterData);
 
 protected:
 	UFUNCTION()

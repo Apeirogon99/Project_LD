@@ -11,6 +11,8 @@
 
 #include <Network/NetworkGameMode.h>
 #include <Network/NetworkCharacter.h>
+#include <Framework/Character/AppearanceCharacter.h>
+
 #include <Framework/Gameinstance/LDGameInstance.h>
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FIdentityPacketHandler.h>
@@ -98,23 +100,22 @@ void UW_SelectCharacterButton::Click_Character()
 	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Reconfirm"));
 }
 
-void UW_SelectCharacterButton::SetCharacterInfo(const FString& name, const FCharacterAppearance& inCharacterAppearance, const FCharacterEquipment& inCharacterEquipment)
+void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterData& inCharacterData)
 {
-	FText characterTitle = FText::FromString(FString::Printf(TEXT("%s"), *name));
+	FText characterTitle = FText::FromString(FString::Printf(TEXT("%s"), *inCharacterData.mName));
 	mCharacterInfoText->SetText(characterTitle);
 
-	ANetworkCharacter* NewDummyCharacter = nullptr;
-	TSubclassOf<ANetworkCharacter> raceClass = mDummyCharacterClass[inCharacterAppearance.mRace];
+	AAppearanceCharacter* NewDummyCharacter = nullptr;
+	TSubclassOf<AAppearanceCharacter> raceClass = mDummyCharacterClass[StaticCast<int32>(inCharacterData.mRace)];
 	if (raceClass)
 	{
 		FActorSpawnParameters spawnParams;
 		spawnParams.Owner = GetOwningPlayer();
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-		mCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(raceClass, mCharacterLocation, mCharacterRotation, spawnParams);
-
-		mCharacter->InitializeCharacter(inCharacterAppearance, inCharacterEquipment);
-		mCharacter->ConstructCharacter();
+		mCharacter = GetWorld()->SpawnActor<AAppearanceCharacter>(raceClass, mCharacterLocation, mCharacterRotation, spawnParams);
+		mCharacter->InitializeCharacter(inCharacterData);
+		mCharacter->InitializeAppearance();
 	}
 	//mCharacter->UpdateAnimationAsset(mDefaultCharacterAnimation);
 
@@ -203,7 +204,7 @@ void UW_SelectCharacterButton::CreateCharacter()
 	ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	if (gameinstance)
 	{
-		gameinstance->mCharacterAppearance.mSeat = mCharacterButtonNumber;
+		gameinstance->mCharacterData.mAppearance.mSeat = mCharacterButtonNumber;
 	}
 
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());

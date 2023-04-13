@@ -11,6 +11,7 @@ class UButton;
 class UTextBlock;
 class UW_ColorPicker;
 class ANetworkCharacter;
+class AAppearanceCharacter;
 struct FCharacterAppearance;
 enum class EEquipment : uint8;
 enum class ETribe : uint8;
@@ -81,7 +82,7 @@ public:
 		void UpdateDummyCharacterPartColor();
 
 	UFUNCTION()
-		void SetClassText(const int32 inClass);
+		void SetClassText(const ECharacterClass inClass);
 
 public:
 
@@ -98,7 +99,7 @@ public:
 	EAppearance mCurrentDummyAppearance;
 
 	UPROPERTY()
-	ANetworkCharacter* mCurrentDummyCharacter;
+	AAppearanceCharacter* mCurrentDummyCharacter;
 
 	FCharacterAppearance mTempCharacterAppearance;
 };

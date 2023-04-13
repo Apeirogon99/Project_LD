@@ -46,14 +46,14 @@ void UW_SelectCharacter::NativeConstruct()
 	mCurrentClickMode = EClickMode::None;
 }
 
-void UW_SelectCharacter::LoadCharacterInfo(const FString& name, const FCharacterAppearance& inCharacterAppearance, const FCharacterEquipment& inCharacterEquipment)
+void UW_SelectCharacter::CreateCharacter(const FCharacterData& inCharacterData)
 {
 	if (mCharacterButtonWidgets.Num() == 0)
 	{
 		LoadChild();
 	}
 
-	int32 seat = inCharacterAppearance.mSeat;
+	int32 seat = inCharacterData.mAppearance.mSeat;
 	if (!(0 <= seat && seat < mCharacterButtonWidgets.Num()))
 	{
 		return;
@@ -62,7 +62,7 @@ void UW_SelectCharacter::LoadCharacterInfo(const FString& name, const FCharacter
 	UW_SelectCharacterButton* characterButton = Cast<UW_SelectCharacterButton>(mCharacterButtonWidgets[seat]);
 	if (characterButton)
 	{
-		characterButton->SetCharacterInfo(name, inCharacterAppearance, inCharacterEquipment);
+		characterButton->SetCharacterInfo(inCharacterData);
 	}
 }
 

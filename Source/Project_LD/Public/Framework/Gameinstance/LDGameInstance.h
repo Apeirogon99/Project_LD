@@ -25,13 +25,10 @@ public:
 public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Network")
-		FString mToken;
+	FString mToken;
 
 	UPROPERTY()
-	FCharacterEquipment mCharacterEquipment;
-
-	UPROPERTY()
-	FCharacterAppearance mCharacterAppearance;
+	FCharacterData mCharacterData;
 
 public:
 	FItemData* GetItemData(int32 inCode);

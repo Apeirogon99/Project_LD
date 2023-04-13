@@ -259,6 +259,8 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 
 	for (int index = 0; index < pkt.appearance_size(); ++index)
 	{
+		FCharacterData characterData;
+
 		FString name = UNetworkUtils::ConvertFString(pkt.name().Get(index));
 		
 		const Protocol::SCharacterAppearance& appearance = pkt.appearance(index);
@@ -269,7 +271,11 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 		FCharacterEquipment characterEquipment;
 		characterEquipment.UpdateEquipments(eqipment);
 
-		selectCharacterWidget->LoadCharacterInfo(name, characterAppearance, characterEquipment);
+		characterData.mName = name;
+		characterData.mAppearance = characterAppearance;
+		characterData.mEquipment = characterEquipment;
+
+		selectCharacterWidget->CreateCharacter(characterData);
 	}
 
 	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));

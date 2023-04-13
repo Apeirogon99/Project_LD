@@ -15,7 +15,7 @@ enum class ECharacterClass : uint8
 };
 
 UENUM(BlueprintType)
-enum class ERace : uint8
+enum class ECharacterRace : uint8
 {
 	None			UMETA(DisplayName = "None"),
 	Male			UMETA(DisplayName = "Male"),
@@ -23,34 +23,27 @@ enum class ERace : uint8
 	Orc				UMETA(DisplayName = "Orc"),
 };
 
+UENUM(BlueprintType)
+enum class ECharacterPose : uint8
+{
+	None			UMETA(DisplayName = "None"),
+	Seat			UMETA(DisplayName = "Seat")
+};
+
 UENUM()
 enum class EEquipment : uint8
 {
 	None			UMETA(DisplayName = "None"),
-	//머리부분
-	Head			UMETA(DisplayName = "Head"),
+	Body			UMETA(DisplayName = "Body"),
 	Hair			UMETA(DisplayName = "Hair"),
-	Facials			UMETA(DisplayName = "Facials"),
-	Ears			UMETA(DisplayName = "Ears"),
 	Helmet			UMETA(DisplayName = "Helmet"),
-
-	//상체
 	Shoulders		UMETA(DisplayName = "Shoulders"),
 	Chest			UMETA(DisplayName = "Chest"),
-	ChestAdd		UMETA(DisplayName = "ChestAdd"),
 	Bracers			UMETA(DisplayName = "Bracers"),
-	BracersAdd		UMETA(DisplayName = "BracersAdd"),
 	Hands			UMETA(DisplayName = "Hands"),
-	HandsAdd		UMETA(DisplayName = "HandsAdd"),
-
-	//하체
 	Pants			UMETA(DisplayName = "Pants"),
-	PantsAdd		UMETA(DisplayName = "PantsAdd"),
-	Legs			UMETA(DisplayName = "Legs"),
 	Boots			UMETA(DisplayName = "Boots"),
-	Feet			UMETA(DisplayName = "Feet"),
 
-	//무기
 	Back_2HL		UMETA(DisplayName = "Back_2HL"),
 	Back_Shield		UMETA(DisplayName = "Back_Shield"),
 	Back_WeaponL	UMETA(DisplayName = "Back_WeaponL"),
@@ -82,6 +75,13 @@ struct FCharacterEquipment
 
 public:
 	FCharacterEquipment();
+	FCharacterEquipment(const FCharacterEquipment& inCharacterEquipments) { UpdateEquipments(inCharacterEquipments); }
+	FCharacterEquipment(const Protocol::SCharacterAppearance& inCharacterEquipments) { UpdateEquipments(inCharacterEquipments);}
+
+	FCharacterEquipment& operator=(const FCharacterEquipment& inCharacterEquipments) { UpdateEquipments(inCharacterEquipments); return *this; }
+	FCharacterEquipment& operator=(const Protocol::SCharacterAppearance& inCharacterEquipments) { UpdateEquipments(inCharacterEquipments); return *this; }
+
+	void UpdateEquipments(const FCharacterEquipment& inCharacterEquipments);
 	void UpdateEquipments(const Protocol::SCharacterEqipment& inCharacterEquipments);
 
 public:
@@ -95,16 +95,16 @@ public:
 	int32 mShoulders;
 
 	UPROPERTY()
-	int32 mChestAdd;
+	int32 mChest;
 
 	UPROPERTY()
-	int32 mBracersAdd;
+	int32 mBracers;
 
 	UPROPERTY()
-	int32 mHandsAdd;
+	int32 mHands;
 
 	UPROPERTY()
-	int32 mPantsAdd;
+	int32 mPants;
 
 	UPROPERTY()
 	int32 mBoots;
@@ -124,18 +124,16 @@ struct FCharacterAppearance
 
 public:
 	FCharacterAppearance();
+	FCharacterAppearance(const FCharacterAppearance& inCharacterAppearance) { UpdateAppearance(inCharacterAppearance); }
+	FCharacterAppearance(const Protocol::SCharacterAppearance& inCharacterAppearance) { UpdateAppearance(inCharacterAppearance); }
+
+	FCharacterAppearance& operator=(const FCharacterAppearance& inCharacterAppearance) { UpdateAppearance(inCharacterAppearance); return *this; }
+	FCharacterAppearance& operator=(const Protocol::SCharacterAppearance& inCharacterAppearance) { UpdateAppearance(inCharacterAppearance); return *this; }
+
+	void UpdateAppearance(const FCharacterAppearance& inCharacterAppearance);
 	void UpdateAppearance(const Protocol::SCharacterAppearance& inCharacterAppearance);
 
 public:
-	UPROPERTY()
-	int32 mCharacterID;
-
-	UPROPERTY()
-	int32 mRace;
-
-	UPROPERTY()
-	int32 mCharacterClass;
-
 	UPROPERTY()
 	int32 mSeat;
 
@@ -156,5 +154,36 @@ USTRUCT(Atomic, BlueprintType)
 struct FCharacterStatus
 {
 	GENERATED_BODY()
+
+public:
+	FCharacterStatus();
+	FCharacterStatus(const FCharacterStatus& inCharacterStatus) { UpdateCharacterStatus(inCharacterStatus); }
+	FCharacterStatus& operator=(const FCharacterStatus& inCharacterStatus) { UpdateCharacterStatus(inCharacterStatus); return *this; }
+
+	void UpdateCharacterStatus(const FCharacterStatus& inCharacterStatus);
+};
+
+
+USTRUCT(Atomic)
+struct FCharacterData
+{
+	GENERATED_BODY()
+
+public:
+	FCharacterData();
+	FCharacterData(const FCharacterData& inCharacterData) { UpdateCharacterData(inCharacterData); }
+	FCharacterData& operator=(const FCharacterData& inCharacterData) { UpdateCharacterData(inCharacterData); return *this; }
+
+	void UpdateCharacterData(const FCharacterData& inCharacterData);
+
+public:
+	int32					mCharacterID;
+	FString					mName;
+	int32					mLevel;
+	ECharacterClass			mClass;
+	ECharacterRace			mRace;
+	FCharacterAppearance	mAppearance;
+	FCharacterEquipment		mEquipment;
+	FCharacterStatus		mStatus;
 
 };

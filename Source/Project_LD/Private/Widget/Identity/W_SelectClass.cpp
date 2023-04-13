@@ -52,7 +52,7 @@ void UW_SelectClass::Click_Wizard()
 	SelectClass(TEXT("마법사"), ECharacterClass::Wizard);
 }
 
-void UW_SelectClass::SelectClass(const FString& inClass, ECharacterClass inClassNum)
+void UW_SelectClass::SelectClass(const FString& inClass, ECharacterClass inCharacterClass)
 {
 	AClientHUD* clientHUD = Cast<AClientHUD>(GetOwningPlayer()->GetHUD());
 	if (nullptr == clientHUD)
@@ -92,7 +92,7 @@ void UW_SelectClass::SelectClass(const FString& inClass, ECharacterClass inClass
 
 	reconfirm->mReConfirmDelegate.BindLambda([=]()
 		{
-			gameInstance->mCharacterAppearance.mCharacterClass = static_cast<int32>(inClassNum);
+			gameInstance->mCharacterData.mClass = inCharacterClass;
 
 			networkGameMode->RequestTravelLevel(TEXT("L_CustomCharacter"));
 		});

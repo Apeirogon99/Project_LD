@@ -4,7 +4,10 @@
 #include "Framework/Identity/GM_CustomCharacter.h"
 #include <Framework/Identity/IdentityPlayerController.h>
 #include <Framework/Gameinstance/LDGameInstance.h>
+
 #include <Network/NetworkCharacter.h>
+#include <Framework/Character/AppearanceCharacter.h>
+
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Identity/W_CustomCharacter.h>
 
@@ -57,24 +60,24 @@ void AGM_CustomCharacter::BeginNetwork()
 		return;
 	}
 
-	CreateNewDummyCharacter(StaticCast<int32>(ERace::Male));
+	CreateNewDummyCharacter(ECharacterRace::Male);
 
 	UW_CustomCharacter* customWidget = Cast<UW_CustomCharacter>(mClientHUD->GetWidgetFromName(TEXT("CustomCharacter")));
-	customWidget->SetClassText(gameinstance->mCharacterAppearance.mCharacterClass);
+	customWidget->SetClassText(gameinstance->mCharacterData.mClass);
 	mClientHUD->ShowWidgetFromName(TEXT("CustomCharacter"));
 }
 
-void AGM_CustomCharacter::CreateNewDummyCharacter(int32 InRace)
+void AGM_CustomCharacter::CreateNewDummyCharacter(const ECharacterRace InRace)
 {
 	ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	if (nullptr == gameinstance)
 	{
 		return;
 	}
-	gameinstance->mCharacterAppearance.mRace = InRace;
+	gameinstance->mCharacterData.mRace = InRace;
 
-	ANetworkCharacter* NewDummyCharacter = nullptr;
-	TSubclassOf<ANetworkCharacter> raceClass = mDummyCharacterClass[InRace];
+	AAppearanceCharacter* NewDummyCharacter = nullptr;
+	TSubclassOf<AAppearanceCharacter> raceClass = mDummyCharacterClass[StaticCast<int32>(InRace)];
 	if (raceClass)
 	{
 		FActorSpawnParameters spawnParams;
@@ -84,11 +87,9 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(int32 InRace)
 		FVector CharacterLocation(100.0f, 0.0f, 520.0f);
 		FRotator CharacterRotation(0.0f, -180.0f, 0.0f);
 
-		NewDummyCharacter = GetWorld()->SpawnActor<ANetworkCharacter>(raceClass, CharacterLocation, CharacterRotation, spawnParams);
-		NewDummyCharacter->mCharacterAppearance = gameinstance->mCharacterAppearance;
-		NewDummyCharacter->UpdateCharacterEquipment(FCharacterEquipment());
-		//NewDummyCharacter->UpdateCharacterAppearnce(characterAppearance);
-		//NewDummyCharacter->ConstructCharacter();
+		NewDummyCharacter = GetWorld()->SpawnActor<AAppearanceCharacter>(raceClass, CharacterLocation, CharacterRotation, spawnParams);
+		NewDummyCharacter->InitializeCharacter(gameinstance->mCharacterData);
+		NewDummyCharacter->InitializeAppearance();
 	}
 
 	if (mDummyCharacter)

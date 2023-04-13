@@ -16,6 +16,8 @@
 #include <Protobuf/Handler/FIdentityPacketHandler.h>
 
 #include <Network/NetworkCharacter.h>
+#include <Framework/Character/AppearanceCharacter.h>
+
 #include <Kismet/GameplayStatics.h>
 #include <Framework/Gameinstance/LDGameInstance.h>
 
@@ -103,6 +105,7 @@ void UW_CustomCharacter::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 void UW_CustomCharacter::Click_Create()
 {
 	ANetworkController* controller = Cast<ANetworkController>(GetOwningPlayer());
+	
 	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
 
 	UW_EditBox* editBox = Cast<UW_EditBox>(clientHUD->GetWidgetFromName(TEXT("EditBox")));
@@ -124,14 +127,14 @@ void UW_CustomCharacter::Click_Create()
 			Protocol::SCharacterAppearance* newCharacterAppearance = createCharacterPacket.mutable_appearance();
 			if (mCurrentDummyCharacter)
 			{
-				FCharacterAppearance appearance = mCurrentDummyCharacter->mCharacterAppearance;
-				newCharacterAppearance->set_race(static_cast<Protocol::ERace>(appearance.mRace));
-				newCharacterAppearance->set_character_class(static_cast<Protocol::ECharacterClass>(appearance.mCharacterClass));
-				newCharacterAppearance->set_seat(appearance.mSeat);
-				newCharacterAppearance->set_skin_color(appearance.mSkin_Color);
-				newCharacterAppearance->set_hair_color(appearance.mHair_Color);
-				newCharacterAppearance->set_eye_color(appearance.mEye_Color);
-				newCharacterAppearance->set_eyebrow_color(appearance.mEyebrow_Color);
+				const FCharacterData& characterData = mCurrentDummyCharacter->GetCharacterData();
+				newCharacterAppearance->set_race(static_cast<Protocol::ERace>(characterData.mRace));
+				newCharacterAppearance->set_character_class(static_cast<Protocol::ECharacterClass>(characterData.mClass));
+				newCharacterAppearance->set_seat(characterData.mAppearance.mSeat);
+				newCharacterAppearance->set_skin_color(characterData.mAppearance.mSkin_Color);
+				newCharacterAppearance->set_hair_color(characterData.mAppearance.mHair_Color);
+				newCharacterAppearance->set_eye_color(characterData.mAppearance.mEye_Color);
+				newCharacterAppearance->set_eyebrow_color(characterData.mAppearance.mEyebrow_Color);
 			}
 
 			SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, createCharacterPacket);
@@ -194,8 +197,8 @@ void UW_CustomCharacter::ToggleColorPicker(EAppearance inDummyAppearance)
 		mColorPicker->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 
 		AActor* newDummyCharacter = nullptr;
-		newDummyCharacter = UGameplayStatics::GetActorOfClass(GetWorld(), ANetworkCharacter::StaticClass());
-		mCurrentDummyCharacter = Cast<ANetworkCharacter>(newDummyCharacter);
+		newDummyCharacter = UGameplayStatics::GetActorOfClass(GetWorld(), AAppearanceCharacter::StaticClass());
+		mCurrentDummyCharacter = Cast<AAppearanceCharacter>(newDummyCharacter);
 		
 		FString colorPickerTarget;
 		switch (inDummyAppearance)
@@ -263,12 +266,10 @@ void UW_CustomCharacter::UpdateDummyCharacterPartColor()
 	}
 }
 
-void UW_CustomCharacter::SetClassText(const int32 inClass)
+void UW_CustomCharacter::SetClassText(const ECharacterClass inClass)
 {
-
 	FString classStr;
-	ECharacterClass gameClass = static_cast<ECharacterClass>(inClass);
-	switch (gameClass)
+	switch (inClass)
 	{
 	case ECharacterClass::None:
 		classStr = TEXT("None");
