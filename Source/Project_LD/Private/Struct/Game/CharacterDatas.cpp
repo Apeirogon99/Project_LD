@@ -2,6 +2,7 @@
 
 
 #include "Struct/Game/CharacterDatas.h"
+#include <Protobuf/Handler/PacketUtils.h>
 
 FCharacterEquipment::FCharacterEquipment() : mHair(0), mHelmet(0), mShoulders(0), mChest(0),mBracers(0), mHands(0), mPants(0), mBoots(0), mWeapon_L(0), mWeapon_R(0)
 {
@@ -27,21 +28,22 @@ void FCharacterEquipment::UpdateEquipments(const Protocol::SCharacterEqipment& i
 	mHair			= inCharacterEquipments.hair();
 	mHelmet			= inCharacterEquipments.helmet();
 	mShoulders		= inCharacterEquipments.shoulders();
-	mChest			= inCharacterEquipments.chest_add();
-	mBracers		= inCharacterEquipments.bracers_add();
-	mHands			= inCharacterEquipments.hands_add();
-	mPants			= inCharacterEquipments.pants_add();
+	mChest			= inCharacterEquipments.chest();
+	mBracers		= inCharacterEquipments.bracers();
+	mHands			= inCharacterEquipments.hands();
+	mPants			= inCharacterEquipments.pants();
 	mBoots			= inCharacterEquipments.boots();
 	mWeapon_L		= inCharacterEquipments.weapon_l();
 	mWeapon_R		= inCharacterEquipments.weapon_r();
 }
 
-FCharacterAppearance::FCharacterAppearance() : mSeat(0), mSkin_Color(0), mHair_Color(0), mEye_Color(0), mEyebrow_Color(0)
+FCharacterAppearance::FCharacterAppearance() : mRace(ECharacterRace::None), mSeat(0), mSkin_Color(0), mHair_Color(0), mEye_Color(0), mEyebrow_Color(0)
 {
 }
 
 void FCharacterAppearance::UpdateAppearance(const FCharacterAppearance& inCharacterAppearance)
 {
+	mRace			= inCharacterAppearance.mRace;
 	mSeat			= inCharacterAppearance.mSeat;
 	mSkin_Color		= inCharacterAppearance.mSkin_Color;
 	mHair_Color		= inCharacterAppearance.mHair_Color;
@@ -51,6 +53,7 @@ void FCharacterAppearance::UpdateAppearance(const FCharacterAppearance& inCharac
 
 void FCharacterAppearance::UpdateAppearance(const Protocol::SCharacterAppearance& inCharacterAppearance)
 {
+	mRace			= UPacketUtils::ConvertToURace(inCharacterAppearance.race());
 	mSeat			= inCharacterAppearance.seat();
 	mSkin_Color		= inCharacterAppearance.skin_color();
 	mHair_Color		= inCharacterAppearance.hair_color();

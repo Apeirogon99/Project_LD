@@ -14,4 +14,6 @@ class PROJECT_LD_API ANetworkGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 	
+public:
+
 };

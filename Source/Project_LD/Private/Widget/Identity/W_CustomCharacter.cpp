@@ -8,8 +8,7 @@
 #include <Blueprint/WidgetTree.h>
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Common/W_ColorPicker.h>
-#include <Widget/Common/W_BackButton.h>
-#include <Widget/Common/W_EditBox.h>
+#include <Widget/WidgetUtils.h>
 
 #include <Network/NetworkUtils.h>
 #include <Protobuf/Handler/FClientPacketHandler.h>
@@ -105,45 +104,49 @@ void UW_CustomCharacter::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 void UW_CustomCharacter::Click_Create()
 {
 	ANetworkController* controller = Cast<ANetworkController>(GetOwningPlayer());
-	
 	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
-
-	UW_EditBox* editBox = Cast<UW_EditBox>(clientHUD->GetWidgetFromName(TEXT("EditBox")));
-	editBox->SetEditTitleText(TEXT("캐릭터 생성"));
-	editBox->SetEditHint(TEXT("캐릭터 닉네임을 설정하세요"));
-	editBox->SetConfrimButtonText(TEXT("설정"));
-
-	editBox->mConfirmDelegate.BindLambda([=](const FString& inName)
+	
+	FButtonDelegate editBoxDelegate;
+	editBoxDelegate.BindLambda([=](const FString& inName)
 		{
-			clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("LoadingServer"));
+			clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
 
 			Protocol::C2S_CreateCharacter createCharacterPacket;
 			std::string name = UNetworkUtils::ConvertString(inName);
 
-			createCharacterPacket.set_name(name);
+			Protocol::SCharacterData* characterData = createCharacterPacket.mutable_character_data();
+	
+			createCharacterPacket.set_remote_id(1);
 			createCharacterPacket.set_server_id(1);
-			//createCharacterPacket.set_remote_id();
 
-			Protocol::SCharacterAppearance* newCharacterAppearance = createCharacterPacket.mutable_appearance();
 			if (mCurrentDummyCharacter)
 			{
-				const FCharacterData& characterData = mCurrentDummyCharacter->GetCharacterData();
-				newCharacterAppearance->set_race(static_cast<Protocol::ERace>(characterData.mRace));
-				newCharacterAppearance->set_character_class(static_cast<Protocol::ECharacterClass>(characterData.mClass));
-				newCharacterAppearance->set_seat(characterData.mAppearance.mSeat);
-				newCharacterAppearance->set_skin_color(characterData.mAppearance.mSkin_Color);
-				newCharacterAppearance->set_hair_color(characterData.mAppearance.mHair_Color);
-				newCharacterAppearance->set_eye_color(characterData.mAppearance.mEye_Color);
-				newCharacterAppearance->set_eyebrow_color(characterData.mAppearance.mEyebrow_Color);
+				const FCharacterData& dummyCharacterData = mCurrentDummyCharacter->GetCharacterData();
+
+				characterData->set_name(name);
+				characterData->set_character_class(static_cast<Protocol::ECharacterClass>(dummyCharacterData.mClass));
+
+				Protocol::SCharacterAppearance* newCharacterAppearance = characterData->mutable_appearance();
+				newCharacterAppearance->set_race(static_cast<Protocol::ERace>(dummyCharacterData.mRace));
+				newCharacterAppearance->set_seat(dummyCharacterData.mAppearance.mSeat);
+				newCharacterAppearance->set_skin_color(dummyCharacterData.mAppearance.mSkin_Color);
+				newCharacterAppearance->set_hair_color(dummyCharacterData.mAppearance.mHair_Color);
+				newCharacterAppearance->set_eye_color(dummyCharacterData.mAppearance.mEye_Color);
+				newCharacterAppearance->set_eyebrow_color(dummyCharacterData.mAppearance.mEyebrow_Color);
 			}
 
 			SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, createCharacterPacket);
 			controller->Send(pakcetBuffer);
 
-			clientHUD->CollapsedWidgetFromName(TEXT("EditBox"));
+			clientHUD->CleanWidgetFromName(TEXT("EditBox"));
 		});
 
-	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("EditBox"));
+	bool ret = UWidgetUtils::SetEditBox(clientHUD, TEXT("캐릭터 생성"), TEXT("캐릭터 닉네임을 설정하세요"), TEXT("설정"), editBoxDelegate);
+	if (ret == false)
+	{
+		UNetworkUtils::NetworkConsoleLog(TEXT("[UW_CustomCharacter::Click_Create] Error"), ELogLevel::Warning);
+		return;
+	}
 }
 
 void UW_CustomCharacter::Click_Tribe()

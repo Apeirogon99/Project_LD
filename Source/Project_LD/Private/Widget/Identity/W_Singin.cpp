@@ -62,7 +62,7 @@ void UW_Singin::Click_Singin()
 	ANetworkController* networkController = Cast<ANetworkController>(owningController);
 
 	AClientHUD* clientHUD = Cast<AClientHUD>(owningController->GetHUD());
-	clientHUD->AllCollapsedButOneWidget(TEXT("LoadingServer"));
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
 
 	std::string id = UNetworkUtils::ConvertString(mID);
 	std::string password = UNetworkUtils::ConvertString(mPassword);
@@ -82,9 +82,9 @@ void UW_Singin::Click_Singup()
 
 	AClientHUD* HUD = Cast<AClientHUD>(owningController->GetHUD());
 
-	HUD->SelfHitTestInvisibleWidgetFromName("Singup");
+	HUD->ShowWidgetFromName("Singup");
 
-	HUD->CollapsedWidgetFromName("Singin");
+	HUD->CleanWidgetFromName("Singin");
 }
 
 void UW_Singin::Committed_ID(const FText& inId)

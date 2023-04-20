@@ -6,8 +6,8 @@
 #include <Components/TextBlock.h>
 #include <Components/Image.h>
 
-#include <Widget/Common/W_Reconfirm.h>
 #include <Widget/Handler/ClientHUD.h>
+#include <Widget/WidgetUtils.h>
 
 #include <Network/NetworkGameMode.h>
 #include <Network/NetworkCharacter.h>
@@ -43,61 +43,64 @@ void UW_SelectCharacterButton::Click_Character()
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
 
-	UW_Reconfirm* reconfirm = Cast<UW_Reconfirm>(clientHUD->GetWidgetFromName(TEXT("Reconfirm")));
+	FString titleText;
+	FString reconfirmText;
+	FString confrimText;
+	FString cancleText;
+	FConfirmButtonDelegate confirmDelegate;
+
+	FCancleButtonDelegate cancleDelegate;
+	cancleDelegate.BindUFunction(this, FName("CancleButton"));
+
 	if (mClickMode == EClickMode::Start)
 	{
-
-		//mCharacter->UpdateAnimationAsset(mSelectCharacterAnimation);
-
-		reconfirm->SetTitleText(TEXT("게임 시작"));
-		reconfirm->SetReconfirmText(TEXT("해당 캐릭터로 시작하시겠습니까?"));
-		reconfirm->SetConfirmButtonText(TEXT("시작"));
-		reconfirm->SetCancleButtonText(TEXT("취소"));
-		reconfirm->mReConfirmDelegate.BindUFunction(this, FName("StartCharacter"));
-		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleButton"));
+		titleText		= (TEXT("게임 시작"));
+		reconfirmText	= (TEXT("해당 캐릭터로 시작하시겠습니까?"));
+		confrimText		= (TEXT("시작"));
+		cancleText		= (TEXT("취소"));
+		confirmDelegate.BindUFunction(this, FName("StartCharacter"));
 	}
 	else if (mClickMode == EClickMode::Create)
 	{
-		reconfirm->SetTitleText(TEXT("캐릭터 생성"));
-		reconfirm->SetReconfirmText(TEXT("캐릭터를 생성하시겠습니까?"));
-		reconfirm->SetConfirmButtonText(TEXT("생성"));
-		reconfirm->SetCancleButtonText(TEXT("취소"));
-		reconfirm->mReConfirmDelegate.BindUFunction(this, FName("CreateCharacter"));
-		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleButton"));
+		titleText		= (TEXT("캐릭터 생성"));
+		reconfirmText	= (TEXT("캐릭터를 생성하시겠습니까?"));
+		confrimText		= (TEXT("생성"));
+		cancleText		= (TEXT("취소"));
+		confirmDelegate.BindUFunction(this, FName("CreateCharacter"));
 	}
 	else if (mClickMode == EClickMode::Appearance)
 	{
-		reconfirm->SetTitleText(TEXT("외형 변경"));
-		reconfirm->SetReconfirmText(TEXT("외형 변경을 하시겠습니까?"));
-		reconfirm->SetConfirmButtonText(TEXT("변경"));
-		reconfirm->SetCancleButtonText(TEXT("취소"));
-		reconfirm->mReConfirmDelegate.BindUFunction(this, FName("AppearanceCharacter"));
-		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleButton"));
+		titleText		= (TEXT("외형 변경"));
+		reconfirmText	= (TEXT("외형 변경을 하시겠습니까?"));
+		confrimText		= (TEXT("변경"));
+		cancleText		= (TEXT("취소"));
+		confirmDelegate.BindUFunction(this, FName("AppearanceCharacter"));
 	}
 	else if (mClickMode == EClickMode::Delete)
 	{
-		reconfirm->SetTitleText(TEXT("캐릭터 삭제"));
-		reconfirm->SetReconfirmText(TEXT("해당 캐릭터를 삭제하겠습니까?"));
-		reconfirm->SetConfirmButtonText(TEXT("삭제"));
-		reconfirm->SetCancleButtonText(TEXT("취소"));
-		reconfirm->mReConfirmDelegate.BindUFunction(this, FName("DeleteCharacter"));
-		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleButton"));
+		titleText		= (TEXT("캐릭터 삭제"));
+		reconfirmText	= (TEXT("해당 캐릭터를 삭제하겠습니까?"));
+		confrimText		= (TEXT("삭제"));
+		cancleText		= (TEXT("취소"));
+		confirmDelegate.BindUFunction(this, FName("DeleteCharacter"));
 	}
 	else if (mClickMode == EClickMode::ReviseName)
 	{
-		reconfirm->SetTitleText(TEXT("닉네임 변경"));
-		reconfirm->SetReconfirmText(TEXT("닉네임을 변경하시겠습니까?"));
-		reconfirm->SetConfirmButtonText(TEXT("변경"));
-		reconfirm->SetCancleButtonText(TEXT("취소"));
-		reconfirm->mReConfirmDelegate.BindUFunction(this, FName("ReviseNameCharacter"));
-		reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleButton"));
+		titleText		= (TEXT("닉네임 변경"));
+		reconfirmText	= (TEXT("닉네임을 변경하시겠습니까?"));
+		confrimText		= (TEXT("변경"));
+		cancleText		= (TEXT("취소"));
+		confirmDelegate.BindUFunction(this, FName("ReviseNameCharacter"));
 	}
-	else
+
+	//mCharacter->UpdateAnimationAsset(mSelectCharacterAnimation);
+
+	bool error = UWidgetUtils::SetReconfirm(clientHUD, TEXT("생성 완료"), TEXT("정말 게임을 종료하시겠습니까?"), TEXT("게임 종료"), TEXT("취소"), confirmDelegate, cancleDelegate);
+	if (error == false)
 	{
 		return;
 	}
 
-	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Reconfirm"));
 }
 
 void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterData& inCharacterData)
@@ -191,7 +194,7 @@ void UW_SelectCharacterButton::StartCharacter()
 	//게임 모드 불러오셈
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
-	clientHUD->CollapsedWidgetFromName(TEXT("Reconfirm"));
+	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
 }
 
 void UW_SelectCharacterButton::CreateCharacter()
@@ -199,7 +202,7 @@ void UW_SelectCharacterButton::CreateCharacter()
 	//커스텀 쪽으로 레벨이동
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
-	clientHUD->CollapsedWidgetFromName(TEXT("Reconfirm"));
+	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
 
 	ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	if (gameinstance)
@@ -231,7 +234,7 @@ void UW_SelectCharacterButton::CancleButton()
 {
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
-	clientHUD->CollapsedWidgetFromName(TEXT("Reconfirm"));
+	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
 
 	if (mCharacter)
 	{

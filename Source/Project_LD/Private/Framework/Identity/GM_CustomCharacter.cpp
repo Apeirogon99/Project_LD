@@ -62,8 +62,22 @@ void AGM_CustomCharacter::BeginNetwork()
 
 	CreateNewDummyCharacter(ECharacterRace::Male);
 
-	UW_CustomCharacter* customWidget = Cast<UW_CustomCharacter>(mClientHUD->GetWidgetFromName(TEXT("CustomCharacter")));
-	customWidget->SetClassText(gameinstance->mCharacterData.mClass);
+	UUserWidget* outWidget = nullptr;
+	UW_CustomCharacter* widget = nullptr;
+	int32 number = 0;
+	bool ret = mClientHUD->GetWidgetFromName(TEXT("Test"), outWidget, number);
+	if (ret == false)
+	{
+		return;
+	}
+
+	widget = Cast<UW_CustomCharacter>(outWidget);
+	if (widget == nullptr)
+	{
+		return;
+	}
+
+	widget->SetClassText(gameinstance->mCharacterData.mClass);
 	mClientHUD->ShowWidgetFromName(TEXT("CustomCharacter"));
 }
 

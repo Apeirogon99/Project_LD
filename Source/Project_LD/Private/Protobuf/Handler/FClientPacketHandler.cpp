@@ -3,7 +3,7 @@
 
 #include "Protobuf/Handler/FClientPacketHandler.h"
 #include <Network/NetworkUtils.h>
-
+#include <PacketUtils.h>
 #include <Protobuf/Handler/FIdentityPacketHandler.h>
 
 PacketFunc FClientPacketHandler::PacketHandler[UINT16_MAX];

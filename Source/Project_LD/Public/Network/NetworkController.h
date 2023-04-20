@@ -45,6 +45,7 @@ public:
 	bool DisconnectToSession(FUnPossessCallBack inUnPossessCallback);
 
 public:
+	bool IsClientController();
 	FNetworkSessionPtr GetNetworkSession() { return mNetworkSession; }
 	void Send(SendBufferPtr FSendBuffer);
 

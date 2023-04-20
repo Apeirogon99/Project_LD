@@ -1,0 +1,26 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "UObject/NoExportTypes.h"
+#include <Widget/Handler/ClientHUD.h>
+#include <Widget/Common/W_Notification.h>
+#include <Widget/Common/W_BackButton.h>
+#include <Widget/Common/W_EditBox.h>
+#include <Widget/Common/W_Reconfirm.h>
+#include "WidgetUtils.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class PROJECT_LD_API UWidgetUtils : public UObject
+{
+	GENERATED_BODY()
+	
+public:
+	static bool SetEditBox(AClientHUD* inHUD, const FString& inTitle, const FString& inHint, const FString& inButtonText, const FButtonDelegate& inDelegate);
+	static bool SetNotification(AClientHUD* inHUD, const FString& inTitle, const FString& inNotification, const FString& inButtonText, const FNotificationDelegate& inDelegate);
+	static bool SetReconfirm(AClientHUD* inHUD, const FString& inTitle, const FString& inText, const FString& inConfirm, const FString& inCancle, const FConfirmButtonDelegate& inConfirmDelegate, const FCancleButtonDelegate& inCancleDelegate);
+};

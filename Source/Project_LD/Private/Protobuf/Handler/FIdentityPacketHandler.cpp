@@ -10,13 +10,12 @@
 #include <Network/NetworkPlayerState.h>
 #include <Network/NetworkService.h>
 #include <Network/NetworkUtils.h>
+#include <PacketUtils.h>
 #include <Network/NetworkSession.h>
 
-#include <Widget/Handler/ClientHUD.h>
-#include <Widget/Common/W_Notification.h>
-#include <Widget/Common/W_EditBox.h>
-
+#include <Widget/WidgetUtils.h>
 #include <Widget/Identity/W_SelectCharacter.h>
+#include <Widget/Test/W_Test.h>
 
 #include <DatabaseErrorTypes.h>
 
@@ -62,22 +61,22 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 		return false;
 	}
 
-	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
 
 	int32 error = pkt.error();
 	if (error != GetDatabaseErrorToInt(EDBErrorType::SUCCESS))
 	{
-		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
-		notification->SetTitle(TEXT("로그인 실패"));
-		notification->SetNotification(UNetworkUtils::GetNetworkErrorToString(error));
-		notification->SetButtonText(TEXT("확인"));
-
-		notification->mNotificationDelegate.BindLambda([=]()
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CollapsedWidgetFromName(TEXT("Notification"));
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
 			});
 
-		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
+		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("로그인 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+		if (ret == false)
+		{
+			return false;
+		}
 	}
 	else
 	{
@@ -115,62 +114,29 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 		return false;
 	}
 
-	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
 
 	int32 error = pkt.error();
-	if (error == GetDatabaseErrorToInt(EDBErrorType::ID_DISTINCT))
+	if (error != GetDatabaseErrorToInt(EDBErrorType::SUCCESS))
 	{
-		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
-		notification->SetTitle(TEXT("회원가입 실패"));
-		notification->SetNotification(TEXT("이미 아이디가 존재합니다"));
-		notification->SetButtonText(TEXT("다시 입력"));
-
-		notification->mNotificationDelegate.BindLambda([=]()
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
 			{
-				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
 			});
 
-		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
-	}
-	else if (error == GetDatabaseErrorToInt(EDBErrorType::ALREADY_EMAIL_VERIFY))
-	{
-		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
-		notification->SetTitle(TEXT("회원가입 실패"));
-		notification->SetNotification(TEXT("이미 이메일이 존재합니다"));
-		notification->SetButtonText(TEXT("다시 입력"));
-
-		notification->mNotificationDelegate.BindLambda([=]()
-			{
-				clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
-			});
-
-		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
-	}
-	else if (error == GetDatabaseErrorToInt(EDBErrorType::TEMP_VERIFY))
-	{
-		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
-		notification->SetTitle(TEXT("회원가입 성공"));
-		notification->SetNotification(TEXT("임시 인증을 성공하였습니다"));
-		notification->SetButtonText(TEXT("확인"));
-
-		notification->mNotificationDelegate.BindLambda([=]()
-			{
-				//clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Notification"));
-				clientHUD->AllCollapsedButOneWidget(TEXT("Singin"));
-			});
-
-		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
+		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("회원가입 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+		if (ret == false)
+		{
+			return false;
+		}
 	}
 	else
 	{
-		UW_EditBox* editBox = Cast<UW_EditBox>(clientHUD->GetWidgetFromName(TEXT("EditBox")));
-		editBox->SetEditTitleText(TEXT("이메일 인증"));
-		editBox->SetEditHint(TEXT("이메일 인증번호"));
-		editBox->SetConfrimButtonText(TEXT("인증하기"));
-
-		editBox->mConfirmDelegate.BindLambda([=](const FString& inCertifiedEmail)
+		FButtonDelegate editBoxDelegate;
+		editBoxDelegate.BindLambda([=](const FString& inCertifiedEmail)
 			{
-				clientHUD->AllCollapsedButOneWidget(TEXT("LoadingServer"));
+				clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
 
 				Protocol::C2S_EmailVerified emailVerifiedPacket;
 				std::string verfiedStr = UNetworkUtils::ConvertString(inCertifiedEmail);
@@ -179,7 +145,11 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 				controller->Send(pakcetBuffer);
 			});
 
-		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("EditBox"));
+		bool ret = UWidgetUtils::SetEditBox(clientHUD, TEXT("이메일 인증"), TEXT("이메일 인증번호"), TEXT("인증하기"), editBoxDelegate);
+		if (ret == false)
+		{
+			return false;
+		}
 	}
 
 	return true;
@@ -199,37 +169,37 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 		return false;
 	}
 
-	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
 
-	int32 error = pkt.error();
-	if (error != 0)
+	int32 result = pkt.error();
+	if (result != GetDatabaseErrorToInt(EDBErrorType::SUCCESS))
 	{
-		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
-		notification->SetTitle(TEXT("이메일 인증 실패"));
-		notification->SetNotification(TEXT("인증번호가 일치하지 않습니다"));
-		notification->SetButtonText(TEXT("다시 인증하기"));
-
-		notification->mNotificationDelegate.BindLambda([=]()
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CollapsedWidgetFromName(TEXT("Notification"));
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
 			});
 
-		clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Notification"));
+		bool error = UWidgetUtils::SetNotification(clientHUD, TEXT("이메일 인증 실패"), UNetworkUtils::GetNetworkErrorToString(result), TEXT("다시 인증하기"), notificationDelegate);
+		if (error == false)
+		{
+			return false;
+		}
 	}
 	else
 	{
-		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
-		notification->SetTitle(TEXT("회원 가입 성공"));
-		notification->SetNotification(TEXT("회원 가입에 성공하였습니다"));
-		notification->SetButtonText(TEXT("로그인 하기"));
-
-		notification->mNotificationDelegate.BindLambda([=]()
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
 			{
-				clientHUD->AllCollapsedButOneWidget(TEXT("Singin"));
-				clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("LoginScreen"));
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				clientHUD->ShowWidgetFromName(TEXT("LoginScreen"));
 			});
 
-		clientHUD->CollapsedWidgetFromName(TEXT("Notification"));
+		bool error = UWidgetUtils::SetNotification(clientHUD, TEXT("회원 가입 성공"), UNetworkUtils::GetNetworkErrorToString(result), TEXT("로그인 하기"), notificationDelegate);
+		if (error == false)
+		{
+			return false;
+		}
 	}
 
 	return true;
@@ -254,32 +224,49 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 		return false;
 	}
 
-	UW_SelectCharacter* selectCharacterWidget = Cast<UW_SelectCharacter>(clientHUD->GetWidgetFromName(TEXT("SelectCharacter")));
-	if (nullptr == selectCharacterWidget) return false;
-
-	for (int index = 0; index < pkt.appearance_size(); ++index)
+	UUserWidget* outWidget = nullptr;
+	UW_SelectCharacter* selectCharacterWidget = nullptr;
+	int32 number = 0;
+	bool error = clientHUD->GetWidgetFromName(TEXT("SelectCharacter"), outWidget, number);
+	if (error == false)
 	{
-		FCharacterData characterData;
+		return false;
+	}
 
-		FString name = UNetworkUtils::ConvertFString(pkt.name().Get(index));
+	selectCharacterWidget = Cast<UW_SelectCharacter>(outWidget);
+	if (selectCharacterWidget == nullptr)
+	{
+		return false;
+	}
+
+	const int32 maxCharacterDataSize = pkt.character_data().size();
+	for (int index = 0; index < maxCharacterDataSize; ++index)
+	{
+		const Protocol::SCharacterData& curCharacterData = pkt.character_data(index);
+		FString name = UNetworkUtils::ConvertFString(curCharacterData.name());
+		int32 level = curCharacterData.level();
+		ECharacterClass characterClass = StaticCast<ECharacterClass>(curCharacterData.character_class());
 		
-		const Protocol::SCharacterAppearance& appearance = pkt.appearance(index);
+		const Protocol::SCharacterAppearance& appearance = curCharacterData.appearance();
 		FCharacterAppearance characterAppearance;
 		characterAppearance.UpdateAppearance(appearance);
 
-		const Protocol::SCharacterEqipment& eqipment = pkt.eqipment(index);
+		const Protocol::SCharacterEqipment& eqipment = curCharacterData.eqipment();
 		FCharacterEquipment characterEquipment;
 		characterEquipment.UpdateEquipments(eqipment);
 
+		FCharacterData characterData;
 		characterData.mName = name;
+		characterData.mLevel = 1;
+		characterData.mClass = characterClass;
 		characterData.mAppearance = characterAppearance;
 		characterData.mEquipment = characterEquipment;
 
 		selectCharacterWidget->CreateCharacter(characterData);
 	}
 
-	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
-	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("SelectCharacter"));
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->ShowWidgetFromName(TEXT("SelectCharacter"));
 
 	return true;
 }
@@ -298,31 +285,25 @@ bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_Cr
 		return false;
 	}
 
-	clientHUD->CollapsedWidgetFromName(TEXT("LoadingServer"));
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
 
-	int32 error = pkt.error();
-	if (error != GetDatabaseErrorToInt(EDBErrorType::SUCCESS))
+	int32 result = pkt.error();
+	if (result != GetDatabaseErrorToInt(EDBErrorType::SUCCESS))
 	{
-		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
-		notification->SetTitle(TEXT("닉네임 중복"));
-		notification->SetNotification(UNetworkUtils::GetNetworkErrorToString(error));
-		notification->SetButtonText(TEXT("확인"));
-
-		notification->mNotificationDelegate.BindLambda([=]()
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CollapsedWidgetFromName(TEXT("Notification"));
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
 			});
 
-		clientHUD->SelfHitTestInvisibleWidgetFromName("Notification");
+		bool error = UWidgetUtils::SetNotification(clientHUD, TEXT("닉네임 중복"), UNetworkUtils::GetNetworkErrorToString(result), TEXT("확인"), notificationDelegate);
+		if (error == false)
+		{
+			return false;
+		}
 	}
 	else
 	{
-		UW_Notification* notification = Cast<UW_Notification>(clientHUD->GetWidgetFromName(TEXT("Notification")));
-		notification->SetTitle(TEXT("생성 완료"));
-		notification->SetNotification(TEXT("축하합니다 캐릭터를 생성하셨습니다"));
-		notification->SetButtonText(TEXT("생성하기"));
-
-
 		AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
 		ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
 		if (nullptr == networkGameMode)
@@ -330,13 +311,18 @@ bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_Cr
 			return false;
 		}
 
-		notification->mNotificationDelegate.BindLambda([=]()
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
 			{
-				clientHUD->CollapsedWidgetFromName(TEXT("Notification"));
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
 				networkGameMode->RequestTravelLevel(TEXT("L_SelectCharacter"));
 			});
 
-		clientHUD->SelfHitTestInvisibleWidgetFromName("Notification");
+		bool error = UWidgetUtils::SetNotification(clientHUD, TEXT("생성 완료"), UNetworkUtils::GetNetworkErrorToString(result), TEXT("확인"), notificationDelegate);
+		if (error == false)
+		{
+			return false;
+		}
 	}
 
 	return true;
@@ -357,7 +343,47 @@ bool Handle_S2C_UpdateNickName(ANetworkController* controller, Protocol::S2C_Upd
 	return false;
 }
 
+bool Handle_S2C_TravelLevel(ANetworkController* controller, Protocol::S2C_TravelLevel& pkt)
+{
+	return false;
+}
+
 bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_TravelServer& pkt)
 {
 	return false;
+}
+
+bool Handle_S2C_Test(ANetworkController* controller, Protocol::S2C_Test& pkt)
+{
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return false;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return false;
+	}
+
+	UUserWidget* outWidget = nullptr;
+	UW_Test* testWidget = nullptr;
+	int32 number = 0;
+	bool ret = clientHUD->GetWidgetFromName(TEXT("Test"), outWidget, number);
+	if (ret == false)
+	{
+		return false;
+	}
+
+	testWidget = Cast<UW_Test>(outWidget);
+	if (testWidget == nullptr)
+	{
+		return false;
+	}
+
+	testWidget->InitWidget(pkt.value(), UNetworkUtils::ConvertFString(pkt.s_value()), pkt.time_stamp());
+	clientHUD->ShowWidgetFromName(TEXT("Test"));
+
+	return true;
 }

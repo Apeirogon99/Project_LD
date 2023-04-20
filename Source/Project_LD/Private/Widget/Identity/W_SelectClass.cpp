@@ -7,7 +7,8 @@
 
 #include <Blueprint/WidgetTree.h>
 #include <Widget/Handler/ClientHUD.h>
-#include <Widget/Common/W_Reconfirm.h>
+
+#include <Widget/WidgetUtils.h>
 #include <Widget/Common/W_BackButton.h>
 
 #include <Framework/Gameinstance/LDGameInstance.h>
@@ -60,12 +61,6 @@ void UW_SelectClass::SelectClass(const FString& inClass, ECharacterClass inChara
 		return;
 	}
 
-	UW_Reconfirm* reconfirm = Cast<UW_Reconfirm>(clientHUD->GetWidgetFromName(TEXT("Reconfirm")));
-	if (nullptr == reconfirm)
-	{
-		return;
-	}
-
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == networkGameMode)
 	{
@@ -85,22 +80,23 @@ void UW_SelectClass::SelectClass(const FString& inClass, ECharacterClass inChara
 
 	FString classStr = FString::Printf(TEXT("%s로 선택하겠습니까?"), *inClass);
 
-	reconfirm->SetTitleText(TEXT("클래스 선택"));
-	reconfirm->SetReconfirmText(classStr);
-	reconfirm->SetConfirmButtonText(TEXT("선택"));
-	reconfirm->SetCancleButtonText(TEXT("취소"));
-
-	reconfirm->mReConfirmDelegate.BindLambda([=]()
+	FConfirmButtonDelegate confirmDelegate;
+	confirmDelegate.BindLambda([=]()
 		{
 			gameInstance->mCharacterData.mClass = inCharacterClass;
 
 			networkGameMode->RequestTravelLevel(TEXT("L_CustomCharacter"));
 		});
 
-	reconfirm->mCancleDelegate.BindLambda([=]()
+	FCancleButtonDelegate cancleDelegate;
+	cancleDelegate.BindLambda([=]()
 		{
-			clientHUD->CollapsedWidgetFromName(TEXT("Reconfirm"));
+			clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
 		});
 
-	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Reconfirm"));
+	bool error = UWidgetUtils::SetReconfirm(clientHUD, TEXT("클래스 선택"), classStr, TEXT("선택"), TEXT("취소"), confirmDelegate, cancleDelegate);
+	if (error == false)
+	{
+		return;
+	}
 }

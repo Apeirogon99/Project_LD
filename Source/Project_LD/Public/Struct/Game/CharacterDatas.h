@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <IdentityPacket.pb.h>
+#include <PacketStruct.pb.h>
+#include <PacketEnum.pb.h>
 #include "CharacterDatas.generated.h"
 
 UENUM(BlueprintType)
@@ -134,6 +135,9 @@ public:
 	void UpdateAppearance(const Protocol::SCharacterAppearance& inCharacterAppearance);
 
 public:
+	UPROPERTY()
+	ECharacterRace mRace;
+
 	UPROPERTY()
 	int32 mSeat;
 

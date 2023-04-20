@@ -24,7 +24,7 @@ public:
 	AClientHUD();
 
 	UFUNCTION(BlueprintCallable)
-	UUserWidget*	GetWidgetFromName(const FString& inWidgetName);
+	bool	GetWidgetFromName(const FString& inWidgetName, UUserWidget* outWidget, int32& outNumber);
 
 	UFUNCTION(BlueprintCallable)
 	void			ShowWidgetFromName(const FString& inWidgetName);
@@ -32,26 +32,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void			CleanWidgetFromName(const FString& inWidgetName);
 
+protected:
 	UFUNCTION(BlueprintCallable)
-	void			CollapsedWidgetFromName(const FString& inWidgetName);
+	void			CollapsedWidget(UUserWidget* inWidget);
 
 	UFUNCTION(BlueprintCallable)
-	void			SelfHitTestInvisibleWidgetFromName(const FString& inWidgetName);
-
-	UFUNCTION(BlueprintCallable)
-	void			AllCleanWidget();
-
-	UFUNCTION(BlueprintCallable)
-	void			AllCollapsedWidget();
-
-	UFUNCTION(BlueprintCallable)
-	void			AllSelfHitTestInvisibleWidget();
-
-	UFUNCTION(BlueprintCallable)
-	void			AllCollapsedButOneWidget(const FString& inWidgetName);
-
-	UFUNCTION(BlueprintCallable)
-	void			AllSelfHitTestInvisibleButOneWidget(const FString& inWidgetName);
+	void			SelfHitTestInvisibleWidget(UUserWidget* inWidget);
 
 	UFUNCTION(BlueprintCallable)
 	bool			IsInit();
@@ -71,4 +57,6 @@ private:
 	TArray<UUserWidget*>	mWidgets;
 	TArray<FString>			mWidgetNames;
 	bool					mIsInit;
+
+	TArray<bool>			mUsedWidgets;
 };

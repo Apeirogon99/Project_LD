@@ -7,6 +7,7 @@
 #include <Network/SendBuffer.h>
 #include <Network/SendBufferQueue.h>
 #include <Network/NetworkUtils.h>
+#include <Framework/Gameinstance/LDGameInstance.h>
 
 ANetworkController::ANetworkController()
 {
@@ -71,6 +72,19 @@ bool ANetworkController::DisconnectToSession(FUnPossessCallBack inUnPossessCallb
 
 	mUnPossessCallBack = inUnPossessCallback;
 	mUnPossessCallBack.Execute(true);
+
+	return true;
+}
+
+bool ANetworkController::IsClientController()
+{
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(GetGameInstance());
+	if (!gameInstance)
+	{
+		return false;
+	}
+
+
 
 	return true;
 }

@@ -13,86 +13,105 @@ AClientHUD::AClientHUD()
 	mIsInit = false;
 }
 
-UUserWidget* AClientHUD::GetWidgetFromName(const FString& inWidgetName)
+bool AClientHUD::GetWidgetFromName(const FString& inWidgetName, UUserWidget* outWidget, int32& outNumber)
 {
 	if (false == mIsInit)
 	{
-		return nullptr;
+		return false;
 	}
 
 	const int32 findPos = mWidgetNames.Find(inWidgetName);
 	if (findPos == INDEX_NONE)
 	{
 		HUD_LOG(TEXT("Can't find widget : %s"), *inWidgetName);
-		return nullptr;
+		return false;
 	}
 
 	UUserWidget* findWidget = mWidgets[findPos];
 	if (nullptr == findWidget)
 	{
 		HUD_LOG(TEXT("Invalid widget : %s "), *inWidgetName);
-		return nullptr;
+		return false;
 	}
 
-	return findWidget;
+	outWidget = findWidget;
+	outNumber = findPos;
+
+	return true;
 }
 
 void AClientHUD::ShowWidgetFromName(const FString& inWidgetName)
 {
-	UUserWidget* widget = GetWidgetFromName(inWidgetName);
-	if (nullptr == widget)
+	UUserWidget* widget = NewObject<UUserWidget>();
+	int32 number = INDEX_NONE;
+	bool ret = GetWidgetFromName(inWidgetName, widget, number);
+	if (ret == false)
 	{
 		return;
 	}
 
-	if (false == widget->IsInViewport())
+	if (widget == nullptr || number == INDEX_NONE)
 	{
-		//widget->AddToViewport();
-		widget->AddToPlayerScreen();
+		return;
 	}
+
+	if (mUsedWidgets[number] == false)
+	{
+		SelfHitTestInvisibleWidget(widget);
+		mUsedWidgets[number] = true;
+	}
+
 }
 
 void AClientHUD::CleanWidgetFromName(const FString& inWidgetName)
 {
-	UUserWidget* widget = GetWidgetFromName(inWidgetName);
-	if (nullptr == widget)
+	UUserWidget* widget = NewObject<UUserWidget>();
+	int32 number = INDEX_NONE;
+	bool ret = GetWidgetFromName(inWidgetName, widget, number);
+	if (ret == false)
 	{
 		return;
 	}
 
-	if (true == widget->IsInViewport())
+	if (widget == nullptr || number == INDEX_NONE)
 	{
-		widget->RemoveFromViewport();
+		return;
 	}
+
+	if (mUsedWidgets[number] == true)
+	{
+		CollapsedWidget(widget);
+		mUsedWidgets[number] = false;
+	}
+
 }
 
-void AClientHUD::CollapsedWidgetFromName(const FString& inWidgetName)
+void AClientHUD::CollapsedWidget(UUserWidget* inWidget)
 {
-	UUserWidget* widget = GetWidgetFromName(inWidgetName);
-	if (nullptr == widget)
+	if (nullptr == inWidget)
 	{
 		return;
 	}
 
-	if (false == widget->IsInViewport())
+	if (false == inWidget->IsInViewport())
 	{
-		widget->AddToPlayerScreen();
+		inWidget->AddToPlayerScreen();
 	}
 
-	ESlateVisibility visible =  widget->GetVisibility();
+	ESlateVisibility visible = inWidget->GetVisibility();
 	switch (visible)
 	{
 	case ESlateVisibility::Collapsed:
 	case ESlateVisibility::Hidden:
 		break;
 	case ESlateVisibility::Visible:
-		widget->SetVisibility(ESlateVisibility::Collapsed);
+		inWidget->SetVisibility(ESlateVisibility::Collapsed);
 		break;
 	case ESlateVisibility::HitTestInvisible:
-		widget->SetVisibility(ESlateVisibility::Collapsed);
+		inWidget->SetVisibility(ESlateVisibility::Collapsed);
 		break;
 	case ESlateVisibility::SelfHitTestInvisible:
-		widget->SetVisibility(ESlateVisibility::Collapsed);
+		inWidget->SetVisibility(ESlateVisibility::Collapsed);
 		break;
 	default:
 		break;
@@ -100,20 +119,19 @@ void AClientHUD::CollapsedWidgetFromName(const FString& inWidgetName)
 	
 }
 
-void AClientHUD::SelfHitTestInvisibleWidgetFromName(const FString& inWidgetName)
+void AClientHUD::SelfHitTestInvisibleWidget(UUserWidget* inWidget)
 {
-	UUserWidget* widget = GetWidgetFromName(inWidgetName);
-	if (nullptr == widget)
+	if (nullptr == inWidget)
 	{
 		return;
 	}
 
-	if (false == widget->IsInViewport())
+	if (false == inWidget->IsInViewport())
 	{
-		widget->AddToPlayerScreen();
+		inWidget->AddToPlayerScreen();
 	}
 
-	ESlateVisibility visible = widget->GetVisibility();
+	ESlateVisibility visible = inWidget->GetVisibility();
 	switch (visible)
 	{
 	case ESlateVisibility::Visible:
@@ -121,78 +139,15 @@ void AClientHUD::SelfHitTestInvisibleWidgetFromName(const FString& inWidgetName)
 	case ESlateVisibility::SelfHitTestInvisible:
 		break;
 	case ESlateVisibility::Collapsed:
-		widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		inWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		break;
 	case ESlateVisibility::Hidden:
-		widget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+		inWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		break;
 	default:
 		break;
 	}
 	
-}
-
-void AClientHUD::AllCleanWidget()
-{
-	if (false == mIsInit)
-	{
-		return;
-	}
-
-	for (UUserWidget* widget : mWidgets)
-	{
-		if (nullptr != widget)
-		{
-			if (true == widget->IsInViewport())
-			{
-				widget->RemoveFromViewport();
-			}
-		}
-	}
-}
-
-void AClientHUD::AllCollapsedWidget()
-{
-	if (false == mIsInit)
-	{
-		return;
-	}
-
-	for (FString widgetName : mWidgetNames)
-	{
-		CollapsedWidgetFromName(widgetName);
-	}
-}
-
-void AClientHUD::AllSelfHitTestInvisibleWidget()
-{
-	if (false == mIsInit)
-	{
-		return;
-	}
-
-	for (FString widgetName : mWidgetNames)
-	{
-		SelfHitTestInvisibleWidgetFromName(widgetName);
-	}
-}
-
-void AClientHUD::AllCollapsedButOneWidget(const FString& inWidgetName)
-{
-	AllCollapsedWidget();
-
-	SelfHitTestInvisibleWidgetFromName(inWidgetName);
-	//ShowWidgetFromName(inWidgetName);
-
-}
-
-void AClientHUD::AllSelfHitTestInvisibleButOneWidget(const FString& inWidgetName)
-{
-	//CleanWidgetFromName(inWidgetName);
-
-	AllSelfHitTestInvisibleWidget();
-
-	CollapsedWidgetFromName(inWidgetName);
 }
 
 bool AClientHUD::IsInit()
@@ -225,6 +180,8 @@ void AClientHUD::BeginPlay()
 	for (TSubclassOf<UUserWidget> widgetClass : mAllUIWidgets)
 	{
 		UUserWidget* newWidget = CreateWidget<UUserWidget>(GetWorld(), widgetClass);
+		newWidget->AddToViewport();
+		newWidget->SetVisibility(ESlateVisibility::Collapsed);
 		mWidgets.Add(newWidget);
 
 		FString newWidgetName = newWidget->GetClass()->GetName();
@@ -232,6 +189,9 @@ void AClientHUD::BeginPlay()
 		newWidgetName.RemoveAt(newWidgetName.Len() - 2 , newWidgetName.Len());
 		mWidgetNames.Add(newWidgetName);
 	}
+
+	//Used UI
+	mUsedWidgets.Init(false, mWidgets.Num());
 	
 	mIsInit = true;
 	networkGameMode->ProcessClientHUD(true);

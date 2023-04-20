@@ -5,7 +5,7 @@
 #include <Components/Button.h>
 #include <Components/TextBlock.h>
 #include <Network/NetworkGameMode.h>
-#include <Widget/Common/W_Reconfirm.h>
+#include <Widget/WidgetUtils.h>
 #include <Widget/Handler/ClientHUD.h>
 
 #include <Protobuf/Handler/FIdentityPacketHandler.h>
@@ -35,16 +35,17 @@ void UW_ExitButton::Click_Exit()
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
 	
-	UW_Reconfirm* reconfirm = Cast<UW_Reconfirm>(clientHUD->GetWidgetFromName(TEXT("Reconfirm")));
-	reconfirm->SetTitleText(TEXT("게임 종료"));
-	reconfirm->SetReconfirmText(TEXT("정말 게임을 종료하시겠습니까?"));
-	reconfirm->SetConfirmButtonText(TEXT("게임 종료"));
-	reconfirm->SetCancleButtonText(TEXT("취소"));
-	reconfirm->mReConfirmDelegate.BindUFunction(this, FName("ExitGame"));
-	reconfirm->mCancleDelegate.BindUFunction(this, FName("CancleExitGame"));
+	FConfirmButtonDelegate confirmDelegate;
+	confirmDelegate.BindUFunction(this, FName("ExitGame"));
 
-	//clientHUD->AllCollapsedButOneWidget(TEXT("Reconfirm"));
-	clientHUD->SelfHitTestInvisibleWidgetFromName(TEXT("Reconfirm"));
+	FCancleButtonDelegate cancleDelegate;
+	cancleDelegate.BindUFunction(this, FName("CancleExitGame"));
+
+	bool error = UWidgetUtils::SetReconfirm(clientHUD, TEXT("생성 완료"), TEXT("정말 게임을 종료하시겠습니까?"), TEXT("게임 종료"), TEXT("취소"), confirmDelegate, cancleDelegate);
+	if (error == false)
+	{
+		return;
+	}
 }
 
 void UW_ExitButton::ExitGame()
@@ -58,6 +59,5 @@ void UW_ExitButton::CancleExitGame()
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
 
-	//clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Reconfirm"));
-	clientHUD->CollapsedWidgetFromName(TEXT("Reconfirm"));
+	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
 }
