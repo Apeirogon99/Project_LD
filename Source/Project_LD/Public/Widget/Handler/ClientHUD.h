@@ -24,23 +24,30 @@ public:
 	AClientHUD();
 
 	UFUNCTION(BlueprintCallable)
-	bool	GetWidgetFromName(const FString& inWidgetName, UUserWidget* outWidget, int32& outNumber);
+	UUserWidget* GetWidgetFromName(const FString& inWidgetName);
 
 	UFUNCTION(BlueprintCallable)
-	void			ShowWidgetFromName(const FString& inWidgetName);
+	void	ShowWidgetFromName(const FString& inWidgetName);
 
 	UFUNCTION(BlueprintCallable)
-	void			CleanWidgetFromName(const FString& inWidgetName);
+	void	CleanWidgetFromName(const FString& inWidgetName);
+
+	UFUNCTION(BlueprintCallable)
+	bool	IsInit();
 
 protected:
 	UFUNCTION(BlueprintCallable)
-	void			CollapsedWidget(UUserWidget* inWidget);
+	UUserWidget* GetWidgetInfo(const FString& inWidgetName, int32& outNumber);
 
 	UFUNCTION(BlueprintCallable)
-	void			SelfHitTestInvisibleWidget(UUserWidget* inWidget);
+	void	CollapsedWidget(UUserWidget* inWidget);
 
 	UFUNCTION(BlueprintCallable)
-	bool			IsInit();
+	void	SelfHitTestInvisibleWidget(UUserWidget* inWidget);
+
+public:
+	void	FadeOut();
+	void	FadeIn();
 
 protected:
 	virtual void BeginPlay() override;
@@ -48,10 +55,14 @@ protected:
 
 public:
 	UPROPERTY(EditAnywhere)
-		TArray<TSubclassOf<UUserWidget>> mCommonUIWidgets;
+	TArray<TSubclassOf<UUserWidget>> mCommonUIWidgets;
 
 	UPROPERTY(EditAnywhere)
-		TArray<TSubclassOf<UUserWidget>> mAllUIWidgets;
+	TArray<TSubclassOf<UUserWidget>> mAllUIWidgets;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Default")
+	TSubclassOf<class UUserWidget> mFadeWidgetClass;
+	class UW_Fade* mFadeWidget;
 
 private:
 	TArray<UUserWidget*>	mWidgets;

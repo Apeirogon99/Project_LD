@@ -5,12 +5,9 @@
 
 bool UWidgetUtils::SetEditBox(AClientHUD* inHUD, const FString& inTitle, const FString& inHint, const FString& inButtonText, const FButtonDelegate& inDelegate)
 {
-    UUserWidget* outWidget = nullptr;
     UW_EditBox* editBox = nullptr;
-    int32 number = 0;
-    
-    bool ret = inHUD->GetWidgetFromName(TEXT("EditBox"), outWidget, number);
-    if (ret == false)
+    UUserWidget* outWidget = inHUD->GetWidgetFromName(TEXT("EditBox"));
+    if (outWidget == nullptr)
     {
         return false;
     }
@@ -32,12 +29,9 @@ bool UWidgetUtils::SetEditBox(AClientHUD* inHUD, const FString& inTitle, const F
 
 bool UWidgetUtils::SetNotification(AClientHUD* inHUD, const FString& inTitle, const FString& inNotification, const FString& inButtonText, const FNotificationDelegate& inDelegate)
 {
-    UUserWidget* outWidget = nullptr;
     UW_Notification* notification = nullptr;
-    int32 number = 0;
-
-    bool ret = inHUD->GetWidgetFromName(TEXT("Notification"), outWidget, number);
-    if (ret == false)
+    UUserWidget* outWidget = inHUD->GetWidgetFromName(TEXT("Notification"));
+    if (outWidget == nullptr)
     {
         return false;
     }
@@ -59,12 +53,9 @@ bool UWidgetUtils::SetNotification(AClientHUD* inHUD, const FString& inTitle, co
 
 bool UWidgetUtils::SetReconfirm(AClientHUD* inHUD, const FString& inTitle, const FString& inText, const FString& inConfirm, const FString& inCancle, const FConfirmButtonDelegate& inConfirmDelegate, const FCancleButtonDelegate& inCancleDelegate)
 {
-    UUserWidget* outWidget = nullptr;
     UW_Reconfirm* reconfirm = nullptr;
-    int32 number = 0;
-
-    bool ret = inHUD->GetWidgetFromName(TEXT("Reconfirm"), outWidget, number);
-    if (ret == false)
+    UUserWidget* outWidget = inHUD->GetWidgetFromName(TEXT("Reconfirm"));
+    if (outWidget == nullptr)
     {
         return false;
     }

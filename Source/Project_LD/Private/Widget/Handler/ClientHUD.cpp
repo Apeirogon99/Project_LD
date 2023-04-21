@@ -4,6 +4,7 @@
 #include "Widget/Handler/ClientHUD.h"
 #include <UMG/Public/Blueprint/WidgetLayoutLibrary.h>
 #include <Network/NetworkGameMode.h>
+#include <Widget/Common/W_Fade.h>
 #include "Blueprint/UserWidget.h"
 
 DEFINE_LOG_CATEGORY(CLIENT_HUD);
@@ -13,7 +14,7 @@ AClientHUD::AClientHUD()
 	mIsInit = false;
 }
 
-bool AClientHUD::GetWidgetFromName(const FString& inWidgetName, UUserWidget* outWidget, int32& outNumber)
+UUserWidget* AClientHUD::GetWidgetFromName(const FString& inWidgetName)
 {
 	if (false == mIsInit)
 	{
@@ -24,32 +25,23 @@ bool AClientHUD::GetWidgetFromName(const FString& inWidgetName, UUserWidget* out
 	if (findPos == INDEX_NONE)
 	{
 		HUD_LOG(TEXT("Can't find widget : %s"), *inWidgetName);
-		return false;
+		return nullptr;
 	}
 
 	UUserWidget* findWidget = mWidgets[findPos];
 	if (nullptr == findWidget)
 	{
 		HUD_LOG(TEXT("Invalid widget : %s "), *inWidgetName);
-		return false;
+		return nullptr;
 	}
 
-	outWidget = findWidget;
-	outNumber = findPos;
-
-	return true;
+	return findWidget;
 }
 
 void AClientHUD::ShowWidgetFromName(const FString& inWidgetName)
 {
-	UUserWidget* widget = NewObject<UUserWidget>();
 	int32 number = INDEX_NONE;
-	bool ret = GetWidgetFromName(inWidgetName, widget, number);
-	if (ret == false)
-	{
-		return;
-	}
-
+	UUserWidget* widget = GetWidgetInfo(inWidgetName, number);
 	if (widget == nullptr || number == INDEX_NONE)
 	{
 		return;
@@ -65,14 +57,8 @@ void AClientHUD::ShowWidgetFromName(const FString& inWidgetName)
 
 void AClientHUD::CleanWidgetFromName(const FString& inWidgetName)
 {
-	UUserWidget* widget = NewObject<UUserWidget>();
 	int32 number = INDEX_NONE;
-	bool ret = GetWidgetFromName(inWidgetName, widget, number);
-	if (ret == false)
-	{
-		return;
-	}
-
+	UUserWidget* widget = GetWidgetInfo(inWidgetName, number);
 	if (widget == nullptr || number == INDEX_NONE)
 	{
 		return;
@@ -84,6 +70,31 @@ void AClientHUD::CleanWidgetFromName(const FString& inWidgetName)
 		mUsedWidgets[number] = false;
 	}
 
+}
+
+UUserWidget* AClientHUD::GetWidgetInfo(const FString& inWidgetName, int32& outNumber)
+{
+	if (false == mIsInit)
+	{
+		return false;
+	}
+
+	const int32 findPos = mWidgetNames.Find(inWidgetName);
+	outNumber = findPos;
+	if (findPos == INDEX_NONE)
+	{
+		HUD_LOG(TEXT("Can't find widget : %s"), *inWidgetName);
+		return nullptr;
+	}
+
+	UUserWidget* findWidget = mWidgets[findPos];
+	if (nullptr == findWidget)
+	{
+		HUD_LOG(TEXT("Invalid widget : %s "), *inWidgetName);
+		return nullptr;
+	}
+
+	return findWidget;
 }
 
 void AClientHUD::CollapsedWidget(UUserWidget* inWidget)
@@ -155,9 +166,25 @@ bool AClientHUD::IsInit()
 	return mIsInit;
 }
 
+void AClientHUD::FadeOut()
+{
+	//mFadeWidget->FadeOut();
+}
+
+void AClientHUD::FadeIn()
+{
+	//mFadeWidget->FadeIn();
+}
+
 void AClientHUD::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (mFadeWidgetClass)
+	{
+		mFadeWidget = CreateWidget<UW_Fade>(GetWorld(), mFadeWidgetClass);
+		mFadeWidget->AddToViewport();
+	}
 
 	AGameModeBase* gameMode = GetWorld()->GetAuthGameMode();
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
@@ -195,6 +222,7 @@ void AClientHUD::BeginPlay()
 	
 	mIsInit = true;
 	networkGameMode->ProcessClientHUD(true);
+
 	HUD_LOG(TEXT("ClientHUD Init : %d"), mWidgets.Num());
 }
 

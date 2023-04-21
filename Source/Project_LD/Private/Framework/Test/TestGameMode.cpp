@@ -20,7 +20,7 @@ void ATestGameMode::BeginPlay()
 
 	if (true == IsConnectedServer())
 	{
-		if (false == RequestKeepConnectServer(TEXT("127.0.0.1"), 9000))
+		if (false == RequestConnectServer(TEXT("127.0.0.1"), 9000))
 		{
 
 		}

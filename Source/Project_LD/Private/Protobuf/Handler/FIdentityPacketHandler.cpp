@@ -224,11 +224,9 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 		return false;
 	}
 
-	UUserWidget* outWidget = nullptr;
 	UW_SelectCharacter* selectCharacterWidget = nullptr;
-	int32 number = 0;
-	bool error = clientHUD->GetWidgetFromName(TEXT("SelectCharacter"), outWidget, number);
-	if (error == false)
+	UUserWidget* outWidget = clientHUD->GetWidgetFromName(TEXT("SelectCharacter"));
+	if (outWidget == nullptr)
 	{
 		return false;
 	}
@@ -367,11 +365,9 @@ bool Handle_S2C_Test(ANetworkController* controller, Protocol::S2C_Test& pkt)
 		return false;
 	}
 
-	UUserWidget* outWidget = nullptr;
 	UW_Test* testWidget = nullptr;
-	int32 number = 0;
-	bool ret = clientHUD->GetWidgetFromName(TEXT("Test"), outWidget, number);
-	if (ret == false)
+	UUserWidget* outWidget = clientHUD->GetWidgetFromName(TEXT("Test"));
+	if (outWidget == nullptr)
 	{
 		return false;
 	}

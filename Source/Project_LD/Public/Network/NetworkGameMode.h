@@ -94,15 +94,6 @@ public:
 public:
 	DECLARE_EVENT_OneParam(ANetworkGameMode, FTravel, const FString&);
 
-public:
-	UPROPERTY(EditDefaultsOnly, Category = "Default")
-	TSubclassOf<class UUserWidget> mServerLoadingWidgetClass;
-	class UUserWidget* mServerLoadingWidget;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Default")
-	TSubclassOf<class UUserWidget> mNetworkNotificationWidgetClass;
-	class UW_Notification* mNetworkNotificationWidget;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Default")
 	TSubclassOf<class AHUD> mDefaultHUDClass;
 

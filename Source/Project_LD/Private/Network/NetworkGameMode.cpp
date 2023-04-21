@@ -11,8 +11,9 @@
 #include <Network/NetworkUtils.h>
 #include <Framework/Gameinstance/LDGameInstance.h>
 #include <Kismet/GameplayStatics.h>
+
 #include <Widget/Handler/ClientHUD.h>
-#include <Widget/Common/W_Notification.h>
+#include <Widget/WidgetUtils.h>
 
 ANetworkGameMode::ANetworkGameMode()
 {
@@ -41,17 +42,6 @@ void ANetworkGameMode::BeginPlay()
 	mPossessCallBack.BindUFunction(this, FName("PossessNetwork"));
 	mUnPossessCallBack.BindUFunction(this, FName("UnPossessNetwork"));
 	mTravel.AddUFunction(this, FName("ProcessOpenLevel"));
-
-	if (mServerLoadingWidgetClass)
-	{
-		mServerLoadingWidget = CreateWidget<UUserWidget>(GetWorld(), mServerLoadingWidgetClass);
-		mServerLoadingWidget->AddToPlayerScreen();
-	}
-
-	if (mNetworkNotificationWidgetClass)
-	{
-		mNetworkNotificationWidget = CreateWidget<UW_Notification>(GetWorld(), mNetworkNotificationWidgetClass);
-	}
 }
 
 void ANetworkGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -199,7 +189,6 @@ bool ANetworkGameMode::RequestUnPossessController()
 
 void ANetworkGameMode::RequestTravelLevel(const FString& inLevel)
 {
-	mServerLoadingWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	mTravelLevel = inLevel;
 	RequestUnPossessController();
 }
@@ -223,7 +212,7 @@ bool ANetworkGameMode::IsNetworkInit()
 		return false;
 	}
 
-	mServerLoadingWidget->SetVisibility(ESlateVisibility::Collapsed);
+	mClientHUD->FadeOut();
 
 	BeginNetwork();
 
@@ -361,6 +350,10 @@ void ANetworkGameMode::ProcessOpenLevel(const FString& inLevel)
 {
 	FString currentLevelName;
 	GetWorld()->GetCurrentLevel()->GetName(currentLevelName);
+	
+
+	mClientHUD->FadeIn();
+
 
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Open Level [%s]->[%s]"), *currentLevelName, *inLevel), ELogLevel::Warning);
 	UGameplayStatics::OpenLevel(GetWorld(), FName(*inLevel));
@@ -368,17 +361,12 @@ void ANetworkGameMode::ProcessOpenLevel(const FString& inLevel)
 
 void ANetworkGameMode::ShowNetworkNotification(const FString& inNotification)
 {
-	if (false == mNetworkNotificationWidget->IsInViewport())
+	AClientHUD* clientHUD = Cast<AClientHUD>(HUDClass);
+	if (clientHUD->IsInit())
 	{
-		mNetworkNotificationWidget->SetTitle(TEXT("에러"));
-		mNetworkNotificationWidget->SetNotification(inNotification);
-		mNetworkNotificationWidget->SetButtonText(TEXT("종료하기"));
-		mNetworkNotificationWidget->mNotificationDelegate.BindUFunction(this, FName("RequestExitGame"));
-		mNetworkNotificationWidget->AddToPlayerScreen();
-	}
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindUFunction(this, FName("RequestExitGame"));
 
-	if (true == mServerLoadingWidget->IsInViewport())
-	{
-		mServerLoadingWidget->RemoveFromParent();
+		UWidgetUtils::SetNotification(clientHUD, TEXT("에러"), inNotification, TEXT("종료하기"), notificationDelegate);
 	}
 }

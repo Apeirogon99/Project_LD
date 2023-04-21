@@ -62,11 +62,9 @@ void AGM_CustomCharacter::BeginNetwork()
 
 	CreateNewDummyCharacter(ECharacterRace::Male);
 
-	UUserWidget* outWidget = nullptr;
 	UW_CustomCharacter* widget = nullptr;
-	int32 number = 0;
-	bool ret = mClientHUD->GetWidgetFromName(TEXT("Test"), outWidget, number);
-	if (ret == false)
+	UUserWidget* outWidget = mClientHUD->GetWidgetFromName(TEXT("Test"));
+	if (outWidget == nullptr)
 	{
 		return;
 	}
