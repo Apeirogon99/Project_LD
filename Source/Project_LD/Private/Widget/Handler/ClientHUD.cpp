@@ -168,23 +168,17 @@ bool AClientHUD::IsInit()
 
 void AClientHUD::FadeOut()
 {
-	//mFadeWidget->FadeOut();
+	mFadeWidget->FadeOut();
 }
 
 void AClientHUD::FadeIn()
 {
-	//mFadeWidget->FadeIn();
+	mFadeWidget->FadeIn();
 }
 
 void AClientHUD::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (mFadeWidgetClass)
-	{
-		mFadeWidget = CreateWidget<UW_Fade>(GetWorld(), mFadeWidgetClass);
-		mFadeWidget->AddToViewport();
-	}
 
 	AGameModeBase* gameMode = GetWorld()->GetAuthGameMode();
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
@@ -215,6 +209,12 @@ void AClientHUD::BeginPlay()
 		newWidgetName.RemoveAt(0, 3);
 		newWidgetName.RemoveAt(newWidgetName.Len() - 2 , newWidgetName.Len());
 		mWidgetNames.Add(newWidgetName);
+	}
+
+	if (mFadeWidgetClass)
+	{
+		mFadeWidget = CreateWidget<UW_Fade>(GetWorld(), mFadeWidgetClass);
+		mFadeWidget->AddToViewport();
 	}
 
 	//Used UI
