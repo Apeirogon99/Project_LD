@@ -38,7 +38,7 @@ public:
 	UButton* mCreateButton;
 
 	UPROPERTY(Meta = (BindWidget))
-	UButton* mTribeButton;
+	UButton* mRaceButton;
 
 	UPROPERTY(Meta = (BindWidget))
 	UButton* mSkinButton;

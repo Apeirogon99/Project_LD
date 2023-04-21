@@ -27,7 +27,7 @@ void UW_CustomCharacter::NativeConstruct()
 	mClassText		= Cast<UTextBlock>(GetWidgetFromName(TEXT("mClassText")));
 
 	mCreateButton	= Cast<UButton>(GetWidgetFromName(TEXT("mCreateButton")));
-	mTribeButton	= Cast<UButton>(GetWidgetFromName(TEXT("mTribeButton")));
+	mRaceButton		= Cast<UButton>(GetWidgetFromName(TEXT("mRaceButton")));
 	mSkinButton		= Cast<UButton>(GetWidgetFromName(TEXT("mSkinButton")));
 	mHairButton		= Cast<UButton>(GetWidgetFromName(TEXT("mHairButton")));
 	mEyeButton		= Cast<UButton>(GetWidgetFromName(TEXT("mEyeButton")));
@@ -38,9 +38,9 @@ void UW_CustomCharacter::NativeConstruct()
 		mCreateButton->OnClicked.AddUniqueDynamic(this, &UW_CustomCharacter::Click_Create);
 	}
 
-	if (mTribeButton != nullptr)
+	if (mRaceButton != nullptr)
 	{
-		mTribeButton->OnClicked.AddUniqueDynamic(this, &UW_CustomCharacter::Click_Tribe);
+		mRaceButton->OnClicked.AddUniqueDynamic(this, &UW_CustomCharacter::Click_Tribe);
 	}
 
 	if (mSkinButton != nullptr)

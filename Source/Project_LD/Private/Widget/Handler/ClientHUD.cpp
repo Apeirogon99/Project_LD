@@ -215,6 +215,7 @@ void AClientHUD::BeginPlay()
 	{
 		mFadeWidget = CreateWidget<UW_Fade>(GetWorld(), mFadeWidgetClass);
 		mFadeWidget->AddToViewport();
+		mFadeWidget->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 
 	//Used UI
