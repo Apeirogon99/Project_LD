@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Network/NetworkUtils.h"
@@ -50,17 +50,16 @@ void UNetworkUtils::NetworkConsoleLog(const FString& inConsoleLog, const ELogLev
 std::string UNetworkUtils::ConvertString(const FString& str)
 {
 	const wchar_t* tempWStr = *str;
-	char def = '?';
+	int tempWLen = wcslen(tempWStr) + 1;
 
-	int32 len = WideCharToMultiByte(CP_ACP, 0, tempWStr, -1, NULL, 0, NULL, NULL);
-	char* tempStr = new char[len];
-	::memset(tempStr, '\0', len);
+	int32 tempLen = WideCharToMultiByte(CP_UTF8, 0, tempWStr, tempWLen, NULL, 0, NULL, NULL);
+	char* tempStr = new char[tempLen];
 
-	WideCharToMultiByte(CP_ACP, 0, tempWStr, -1, tempStr, len, &def, NULL);
-	tempStr[len] = '\0';
+	WideCharToMultiByte(CP_UTF8, 0, tempWStr, tempWLen, tempStr, tempLen, NULL, NULL);
 
 	std::string outStr(tempStr);
 	delete[] tempStr;
+	tempStr = nullptr;
 	return outStr;
 }
 
@@ -69,19 +68,19 @@ int32 UNetworkUtils::ConvertStringToInt(const FString& str)
 	return FCString::Atoi(*str);
 }
 
-FString UNetworkUtils::ConvertFString(const std::string& str)
+FString UNetworkUtils::ConvertFString(const std::string& inStr)
 {
-	const char* tempStr = str.c_str();
+	const char* tempStr = inStr.c_str();
+	int32 tempLen = strlen(tempStr) + 1;
 
-	int32 len = MultiByteToWideChar(CP_ACP, 0, tempStr, strlen(tempStr), NULL, NULL);
-	wchar_t* tempWStr = new wchar_t[len];
-	::wmemset(tempWStr, '\0', len);
+	int32 tempWLen = MultiByteToWideChar(CP_UTF8, 0, tempStr, tempLen, NULL, 0);
+	wchar_t* tempWStr = new wchar_t[tempWLen];
 
-	MultiByteToWideChar(CP_ACP, 0, tempStr, strlen(tempStr), tempWStr, len);
-	tempWStr[len] = '\0';
+	MultiByteToWideChar(CP_UTF8, 0, tempStr, tempLen, tempWStr, tempWLen);
 
 	FString outStr = tempWStr;
 	delete[] tempWStr;
+	tempWStr = nullptr;
 	return outStr;
 }
 
@@ -117,8 +116,8 @@ uint32 UNetworkUtils::ConverLinerColorToInt(FLinearColor inValue)
 	return packed;
 }
 
-FString UNetworkUtils::GetNetworkErrorToString(int32 inError)
+FString UNetworkUtils::GetNetworkErrorToString(const int32 inError)
 {
-	std::string errorStr = GetDatabaseError(inError);
+	const std::string errorStr = GetDatabaseError(inError);
 	return ConvertFString(errorStr);
 }
