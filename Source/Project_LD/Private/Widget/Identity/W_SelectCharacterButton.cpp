@@ -93,9 +93,12 @@ void UW_SelectCharacterButton::Click_Character()
 		confirmDelegate.BindUFunction(this, FName("ReviseNameCharacter"));
 	}
 
-	//mCharacter->UpdateAnimationAsset(mSelectCharacterAnimation);
+	if (mCharacter)
+	{
+		mCharacter->UpdateCharacterPose(ECharacterPose::Rise);
+	}
 
-	bool error = UWidgetUtils::SetReconfirm(clientHUD, TEXT("생성 완료"), TEXT("정말 게임을 종료하시겠습니까?"), TEXT("게임 종료"), TEXT("취소"), confirmDelegate, cancleDelegate);
+	bool error = UWidgetUtils::SetReconfirm(clientHUD, titleText, reconfirmText, confrimText, cancleText, confirmDelegate, cancleDelegate);
 	if (error == false)
 	{
 		return;
@@ -120,7 +123,11 @@ void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterData& inCharacte
 		mCharacter->InitializeCharacter(inCharacterData);
 		mCharacter->InitializeAppearance();
 	}
-	//mCharacter->UpdateAnimationAsset(mDefaultCharacterAnimation);
+
+	if (mCharacter)
+	{
+		mCharacter->UpdateCharacterPose(ECharacterPose::Seat);
+	}
 
 	SetClickMode(EClickMode::Start);
 }
@@ -142,13 +149,13 @@ void UW_SelectCharacterButton::SetClickMode(EClickMode inClickMode)
 			texture = nullptr;
 			break;
 		case EClickMode::Appearance:
-			texture = mAppearanceTexture;
+			texture = mCheckTexture;
 			break;
 		case EClickMode::Delete:
-			texture = mDeleteTexture;
+			texture = mCheckTexture;
 			break;
 		case EClickMode::ReviseName:
-			texture = mReviseNameTexture;
+			texture = mCheckTexture;
 			break;
 		default:
 			texture = nullptr;
@@ -158,7 +165,7 @@ void UW_SelectCharacterButton::SetClickMode(EClickMode inClickMode)
 	else
 	{
 		mClickMode = EClickMode::Create;
-		texture = mCreateTexture;
+		texture = mAddTexture;
 	}
 
 	if (texture == nullptr)
@@ -238,7 +245,7 @@ void UW_SelectCharacterButton::CancleButton()
 
 	if (mCharacter)
 	{
-		//mCharacter->UpdateAnimationAsset(mDefaultCharacterAnimation);
+		mCharacter->UpdateCharacterPose(ECharacterPose::Seat);
 	}
 
 }

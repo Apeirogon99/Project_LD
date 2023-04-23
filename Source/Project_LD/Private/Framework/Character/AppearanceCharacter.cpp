@@ -61,6 +61,8 @@ AAppearanceCharacter::AAppearanceCharacter()
 		mHip_R->SetupAttachment(meshRoot);
 
 	}
+
+	//mCharacterPoses.Reserve(StaticCast<int32>(ECharacterPose::None));
 }
 
 AAppearanceCharacter::~AAppearanceCharacter()

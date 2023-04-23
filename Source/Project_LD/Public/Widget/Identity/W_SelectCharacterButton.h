@@ -98,16 +98,10 @@ public:
 	TArray<TSubclassOf<AAppearanceCharacter>> mDummyCharacterClass;
 
 	UPROPERTY(EditAnywhere, Category = "Default")
-	UTexture2D* mCreateTexture;
+	UTexture2D* mAddTexture;
 
 	UPROPERTY(EditAnywhere, Category = "Default")
-	UTexture2D* mAppearanceTexture;
-
-	UPROPERTY(EditAnywhere, Category = "Default")
-	UTexture2D* mDeleteTexture;
-
-	UPROPERTY(EditAnywhere, Category = "Default")
-	UTexture2D* mReviseNameTexture;
+	UTexture2D* mCheckTexture;
 
 private:
 

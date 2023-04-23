@@ -28,7 +28,16 @@ bool Handle_S2C_EnterIdentityServer(ANetworkController* controller, Protocol::S2
 		return false;
 	}
 
-	UNetworkUtils::NetworkConsoleLog("Handle_S2C_EnterServer", ELogLevel::Warning);
+	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return false;
+	}
+
+	clientHUD->ShowWidgetFromName(TEXT("LoginScreen"));
+	clientHUD->ShowWidgetFromName(TEXT("Singin"));
+
+	UNetworkUtils::NetworkConsoleLog("Welcome LD_Project", ELogLevel::Warning);
 
 	return true;
 }
@@ -72,7 +81,8 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 				clientHUD->CleanWidgetFromName(TEXT("Notification"));
 			});
 
-		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("로그인 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+		const FString description = UNetworkUtils::GetNetworkErrorToString(error);
+		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("로그인 실패"), description, TEXT("확인"), notificationDelegate);
 		if (ret == false)
 		{
 			return false;

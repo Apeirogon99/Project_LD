@@ -28,7 +28,8 @@ UENUM(BlueprintType)
 enum class ECharacterPose : uint8
 {
 	None			UMETA(DisplayName = "None"),
-	Seat			UMETA(DisplayName = "Seat")
+	Seat			UMETA(DisplayName = "Seat"),
+	Rise			UMETA(DisplayName = "Rise"),
 };
 
 UENUM()

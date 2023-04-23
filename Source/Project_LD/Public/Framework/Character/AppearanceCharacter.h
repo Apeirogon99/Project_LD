@@ -97,7 +97,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Weapon")
 		USkeletalMeshComponent* mHip_R;
 
-private:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
 	TArray<UAnimationAsset*> mCharacterPoses;
 };
