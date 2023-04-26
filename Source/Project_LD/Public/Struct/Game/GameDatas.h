@@ -56,7 +56,7 @@ public:
 		int32	rotation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-		USkeletalMesh* icro;
+		UTexture2D* icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 		USkeletalMesh* mesh;
