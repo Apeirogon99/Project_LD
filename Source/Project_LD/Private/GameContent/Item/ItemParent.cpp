@@ -17,21 +17,7 @@ AItemParent::AItemParent()
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	Sphere->InitSphereRadius(50.0f);
 	Sphere->SetupAttachment(RootComponent);
-
-	Sphere->SetCollisionProfileName(TEXT("OverlapAll"));
-
-	/*
-	//Default(바구니) item을 StaticMesh로 저장
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> StaticMesh(TEXT("/Game/Medieval_Village/meshes/props/SM_basket_01.SM_basket_01")); 
-	if (StaticMesh.Succeeded())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("StaticMesh is Succeeded"));
-		StaticMeshComponent->SetStaticMesh(StaticMesh.Object);
-		Sphere->SetCollisionProfileName(TEXT("OverlapAll"));
-	}
-	*/
-
-	//ItemObjectData = NewObject<FItemData>();
+	Sphere->SetCollisionProfileName(TEXT("OverlapAll"));	
 }
 
 // Called when the game starts or when spawned

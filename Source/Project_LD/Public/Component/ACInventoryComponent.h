@@ -44,15 +44,16 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Form") int Colums;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Form") int Rows;
-	/*
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int Colums;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int Rows;
+	
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintSetter = SetItemDataArr, BlueprintGetter = GetItemDataArr, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetItemDataArr, meta = (AllowPrivateAccess = "true"))
 	TArray<FItemData> ItemDataArr;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintSetter = SetIsChange, BlueprintGetter = GetIsChange, meta = (AllowPrivateAccess = "true"))
 	bool IsChange;
-
+	
 public:
 	//Getter
 	UFUNCTION(BlueprintGetter)
@@ -65,9 +66,7 @@ public:
 	UFUNCTION(BlueprintSetter)
 	void SetIsChange(bool Change) { IsChange = Change; }
 
-	UFUNCTION(BlueprintSetter)
-	void SetItemDataArr(TArray<FItemData> Data) { ItemDataArr = Data; }
-	
+	/*
 public:
 	void																	RemoveItem(FItemData ItemData);
 	void																	AddItemAt(FItemData ItemData, int TopLeftIndex);

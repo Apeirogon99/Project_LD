@@ -18,13 +18,14 @@ public:
 	// Sets default values for this actor's properties
 	AItemParent();
 
-private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
 	UStaticMeshComponent* StaticMeshComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
 	USphereComponent* Sphere;
 
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintSetter = SetItemObjectData, BlueprintGetter = GetItemObjectData, Category = "Component", meta = (AllowPrivateAccess = "true"))
 	FItemData ItemObjectData;
 
