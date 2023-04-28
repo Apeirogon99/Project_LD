@@ -77,7 +77,7 @@ void AAppearanceCharacter::InitializeAppearance()
 
 void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment)
 {
-	ECharacterRace currentRace = StaticCast<ECharacterRace>(mCharacterData.mRace);
+	ECharacterRace currentRace = mCharacterData.mAppearance.mRace;
 	if (currentRace == ECharacterRace::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
@@ -120,7 +120,7 @@ void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& I
 
 void AAppearanceCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance)
 {
-	ECharacterRace currentRace = StaticCast<ECharacterRace>(mCharacterData.mRace);
+	ECharacterRace currentRace = mCharacterData.mAppearance.mRace;
 	if (currentRace == ECharacterRace::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
@@ -135,16 +135,16 @@ void AAppearanceCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& 
 	if (currentRace == ECharacterRace::Female)
 	{
 		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 0, skinColor);		//官叼
-		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 1, eyeColor);		//传
-		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 2, eyebrowColor);	//传界
+		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 1, eyebrowColor);	//传界
+		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 2, eyeColor);		//传
 		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 3, skinColor);		//赣府
 		SetSkeletalPartColor(mHair,		TEXT("BaseColor"), 0, hairColor);		//庆绢
 	}
 	else if(currentRace == ECharacterRace::Male || currentRace == ECharacterRace::Orc)
 	{
 		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 0, skinColor);		//官叼
-		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 1, eyeColor);		//传
-		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 2, skinColor);		//赣府
+		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 1, skinColor);		//赣府
+		SetSkeletalPartColor(GetMesh(), TEXT("BaseColor"), 2, eyeColor);		//传
 		SetSkeletalPartColor(mHair,		TEXT("BaseColor"), 0, hairColor);		//庆绢
 	}
 
@@ -200,6 +200,10 @@ void AAppearanceCharacter::SetSkeletalPartColor(USkeletalMeshComponent* inMesh, 
 	{
 		materialDynamic->SetVectorParameterValue(FName(*paramterName), meshColor);
 	}
+	else
+	{
+		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::SetSkeletalPartColor] MaterialDynamic is None"), ELogLevel::Error);
+	}
 }
 
 void AAppearanceCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, int32 InMeshIndex)
@@ -242,10 +246,10 @@ FLinearColor AAppearanceCharacter::GetMeshColor(const EAppearance InAppearance)
 	FLinearColor			meshColor;
 	FString					paramterName = TEXT("BaseColor");
 
-	ECharacterRace currentTribe = StaticCast<ECharacterRace>(mCharacterData.mRace);
-	if (currentTribe == ECharacterRace::None)
+	ECharacterRace currentRace = mCharacterData.mAppearance.mRace;
+	if (currentRace == ECharacterRace::None)
 	{
-		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
+		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetMeshColor] Race is None"), ELogLevel::Error);
 		return FLinearColor();
 	}
 
@@ -256,15 +260,15 @@ FLinearColor AAppearanceCharacter::GetMeshColor(const EAppearance InAppearance)
 		break;
 	case EAppearance::Body:
 		mesh = GetMesh();
-		index = (currentTribe == ECharacterRace::Female ? 2 : 0);
+		index = (currentRace == ECharacterRace::Female ? 0 : 0);
 		break;
 	case EAppearance::Eye:
 		mesh = GetMesh();
-		index = (currentTribe == ECharacterRace::Female ? 1 : 1);
+		index = (currentRace == ECharacterRace::Female ? 2 : 2);
 		break;
 	case EAppearance::Eyebrow:
 		mesh = GetMesh();
-		index = (currentTribe == ECharacterRace::Female ? 0 : 1);
+		index = (currentRace == ECharacterRace::Female ? 1 : 2);
 		break;
 	case EAppearance::Hair:
 		mesh = mHair;
@@ -278,9 +282,11 @@ FLinearColor AAppearanceCharacter::GetMeshColor(const EAppearance InAppearance)
 	UMaterialInstanceDynamic* materialDynamic = mesh->CreateDynamicMaterialInstance(index);
 	if (materialDynamic == nullptr)
 	{
+		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetMeshColor] MaterialDynamic is None"), ELogLevel::Error);
 		return FLinearColor();
 	}
 	materialDynamic->GetVectorParameterValue(FName(*paramterName), meshColor);
 
+	meshColor.A = 1.0f;
 	return meshColor;
 }

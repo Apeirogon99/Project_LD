@@ -2,8 +2,11 @@
 
 
 #include "Framework/Identity/GM_LoginScreen.h"
+#include <Network/NetworkController.h>
 #include <Framework/Identity/IdentityPlayerController.h>
 #include <Widget/Handler/ClientHUD.h>
+
+#include <Protobuf/Handler/FIdentityPacketHandler.h>
 
 AGM_LoginScreen::AGM_LoginScreen()
 {
@@ -43,12 +46,10 @@ void AGM_LoginScreen::BeginNetwork()
 {
 	Super::BeginNetwork();
 
-	if (false == mClientHUD)
-	{
-		return;
-	}
+	ANetworkController* controller = GetNetworkController();
 
-	mClientHUD->ShowWidgetFromName(TEXT("LoginScreen"));
-	mClientHUD->ShowWidgetFromName(TEXT("Singin"));
+	Protocol::C2S_EnterIdentityServer packet;
+	packet.set_error(0);
 
+	controller->Send(FIdentityPacketHandler::MakeSendBuffer(controller, packet));
 }

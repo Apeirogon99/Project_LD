@@ -186,7 +186,6 @@ public:
 	FString					mName;
 	int32					mLevel;
 	ECharacterClass			mClass;
-	ECharacterRace			mRace;
 	FCharacterAppearance	mAppearance;
 	FCharacterEquipment		mEquipment;
 	FCharacterStatus		mStatus;

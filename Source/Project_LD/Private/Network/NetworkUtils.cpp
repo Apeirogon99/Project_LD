@@ -100,8 +100,8 @@ FLinearColor UNetworkUtils::ConverLinearColor(const uint32 inValue)
 	uint8 Red	= (inValue >> 24);
 	uint8 Green = (inValue >> 16);
 	uint8 Blue	= (inValue >> 8);
-	uint8 Alpha = (inValue);
-	//uint8 Alpha = 255;
+	//uint8 Alpha = (inValue);
+	uint8 Alpha = 255;
 
 	FColor fColor(Red, Green, Blue, Alpha);
 

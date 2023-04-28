@@ -111,4 +111,6 @@ private:
 	bool mIsConnect;
 	bool mIsPossess;
 	FString mTravelLevel;
+
+	
 };

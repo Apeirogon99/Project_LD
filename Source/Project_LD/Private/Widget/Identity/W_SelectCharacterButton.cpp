@@ -112,7 +112,7 @@ void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterData& inCharacte
 	mCharacterInfoText->SetText(characterTitle);
 
 	AAppearanceCharacter* NewDummyCharacter = nullptr;
-	TSubclassOf<AAppearanceCharacter> raceClass = mDummyCharacterClass[StaticCast<int32>(inCharacterData.mRace)];
+	TSubclassOf<AAppearanceCharacter> raceClass = mDummyCharacterClass[StaticCast<int32>(inCharacterData.mAppearance.mRace)];
 	if (raceClass)
 	{
 		FActorSpawnParameters spawnParams;

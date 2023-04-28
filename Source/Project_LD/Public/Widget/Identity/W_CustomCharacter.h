@@ -9,6 +9,7 @@
 
 class UButton;
 class UTextBlock;
+class UImage;
 class UW_ColorPicker;
 class ANetworkCharacter;
 class AAppearanceCharacter;
@@ -38,26 +39,44 @@ public:
 	UButton* mCreateButton;
 
 	UPROPERTY(Meta = (BindWidget))
-	UButton* mRaceButton;
+	UButton* mMaleButton;
 
 	UPROPERTY(Meta = (BindWidget))
-	UButton* mSkinButton;
+	UButton* mFemaleButton;
 
 	UPROPERTY(Meta = (BindWidget))
-	UButton* mHairButton;
+	UButton* mSkinColorButton;
 
 	UPROPERTY(Meta = (BindWidget))
-	UButton* mEyeButton;
+	UButton* mHairColorButton;
 
 	UPROPERTY(Meta = (BindWidget))
-	UButton* mEyebrowButton;
+	UButton* mEyeColorButton;
+
+	UPROPERTY(Meta = (BindWidget))
+	UButton* mEyebrowColorButton;
+
+	UPROPERTY(Meta = (BindWidget))
+	UImage* mSkinColor;
+
+	UPROPERTY(Meta = (BindWidget))
+	UImage* mHairColor;
+
+	UPROPERTY(Meta = (BindWidget))
+	UImage* mEyeColor;
+
+	UPROPERTY(Meta = (BindWidget))
+	UImage* mEyebrowColor;
 
 public:
 	UFUNCTION()
 		void Click_Create();
 	
 	UFUNCTION()
-		void Click_Tribe();
+		void Click_MaleRace();
+
+	UFUNCTION()
+		void Click_FemaleRace();
 
 	UFUNCTION()
 		void Click_Skin();
@@ -82,6 +101,12 @@ public:
 		void UpdateDummyCharacterPartColor();
 
 	UFUNCTION()
+		void UpdateColorPicker();
+
+	UFUNCTION()
+		void SetDummyCharacter(AAppearanceCharacter* inDummyCharacter);
+
+	UFUNCTION()
 		void SetClassText(const ECharacterClass inClass);
 
 public:
@@ -90,7 +115,7 @@ public:
 	UWidget* mBackButton;
 
 	UPROPERTY()
-	UWidget* mTribeSelectWidget;
+	UWidget* mEyebrowBox;
 
 	UPROPERTY()
 	UW_ColorPicker* mColorPicker;
@@ -102,4 +127,6 @@ public:
 	AAppearanceCharacter* mCurrentDummyCharacter;
 
 	FCharacterAppearance mTempCharacterAppearance;
+
+	bool IsSetupCharacter;
 };

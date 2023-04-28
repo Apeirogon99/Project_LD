@@ -70,7 +70,7 @@ void FCharacterStatus::UpdateCharacterStatus(const FCharacterStatus& inCharacter
 }
 
 
-FCharacterData::FCharacterData() : mCharacterID(0), mClass(ECharacterClass::None), mRace(ECharacterRace::None), mAppearance(), mEquipment(), mStatus()
+FCharacterData::FCharacterData() : mCharacterID(0), mClass(ECharacterClass::None), mAppearance(), mEquipment(), mStatus()
 {
 }
 
@@ -80,7 +80,6 @@ void FCharacterData::UpdateCharacterData(const FCharacterData& inCharacterData)
 	mLevel				= inCharacterData.mLevel;
 	mCharacterID		= inCharacterData.mCharacterID;
 	mClass				= inCharacterData.mClass;
-	mRace				= inCharacterData.mRace;
 	mAppearance			= inCharacterData.mAppearance;
 	mEquipment			= inCharacterData.mEquipment;
 	mStatus				= inCharacterData.mStatus;

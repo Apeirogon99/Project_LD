@@ -63,7 +63,7 @@ void AGM_CustomCharacter::BeginNetwork()
 	CreateNewDummyCharacter(ECharacterRace::Male);
 
 	UW_CustomCharacter* widget = nullptr;
-	UUserWidget* outWidget = mClientHUD->GetWidgetFromName(TEXT("Test"));
+	UUserWidget* outWidget = mClientHUD->GetWidgetFromName(TEXT("CustomCharacter"));
 	if (outWidget == nullptr)
 	{
 		return;
@@ -86,7 +86,7 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(const ECharacterRace InRace)
 	{
 		return;
 	}
-	gameinstance->mCharacterData.mRace = InRace;
+	gameinstance->mCharacterData.mAppearance.mRace = InRace;
 
 	AAppearanceCharacter* NewDummyCharacter = nullptr;
 	TSubclassOf<AAppearanceCharacter> raceClass = mDummyCharacterClass[StaticCast<int32>(InRace)];
@@ -101,7 +101,7 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(const ECharacterRace InRace)
 
 		NewDummyCharacter = GetWorld()->SpawnActor<AAppearanceCharacter>(raceClass, CharacterLocation, CharacterRotation, spawnParams);
 		NewDummyCharacter->InitializeCharacter(gameinstance->mCharacterData);
-		NewDummyCharacter->InitializeAppearance();
+		//NewDummyCharacter->InitializeAppearance();
 	}
 
 	if (mDummyCharacter)
@@ -111,4 +111,19 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(const ECharacterRace InRace)
 
 	mDummyCharacter = NewDummyCharacter;
 
+
+	UW_CustomCharacter* widget = nullptr;
+	UUserWidget* outWidget = mClientHUD->GetWidgetFromName(TEXT("CustomCharacter"));
+	if (outWidget == nullptr)
+	{
+		return;
+	}
+
+	widget = Cast<UW_CustomCharacter>(outWidget);
+	if (widget == nullptr)
+	{
+		return;
+	}
+
+	widget->SetDummyCharacter(mDummyCharacter);
 }
