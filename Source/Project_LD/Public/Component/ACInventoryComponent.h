@@ -76,6 +76,8 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
+	void																	RemoveItem(FItemData ItemObjectData);
+	UFUNCTION(BlueprintCallable)
 	void																	AddItemAt(FItemData ItemObjectData, int TopLeftIndex);
 	UFUNCTION(BlueprintCallable)
 	bool																	TryAddItem(FItemData ItemObjectData);
@@ -86,13 +88,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FTile																IndexToTile(int Index)		const;
 	UFUNCTION(BlueprintCallable)
-	FReturnItemAtIndex											GetItemAtIndex(int Index);
+	FReturnItemAtIndex										GetItemAtIndex(int Index);
 	/*
 public:
-	void																	RemoveItem(FItemData ItemData);
 	TArray<TMap<FItemData, FTile>>				GetAllItems();
-	TArray<FItemData>										GetItems() const;
-	TArray<FEquipmentData>								GetEquipment() const;
+
 
 private:
 	//return Bool, ItemObjectData

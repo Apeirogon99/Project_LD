@@ -38,11 +38,30 @@ void UACInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 		IsChange = false;
 
 		//Inventory Change event
+		//델리게이트 이용해서 인벤토리 변화 감지
+	}
+}
+
+void UACInventoryComponent::RemoveItem(FItemData ItemObjectData)
+{
+	if (ItemObjectData.ValidData == true)
+	{
+		int itemIndex = 0;
+		for (FItemData itemData : ItemDataArr)
+		{
+			if (itemData == ItemObjectData)
+			{
+				ItemDataArr[itemIndex] = FItemData();
+				IsChange = true;
+			}
+			itemIndex++;
+		}
 	}
 }
 
 void UACInventoryComponent::AddItemAt(FItemData ItemObjectData, int TopLeftIndex)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Call AddItemAt"));
 	FTile TileData = IndexToTile(TopLeftIndex);
 	int X = ItemObjectData.size_x;
 	int Y = ItemObjectData.size_y;
@@ -61,6 +80,7 @@ void UACInventoryComponent::AddItemAt(FItemData ItemObjectData, int TopLeftIndex
 
 bool UACInventoryComponent::TryAddItem(FItemData ItemObjectData)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Call TryAddItem"));
 	if(ItemObjectData.ValidData == true)
 	{
 		int itemIndex = 0;
@@ -92,6 +112,7 @@ bool UACInventoryComponent::TryAddItem(FItemData ItemObjectData)
 
 bool UACInventoryComponent::IsRoomAvailable(FItemData ItemObjectData, int TopLeftIndex)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Call IsRoomAvailable"));
 	FTile TileData = IndexToTile(TopLeftIndex);
 	int X = ItemObjectData.size_x;
 	int Y = ItemObjectData.size_y;

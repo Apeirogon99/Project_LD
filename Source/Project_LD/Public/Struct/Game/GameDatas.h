@@ -63,6 +63,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Check")
 	bool	ValidData;
+
+	bool operator==(const FItemData& Other) const
+	{
+		return this==&Other;
+	}
 };
 
 UCLASS()
