@@ -106,7 +106,7 @@ bool UACInventoryComponent::IsRoomAvailable(FItemData ItemObjectData, int TopLef
 				LocalTile.X = FIndex;
 				LocalTile.Y = SIndex;
 
-				ReturnItemAtIndex Data = ReturnItemAtIndex();
+				FReturnItemAtIndex Data = FReturnItemAtIndex();
 				Data=GetItemAtIndex(TileToIndex(LocalTile));
 				if (Data.valid)
 				{
@@ -142,9 +142,9 @@ FTile UACInventoryComponent::IndexToTile(int Index) const
 	return Node;
 }
 
-ReturnItemAtIndex UACInventoryComponent::GetItemAtIndex(int Index)
+FReturnItemAtIndex UACInventoryComponent::GetItemAtIndex(int Index)
 {
-	ReturnItemAtIndex RData;
+	FReturnItemAtIndex RData;
 	if(ItemDataArr.IsValidIndex(Index))
 	{
 		RData.valid = true;

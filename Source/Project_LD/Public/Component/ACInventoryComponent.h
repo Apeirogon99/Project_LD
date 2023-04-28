@@ -12,8 +12,8 @@ struct PROJECT_LD_API FLine
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Line) FVector2D Start;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Line) FVector2D End;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Line") FVector2D Start;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Line") FVector2D End;
 };
 
 USTRUCT(BlueprintType)
@@ -21,14 +21,17 @@ struct PROJECT_LD_API FTile
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Tile) int32 X;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Tile) int32 Y;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile") int32 X;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile") int32 Y;
 };
 
-struct ReturnItemAtIndex
+USTRUCT(BlueprintType)
+struct PROJECT_LD_API FReturnItemAtIndex
 {
-	bool valid;
-	FItemData ItemObjectData;
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Return") bool valid;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Return") FItemData ItemObjectData;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -72,12 +75,18 @@ public:
 	void SetIsChange(bool Change) { IsChange = Change; }
 
 public:
+	UFUNCTION(BlueprintCallable)
 	void																	AddItemAt(FItemData ItemObjectData, int TopLeftIndex);
+	UFUNCTION(BlueprintCallable)
 	bool																	TryAddItem(FItemData ItemObjectData);
+	UFUNCTION(BlueprintCallable)
 	bool																	IsRoomAvailable(FItemData ItemObjectData, int TopLeftIndex);
+	UFUNCTION(BlueprintCallable)
 	int																	TileToIndex(FTile Tile)	const;
+	UFUNCTION(BlueprintCallable)
 	FTile																IndexToTile(int Index)		const;
-	ReturnItemAtIndex											GetItemAtIndex(int Index);
+	UFUNCTION(BlueprintCallable)
+	FReturnItemAtIndex											GetItemAtIndex(int Index);
 	/*
 public:
 	void																	RemoveItem(FItemData ItemData);
