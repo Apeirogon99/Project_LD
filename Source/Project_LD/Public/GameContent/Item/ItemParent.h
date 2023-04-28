@@ -7,10 +7,11 @@
 #include <Engine/EngineTypes.h>
 #include <Engine/Classes/Components/SphereComponent.h>
 #include "GameFramework/Actor.h"
+#include <Framework/Interface/InventoryInterface.h>
 #include "ItemParent.generated.h"
 
 UCLASS()
-class PROJECT_LD_API AItemParent : public AActor
+class PROJECT_LD_API AItemParent : public AActor, public IInventoryInterface
 {
 	GENERATED_BODY()
 	
@@ -41,4 +42,9 @@ protected:
 
 	UFUNCTION(BlueprintGetter)
 	FItemData GetItemObjectData() { return ItemObjectData; }
+	
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interface")
+	void PickUpItem();
+	virtual void PickUpItem_Implementation() override;
 };

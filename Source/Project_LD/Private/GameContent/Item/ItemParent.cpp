@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "GameContent/Item/ItemParent.h"
 
 // Sets default values
@@ -23,7 +22,7 @@ AItemParent::AItemParent()
 // Called when the game starts or when spawned
 void AItemParent::BeginPlay()
 {
-	Super::BeginPlay();
+	AActor::BeginPlay();
 
 	/*
 	//itemObjectData 생성 확인
@@ -47,4 +46,10 @@ void AItemParent::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 	//캐릭터와 아이템이 닿은 경우 Pickup Widget을 생성
 }
 
-//아이템을 얻는 과정은 인터페이스로 제작 예정
+void AItemParent::PickUpItem_Implementation()
+{
+	//아이템 먹는 처리 할 예정
+	//GetOwner로 플레이어 받아서 Cast 후 InventroyComponent에서 TryAddItem이후 Destory
+	//UE_LOG(LogTemp, Warning, TEXT("PickUpItem_Implemetation"));
+	//현재는 BP에서 처리중
+}

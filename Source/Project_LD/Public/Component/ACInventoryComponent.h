@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include <Struct/Game/GameDatas.h>
-//#include <Struct/Inven/EquipmentData.h>
 #include "Components/ActorComponent.h"
 #include "ACInventoryComponent.generated.h"
 
@@ -24,6 +23,12 @@ struct PROJECT_LD_API FTile
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Tile) int32 X;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Tile) int32 Y;
+};
+
+struct ReturnItemAtIndex
+{
+	bool valid;
+	FItemData ItemObjectData;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -66,14 +71,16 @@ public:
 	UFUNCTION(BlueprintSetter)
 	void SetIsChange(bool Change) { IsChange = Change; }
 
+public:
+	void																	AddItemAt(FItemData ItemObjectData, int TopLeftIndex);
+	bool																	TryAddItem(FItemData ItemObjectData);
+	bool																	IsRoomAvailable(FItemData ItemObjectData, int TopLeftIndex);
+	int																	TileToIndex(FTile Tile)	const;
+	FTile																IndexToTile(int Index)		const;
+	ReturnItemAtIndex											GetItemAtIndex(int Index);
 	/*
 public:
 	void																	RemoveItem(FItemData ItemData);
-	void																	AddItemAt(FItemData ItemData, int TopLeftIndex);
-	bool																	TryAddItem(FItemData ItemData);
-	bool																	IsRoomAvailable(FItemData ItemData, int TopLeftIndex);
-	int																	TileToIndex(FTile Tile) const;
-	FTile																IndexToTile(int Index) const;
 	TArray<TMap<FItemData, FTile>>				GetAllItems();
 	TArray<FItemData>										GetItems() const;
 	TArray<FEquipmentData>								GetEquipment() const;
