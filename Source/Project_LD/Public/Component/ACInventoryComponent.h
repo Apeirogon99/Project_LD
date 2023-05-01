@@ -76,23 +76,20 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void																	RemoveItem(FItemData ItemObjectData);
+	void																	RemoveItem(FItemData& ItemObjectData);
 	UFUNCTION(BlueprintCallable)
-	void																	AddItemAt(FItemData ItemObjectData, int TopLeftIndex);
+	void																	AddItemAt(FItemData& ItemObjectData, int TopLeftIndex);
 	UFUNCTION(BlueprintCallable)
-	bool																	TryAddItem(FItemData ItemObjectData);
+	bool																	TryAddItem(FItemData& ItemObjectData);
 	UFUNCTION(BlueprintCallable)
-	bool																	IsRoomAvailable(FItemData ItemObjectData, int TopLeftIndex);
+	bool																	IsRoomAvailable(FItemData& ItemObjectData, int TopLeftIndex);
 	UFUNCTION(BlueprintCallable)
 	int																	TileToIndex(FTile Tile)	const;
 	UFUNCTION(BlueprintCallable)
 	FTile																IndexToTile(int Index)		const;
 	UFUNCTION(BlueprintCallable)
-	FReturnItemAtIndex										GetItemAtIndex(int Index);
+	FReturnItemAtIndex									GetItemAtIndex(int Index);
 	/*
-public:
-	TArray<TMap<FItemData, FTile>>				GetAllItems();
-
 
 private:
 	//return Bool, ItemObjectData

@@ -42,12 +42,12 @@ void UACInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	}
 }
 
-void UACInventoryComponent::RemoveItem(FItemData ItemObjectData)
+void UACInventoryComponent::RemoveItem(FItemData& ItemObjectData)
 {
 	if (ItemObjectData.ValidData == true)
 	{
 		int itemIndex = 0;
-		for (FItemData itemData : ItemDataArr)
+		for (FItemData& itemData : ItemDataArr)
 		{
 			if (itemData == ItemObjectData)
 			{
@@ -59,7 +59,7 @@ void UACInventoryComponent::RemoveItem(FItemData ItemObjectData)
 	}
 }
 
-void UACInventoryComponent::AddItemAt(FItemData ItemObjectData, int TopLeftIndex)
+void UACInventoryComponent::AddItemAt(FItemData& ItemObjectData, int TopLeftIndex)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Call AddItemAt"));
 	FTile TileData = IndexToTile(TopLeftIndex);
@@ -78,13 +78,13 @@ void UACInventoryComponent::AddItemAt(FItemData ItemObjectData, int TopLeftIndex
 	IsChange = true;
 }
 
-bool UACInventoryComponent::TryAddItem(FItemData ItemObjectData)
+bool UACInventoryComponent::TryAddItem(FItemData& ItemObjectData)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Call TryAddItem"));
 	if(ItemObjectData.ValidData == true)
 	{
 		int itemIndex = 0;
-		for (FItemData itemData : ItemDataArr)
+		for (FItemData& itemData : ItemDataArr)
 		{
 			if(IsRoomAvailable(ItemObjectData,itemIndex))
 			{
@@ -96,7 +96,7 @@ bool UACInventoryComponent::TryAddItem(FItemData ItemObjectData)
 		FItemData RotatedItemObjectData = ItemObjectData;
 		RotatedItemObjectData.rotation = 1;
 		itemIndex = 0;
-		for (FItemData itemData : ItemDataArr)
+		for (FItemData& itemData : ItemDataArr)
 		{
 			if(IsRoomAvailable(RotatedItemObjectData,itemIndex))
 			{
@@ -110,7 +110,7 @@ bool UACInventoryComponent::TryAddItem(FItemData ItemObjectData)
 	return false;
 }
 
-bool UACInventoryComponent::IsRoomAvailable(FItemData ItemObjectData, int TopLeftIndex)
+bool UACInventoryComponent::IsRoomAvailable(FItemData& ItemObjectData, int TopLeftIndex)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Call IsRoomAvailable"));
 	FTile TileData = IndexToTile(TopLeftIndex);
@@ -178,3 +178,4 @@ FReturnItemAtIndex UACInventoryComponent::GetItemAtIndex(int Index)
 	}
 	return RData;
 }
+
