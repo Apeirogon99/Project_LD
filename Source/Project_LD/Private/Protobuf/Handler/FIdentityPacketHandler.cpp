@@ -21,6 +21,7 @@
 
 bool Handle_S2C_EnterIdentityServer(ANetworkController* controller, Protocol::S2C_EnterIdentityServer& pkt)
 {
+	//
 	AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
 	if (nullptr == networkGameMode)
@@ -389,7 +390,14 @@ bool Handle_S2C_Test(ANetworkController* controller, Protocol::S2C_Test& pkt)
 	}
 
 	testWidget->InitWidget(pkt.value(), UNetworkUtils::ConvertFString(pkt.s_value()), pkt.time_stamp());
-	clientHUD->ShowWidgetFromName(TEXT("Test"));
 
+	return true;
+}
+
+bool Handle_S2C_GetRoundTripTime(ANetworkController* controller, Protocol::S2C_GetRoundTripTime& pkt)
+{
+	const int64 clientTimeStamp = controller->GetNetworkTimeStamp();
+	controller->SetNetworkTimeStamp(pkt.time_stamp());
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("SYNC TIME : (%lld) (%lld)"), clientTimeStamp, pkt.time_stamp()), ELogLevel::Warning);
 	return true;
 }

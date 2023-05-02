@@ -67,12 +67,10 @@ void UW_Test::TestProcess(const int32 inIValue, const FString& inSValue, const i
 	APlayerController* owningController = GetOwningPlayer();
 	ANetworkController* networkController = Cast<ANetworkController>(owningController);
 
-	Protocol::C2S_Test packet;
-	packet.set_i_value(inIValue);
-	packet.set_s_value(UNetworkUtils::ConvertString(inSValue));
-	packet.set_time_stamp(inTimeStamp);
+	const int64 clientTimeStamp = networkController->GetNetworkTimeStamp();
+
+	Protocol::C2S_GetRoundTripTime packet;
 
 	SendBufferPtr sendBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, packet);
-
 	networkController->Send(sendBuffer);
 }

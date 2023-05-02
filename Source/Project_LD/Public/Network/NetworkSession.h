@@ -22,6 +22,8 @@ class FSendBuffer;
 class UNetworkService;
 class ANetworkController;
 
+class UNetworkTimeStamp;
+
 using SendBufferPtr = TSharedPtr<class FSendBuffer>;
 
 class PROJECT_LD_API FNetworkSession : public TSharedFromThis<FNetworkSession>
@@ -67,6 +69,9 @@ public:
 	void Disconnect(const FString& inCause);
 	void Send(SendBufferPtr FSendBuffer);
 
+	const int64	GetServerTimeStamp();
+	void		SetTimeStamp(const int64 inTimeStamp);
+
 public:
 	bool IsConnected() const;
 	bool GetHasData();
@@ -90,6 +95,8 @@ private:
 
 	UNetworkService*		mService;
 	ANetworkController*		mController;
+
+	UNetworkTimeStamp*		mTimeStamp;
 
 private:
 	FConnectCallBack		mConnectCallBack;

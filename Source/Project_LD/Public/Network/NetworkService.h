@@ -34,14 +34,14 @@ public:
 	virtual bool IsTickableInEditor() const override;
 	virtual UWorld* GetTickableGameObjectWorld() const override;
 
-	virtual void Tick(float DeltaTime) override;
-	virtual ETickableTickType GetTickableTickType() const override;
-	virtual bool IsTickable() const override;
-	virtual bool IsAllowedToTick() const override final;
-	virtual TStatId GetStatId() const override;
+	virtual void				Tick(float DeltaTime) override;
+	virtual ETickableTickType	GetTickableTickType() const override;
+	virtual bool				IsTickable() const override;
+	virtual bool				IsAllowedToTick() const override final;
+	virtual TStatId				GetStatId() const override;
 
 public:
-	FNetworkSessionPtr	GetNetworkSession();
+	FNetworkSessionPtr			GetNetworkSession();
 
 private:
 	FNetworkSessionPtr	mNetworkSession;

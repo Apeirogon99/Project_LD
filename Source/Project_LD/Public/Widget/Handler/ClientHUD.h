@@ -8,7 +8,7 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(CLIENT_HUD, Log, All);
 
-#define HUD_LOG(Format, ...) UE_LOG(CLIENT_HUD, Warning, TEXT("[%s] %s"), __FUNCTION__ ,*FString::Printf(Format, ##__VA_ARGS__))
+#define HUD_LOG(Format, ...) UE_LOG(CLIENT_HUD, Warning, TEXT("[%s] %s"), *FString("ClientHUD") ,*FString::Printf(Format, ##__VA_ARGS__))
 
 class UUserWidget;
 

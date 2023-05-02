@@ -89,6 +89,21 @@ bool ANetworkController::IsClientController()
 	return true;
 }
 
+int64 ANetworkController::GetNetworkTimeStamp()
+{
+	if (mNetworkSession)
+	{
+		return mNetworkSession->GetServerTimeStamp();
+	}
+
+	return -1;
+}
+
+void ANetworkController::SetNetworkTimeStamp(const int64 inTimeStamp)
+{
+	mNetworkSession->SetTimeStamp(inTimeStamp);
+}
+
 void ANetworkController::Send(SendBufferPtr FSendBuffer)
 {
 	if (mNetworkSession.IsValid())

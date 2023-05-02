@@ -12,11 +12,13 @@
 #include <Network/NetworkTypes.h>
 #include <Network/NetworkService.h>
 #include <Network/NetworkController.h>
+#include <Network/NetworkTimeStamp.h>
 
-FNetworkSession::FNetworkSession() : mRecvBuffer(nullptr), mSendBufferQueue(nullptr), mService(nullptr), mController(nullptr)
+FNetworkSession::FNetworkSession() : mRecvBuffer(nullptr), mSendBufferQueue(nullptr), mService(nullptr), mController(nullptr), mTimeStamp(nullptr)
 {
-	mRecvBuffer = new FRecvBuffer(static_cast<uint32>(Default::MAX_RECV_BUFFER));
-	mSendBufferQueue = new FSendBufferQueue(static_cast<uint32>(Default::MAX_SEND_QUEUE));
+	mRecvBuffer			= new FRecvBuffer(static_cast<uint32>(Default::MAX_RECV_BUFFER));
+	mSendBufferQueue	= new FSendBufferQueue(static_cast<uint32>(Default::MAX_SEND_QUEUE));
+	mTimeStamp			= NewObject<UNetworkTimeStamp>();
 
 	mIsSending = static_cast<bool>(Default::SESSION_IS_FREE);
 	mIsRecving = static_cast<bool>(Default::SESSION_IS_FREE);
@@ -27,6 +29,15 @@ FNetworkSession::FNetworkSession() : mRecvBuffer(nullptr), mSendBufferQueue(null
 	mSocket = mSocketSubsystem->CreateSocket(NAME_Stream, TEXT("NetworkSession"), false);
 
 	mSocket->SetNoDelay(true);
+	//mSocket->SetNonBlocking(true);
+
+	int32 newRecvSize = 0;
+	mSocket->SetReceiveBufferSize(16384, newRecvSize);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Socket] Receive buffer size : %d"), newRecvSize), ELogLevel::Warning);
+
+	int32 newSendSize = 0;
+	mSocket->SetSendBufferSize(16384, newSendSize);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Socket] Send buffer size : %d"), newSendSize), ELogLevel::Warning);
 	//mSocket->SetLinger()
 	
 }
@@ -57,6 +68,8 @@ FNetworkSession::~FNetworkSession()
 
 void FNetworkSession::NetworkLoop()
 {
+	FDateTime timeBeginningOfTick = FDateTime::UtcNow();
+
 	if (false == IsConnected())
 	{
 		return;
@@ -73,6 +86,15 @@ void FNetworkSession::NetworkLoop()
 	if (oldRecving == static_cast<LONG>(Default::SESSION_IS_FREE))
 	{
 		RegisterRecv();
+	}
+
+	FDateTime timeEndOfTick = FDateTime::UtcNow();
+	FTimespan tickDuration = timeEndOfTick - timeBeginningOfTick;
+	float secondsThisTickTook = tickDuration.GetTotalSeconds();
+	float timeToSleep = 0.008f - secondsThisTickTook;
+	if (timeToSleep > 0.f)
+	{
+		FPlatformProcess::Sleep(timeToSleep);
 	}
 }
 
@@ -424,6 +446,16 @@ void FNetworkSession::Send(SendBufferPtr FSendBuffer)
 		RegisterSend();
 	}
 
+}
+
+const int64 FNetworkSession::GetServerTimeStamp()
+{
+	return mTimeStamp->GetClientTimeStamp();
+}
+
+void FNetworkSession::SetTimeStamp(const int64 inTimeStamp)
+{
+	mTimeStamp->SetClientTimeStamp(inTimeStamp);
 }
 
 bool FNetworkSession::IsConnected() const

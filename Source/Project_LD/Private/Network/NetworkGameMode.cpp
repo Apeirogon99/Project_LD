@@ -361,12 +361,11 @@ void ANetworkGameMode::ProcessOpenLevel(const FString& inLevel)
 
 void ANetworkGameMode::ShowNetworkNotification(const FString& inNotification)
 {
-	AClientHUD* clientHUD = Cast<AClientHUD>(HUDClass);
-	if (clientHUD->IsInit())
+	if (mIsHUD)
 	{
 		FNotificationDelegate notificationDelegate;
 		notificationDelegate.BindUFunction(this, FName("RequestExitGame"));
 
-		UWidgetUtils::SetNotification(clientHUD, TEXT("에러"), inNotification, TEXT("종료하기"), notificationDelegate);
+		UWidgetUtils::SetNotification(mClientHUD, TEXT("에러"), inNotification, TEXT("종료하기"), notificationDelegate);
 	}
 }
