@@ -2,8 +2,11 @@
 
 
 #include "Framework/Test/TestGameMode.h"
+#include <Network/NetworkController.h>
 #include <Framework/Identity/IdentityPlayerController.h>
 #include <Widget/Handler/ClientHUD.h>
+
+#include <Protobuf/Handler/FIdentityPacketHandler.h>
 
 ATestGameMode::ATestGameMode()
 {
@@ -18,9 +21,9 @@ void ATestGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (true == IsConnectedServer())
+	if (false == IsConnectedServer())
 	{
-		if (false == RequestConnectServer(TEXT("127.0.0.1"), 9000))
+		if (false == RequestConnectServer(TEXT("116.41.116.247"), 9000))
 		{
 
 		}
@@ -40,6 +43,11 @@ void ATestGameMode::BeginNetwork()
 	{
 		return;
 	}
+
+	ANetworkController* controller = GetNetworkController();
+	Protocol::C2S_EnterIdentityServer packet;
+	packet.set_error(0);
+	controller->Send(FIdentityPacketHandler::MakeSendBuffer(controller, packet));
 
 	mClientHUD->ShowWidgetFromName(TEXT("Test"));
 }
