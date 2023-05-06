@@ -20,5 +20,13 @@ void UUWInventory::NativeOnInitialized()
 
 void UUWInventory::DelayInit()
 {
-	InventoryStore->Init(ACInventory, TileSize);
+	//InventoryStore->Init(ACInventory, TileSize);
+	if (ACInventory != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UWInven ACInventory exist"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UWInven ACInventory dosen't exist"));
+	}
 }

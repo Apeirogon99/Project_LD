@@ -5,7 +5,12 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Components/DecalComponent.h"
+#include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include <Widget/Game/Inventory/UWInventory.h>
+#include <Component/ACInventoryComponent.h>
+
+//#include "Components/DecalComponent.h"
 
 AGameCharacter::AGameCharacter()
 {
@@ -46,6 +51,8 @@ AGameCharacter::AGameCharacter()
 	//Character Level
 	CharacterLevel = 1;
 
+	InventoryComponent = CreateDefaultSubobject<UACInventoryComponent>(TEXT("InventoryComponent"));
+
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 }
@@ -55,10 +62,30 @@ AGameCharacter::~AGameCharacter()
 
 }
 
+void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction("ToggleInventory", IE_Pressed, this, &AGameCharacter::OpenInventory);
+}
+
+void AGameCharacter::OpenInventory()
+{
+	UE_LOG(LogTemp, Warning, TEXT("OpenInven"));
+}
+
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UUserWidget* Widget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(this, 0), UUWInventory::StaticClass());
+	InventoryWidget = Cast<UUWInventory>(Widget);
+	
+	InventoryWidget->TileSize = 50.0f;
+
+	InventoryWidget->ACInventory = InventoryComponent;
+
+	InventoryWidget->AddToViewport();
 }
 
 void AGameCharacter::Tick(float DeltaSeconds)
@@ -76,10 +103,4 @@ void AGameCharacter::Tick(float DeltaSeconds)
 		CursorToWorld->SetWorldRotation(CursorR);
 	}
 	*/
-}
-
-void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }

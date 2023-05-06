@@ -88,7 +88,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FTile																IndexToTile(int Index)		const;
 	UFUNCTION(BlueprintCallable)
-	FReturnItemAtIndex									GetItemAtIndex(int Index);
+	FReturnItemAtIndex										GetItemAtIndex(int Index);
 	/*
 
 private:

@@ -31,6 +31,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* CameraBoom;
 
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+		class UUWInventory* InventoryWidget;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
+		class UACInventoryComponent* InventoryComponent;
+
 	/*
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 		class UDecalComponent* CursorToWorld;
@@ -82,4 +89,9 @@ public:
 	void SetCurrentMana(float NewCurrentMana) { CurrentMana = NewCurrentMana; }
 	void SetIsAttacking(bool NewIsAttacking) { IsAttacking = NewIsAttacking; }
 	void SetCharacterLevel(int32 NewLevel) { CharacterLevel = NewLevel; }
+
+public:
+	UFUNCTION()
+	void OpenInventory();
+
 };
