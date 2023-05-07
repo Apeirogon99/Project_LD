@@ -20,6 +20,6 @@ int64 UNetworkTimeStamp::GetClientTimeStamp()
 
 void UNetworkTimeStamp::SetClientTimeStamp(const int64 inTimeStamp)
 {
-	mClock = std::chrono::steady_clock::now();
 	mTimeStamp = inTimeStamp;
+	mClock = std::chrono::steady_clock::now();
 }

@@ -364,11 +364,14 @@ bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_Trave
 
 bool Handle_S2C_Test(ANetworkController* controller, Protocol::S2C_Test& pkt)
 {
-	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
-	if (nullptr == gameInstance)
-	{
-		return false;
-	}
+	return true;
+}
+
+bool Handle_S2C_GetRoundTripTime(ANetworkController* controller, Protocol::S2C_GetRoundTripTime& pkt)
+{
+	const int64 clientTimeStamp = controller->GetNetworkTimeStamp();
+	const int64 serverTimeStamp = pkt.time_stamp();
+	controller->SetNetworkTimeStamp(serverTimeStamp);
 
 	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
 	if (nullptr == clientHUD)
@@ -389,15 +392,6 @@ bool Handle_S2C_Test(ANetworkController* controller, Protocol::S2C_Test& pkt)
 		return false;
 	}
 
-	testWidget->InitWidget(pkt.value(), UNetworkUtils::ConvertFString(pkt.s_value()), pkt.time_stamp());
-
-	return true;
-}
-
-bool Handle_S2C_GetRoundTripTime(ANetworkController* controller, Protocol::S2C_GetRoundTripTime& pkt)
-{
-	const int64 clientTimeStamp = controller->GetNetworkTimeStamp();
-	controller->SetNetworkTimeStamp(pkt.time_stamp());
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("SYNC TIME : (%lld) (%lld)"), clientTimeStamp, pkt.time_stamp()), ELogLevel::Warning);
+	testWidget->InitWidget(clientTimeStamp, serverTimeStamp);
 	return true;
 }

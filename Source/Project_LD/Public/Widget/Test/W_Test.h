@@ -25,36 +25,22 @@ public:
 
 public:
 	UFUNCTION()
-	void InitWidget(const int32 inIValue, const FString& inSValue, const int32 inTimeStamp);
+	void InitWidget(const int32 inClientTimeStamp, const int32 inServerTimeStamp);
 
 	UFUNCTION()
-		void Click_LeftButton();
-
-	UFUNCTION()
-		void Click_RightButton();
-
-protected:
-	UFUNCTION()
-	void TestProcess(const int32 inIValue, const FString& inSValue, const int32 inTimeStamp);
+		void Click_SendButton();
 
 private:
 	UPROPERTY(Meta = (BindWidget))
-	UButton* mLeftButton;
+	UButton* mSendButton;
 
 	UPROPERTY(Meta = (BindWidget))
-	UButton* mRightButton;
+	UTextBlock* mServerTimeStampText;
 
 	UPROPERTY(Meta = (BindWidget))
-	UTextBlock* mTimeStampText;
-
-	UPROPERTY(Meta = (BindWidget))
-	UTextBlock* mIValueText;
-
-	UPROPERTY(Meta = (BindWidget))
-	UTextBlock* mSValueText;
+	UTextBlock* mClientTimeStampText;
 
 private:
-	FString	mIValue;
-	FString	mSValue;
-	FString	mTimeStamp;
+	FString	mClientTimeStamp;
+	FString	mServerTimeStamp;
 };

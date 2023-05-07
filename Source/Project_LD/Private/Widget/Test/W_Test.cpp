@@ -15,54 +15,28 @@ void UW_Test::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	mLeftButton		= Cast<UButton>(GetWidgetFromName(TEXT("mLeftButton")));
-	mRightButton	= Cast<UButton>(GetWidgetFromName(TEXT("mRightButton")));
+	mSendButton = Cast<UButton>(GetWidgetFromName(TEXT("mSendButton")));
 
-	mIValueText		= Cast<UTextBlock>(GetWidgetFromName(TEXT("mIValueText")));
-	mSValueText		= Cast<UTextBlock>(GetWidgetFromName(TEXT("mSValueText")));
-	mTimeStampText	= Cast<UTextBlock>(GetWidgetFromName(TEXT("mTimeStampText")));
+	mServerTimeStampText = Cast<UTextBlock>(GetWidgetFromName(TEXT("mServerTimeStampText")));
+	mClientTimeStampText = Cast<UTextBlock>(GetWidgetFromName(TEXT("mClientTimeStampText")));
 
-	if (mLeftButton != nullptr)
+	if (mSendButton != nullptr)
 	{
-		mLeftButton->OnClicked.AddDynamic(this, &UW_Test::Click_LeftButton);
+		mSendButton->OnClicked.AddDynamic(this, &UW_Test::Click_SendButton);
 	}
 
-	if (mRightButton != nullptr)
-	{
-		mRightButton->OnClicked.AddDynamic(this, &UW_Test::Click_RightButton);
-	}
 }
 
-void UW_Test::InitWidget(const int32 inIValue, const FString& inSValue, const int32 inTimeStamp)
+void UW_Test::InitWidget(const int32 inClientTimeStamp, const int32 inServerTimeStamp)
 {
-	mIValue = FString::FromInt(inIValue);
-	mSValue = inSValue;
-	mTimeStamp = FString::FromInt(inTimeStamp);
+	mClientTimeStamp = FString::FromInt(inClientTimeStamp);
+	mServerTimeStamp = FString::FromInt(inServerTimeStamp);
 
-	mIValueText->SetText(FText::FromString(mIValue));
-	mSValueText->SetText(FText::FromString(mSValue));
-	mTimeStampText->SetText(FText::FromString(mTimeStamp));
+	mClientTimeStampText->SetText(FText::FromString(mClientTimeStamp));
+	mServerTimeStampText->SetText(FText::FromString(mServerTimeStamp));
 }
 
-void UW_Test::Click_LeftButton()
-{
-	const int32		iValue = FCString::Atoi(*mIValue) + 1;
-	const FString	sValue = FString(TEXT("LEFT"));
-	const int32		timestamp = FCString::Atoi(*mTimeStamp) + 1000;
-
-	TestProcess(iValue, sValue, timestamp);
-}
-
-void UW_Test::Click_RightButton()
-{
-	const int32		iValue = FCString::Atoi(*mIValue) + 5;
-	const FString	sValue = FString(TEXT("RIGHT"));
-	const int32		timestamp = FCString::Atoi(*mTimeStamp) + 5000;
-
-	TestProcess(iValue, sValue, timestamp);
-}
-
-void UW_Test::TestProcess(const int32 inIValue, const FString& inSValue, const int32 inTimeStamp)
+void UW_Test::Click_SendButton()
 {
 	APlayerController* owningController = GetOwningPlayer();
 	ANetworkController* networkController = Cast<ANetworkController>(owningController);
