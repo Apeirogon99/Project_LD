@@ -14,6 +14,16 @@
 
 AGameCharacter::AGameCharacter()
 {
+	static ConstructorHelpers::FClassFinder<UUserWidget> MainWidgetAsset(TEXT("WidgetBlueprint'/Game/TestFolder/TestCharacter/widget/BP_UWInventory.BP_UWInventory_C'"));
+	if (MainWidgetAsset.Succeeded())
+	{
+		MainWidgetClass = MainWidgetAsset.Class;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Fail Character"));
+	}
+
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
 
 	bUseControllerRotationPitch = false;
@@ -72,20 +82,71 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 void AGameCharacter::OpenInventory()
 {
 	UE_LOG(LogTemp, Warning, TEXT("OpenInven"));
+
+	UE_LOG(LogTemp, Warning, TEXT("IsInViewport %d"),InventoryWidget->IsInViewport());
+
+	if (InventoryWidget->IsInViewport())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InventoryWidget->IsInViewport() is ture"));
+		InventoryWidget->RemoveFromParent();
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (PlayerController != nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("PlayerContorller is exist, GameOnly"));
+			FInputModeGameOnly InputMode;
+			PlayerController->SetInputMode(InputMode);
+			PlayerController->bShowMouseCursor = false;
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InventoryWidget->IsInViewport() is false"));
+		InventoryWidget->AddToViewport();
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+		if (PlayerController != nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("PlayerContorller is exist, Game And UI"));
+			FInputModeGameAndUI InputMode;
+			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			InputMode.SetHideCursorDuringCapture(false);
+			PlayerController->SetInputMode(InputMode);
+			PlayerController->bShowMouseCursor = true;
+		}
+	}
 }
 
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	/*
 	UUserWidget* Widget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(this, 0), UUWInventory::StaticClass());
 	InventoryWidget = Cast<UUWInventory>(Widget);
 	
-	InventoryWidget->TileSize = 50.0f;
+	if (InventoryWidget == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Character InvenWidget fail"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Character InvenWidget succeed"));
+	}*/
 
-	InventoryWidget->ACInventory = InventoryComponent;
+	if (IsValid(MainWidgetClass))
+	{
+		InventoryWidget = Cast<UUWInventory>(CreateWidget(GetWorld(), MainWidgetClass));
 
-	InventoryWidget->AddToViewport();
+		if (InventoryWidget)
+		{
+			InventoryWidget->AddToViewport();
+		}
+	}
+
+	//InventoryWidget->TileSize = 50.0f;
+
+	//InventoryWidget->ACInventory = InventoryComponent;
+
+	//InventoryWidget->AddToViewport();
 }
 
 void AGameCharacter::Tick(float DeltaSeconds)

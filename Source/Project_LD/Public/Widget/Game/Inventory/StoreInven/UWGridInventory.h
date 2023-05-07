@@ -7,6 +7,8 @@
 #include <UMG/Public/Components/Border.h>
 #include <UMG/Public/Components/CanvasPanel.h>
 #include "Blueprint/UserWidget.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Kismet/GameplayStatics.h"
 #include "Containers/Array.h"
 #include "UWGridInventory.generated.h"
 
@@ -19,8 +21,7 @@ class PROJECT_LD_API UUWGridInventory : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-	virtual void NativeConstruct() override;
-	virtual void NativeOnInitialized() override;
+	void NativeOnInitialized() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintGetter = GetACInventory, Category = "Component")
@@ -32,13 +33,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (AllowPrivateAccess = "true"))
 	TArray<FLine> LineArr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget", meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget))
 	UBorder* GridBorder;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget", meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget))
 	UCanvasPanel* GridCanvas_Panel;
 
 public:
+	UFUNCTION(BlueprintCallable)
+	void testInit();
+
 	UFUNCTION(BlueprintCallable)
 	void Init(UACInventoryComponent* InventoryComponent, float Size);
 

@@ -1,20 +1,39 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Widget/Game/Inventory/StoreInven/UWGridInventory.h"
-#include "Components/CanvasPanelSlot.h"
 
-void UUWGridInventory::NativeConstruct()
-{
-	Super::NativeConstruct();
-
-	GridBorder = Cast<UBorder>(GetWidgetFromName(TEXT("GridBorder")));
-	GridCanvas_Panel = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("GridCanvasPanel")));
-}
 
 void UUWGridInventory::NativeOnInitialized()
 {
-	Super::NativeOnInitialized();
+	UE_LOG(LogTemp, Warning, TEXT("Call UWGridInven NativeOnInitialized"));
+}
+
+void UUWGridInventory::testInit()
+{
+	if (ACInventory != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UWGrid ACInventory exist"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UWGrid ACInventory dosen't exist"));
+	}
+	if (GridBorder != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UWGrid GridBorder exist"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UWGrid GridBorder dosen't exist"));
+	}
+	if (GridCanvas_Panel != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UWGrid GridCanvas_Panel exist"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("UWGrid GridCanvas_Panel dosen't exist"));
+	}
 }
 
 void UUWGridInventory::Init(UACInventoryComponent* InventoryComponent, float Size)

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include <Component/ACInventoryComponent.h>
 #include <Widget/Game/Inventory/StoreInven/UWGridInventory.h>
+#include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "UWInventory.generated.h"
 
@@ -17,13 +18,19 @@ class PROJECT_LD_API UUWInventory : public UUserWidget
 	GENERATED_BODY()
 
 protected:
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget", meta = (BindWidget))
-	UUWGridInventory* InventoryStore;
+	//UPROPERTY(meta = (BindWidget))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class UUWGridInventory* Grid_Inventory;
 
+	UPROPERTY(meta = (BindWidget))
+	UBorder* GridBorder;
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", Meta = (ExposeOnSpawn = true))
 	UACInventoryComponent* ACInventory;
 
