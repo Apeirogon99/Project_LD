@@ -22,6 +22,6 @@ class PROJECT_LD_API IInventoryInterface
 
 		// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interface")
-	void PickUpItem();
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interface")
+	virtual void PickUpItem();
 };

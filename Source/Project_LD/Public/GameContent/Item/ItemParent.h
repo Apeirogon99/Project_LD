@@ -44,7 +44,7 @@ protected:
 	FItemData GetItemObjectData() { return ItemObjectData; }
 	
 public:
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interface")
-	void PickUpItem();
-	virtual void PickUpItem_Implementation() override;
+	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interface")
+	virtual void PickUpItem() override;
+	//virtual void PickUpItem_Implementation() override;
 };

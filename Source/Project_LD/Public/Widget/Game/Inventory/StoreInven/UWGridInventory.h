@@ -21,10 +21,11 @@ class PROJECT_LD_API UUWGridInventory : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-	void NativeOnInitialized() override;
-
+	virtual void NativeConstruct() override;
+	virtual void NativeOnInitialized() override;
+	
 public:
-	UPROPERTY(EditAnywhere, BlueprintGetter = GetACInventory, Category = "Component")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetACInventory, Category = "Component")
 	UACInventoryComponent* ACInventory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetTileSize, BlueprintSetter = SetTileSize, Category = "Default", meta = (AllowPrivateAccess = "true"))
@@ -33,22 +34,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (AllowPrivateAccess = "true"))
 	TArray<FLine> LineArr;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UBorder* GridBorder;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UCanvasPanel* GridCanvas_Panel;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void testInit();
-
-	UFUNCTION(BlueprintCallable)
 	void Init(UACInventoryComponent* InventoryComponent, float Size);
-
-	//custom event
-	UFUNCTION(BlueprintImplementableEvent)
-	void Setting();
 
 	UFUNCTION()
 	void CreateLineSegments();

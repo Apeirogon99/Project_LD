@@ -2,87 +2,24 @@
 
 #include "Widget/Game/Inventory/UWInventory.h"
 
-void UUWInventory::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-
-	Grid_Inventory = Cast<UUWGridInventory>(GetWidgetFromName(TEXT("BP_UWInventoryStore")));
-	if (Grid_Inventory == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("111111111111 Fail"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("22222222222 Success"));
-	}
-}
-
 void UUWInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-
-
-	
+	GridInventory = this->WidgetTree->FindWidget(FName(TEXT("BW_GridInventory")));
+	if (GridInventory != nullptr)
+	{
+		UUWGridInventory* GridInven = Cast<UUWGridInventory>(GridInventory);
+		GridInven->Init(ACInventory,TileSize);
+	}
 }
 
 void UUWInventory::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
-	UE_LOG(LogTemp, Warning, TEXT("Call UWInven NativeOnInitialized"));
-
-	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UUWInventory::DelayInit, 0.01f, false);
 }
 
-void UUWInventory::DelayInit()
+void UUWInventory::NativeDestruct()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Call UWInven DelayInit"));
-	/*
-	UWidget* InvenWidget = GetWidgetFromName(TEXT("BP_UWInventoryStore"));
-	if (InvenWidget == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("DelayInit UWidget GetWidgetFromName Fail"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("DelayInit UWidget GetWidgetFromName Success"));
-	}
-
-	GridInventory = Cast<UUWGridInventory>(InvenWidget);
-	*/
-
-	/*
-	if (ACInventory != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWInven ACInventory exist"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWInven ACInventory dosen't exist"));
-	}
-	*/
-	/*
-	if (GridInventory != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWInven GridInven exist"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWInven GridInven dosen't exist"));
-	}
-	
-	if (GridBorder != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWInven GridBorder exist"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWInven GridBorder dosen't exist"));
-	}*/
-	
-	//GridInventory->ACInventory = ACInventory;
-	//GridInventory->TileSize = TileSize;
-	//GridInventory->testInit();
+	Super::NativeDestruct();
 }

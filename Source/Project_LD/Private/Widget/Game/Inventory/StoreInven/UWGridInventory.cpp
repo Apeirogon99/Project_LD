@@ -3,60 +3,40 @@
 #include "Widget/Game/Inventory/StoreInven/UWGridInventory.h"
 
 
-void UUWGridInventory::NativeOnInitialized()
+void UUWGridInventory::NativeConstruct()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Call UWGridInven NativeOnInitialized"));
+	Super::NativeConstruct();
+
+	GridBorder = Cast<UBorder>(GetWidgetFromName(TEXT("GridBorder")));
+	GridCanvas_Panel = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("GridCanvas_Panel")));
 }
 
-void UUWGridInventory::testInit()
+void UUWGridInventory::NativeOnInitialized()
 {
-	if (ACInventory != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWGrid ACInventory exist"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWGrid ACInventory dosen't exist"));
-	}
-	if (GridBorder != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWGrid GridBorder exist"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWGrid GridBorder dosen't exist"));
-	}
-	if (GridCanvas_Panel != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWGrid GridCanvas_Panel exist"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UWGrid GridCanvas_Panel dosen't exist"));
-	}
+	Super::NativeOnInitialized();
 }
+
 
 void UUWGridInventory::Init(UACInventoryComponent* InventoryComponent, float Size)
 {
-	//ACInventory = InventoryComponent;
-	//TileSize = Size;
-	
-	/*
-	float SizeX = GetACInventory()->Colums * GetTileSize();
-	float SizeY = GetACInventory()->Rows * GetTileSize();
+	ACInventory = InventoryComponent;
+	TileSize = Size;
+	if (ACInventory != nullptr)
+	{
+		float SizeX = GetACInventory()->Colums * GetTileSize();
+		float SizeY = GetACInventory()->Rows * GetTileSize();
 
-	UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(GridBorder->Slot);
-	CanvasSlot->SetSize(FVector2D(SizeX, SizeY));
+		UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(GridBorder->Slot);
+		CanvasSlot->SetSize(FVector2D(SizeX, SizeY));
 
-	CreateLineSegments();
-	*/
-	//Setting();
+		CreateLineSegments();
+	}
 }
 
 void UUWGridInventory::CreateLineSegments()
 {
 	//Vertical
-	for (int Index = 0; GetACInventory()->Colums + 1; Index++)
+	for (int Index = 0; Index < GetACInventory()->Colums + 1; Index++)
 	{
 		float X_Local = Index * TileSize;
 		FLine makeLine;
@@ -66,7 +46,7 @@ void UUWGridInventory::CreateLineSegments()
 		LineArr.Add(makeLine);
 	}
 	//Horizantal
-	for (int Index = 0; GetACInventory()->Rows + 1; Index++)
+	for (int Index = 0; Index < GetACInventory()->Rows + 1; Index++)
 	{
 		float Y_Local = Index * TileSize;
 		FLine makeLine;
@@ -74,5 +54,5 @@ void UUWGridInventory::CreateLineSegments()
 		makeLine.End = FVector2D(GetACInventory()->Colums * TileSize, Y_Local);
 
 		LineArr.Add(makeLine);
-	}
+	}	
 }

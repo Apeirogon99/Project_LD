@@ -5,23 +5,24 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Blueprint/UserWidget.h"
-#include "Kismet/GameplayStatics.h"
-#include <Widget/Game/Inventory/UWInventory.h>
+
 #include <Component/ACInventoryComponent.h>
+#include "GameContent/Item/ItemParent.h"
+
+#include <Widget/Game/Inventory/UWInventory.h>
+#include "Blueprint/UserWidget.h"
+
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 //#include "Components/DecalComponent.h"
 
 AGameCharacter::AGameCharacter()
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget> MainWidgetAsset(TEXT("WidgetBlueprint'/Game/TestFolder/TestCharacter/widget/BP_UWInventory.BP_UWInventory_C'"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> MainWidgetAsset(TEXT("WidgetBlueprint'/Game/TestFolder/TestCharacter/widget/BW_Inventory.BW_Inventory_C'"));
 	if (MainWidgetAsset.Succeeded())
 	{
 		MainWidgetClass = MainWidgetAsset.Class;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Fail Character"));
 	}
 
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
@@ -77,35 +78,29 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	PlayerInputComponent->BindAction("ToggleInventory", IE_Pressed, this, &AGameCharacter::OpenInventory);
+	PlayerInputComponent->BindAction("InteractItem", IE_Pressed, this, &AGameCharacter::InteractItem);
 }
 
 void AGameCharacter::OpenInventory()
 {
-	UE_LOG(LogTemp, Warning, TEXT("OpenInven"));
-
-	UE_LOG(LogTemp, Warning, TEXT("IsInViewport %d"),InventoryWidget->IsInViewport());
-
 	if (InventoryWidget->IsInViewport())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("InventoryWidget->IsInViewport() is ture"));
 		InventoryWidget->RemoveFromParent();
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		if (PlayerController != nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("PlayerContorller is exist, GameOnly"));
 			FInputModeGameOnly InputMode;
 			PlayerController->SetInputMode(InputMode);
 			PlayerController->bShowMouseCursor = false;
+			Cast<UUWGridInventory>(InventoryWidget->GridInventory)->LineArr.Reset();
 		}
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("InventoryWidget->IsInViewport() is false"));
 		InventoryWidget->AddToViewport();
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 		if (PlayerController != nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("PlayerContorller is exist, Game And UI"));
 			FInputModeGameAndUI InputMode;
 			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 			InputMode.SetHideCursorDuringCapture(false);
@@ -115,22 +110,29 @@ void AGameCharacter::OpenInventory()
 	}
 }
 
+void AGameCharacter::InteractItem()
+{
+	TArray<AActor*> Result;
+	GetOverlappingActors(Result, AItemParent::StaticClass());
+
+	UE_LOG(LogTemp, Warning, TEXT("InteractItem"));
+	for (auto& Actor : Result)
+	{
+		if (UKismetSystemLibrary::DoesImplementInterface(Actor, UInventoryInterface::StaticClass()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("InteractItem -> exist Interface"));
+			AItemParent* Item = Cast<AItemParent>(Actor);
+			if (Item != nullptr)
+			{
+				Item->PickUpItem();
+			}
+		}
+	}
+}
+
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	/*
-	UUserWidget* Widget = CreateWidget<UUserWidget>(UGameplayStatics::GetPlayerController(this, 0), UUWInventory::StaticClass());
-	InventoryWidget = Cast<UUWInventory>(Widget);
-	
-	if (InventoryWidget == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Character InvenWidget fail"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Character InvenWidget succeed"));
-	}*/
 
 	if (IsValid(MainWidgetClass))
 	{
@@ -138,15 +140,10 @@ void AGameCharacter::BeginPlay()
 
 		if (InventoryWidget)
 		{
-			InventoryWidget->AddToViewport();
+			InventoryWidget->TileSize = 50.0f;
+			InventoryWidget->ACInventory = InventoryComponent;
 		}
 	}
-
-	//InventoryWidget->TileSize = 50.0f;
-
-	//InventoryWidget->ACInventory = InventoryComponent;
-
-	//InventoryWidget->AddToViewport();
 }
 
 void AGameCharacter::Tick(float DeltaSeconds)

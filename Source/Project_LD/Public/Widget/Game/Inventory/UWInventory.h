@@ -7,6 +7,7 @@
 #include <Widget/Game/Inventory/StoreInven/UWGridInventory.h>
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
+#include "Blueprint/WidgetTree.h"
 #include "UWInventory.generated.h"
 
 /**
@@ -18,26 +19,18 @@ class PROJECT_LD_API UUWInventory : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
+	virtual void NativeDestruct() override;
 
 public:
-	//UPROPERTY(meta = (BindWidget))
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UUWGridInventory* Grid_Inventory;
-
-	UPROPERTY(meta = (BindWidget))
-	UBorder* GridBorder;
+	UPROPERTY()
+	UWidget* GridInventory;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", Meta = (ExposeOnSpawn = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
 	UACInventoryComponent* ACInventory;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "default", Meta = (ExposeOnSpawn = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "default")
 	float TileSize;
-
-public:
-	UFUNCTION()
-	void DelayInit();
 };
