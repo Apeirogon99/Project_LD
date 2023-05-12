@@ -7,7 +7,9 @@
 #include <Engine/EngineTypes.h>
 #include <Engine/Classes/Components/SphereComponent.h>
 #include "GameFramework/Actor.h"
+#include <Component/ACInventoryComponent.h>
 #include <Framework/Interface/InventoryInterface.h>
+#include <Framework/Character/GameCharacter.h>
 #include "ItemParent.generated.h"
 
 UCLASS()
@@ -44,7 +46,5 @@ protected:
 	FItemData GetItemObjectData() { return ItemObjectData; }
 	
 public:
-	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interface")
 	virtual void PickUpItem() override;
-	//virtual void PickUpItem_Implementation() override;
 };

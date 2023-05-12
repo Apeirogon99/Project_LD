@@ -56,3 +56,9 @@ void UUWGridInventory::CreateLineSegments()
 		LineArr.Add(makeLine);
 	}	
 }
+
+void UUWGridInventory::Refresh()
+{
+	GridCanvas_Panel->ClearChildren();
+
+}

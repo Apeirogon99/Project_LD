@@ -11,10 +11,11 @@
 USTRUCT(BlueprintType)
 struct FItemData : public FTableRowBase
 {
-	GENERATED_BODY()
+	GENERATED_USTRUCT_BODY()
 
 public:
-	FItemData() : category_id(0), character_class_id(0), race_id(0), tier_id(0), name(TEXT("")), description(TEXT("")), cost(0), level(0), rate(1), size_x(0), size_y(0), mesh(nullptr), ValidData(false) {}
+	FItemData() : category_id(0), character_class_id(0), race_id(0), tier_id(0), name(TEXT("")), description(TEXT(""))
+		, cost(0), level(0), rate(1), size_x(0), size_y(0),rotation(0), icon(nullptr), mesh(nullptr), ValidData(false) {}
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	//int32	id;
@@ -68,6 +69,8 @@ public:
 	{
 		return this==&Other;
 	}
+
+	friend uint32 GetTypeHash(const FItemData& ItemData);
 };
 
 UCLASS()

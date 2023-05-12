@@ -49,14 +49,13 @@ void AItemParent::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 void AItemParent::PickUpItem()
 {
 	UE_LOG(LogTemp, Warning, TEXT("PickUpItem"));
+	AActor* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+	if (PlayerPawn != nullptr)
+	{
+		if (Cast<AGameCharacter>(PlayerPawn)->InventoryComponent->TryAddItem(ItemObjectData))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("TryAddItem"));
+			Destroy();
+		}
+	}
 }
-
-/*
-void AItemParent::PickUpItem_Implementation()
-{
-	//UE_LOG(LogTemp, Warning, TEXT("PickUpItem_Implementation"));
-	//아이템 먹는 처리 할 예정
-	//GetOwner로 플레이어 받아서 Cast 후 InventroyComponent에서 TryAddItem이후 Destory
-	//현재는 BP에서 처리중
-}
-*/

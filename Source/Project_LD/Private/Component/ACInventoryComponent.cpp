@@ -61,7 +61,6 @@ void UACInventoryComponent::RemoveItem(FItemData& ItemObjectData)
 
 void UACInventoryComponent::AddItemAt(FItemData& ItemObjectData, int TopLeftIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Call AddItemAt"));
 	FTile TileData = IndexToTile(TopLeftIndex);
 	int X = ItemObjectData.size_x;
 	int Y = ItemObjectData.size_y;
@@ -80,7 +79,6 @@ void UACInventoryComponent::AddItemAt(FItemData& ItemObjectData, int TopLeftInde
 
 bool UACInventoryComponent::TryAddItem(FItemData& ItemObjectData)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Call TryAddItem"));
 	if(ItemObjectData.ValidData == true)
 	{
 		int itemIndex = 0;
@@ -112,7 +110,6 @@ bool UACInventoryComponent::TryAddItem(FItemData& ItemObjectData)
 
 bool UACInventoryComponent::IsRoomAvailable(FItemData& ItemObjectData, int TopLeftIndex)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Call IsRoomAvailable"));
 	FTile TileData = IndexToTile(TopLeftIndex);
 	int X = ItemObjectData.size_x;
 	int Y = ItemObjectData.size_y;
@@ -179,3 +176,7 @@ FReturnItemAtIndex UACInventoryComponent::GetItemAtIndex(int Index)
 	return RData;
 }
 
+TMap<FItemData, FTile> UACInventoryComponent::GetAllItems()
+{
+	return TMap<FItemData, FTile>();
+}

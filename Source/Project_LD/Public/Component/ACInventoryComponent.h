@@ -89,8 +89,11 @@ public:
 	FTile																IndexToTile(int Index)		const;
 	UFUNCTION(BlueprintCallable)
 	FReturnItemAtIndex										GetItemAtIndex(int Index);
-	/*
 
+	UFUNCTION(BlueprintCallable)
+	TMap<FItemData, FTile>								GetAllItems();
+	
+	/*
 private:
 	//return Bool, ItemObjectData
 	FItemData					GetItemAtIndex(int index);

@@ -47,6 +47,8 @@ public:
 	UFUNCTION()
 	void CreateLineSegments();
 
+	void Refresh();
+
 public:
 	UFUNCTION(BlueprintSetter)
 	void SetTileSize(float size) { this->TileSize = size; }
