@@ -27,6 +27,13 @@ void UACInventoryComponent::BeginPlay()
 	ItemDataArr.SetNum(Colums * Rows);
 }
 
+void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	OnInventoryChanged.Clear();
+}
+
 
 // Called every frame
 void UACInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -36,9 +43,10 @@ void UACInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	if (IsChange)
 	{
 		IsChange = false;
-
-		//Inventory Change event
-		//델리게이트 이용해서 인벤토리 변화 감지
+		if (OnInventoryChanged.IsBound() == true)
+		{
+			OnInventoryChanged.Broadcast();
+		}
 	}
 }
 
@@ -178,5 +186,19 @@ FReturnItemAtIndex UACInventoryComponent::GetItemAtIndex(int Index)
 
 TMap<FItemData, FTile> UACInventoryComponent::GetAllItems()
 {
-	return TMap<FItemData, FTile>();
+	TMap<FItemData, FTile> AllItem_Local;
+	int Index = 0;
+
+	for (FItemData& Data : ItemDataArr)
+	{
+		if (Data.ValidData == true)
+		{
+			if (!AllItem_Local.Contains(Data))
+			{
+				AllItem_Local.Add(Data,IndexToTile(Index));
+			}
+		}
+		Index++;
+	}
+	return AllItem_Local;
 }

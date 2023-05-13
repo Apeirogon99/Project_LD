@@ -40,12 +40,18 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UCanvasPanel* GridCanvas_Panel;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UUserWidget> ImageAsset;
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void Init(UACInventoryComponent* InventoryComponent, float Size);
 
 	UFUNCTION()
 	void CreateLineSegments();
+
+	UFUNCTION()
+	void CallRemoved_Single(FItemData ItemData);
 
 	void Refresh();
 

@@ -7,6 +7,8 @@
 #include "Components/ActorComponent.h"
 #include "ACInventoryComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnInventoryChanged);
+
 USTRUCT(BlueprintType)
 struct PROJECT_LD_API FLine
 {
@@ -46,6 +48,7 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	// Called every frame
@@ -55,6 +58,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int Colums;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int Rows;
 	
+	FOnInventoryChanged OnInventoryChanged;
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetItemDataArr, meta = (AllowPrivateAccess = "true"))
 	TArray<FItemData> ItemDataArr;
@@ -92,11 +97,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	TMap<FItemData, FTile>								GetAllItems();
-	
-	/*
-private:
-	//return Bool, ItemObjectData
-	FItemData					GetItemAtIndex(int index);
-	void								Init_EquipmentData();
-	*/
 };
