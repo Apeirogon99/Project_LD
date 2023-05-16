@@ -9,10 +9,11 @@ void UUWGridInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	static ConstructorHelpers::FClassFinder<UUserWidget> ImageWidgetAsset(TEXT("WidgetBlueprint'/Game/TestFolder/TestCharacter/widget/BW_Item.BW_Item_C'"));
-	if (ImageWidgetAsset.Succeeded())
+	TSubclassOf<UUWItem> ImageWidgetAsset = StaticLoadClass(UUWItem::StaticClass(), NULL, TEXT("WidgetBlueprint'/Game/TestFolder/TestCharacter/widget/BW_Item.BW_Item_C'"));
+	if (ImageWidgetAsset)
 	{
-		ImageAsset = ImageWidgetAsset.Class;
+		UE_LOG(LogTemp, Warning, TEXT("ImageWidget Succeeded"));
+		ImageAsset = ImageWidgetAsset;
 	}
 
 	GridBorder = Cast<UBorder>(GetWidgetFromName(TEXT("GridBorder")));
@@ -24,6 +25,12 @@ void UUWGridInventory::NativeOnInitialized()
 	Super::NativeOnInitialized();
 }
 
+void UUWGridInventory::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	ACInventory->OnInventoryChanged.Clear();
+}
 
 void UUWGridInventory::Init(UACInventoryComponent* InventoryComponent, float Size)
 {
@@ -38,9 +45,7 @@ void UUWGridInventory::Init(UACInventoryComponent* InventoryComponent, float Siz
 		CanvasSlot->SetSize(FVector2D(SizeX, SizeY));
 
 		CreateLineSegments();
-
 		Refresh();
-
 		ACInventory->OnInventoryChanged.AddUFunction(this, FName("Refresh"));
 	}
 }
@@ -93,7 +98,6 @@ void UUWGridInventory::Refresh()
 				
 				UCanvasPanelSlot* Local_Slot = Cast<UCanvasPanelSlot>(GridCanvas_Panel->AddChild(ItemImageWidget));
 				Local_Slot->SetAutoSize(true);
-
 				float X = Data.Value.X * TileSize;
 				float Y = Data.Value.Y * TileSize;
 				Local_Slot->SetPosition(FVector2D(X, Y));

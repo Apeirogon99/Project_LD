@@ -115,12 +115,10 @@ void AGameCharacter::InteractItem()
 	TArray<AActor*> Result;
 	GetOverlappingActors(Result, AItemParent::StaticClass());
 
-	UE_LOG(LogTemp, Warning, TEXT("InteractItem"));
 	for (auto& Actor : Result)
 	{
 		if (UKismetSystemLibrary::DoesImplementInterface(Actor, UInventoryInterface::StaticClass()))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("InteractItem -> exist Interface"));
 			AItemParent* Item = Cast<AItemParent>(Actor);
 			if (Item != nullptr)
 			{

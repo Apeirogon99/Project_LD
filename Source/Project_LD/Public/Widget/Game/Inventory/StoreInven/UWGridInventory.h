@@ -23,6 +23,7 @@ class PROJECT_LD_API UUWGridInventory : public UUserWidget
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
+	virtual void NativeDestruct() override;
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetACInventory, Category = "Component")
@@ -34,13 +35,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (AllowPrivateAccess = "true"))
 	TArray<FLine> LineArr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
 	UBorder* GridBorder;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
 	UCanvasPanel* GridCanvas_Panel;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
 	TSubclassOf<UUserWidget> ImageAsset;
 
 public:
@@ -53,6 +54,7 @@ public:
 	UFUNCTION()
 	void CallRemoved_Single(FItemData ItemData);
 
+	UFUNCTION()
 	void Refresh();
 
 public:

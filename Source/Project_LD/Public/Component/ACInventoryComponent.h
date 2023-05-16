@@ -36,6 +36,15 @@ struct PROJECT_LD_API FReturnItemAtIndex
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Return") FItemData ItemObjectData;
 };
 
+USTRUCT(BlueprintType)
+struct PROJECT_LD_API FValidFirstItemData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Valid") bool first = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Valid") FItemData ItemObjectData;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_LD_API UACInventoryComponent : public UActorComponent
 {
@@ -60,24 +69,12 @@ public:
 	
 	FOnInventoryChanged OnInventoryChanged;
 
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetItemDataArr, meta = (AllowPrivateAccess = "true"))
-	TArray<FItemData> ItemDataArr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintSetter = SetIsChange, BlueprintGetter = GetIsChange, meta = (AllowPrivateAccess = "true"))
-	bool IsChange;
-	
 public:
-	//Getter
-	UFUNCTION(BlueprintGetter)
-	bool GetIsChange() const { return IsChange; }
-	
-	UFUNCTION(BlueprintGetter)
-	TArray<FItemData> GetItemDataArr() { return ItemDataArr; }
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FValidFirstItemData> ItemDataArr;
 
-	//Setter
-	UFUNCTION(BlueprintSetter)
-	void SetIsChange(bool Change) { IsChange = Change; }
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool IsChange;
 
 public:
 	UFUNCTION(BlueprintCallable)

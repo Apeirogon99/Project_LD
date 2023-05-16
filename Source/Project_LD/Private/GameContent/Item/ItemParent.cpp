@@ -16,7 +16,7 @@ AItemParent::AItemParent()
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	Sphere->InitSphereRadius(50.0f);
 	Sphere->SetupAttachment(RootComponent);
-	Sphere->SetCollisionProfileName(TEXT("OverlapAll"));	
+	Sphere->SetCollisionProfileName(TEXT("OverlapAll"));
 }
 
 // Called when the game starts or when spawned
@@ -48,13 +48,11 @@ void AItemParent::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 
 void AItemParent::PickUpItem()
 {
-	UE_LOG(LogTemp, Warning, TEXT("PickUpItem"));
 	AActor* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (PlayerPawn != nullptr)
 	{
 		if (Cast<AGameCharacter>(PlayerPawn)->InventoryComponent->TryAddItem(ItemObjectData))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("TryAddItem"));
 			Destroy();
 		}
 	}

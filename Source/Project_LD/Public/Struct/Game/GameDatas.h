@@ -15,7 +15,7 @@ struct FItemData : public FTableRowBase
 
 public:
 	FItemData() : category_id(0), character_class_id(0), race_id(0), tier_id(0), name(TEXT("")), description(TEXT(""))
-		, cost(0), level(0), rate(1), size_x(0), size_y(0),rotation(0), icon(nullptr), mesh(nullptr), ValidData(false) {}
+		, cost(0), level(0), rate(1), size_x(0), size_y(0),rotation(0), icon(nullptr), mesh(nullptr) {}
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	//int32	id;
@@ -62,8 +62,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	USkeletalMesh* mesh;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Check")
-	bool	ValidData;
+	bool IsValid() const
+	{
+		if (category_id == 0)
+			return false;
+		if (size_x == 0)
+			return false;
+		if (size_y == 0)
+			return false;
+		return true;
+	}
 
 	bool operator==(const FItemData& Other) const
 	{
