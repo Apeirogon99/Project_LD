@@ -8,6 +8,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetTree.h"
+#include "Components/Border.h"
+#include "Components/BackgroundBlur.h"
 #include "UWInventory.generated.h"
 
 /**
@@ -23,9 +25,17 @@ protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeDestruct() override;
 
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
+
 public:
 	UPROPERTY()
 	UWidget* GridInventory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
+	UBorder* BackgroundBorder;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
+	UBackgroundBlur* BackgroundBlur;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")

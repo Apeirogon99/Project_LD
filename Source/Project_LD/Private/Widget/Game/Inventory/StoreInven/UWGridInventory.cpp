@@ -32,6 +32,13 @@ void UUWGridInventory::NativeDestruct()
 	ACInventory->OnInventoryChanged.Clear();
 }
 
+FReply UUWGridInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
+{
+	Super::NativeOnMouseButtonDown(MyGeometry, MouseEvent);
+
+	return FReply::Handled();
+}
+
 void UUWGridInventory::Init(UACInventoryComponent* InventoryComponent, float Size)
 {
 	ACInventory = InventoryComponent;
@@ -82,8 +89,9 @@ void UUWGridInventory::CallRemoved_Single(FItemData ItemData)
 void UUWGridInventory::Refresh()
 {
 	GridCanvas_Panel->ClearChildren();
-	TMap<FItemData, FTile> AllItem = ACInventory->GetAllItems();
-	for (TPair<FItemData, FTile> Data : AllItem)
+
+	TArray<FItemData> AllItem = ACInventory->GetAllItems();
+	for (FItemData Data : AllItem)
 	{
 		if (IsValid(ImageAsset))
 		{
@@ -91,15 +99,15 @@ void UUWGridInventory::Refresh()
 			if (ItemImageWidget)
 			{
 				ItemImageWidget->TileSize = TileSize;
-				ItemImageWidget->ItemData = Data.Key;
+				ItemImageWidget->ItemData = Data;
 
 				//Bind Remove
 				ItemImageWidget->OnRemoved.AddUFunction(this, FName("CallRemoved_Single"));
-				
+
 				UCanvasPanelSlot* Local_Slot = Cast<UCanvasPanelSlot>(GridCanvas_Panel->AddChild(ItemImageWidget));
 				Local_Slot->SetAutoSize(true);
-				float X = Data.Value.X * TileSize;
-				float Y = Data.Value.Y * TileSize;
+				float X = Data.position_x * TileSize;
+				float Y = Data.position_y * TileSize;
 				Local_Slot->SetPosition(FVector2D(X, Y));
 			}
 		}

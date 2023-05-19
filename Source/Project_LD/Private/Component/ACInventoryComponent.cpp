@@ -24,7 +24,7 @@ void UACInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 
 	//ItemArr resize
-	ItemDataArr.SetNum(Colums * Rows);
+	ItemDataArr.SetNum(Colums * Rows + 1);
 }
 
 void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -82,6 +82,12 @@ void UACInventoryComponent::AddItemAt(FItemData& ItemObjectData, int TopLeftInde
 			if ((FIndex == TileData.X) && (SIndex == TileData.Y))
 			{
 				ItemDataArr[TileToIndex(LocalTile)].first = true;
+				
+				// TileItemData;
+				FItemData TileItemData = ItemObjectData;
+				TileItemData.position_x = LocalTile.X;
+				TileItemData.position_y = LocalTile.Y;
+				TileItemDataArr.Add(TileItemData);
 			}
 			else
 			{
@@ -195,6 +201,12 @@ FReturnItemAtIndex UACInventoryComponent::GetItemAtIndex(int Index)
 	return RData;
 }
 
+TArray<FItemData> UACInventoryComponent::GetAllItems()
+{
+	return TileItemDataArr;
+}
+
+/*
 TMap<FItemData, FTile> UACInventoryComponent::GetAllItems()
 {
 	TMap<FItemData, FTile> AllItem_Local;
@@ -213,3 +225,4 @@ TMap<FItemData, FTile> UACInventoryComponent::GetAllItems()
 	}
 	return AllItem_Local;
 }
+*/

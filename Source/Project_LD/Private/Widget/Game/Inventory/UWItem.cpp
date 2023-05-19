@@ -30,6 +30,25 @@ void UUWItem::NativeDestruct()
 	OnRemoved.Clear();
 }
 
+void UUWItem::NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
+{
+	BackgroundBorder->SetBrushColor(FLinearColor(0.5f, 0.5f, 0.5f, 0.2f));
+}
+
+void UUWItem::NativeOnMouseLeave(const FPointerEvent& MouseEvent)
+{
+	BackgroundBorder->SetBrushColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.5f));
+}
+
+void UUWItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
+{
+	UDragDropOperation* DragDropOperation = UWidgetBlueprintLibrary::CreateDragDropOperation(UDragDropOperation::StaticClass());
+	this->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	//DragDropOperation->Payload = ItemData;
+	DragDropOperation->DefaultDragVisual = this;
+}
+
 void UUWItem::Refresh()
 {
 	Size.X = ItemData.size_x * TileSize;

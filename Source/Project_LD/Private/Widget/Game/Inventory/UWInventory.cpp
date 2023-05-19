@@ -10,8 +10,11 @@ void UUWInventory::NativeConstruct()
 	if (GridInventory != nullptr)
 	{
 		UUWGridInventory* GridInven = Cast<UUWGridInventory>(GridInventory);
-		GridInven->Init(ACInventory,TileSize);
+		GridInven->Init(ACInventory, TileSize);
 	}
+
+	BackgroundBorder = Cast<UBorder>(GetWidgetFromName(TEXT("BackgroundBorder")));
+	BackgroundBlur = Cast<UBackgroundBlur>(GetWidgetFromName(TEXT("BackgroundBlur")));
 }
 
 void UUWInventory::NativeOnInitialized()
@@ -22,4 +25,11 @@ void UUWInventory::NativeOnInitialized()
 void UUWInventory::NativeDestruct()
 {
 	Super::NativeDestruct();
+}
+
+FReply UUWInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
+{
+	Super::NativeOnMouseButtonDown(MyGeometry, MouseEvent);
+
+	return FReply::Handled();
 }

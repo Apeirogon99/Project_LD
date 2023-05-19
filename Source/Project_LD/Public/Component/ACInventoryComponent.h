@@ -45,6 +45,15 @@ struct PROJECT_LD_API FValidFirstItemData
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Valid") FItemData ItemObjectData;
 };
 
+USTRUCT(BlueprintType)
+struct PROJECT_LD_API FTileItemData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Valid") FTile TileIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Valid") FItemData ItemObjectData;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_LD_API UACInventoryComponent : public UActorComponent
 {
@@ -72,6 +81,9 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FValidFirstItemData> ItemDataArr;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FItemData> TileItemDataArr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsChange;
@@ -91,7 +103,6 @@ public:
 	FTile																IndexToTile(int Index)		const;
 	UFUNCTION(BlueprintCallable)
 	FReturnItemAtIndex										GetItemAtIndex(int Index);
-
 	UFUNCTION(BlueprintCallable)
-	TMap<FItemData, FTile>								GetAllItems();
+		TArray<FItemData>									GetAllItems();
 };
