@@ -54,15 +54,33 @@ void UACInventoryComponent::RemoveItem(FItemData& ItemObjectData)
 {
 	if (ItemObjectData.IsValid() == true)
 	{
-		int itemIndex = 0;
-		for (FValidFirstItemData& itemData : ItemDataArr)
+		int X = ItemObjectData.position_x;
+		int Y = ItemObjectData.position_y;
+		int sizeX = ItemObjectData.size_x;
+		int sizeY = ItemObjectData.size_y;
+
+		for (int FIndex = X; FIndex < X + sizeX; FIndex++)
 		{
-			if (itemData.ItemObjectData == ItemObjectData)
+			for (int SIndex = Y; SIndex < Y + sizeY; SIndex++)
 			{
-				ItemDataArr[itemIndex] = FValidFirstItemData();
-				IsChange = true;
+				ItemDataArr[FIndex + SIndex * Colums] = FValidFirstItemData();
 			}
-			itemIndex++;
+		}
+
+		int Index = 0;
+		for (FItemData Data : TileItemDataArr)
+		{
+			if (Data.position_x == ItemObjectData.position_x)
+			{
+				if (Data.position_y == ItemObjectData.position_y)
+				{
+					if (Data.category_id == ItemObjectData.category_id)
+					{
+						TileItemDataArr.RemoveAt(Index);
+					}
+				}
+			}
+			Index++;
 		}
 	}
 }
@@ -70,8 +88,10 @@ void UACInventoryComponent::RemoveItem(FItemData& ItemObjectData)
 void UACInventoryComponent::AddItemAt(FItemData& ItemObjectData, int TopLeftIndex)
 {
 	FTile TileData = IndexToTile(TopLeftIndex);
-	int X = ItemObjectData.size_x;
-	int Y = ItemObjectData.size_y;
+	FTile checkRotationData = GetItemDataXY(ItemObjectData);
+	int X = checkRotationData.X;
+	int Y = checkRotationData.Y;
+
 	for (int FIndex = TileData.X; FIndex < TileData.X + X; FIndex++)
 	{
 		for (int SIndex = TileData.Y; SIndex < TileData.Y + Y; SIndex++)
@@ -83,7 +103,6 @@ void UACInventoryComponent::AddItemAt(FItemData& ItemObjectData, int TopLeftInde
 			{
 				ItemDataArr[TileToIndex(LocalTile)].first = true;
 				
-				// TileItemData;
 				FItemData TileItemData = ItemObjectData;
 				TileItemData.position_x = LocalTile.X;
 				TileItemData.position_y = LocalTile.Y;
@@ -97,6 +116,24 @@ void UACInventoryComponent::AddItemAt(FItemData& ItemObjectData, int TopLeftInde
 		}
 	}
 	IsChange = true;
+}
+
+FTile UACInventoryComponent::GetItemDataXY(FItemData ItemData)
+{
+	FTile Tile;
+	if (ItemData.rotation)
+	{
+		Tile.X = ItemData.size_y;
+		Tile.Y = ItemData.size_x;
+		return Tile;
+	}
+	else
+	{
+		Tile.X = ItemData.size_x;
+		Tile.Y = ItemData.size_y;
+		return Tile;
+	}
+	return Tile;
 }
 
 bool UACInventoryComponent::TryAddItem(FItemData& ItemObjectData)
@@ -113,11 +150,8 @@ bool UACInventoryComponent::TryAddItem(FItemData& ItemObjectData)
 			}
 			itemIndex++;
 		}
-		int32 temp = ItemObjectData.size_x;
-		ItemObjectData.rotation = 1;
-		ItemObjectData.size_x = ItemObjectData.size_y;
-		ItemObjectData.size_y = temp;
-	
+		
+		ItemObjectData.rotation == 0 ? ItemObjectData.rotation = 1 : ItemObjectData.rotation = 0;
 		itemIndex = 0;
 		for (FValidFirstItemData& itemData : ItemDataArr)
 		{
@@ -136,8 +170,9 @@ bool UACInventoryComponent::TryAddItem(FItemData& ItemObjectData)
 bool UACInventoryComponent::IsRoomAvailable(FItemData& ItemObjectData, int TopLeftIndex)
 {
 	FTile TileData = IndexToTile(TopLeftIndex);
-	int X = ItemObjectData.size_x;
-	int Y = ItemObjectData.size_y;
+	FTile checkRotationData = GetItemDataXY(ItemObjectData);
+	int X = checkRotationData.X;
+	int Y = checkRotationData.Y;
 
 	for (int FIndex = TileData.X; FIndex < TileData.X + X; FIndex++)
 	{
@@ -205,24 +240,3 @@ TArray<FItemData> UACInventoryComponent::GetAllItems()
 {
 	return TileItemDataArr;
 }
-
-/*
-TMap<FItemData, FTile> UACInventoryComponent::GetAllItems()
-{
-	TMap<FItemData, FTile> AllItem_Local;
-	int Index = 0;
-
-	for (FValidFirstItemData Data : ItemDataArr)
-	{
-		if (Data.ItemObjectData.IsValid() == true)
-		{
-			if (Data.first == true)
-			{
-				AllItem_Local.Add(Data.ItemObjectData, IndexToTile(Index));
-			}
-		}
-		Index++;
-	}
-	return AllItem_Local;
-}
-*/

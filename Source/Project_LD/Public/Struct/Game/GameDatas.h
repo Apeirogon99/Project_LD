@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
 #include "GameFramework/Actor.h"
+#include "UObject/Object.h"
 #include <Engine/SkeletalMesh.h>
 #include "GameDatas.generated.h"
 
@@ -88,7 +89,27 @@ public:
 		return this==&Other;
 	}
 
+	UObject* ToUObject() const;
+	FItemData UObjectToFItemData(UObject* Object) const;
+
 	friend uint32 GetTypeHash(const FItemData& ItemData);
+};
+
+UCLASS()
+class PROJECT_LD_API UItemDataObject : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	FItemData ItemData;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	FVector2D	GetSize();
+
+	UFUNCTION(BlueprintCallable)
+	void Rotate();
 };
 
 UCLASS()

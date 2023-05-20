@@ -15,9 +15,9 @@
  * 
  */
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnRemoved, FItemData);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnRemoved, FItemData&);
 
-UCLASS()
+UCLASS(BlueprintType)
 class PROJECT_LD_API UUWItem : public UUserWidget
 {
 	GENERATED_BODY()
@@ -29,8 +29,8 @@ protected:
 
 	virtual void NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& MouseEvent) override;
-
 	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation);
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
@@ -55,5 +55,9 @@ public:
 	FOnRemoved OnRemoved;
 
 public:
+	UFUNCTION(BlueprintCallable)
 	void Refresh();
+
+	UFUNCTION(BlueprintCallable)
+	void Rotate();
 };

@@ -33,3 +33,22 @@ FReply UUWInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const 
 
 	return FReply::Handled();
 }
+
+bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+
+	UE_LOG(LogTemp, Warning, TEXT("On Drop Item"));
+
+	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
+	/*
+	UObject* payload =Operation->Payload;
+	FItemData ItemData = FItemData().UObjectToFItemData(payload);
+	*/
+	FItemData ItemData = Cast<UItemDataObject>(Operation->Payload)->ItemData;
+
+	AActor* Owner = ACInventory->GetOwner();
+	//아이템 소환
+	 
+	return false;
+}

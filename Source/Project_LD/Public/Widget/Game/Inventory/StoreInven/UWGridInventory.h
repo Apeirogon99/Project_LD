@@ -15,6 +15,15 @@
 /**
  * 
  */
+USTRUCT(BlueprintType)
+struct PROJECT_LD_API FMousePositionReturn
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Position") bool Right;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Position") bool Down;
+};
+
 UCLASS()
 class PROJECT_LD_API UUWGridInventory : public UUserWidget
 {
@@ -26,6 +35,12 @@ protected:
 	virtual void NativeDestruct() override;
 
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
+
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+	virtual bool NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
+	virtual void NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+	virtual void NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetACInventory, Category = "Component")
@@ -46,18 +61,36 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
 	TSubclassOf<UUserWidget> ImageAsset;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drag Drop")
+	bool DrawDropLocation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drag Drop")
+	FIntPoint DraggedItemTopLeftTile;
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void Init(UACInventoryComponent* InventoryComponent, float Size);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void CreateLineSegments();
 
-	UFUNCTION()
-	void CallRemoved_Single(FItemData ItemData);
+	UFUNCTION(BlueprintCallable)
+	void CallRemoved_Single(FItemData& ItemData);
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void Refresh();
+
+	UFUNCTION(BlueprintCallable)
+	FItemData GetPayload(UDragDropOperation* Operator);
+
+	UFUNCTION(BlueprintCallable)
+	UItemDataObject* GetPayloadObject(UDragDropOperation* Operator) const;
+
+	UFUNCTION(BlueprintCallable)
+	bool IsRoomAvailableForPayload(FItemData Payload) const;
+
+	UFUNCTION(BlueprintCallable)
+	FMousePositionReturn MousePositionInTile(FVector2D MousePosition);
 
 public:
 	UFUNCTION(BlueprintSetter)

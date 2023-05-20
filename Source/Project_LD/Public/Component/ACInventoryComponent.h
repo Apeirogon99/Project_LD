@@ -23,6 +23,9 @@ struct PROJECT_LD_API FTile
 {
 	GENERATED_USTRUCT_BODY()
 
+	FTile() : X(0), Y(0) {}
+	FTile(int32 X, int32 Y) : X(X), Y(Y) {}
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile") int32 X;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile") int32 Y;
 };
@@ -104,5 +107,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FReturnItemAtIndex										GetItemAtIndex(int Index);
 	UFUNCTION(BlueprintCallable)
-		TArray<FItemData>									GetAllItems();
+	TArray<FItemData>										GetAllItems();
+
+	FTile																GetItemDataXY(FItemData ItemData);
+	
 };

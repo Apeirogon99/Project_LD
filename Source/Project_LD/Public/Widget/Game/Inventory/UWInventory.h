@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/WidgetTree.h"
+#include "Blueprint/DragDropOperation.h"
 #include "Components/Border.h"
 #include "Components/BackgroundBlur.h"
 #include "UWInventory.generated.h"
@@ -26,6 +27,7 @@ protected:
 	virtual void NativeDestruct() override;
 
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
 public:
 	UPROPERTY()
