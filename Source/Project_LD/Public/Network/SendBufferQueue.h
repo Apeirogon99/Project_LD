@@ -10,7 +10,7 @@
  */
 
 class FSendBuffer;
-using SendBufferPtr = TSharedPtr<class FSendBuffer>;
+using FSendBufferPtr = TSharedPtr<class FSendBuffer>;
 
 class PROJECT_LD_API FSendBufferQueue
 {
@@ -26,8 +26,8 @@ public:
 
 public:
 	void		Clear();
-	void		Push(SendBufferPtr FSendBuffer);
-	void		PopAll(TArray<SendBufferPtr>& FSendBuffers);
+	void		Push(FSendBufferPtr FSendBuffer);
+	void		PopAll(TArray<FSendBufferPtr>& FSendBuffers);
 	bool		IsEmpty();
 	bool		IsFull();
 
@@ -36,5 +36,5 @@ private:
 	uint32		mHead;
 	uint32		mTail;
 
-	TCircularBuffer<SendBufferPtr> mSendBufferQueue;
+	TCircularBuffer<FSendBufferPtr> mSendBufferQueue;
 };

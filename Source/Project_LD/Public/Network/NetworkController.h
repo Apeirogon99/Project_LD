@@ -46,8 +46,9 @@ public:
 
 public:
 	bool IsClientController();
-	int64 GetNetworkTimeStamp();
-	void SetNetworkTimeStamp(const int64 inTimeStamp);
+
+	class	UNetworkTimeStamp* GetTimeStamp();
+
 	FNetworkSessionPtr GetNetworkSession() { return mNetworkSession; }
 	void Send(SendBufferPtr FSendBuffer);
 
@@ -59,10 +60,16 @@ public:
 	virtual bool	OnConnect() { return true; };
 	virtual bool	OnDisconnect() { return true; };
 
+public:
+	void ExecutePossessCallBack(const bool inResult);
+	void ExecuteUnPossessCallBack(const bool inResult);
+
 private:
 	FNetworkSessionPtr	mNetworkSession;
 	FPossessCallBack	mPossessCallBack;
 	FUnPossessCallBack	mUnPossessCallBack;
+
+private:
 
 	//BYTE				mPacketBuffer[1024];
 };

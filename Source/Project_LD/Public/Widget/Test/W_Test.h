@@ -25,7 +25,7 @@ public:
 
 public:
 	UFUNCTION()
-	void InitWidget(const int32 inClientTimeStamp, const int32 inServerTimeStamp);
+	void Update(const int32 inCurClientTimeStamp, const int32 inServerTimeStamp, const int32 inDiffTimeStamp, const int32 inClientTimeStamp);
 
 	UFUNCTION()
 		void Click_SendButton();
@@ -34,13 +34,22 @@ private:
 	UPROPERTY(Meta = (BindWidget))
 	UButton* mSendButton;
 
+
+	UPROPERTY(Meta = (BindWidget))
+	UTextBlock* mCurTimeStampText;
+
 	UPROPERTY(Meta = (BindWidget))
 	UTextBlock* mServerTimeStampText;
+
+	UPROPERTY(Meta = (BindWidget))
+	UTextBlock* mDiffTimeStampText;
 
 	UPROPERTY(Meta = (BindWidget))
 	UTextBlock* mClientTimeStampText;
 
 private:
-	FString	mClientTimeStamp;
+	FString	mCurTimeStamp;
 	FString	mServerTimeStamp;
+	FString	mDiffTimeStamp;
+	FString	mClientTimeStamp;
 };

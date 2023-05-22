@@ -75,7 +75,7 @@ void UW_CustomCharacter::NativeConstruct()
 	{
 		mEyebrowColorButton->OnClicked.AddUniqueDynamic(this, &UW_CustomCharacter::Click_Eyebrow);
 	}
-
+	
 	mBackButton = this->WidgetTree->FindWidget(FName(TEXT("BW_BackButton")));
 	if (mBackButton != nullptr)
 	{
@@ -108,6 +108,7 @@ void UW_CustomCharacter::NativeTick(const FGeometry& MyGeometry, float InDeltaTi
 	{
 		UpdateDummyCharacterPartColor();
 		UpdateColorPicker();
+		UpdateEquipment();
 	}
 }
 
@@ -123,9 +124,9 @@ void UW_CustomCharacter::Click_Create()
 
 			Protocol::C2S_CreateCharacter createCharacterPacket;
 			std::string name = UNetworkUtils::ConvertString(inName);
+			FString fName = UNetworkUtils::ConvertFString(name);
 
 			Protocol::SCharacterData* characterData = createCharacterPacket.mutable_character_data();
-	
 			createCharacterPacket.set_remote_id(1);
 			createCharacterPacket.set_server_id(1);
 
@@ -137,12 +138,10 @@ void UW_CustomCharacter::Click_Create()
 				characterData->set_character_class(static_cast<Protocol::ECharacterClass>(dummyCharacterData.mClass));
 
 				Protocol::SCharacterAppearance* newCharacterAppearance = characterData->mutable_appearance();
-				newCharacterAppearance->set_race(static_cast<Protocol::ERace>(dummyCharacterData.mAppearance.mRace));
-				newCharacterAppearance->set_seat(dummyCharacterData.mAppearance.mSeat);
-				newCharacterAppearance->set_skin_color(dummyCharacterData.mAppearance.mSkin_Color);
-				newCharacterAppearance->set_hair_color(dummyCharacterData.mAppearance.mHair_Color);
-				newCharacterAppearance->set_eye_color(dummyCharacterData.mAppearance.mEye_Color);
-				newCharacterAppearance->set_eyebrow_color(dummyCharacterData.mAppearance.mEyebrow_Color);
+				*newCharacterAppearance = UPacketUtils::ConvertToPAppearance(dummyCharacterData.mAppearance);
+
+				Protocol::SCharacterEqipment* newCharacterEqipment = characterData->mutable_eqipment();
+				*newCharacterEqipment = UPacketUtils::ConvertToPEqipment(dummyCharacterData.mEquipment);
 			}
 
 			SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, createCharacterPacket);
@@ -285,6 +284,17 @@ void UW_CustomCharacter::UpdateColorPicker()
 	}
 }
 
+void UW_CustomCharacter::UpdateEquipment()
+{
+	mTempCharacterEquipment.mHair = mHairNumber;
+	if (mOldHairNumber != mHairNumber)
+	{
+		mCurrentDummyCharacter->UpdateCharacterEquipment(mTempCharacterEquipment);
+		mCurrentDummyCharacter->UpdateCharacterPose(ECharacterPose::Idle);
+		mOldHairNumber = mHairNumber;
+	}
+}
+
 void UW_CustomCharacter::SetDummyCharacter(AAppearanceCharacter* inDummyCharacter)
 {
 	IsSetupCharacter = false;
@@ -302,11 +312,15 @@ void UW_CustomCharacter::SetDummyCharacter(AAppearanceCharacter* inDummyCharacte
 	mTempCharacterAppearance.mEye_Color = UNetworkUtils::ConverLinerColorToInt(eye);
 	mTempCharacterAppearance.mEyebrow_Color = UNetworkUtils::ConverLinerColorToInt(eyebrow);
 
-	
+	mOldHairNumber = mHairNumber;
+	mTempCharacterEquipment.mHair = mHairNumber;
+
 	mColorPicker->SetVisibility(ESlateVisibility::Collapsed);
 	mCurrentDummyAppearance = EAppearance::None;
 
 	mCurrentDummyCharacter->UpdateCharacterAppearnce(mTempCharacterAppearance);
+	mCurrentDummyCharacter->UpdateCharacterEquipment(mTempCharacterEquipment);
+	//mCurrentDummyCharacter->UpdateDefaultAnimation();
 
 	UpdateDummyCharacterPartColor();
 
@@ -315,8 +329,8 @@ void UW_CustomCharacter::SetDummyCharacter(AAppearanceCharacter* inDummyCharacte
 	if (box != nullptr)
 	{
 		const FCharacterData& data = mCurrentDummyCharacter->GetCharacterData();
-		const ECharacterRace& race = data.mAppearance.mRace;
-		if (race == ECharacterRace::Female)
+		mCurrentDummyRace = data.mAppearance.mRace;
+		if (mCurrentDummyRace == ECharacterRace::Female)
 		{
 			box->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 		}

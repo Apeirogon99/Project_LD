@@ -19,11 +19,25 @@ public:
 	UNetworkTimeStamp();
 	virtual ~UNetworkTimeStamp();
 
-public:
-	int64	GetClientTimeStamp();
-	void	SetClientTimeStamp(const int64 inTimeStamp);
+protected:
+	const int64	GetDurationTimeStamp();
+	const int64 GetUtcDurationTimeStamp();
 
-private:
+public:
+	void		UpdateTimeStamp(const int64 inServerTimeStamp);
+	void		UpdateUtcDelta(const int64 inServerUtcTime);
+
+	const int64	GetServerTimeStamp();
+	const int64 GetTimeStampDelta();
+	const int64 GetUtcTimeStampDelta();
+
+public:
 	std::chrono::steady_clock::time_point mClock;
 	int64 mTimeStamp;
+	int64 mTimeStampDelta;
+	int64 mSumTimeStampDelta;
+	int64 mNumTimeStampDelta;
+
+	int64 mUtcTimeStamp;
+	int64 mUtcTimeStampDelta;
 };

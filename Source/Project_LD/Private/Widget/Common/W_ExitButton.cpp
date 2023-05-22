@@ -50,8 +50,11 @@ void UW_ExitButton::Click_Exit()
 
 void UW_ExitButton::ExitGame()
 {
-	//LeaveServer
-	//Protocol::C2S_LeaveServer levalPacket;
+	ANetworkController* controller = Cast<ANetworkController>(GetOwningPlayer());
+
+	Protocol::C2S_LeaveIdentityServer leavePacket;
+	SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, leavePacket);
+	controller->Send(pakcetBuffer);
 }
 
 void UW_ExitButton::CancleExitGame()

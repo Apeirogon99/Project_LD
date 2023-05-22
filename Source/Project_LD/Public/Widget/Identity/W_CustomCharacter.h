@@ -104,6 +104,9 @@ public:
 		void UpdateColorPicker();
 
 	UFUNCTION()
+		void UpdateEquipment();
+
+	UFUNCTION()
 		void SetDummyCharacter(AAppearanceCharacter* inDummyCharacter);
 
 	UFUNCTION()
@@ -127,6 +130,15 @@ public:
 	AAppearanceCharacter* mCurrentDummyCharacter;
 
 	FCharacterAppearance mTempCharacterAppearance;
+	FCharacterEquipment mTempCharacterEquipment;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Custom")
+	int32	mHairNumber;
+
+	int32	mOldHairNumber;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Custom")
+	ECharacterRace	mCurrentDummyRace;
 
 	bool IsSetupCharacter;
 };

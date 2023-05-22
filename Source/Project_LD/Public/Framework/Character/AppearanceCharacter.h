@@ -21,9 +21,13 @@ public:
 public:
 	void InitializeAppearance();
 
+	UFUNCTION(BlueprintCallable)
 	void UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment);
+
 	void UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance);
+
 	void UpdateCharacterPose(const ECharacterPose InCharacterPose);
+	void UpdateDefaultAnimation();
 
 	void SetSkeletalPartColor(USkeletalMeshComponent* inMesh, const FString& inParamterName, int32 inIndex, uint32 inColor);
 	void SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, int32 InMeshIndex);
@@ -99,4 +103,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
 	TArray<UAnimationAsset*> mCharacterPoses;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
+		UAnimInstance* mDefaultAnimation;
 };

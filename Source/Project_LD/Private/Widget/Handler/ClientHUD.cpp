@@ -227,6 +227,18 @@ void AClientHUD::BeginPlay()
 	HUD_LOG(TEXT("ClientHUD Init : %d"), mWidgets.Num());
 }
 
+void AClientHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	for (UUserWidget* widget : mWidgets)
+	{
+		widget->RemoveFromParent();
+	}
+
+	mWidgetNames.Empty();
+
+	mUsedWidgets.Empty();
+}
+
 void AClientHUD::DrawHUD()
 {
 	Super::DrawHUD();

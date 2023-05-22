@@ -11,6 +11,7 @@
 
 #include <Network/NetworkGameMode.h>
 #include <Network/NetworkCharacter.h>
+#include <Network/NetworkUtils.h>
 #include <Framework/Character/AppearanceCharacter.h>
 
 #include <Framework/Gameinstance/LDGameInstance.h>
@@ -95,7 +96,7 @@ void UW_SelectCharacterButton::Click_Character()
 
 	if (mCharacter)
 	{
-		mCharacter->UpdateCharacterPose(ECharacterPose::Rise);
+		mCharacter->UpdateCharacterPose(ECharacterPose::StandUp);
 	}
 
 	bool error = UWidgetUtils::SetReconfirm(clientHUD, titleText, reconfirmText, confrimText, cancleText, confirmDelegate, cancleDelegate);
@@ -229,7 +230,23 @@ void UW_SelectCharacterButton::AppearanceCharacter()
 
 void UW_SelectCharacterButton::DeleteCharacter()
 {
+	APlayerController* playerControll = GetOwningPlayer();
+	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
+	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
 
+	if (mCharacter)
+	{
+		ANetworkController* controller = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode())->GetNetworkController();
+		Protocol::C2S_DeleteCharacter packet;
+
+		const FCharacterData& characterData = mCharacter->GetCharacterData();
+		packet.set_name(UNetworkUtils::ConvertString(characterData.mName));
+
+		clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
+
+		SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, packet);
+		controller->Send(pakcetBuffer);
+	}
 }
 
 void UW_SelectCharacterButton::ReviseNameCharacter()
@@ -245,7 +262,7 @@ void UW_SelectCharacterButton::CancleButton()
 
 	if (mCharacter)
 	{
-		mCharacter->UpdateCharacterPose(ECharacterPose::Seat);
+		mCharacter->UpdateCharacterPose(ECharacterPose::StandDown);
 	}
 
 }

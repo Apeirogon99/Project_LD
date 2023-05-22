@@ -30,8 +30,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void BeginNetwork();
 
+	virtual void InitNetwork() {};
+	virtual void BeginNetwork() {};
 public:
 	UFUNCTION(BlueprintCallable, Category = "Network")
 	bool RequestConnectServer(const FString& inIpAddr, const int32 inPort);
@@ -67,6 +68,9 @@ public:
 	UFUNCTION()
 	ANetworkController* GetNetworkController();
 
+	UFUNCTION()
+	AClientHUD* GetClientHUD();
+
 public:
 	UFUNCTION()
 	void ProcessClientHUD(bool inInitHUD);
@@ -89,7 +93,9 @@ public:
 	UFUNCTION()
 	void ShowNetworkNotification(const FString& inNotification);
 
-public:
+protected:
+	UFUNCTION()
+	void NetworkGameModeLog(const FString& inLog);
 
 public:
 	DECLARE_EVENT_OneParam(ANetworkGameMode, FTravel, const FString&);
@@ -112,5 +118,5 @@ private:
 	bool mIsPossess;
 	FString mTravelLevel;
 
-	
+	FEvent* mHudEvent;
 };

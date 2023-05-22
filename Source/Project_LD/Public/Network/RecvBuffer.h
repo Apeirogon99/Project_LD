@@ -13,35 +13,38 @@ class PROJECT_LD_API FRecvBuffer
 	
 public:
 	FRecvBuffer();
-	FRecvBuffer(const uint32 inBufferSize);
+	FRecvBuffer(const int32 inCapcity);
 	~FRecvBuffer();
+
+protected:
+	void InitBuffer(const int32 inCapcity);
 
 public:
 	BYTE*			GetBuffer();
 	BYTE*			GetReadBuffer();
 	BYTE*			GetWriteBuffer();
-	int32			GetMaxReadBytes(const uint32 inPendingDataSize);
+	int32			GetMaxReadBytes(const int32 inPendingDataSize);
 
 public:
 	void			Clear();
-	void			MoveRear(const uint32 size);
-	void			MoveFront(const uint32 len);
-	uint32			Enqueue(const BYTE* data, const uint32 size);
-	uint32			Dequeue(BYTE* dest, const uint32 len);
-	uint32			Peek(BYTE* dest, const uint32 len);
+	void			MoveRear(const int32 size);
+	void			MoveFront(const int32 len);
+	int32			Enqueue(const BYTE* data, const int32 size);
+	int32			Dequeue(BYTE* dest, const int32 len);
+	int32			Peek(BYTE* dest, const int32 len);
 
 public:
-	uint32			GetUsedSize() const;
-	uint32			GetTotalSize() const;
-	uint32			GetFreeSize() const;
+	int32			GetUsedSize() const;
+	int32			GetTotalSize() const;
+	int32			GetFreeSize() const;
 
 public:
 	void			TestPrintLog();
 
 private:
-	uint32			mWritePos;
-	uint32			mIndexMask;
-	uint32			mReadPos;
-	uint32			mBufferSize;
+	int32			mWritePos;
+	int32			mIndexMask;
+	int32			mReadPos;
+	int32			mCapcity;
 	BYTE*			mBuffer;
 };

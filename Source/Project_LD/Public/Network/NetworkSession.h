@@ -30,8 +30,8 @@ class PROJECT_LD_API FNetworkSession : public TSharedFromThis<FNetworkSession>
 {
 	enum class Default
 	{
-		MAX_RECV_BUFFER = 0x400,
-		MAX_SEND_QUEUE = 0x400,
+		MAX_RECV_BUFFER = 0x1000,
+		MAX_SEND_QUEUE = 0x1000,
 		SESSION_IS_SENDING = 1,
 		SESSION_IS_RECVING = 1,
 		SESSION_IS_CONNECT = 1,
@@ -51,7 +51,7 @@ public:
 	void PossessToController(ANetworkController* controller, FPossessCallBack inPossessCallback);
 	void UnPossessToController(FUnPossessCallBack inUnPossessCallBack);
 	ANetworkController* GetNetworkController();
-	bool IsPossessController();
+	bool IsPossessController() const;
 
 	bool RegisterConnect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack);
 	bool RegisterDisconnect(const FString& inCause);
@@ -64,13 +64,14 @@ public:
 	void ProcessRecv(int32 numOfBytes);
 
 	bool CanRecv();
+	bool CheackDisconnect();
+	bool IsServerOpen(const TSharedRef<FInternetAddr>& inIpAddr);
 	void Connect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack);
 	void KeepConnect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack);
 	void Disconnect(const FString& inCause);
 	void Send(SendBufferPtr FSendBuffer);
 
-	const int64	GetServerTimeStamp();
-	void		SetTimeStamp(const int64 inTimeStamp);
+	UNetworkTimeStamp* GetTimeStamp();
 
 public:
 	bool IsConnected() const;

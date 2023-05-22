@@ -17,8 +17,10 @@ void UW_Test::NativeConstruct()
 
 	mSendButton = Cast<UButton>(GetWidgetFromName(TEXT("mSendButton")));
 
-	mServerTimeStampText = Cast<UTextBlock>(GetWidgetFromName(TEXT("mServerTimeStampText")));
-	mClientTimeStampText = Cast<UTextBlock>(GetWidgetFromName(TEXT("mClientTimeStampText")));
+	mCurTimeStampText		= Cast<UTextBlock>(GetWidgetFromName(TEXT("mCurTimeStampText")));
+	mServerTimeStampText	= Cast<UTextBlock>(GetWidgetFromName(TEXT("mServerTimeStampText")));
+	mDiffTimeStampText		= Cast<UTextBlock>(GetWidgetFromName(TEXT("mDiffTimeStampText")));
+	mClientTimeStampText	= Cast<UTextBlock>(GetWidgetFromName(TEXT("mClientTimeStampText")));
 
 	if (mSendButton != nullptr)
 	{
@@ -27,24 +29,21 @@ void UW_Test::NativeConstruct()
 
 }
 
-void UW_Test::InitWidget(const int32 inClientTimeStamp, const int32 inServerTimeStamp)
+void UW_Test::Update(const int32 inCurClientTimeStamp, const int32 inServerTimeStamp, const int32 inDiffTimeStamp, const int32 inClientTimeStamp)
 {
-	mClientTimeStamp = FString::FromInt(inClientTimeStamp);
-	mServerTimeStamp = FString::FromInt(inServerTimeStamp);
+	mCurTimeStamp		= FString::FromInt(inCurClientTimeStamp);
+	mServerTimeStamp	= FString::FromInt(inServerTimeStamp);
+	mDiffTimeStamp		= FString::FromInt(inDiffTimeStamp);
+	mClientTimeStamp	= FString::FromInt(inClientTimeStamp);
 
-	mClientTimeStampText->SetText(FText::FromString(mClientTimeStamp));
+	mCurTimeStampText->SetText(FText::FromString(mCurTimeStamp));
 	mServerTimeStampText->SetText(FText::FromString(mServerTimeStamp));
+	mDiffTimeStampText->SetText(FText::FromString(mDiffTimeStamp));
+	mClientTimeStampText->SetText(FText::FromString(mClientTimeStamp));
 }
 
 void UW_Test::Click_SendButton()
 {
 	APlayerController* owningController = GetOwningPlayer();
 	ANetworkController* networkController = Cast<ANetworkController>(owningController);
-
-	const int64 clientTimeStamp = networkController->GetNetworkTimeStamp();
-
-	Protocol::C2S_GetRoundTripTime packet;
-
-	SendBufferPtr sendBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, packet);
-	networkController->Send(sendBuffer);
 }
