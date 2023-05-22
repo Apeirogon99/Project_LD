@@ -7,19 +7,42 @@
 
 FRecvBuffer::FRecvBuffer() : mWritePos(0), mReadPos(0)
 {
-	mBufferSize = 0x1000;
-	mBuffer = new BYTE[mBufferSize];
+	InitBuffer(0x1000);
 }
 
-FRecvBuffer::FRecvBuffer(const uint32 inBufferSize) : mWritePos(0), mReadPos(0)
+FRecvBuffer::FRecvBuffer(const int32 inCapcity) : mWritePos(0), mReadPos(0)
 {
-	mBufferSize = inBufferSize;
-	mBuffer = new BYTE[mBufferSize];
+	InitBuffer(inCapcity);
 }
 
 FRecvBuffer::~FRecvBuffer()
 {
 
+}
+
+void FRecvBuffer::InitBuffer(const int32 inCapcity)
+{
+	if (inCapcity > UINT16_MAX)
+	{
+		UNetworkUtils::NetworkConsoleLog("[FRecvBuffer::InitBuffer] : It's too big to make", ELogLevel::Error);
+		return;
+	}
+
+	int32 newCapcity = 0;
+	if (!((inCapcity & (inCapcity - 1)) == 0))
+	{
+		newCapcity = static_cast<int32>(pow(2, floor(log2(inCapcity)) + 1));
+	}
+	else
+	{
+		newCapcity = static_cast<int32>(inCapcity);
+	}
+
+
+	mCapcity = newCapcity;
+	mIndexMask = newCapcity - 1;
+	mBuffer = new BYTE[newCapcity]();
+	Clear();
 }
 
 BYTE* FRecvBuffer::GetBuffer()
@@ -37,14 +60,14 @@ BYTE* FRecvBuffer::GetWriteBuffer()
 	return &mBuffer[mWritePos];
 }
 
-int32 FRecvBuffer::GetMaxReadBytes(const uint32 inPendingDataSize)
+int32 FRecvBuffer::GetMaxReadBytes(const int32 inPendingDataSize)
 {
-	const uint32 PrevWritePos = mWritePos;
+	const int32 PrevWritePos = mWritePos;
 	const bool IsOverBuffer = (mWritePos + inPendingDataSize) > GetTotalSize() ? true : false;
 	if (IsOverBuffer)
 	{
-		const uint32 OverLen = (PrevWritePos + inPendingDataSize) - GetTotalSize();
-		const uint32 LessLen = inPendingDataSize - OverLen;
+		const int32 OverLen = (PrevWritePos + inPendingDataSize) - GetTotalSize();
+		const int32 LessLen = inPendingDataSize - OverLen;
 		return LessLen;
 	}
 	else
@@ -57,34 +80,34 @@ int32 FRecvBuffer::GetMaxReadBytes(const uint32 inPendingDataSize)
 
 void FRecvBuffer::Clear()
 {
-	::memset(mBuffer, NULL, mBufferSize);
+	::memset(mBuffer, NULL, mCapcity);
 	mWritePos = 0;
 	mReadPos = 0;
 }
 
-void FRecvBuffer::MoveRear(const uint32 size)
+void FRecvBuffer::MoveRear(const int32 size)
 {
 	mWritePos = (mWritePos + size) % GetTotalSize();
 }
 
-void FRecvBuffer::MoveFront(const uint32 len)
+void FRecvBuffer::MoveFront(const int32 len)
 {
 	mReadPos = (mReadPos + len) % GetTotalSize();
 }
 
-uint32 FRecvBuffer::Enqueue(const BYTE* data, const uint32 size)
+int32 FRecvBuffer::Enqueue(const BYTE* data, const int32 size)
 {
 	if (GetFreeSize() < size)
 	{
 		return 0;
 	}
 	
-	const uint32 PrevWritePos = mWritePos;
+	const int32 PrevWritePos = mWritePos;
 	const int32 IsOverBuffer = (PrevWritePos + size) > GetTotalSize() ? 1 : 0;
 	if (IsOverBuffer)
 	{
-		const uint32 OverLen = (PrevWritePos + size) - GetTotalSize();
-		const uint32 LessLen = size - OverLen;
+		const int32 OverLen = (PrevWritePos + size) - GetTotalSize();
+		const int32 LessLen = size - OverLen;
 
 		::memcpy(&mBuffer[PrevWritePos], &data[0], LessLen);
 		::memcpy(&mBuffer[0], &data[LessLen], OverLen);
@@ -99,19 +122,19 @@ uint32 FRecvBuffer::Enqueue(const BYTE* data, const uint32 size)
 	return size;
 }
 
-uint32 FRecvBuffer::Dequeue(BYTE* dest, const uint32 len)
+int32 FRecvBuffer::Dequeue(BYTE* dest, const int32 len)
 {
 	if (GetUsedSize() < len)
 	{
 		return 0;
 	}
 
-	const uint32 PrevReadPos = mReadPos;
+	const int32 PrevReadPos = mReadPos;
 	const int32 IsOverBuffer = (PrevReadPos + len) > GetTotalSize() ? 1 : 0;
 	if (IsOverBuffer)
 	{
-		const uint32 OverLen = (PrevReadPos + len) - GetTotalSize();
-		const uint32 LessLen = len - OverLen;
+		const int32 OverLen = (PrevReadPos + len) - GetTotalSize();
+		const int32 LessLen = len - OverLen;
 
 		::memcpy(dest, & mBuffer[PrevReadPos], LessLen);
 		::memcpy(&dest[LessLen], &mBuffer[0], OverLen);
@@ -126,19 +149,19 @@ uint32 FRecvBuffer::Dequeue(BYTE* dest, const uint32 len)
 	return len;
 }
 
-uint32 FRecvBuffer::Peek(BYTE* dest, const uint32 len)
+int32 FRecvBuffer::Peek(BYTE* dest, const int32 len)
 {
 	if (GetUsedSize() < len)
 	{
 		return 0;
 	}
 
-	const uint32 PrevReadPos = mReadPos;
+	const int32 PrevReadPos = mReadPos;
 	const bool IsOverBuffer = (PrevReadPos + len) > GetTotalSize() ? true : false;
 	if (IsOverBuffer)
 	{
-		const uint32 OverLen = (PrevReadPos + len) - GetTotalSize();
-		const uint32 LessLen = len - OverLen;
+		const int32 OverLen = (PrevReadPos + len) - GetTotalSize();
+		const int32 LessLen = len - OverLen;
 
 		::memcpy(dest, &mBuffer[PrevReadPos], LessLen);
 		::memcpy(&dest[LessLen], &mBuffer[0], OverLen);
@@ -152,7 +175,7 @@ uint32 FRecvBuffer::Peek(BYTE* dest, const uint32 len)
 }
 
 
-inline uint32 FRecvBuffer::GetUsedSize() const
+inline int32 FRecvBuffer::GetUsedSize() const
 {
 	if (mWritePos == mReadPos)
 	{
@@ -168,15 +191,15 @@ inline uint32 FRecvBuffer::GetUsedSize() const
 	}
 
 	wprintf(L"RingBuffer::GetAllocated()");
-	return mBufferSize;
+	return mCapcity;
 }
 
-inline uint32 FRecvBuffer::GetTotalSize() const
+inline int32 FRecvBuffer::GetTotalSize() const
 {
-	return mBufferSize;
+	return mCapcity;
 }
 
-inline uint32 FRecvBuffer::GetFreeSize() const
+inline int32 FRecvBuffer::GetFreeSize() const
 {
 	return GetTotalSize() - GetUsedSize();
 }

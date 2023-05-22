@@ -30,7 +30,7 @@ void FSendBufferQueue::Clear()
 	}
 }
 
-void FSendBufferQueue::Push(SendBufferPtr FSendBuffer)
+void FSendBufferQueue::Push(FSendBufferPtr inSendBuffer)
 {
 	FRWScopeLock lock(mLock, SLT_Write);
 	if (true == IsFull())
@@ -38,17 +38,16 @@ void FSendBufferQueue::Push(SendBufferPtr FSendBuffer)
 		return;
 	}
 
-	mSendBufferQueue[mHead] = FSendBuffer;
+	mSendBufferQueue[mHead] = MoveTemp(inSendBuffer);
 	mHead = mSendBufferQueue.GetNextIndex(mHead);
 }
 
-void FSendBufferQueue::PopAll(TArray<SendBufferPtr>& FSendBuffers)
+void FSendBufferQueue::PopAll(TArray<FSendBufferPtr>& FSendBuffers)
 {
 	FRWScopeLock lock(mLock, SLT_Write);
 	while (false == IsEmpty())
 	{
-		SendBufferPtr OutFSendBuffer = mSendBufferQueue[mTail];
-		mSendBufferQueue[mTail].Reset();
+		FSendBufferPtr OutFSendBuffer = MoveTemp(mSendBufferQueue[mTail]);
 		mTail = mSendBufferQueue.GetNextIndex(mTail);
 		FSendBuffers.Emplace(OutFSendBuffer);
 	}

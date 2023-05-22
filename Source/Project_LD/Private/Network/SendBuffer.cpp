@@ -9,13 +9,36 @@ FSendBuffer::FSendBuffer()
 	mBuffer.Init(NULL, 0);
 }
 
-FSendBuffer::FSendBuffer(const uint32 size)
+FSendBuffer::FSendBuffer(const uint32 inDataSize)
 {
-	mBuffer.Init(NULL, size);
+	mBuffer.Init(NULL, inDataSize);
+}
+
+FSendBuffer::FSendBuffer(const FSendBuffer& inSendBuffer)
+{
+	mBuffer = inSendBuffer.mBuffer;
+}
+
+FSendBuffer& FSendBuffer::operator=(const FSendBuffer& inSendBuffer)
+{
+	mBuffer = inSendBuffer.mBuffer;
+	return *this;
+}
+
+FSendBuffer::FSendBuffer(FSendBuffer&& inSendBuffer)
+{
+	mBuffer = inSendBuffer.mBuffer;
+}
+
+FSendBuffer& FSendBuffer::operator=(FSendBuffer&& inSendBuffer)
+{
+	mBuffer = inSendBuffer.mBuffer;
+	return *this;
 }
 
 FSendBuffer::~FSendBuffer()
 {
+	mBuffer.Empty();
 }
 
 BYTE* FSendBuffer::GetData()
