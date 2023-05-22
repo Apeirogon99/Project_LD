@@ -7,6 +7,7 @@
 #include <Network/SendBuffer.h>
 #include <Network/SendBufferQueue.h>
 #include <Network/NetworkUtils.h>
+#include <Network/NetworkTimeStamp.h>
 #include <Framework/Gameinstance/LDGameInstance.h>
 
 ANetworkController::ANetworkController()
@@ -28,7 +29,7 @@ void ANetworkController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 bool ANetworkController::IsConnectedToSession()
 {
-	bool isValid = mNetworkSession.IsValid();
+	const bool isValid = mNetworkSession.IsValid();
 	return isValid == true ? true : false;
 }
 
@@ -49,8 +50,6 @@ bool ANetworkController::ConnectToSession(FNetworkSessionPtr session, FPossessCa
 	}
 
 	mPossessCallBack = inPossessCallBack;
-	mPossessCallBack.Execute(true);
-
 	return true;
 }
 
@@ -71,8 +70,6 @@ bool ANetworkController::DisconnectToSession(FUnPossessCallBack inUnPossessCallb
 	}
 
 	mUnPossessCallBack = inUnPossessCallback;
-	mUnPossessCallBack.Execute(true);
-
 	return true;
 }
 
@@ -89,19 +86,14 @@ bool ANetworkController::IsClientController()
 	return true;
 }
 
-int64 ANetworkController::GetNetworkTimeStamp()
+UNetworkTimeStamp* ANetworkController::GetTimeStamp()
 {
 	if (mNetworkSession)
 	{
-		return mNetworkSession->GetServerTimeStamp();
+		return mNetworkSession->GetTimeStamp();
 	}
 
-	return -1;
-}
-
-void ANetworkController::SetNetworkTimeStamp(const int64 inTimeStamp)
-{
-	mNetworkSession->SetTimeStamp(inTimeStamp);
+	return nullptr;
 }
 
 void ANetworkController::Send(SendBufferPtr FSendBuffer)
@@ -147,4 +139,20 @@ bool ANetworkController::OnRecv(FRecvBuffer* buffer, int32 len)
 	}
 
 	return true;
+}
+
+void ANetworkController::ExecutePossessCallBack(const bool inResult)
+{
+	if (mPossessCallBack.IsBound())
+	{
+		mPossessCallBack.Execute(inResult);
+	}
+}
+
+void ANetworkController::ExecuteUnPossessCallBack(const bool inResult)
+{
+	if (mUnPossessCallBack.IsBound())
+	{
+		mUnPossessCallBack.Execute(inResult);
+	}
 }

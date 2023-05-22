@@ -27,6 +27,7 @@ ANetworkGameMode::ANetworkGameMode()
 		this->HUDClass = mDefaultHUDClass->StaticClass();
 	}
 
+	mHudEvent = FPlatformProcess::GetSynchEventFromPool();
 }
 
 ANetworkGameMode::~ANetworkGameMode()
@@ -214,6 +215,8 @@ bool ANetworkGameMode::IsNetworkInit()
 
 	mClientHUD->FadeOut();
 
+	NetworkGameModeLog(FString(TEXT("complete network init")));
+
 	BeginNetwork();
 
 	return true;
@@ -274,9 +277,9 @@ ANetworkController* ANetworkGameMode::GetNetworkController()
 	return controller;
 }
 
-void ANetworkGameMode::BeginNetwork()
+AClientHUD* ANetworkGameMode::GetClientHUD()
 {
-	
+	return mClientHUD;
 }
 
 void ANetworkGameMode::ProcessClientHUD(bool inInitHUD)
@@ -285,13 +288,14 @@ void ANetworkGameMode::ProcessClientHUD(bool inInitHUD)
 
 	if (false == mIsHUD)
 	{
-		ShowNetworkNotification(TEXT("사용자 위젯 초기화에 실패하였습니다"));
+		UNetworkUtils::NetworkConsoleLog(TEXT("사용자 위젯 초기화에 실패하였습니다"), ELogLevel::Error);
 		return;
 	}
 
 	APlayerController* playerController = GetWorld()->GetFirstPlayerController();
 	mClientHUD = Cast<AClientHUD>(playerController->GetHUD());
-	IsNetworkInit();
+
+	InitNetwork();
 }
 
 void ANetworkGameMode::ProcessConnect(bool inIsConnect)
@@ -361,11 +365,21 @@ void ANetworkGameMode::ProcessOpenLevel(const FString& inLevel)
 
 void ANetworkGameMode::ShowNetworkNotification(const FString& inNotification)
 {
-	if (mIsHUD)
+	if (mClientHUD)
 	{
+		mClientHUD->FadeOut();
+
 		FNotificationDelegate notificationDelegate;
 		notificationDelegate.BindUFunction(this, FName("RequestExitGame"));
 
 		UWidgetUtils::SetNotification(mClientHUD, TEXT("에러"), inNotification, TEXT("종료하기"), notificationDelegate);
 	}
+}
+
+void ANetworkGameMode::NetworkGameModeLog(const FString& inLog)
+{
+	FString tempLog;
+	tempLog.Append(TEXT("[NetworkGameMode] "));
+	tempLog.Append(inLog);
+	UNetworkUtils::NetworkConsoleLog(tempLog, ELogLevel::Warning);
 }

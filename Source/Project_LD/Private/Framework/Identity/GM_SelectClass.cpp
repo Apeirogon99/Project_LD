@@ -18,25 +18,29 @@ void AGM_SelectClass::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (true == IsConnectedServer())
-	{
-		if (false == RequestKeepConnectServer(TEXT("127.0.0.1"), 9000))
-		{
-
-		}
-	}
-	else
-	{
-		if (false == RequestConnectServer(TEXT("127.0.0.1"), 9000))
-		{
-
-		}
-	}
 }
 
 void AGM_SelectClass::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+}
+
+void AGM_SelectClass::InitNetwork()
+{
+	if (true == IsConnectedServer())
+	{
+		if (false == RequestKeepConnectServer(TEXT("116.41.116.247"), 9000))
+		{
+			NetworkGameModeLog(FString(TEXT("failed to requset keep connect server")));
+		}
+	}
+	else
+	{
+		if (false == RequestConnectServer(TEXT("116.41.116.247"), 9000))
+		{
+			NetworkGameModeLog(FString(TEXT("failed to requset connect server")));
+		}
+	}
 }
 
 void AGM_SelectClass::BeginNetwork()

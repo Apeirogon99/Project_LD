@@ -20,7 +20,15 @@ ATestGameMode::~ATestGameMode()
 void ATestGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
+void ATestGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+}
+
+void ATestGameMode::InitNetwork()
+{
 	if (false == IsConnectedServer())
 	{
 		if (false == RequestConnectServer(TEXT("116.41.116.247"), 9000))
@@ -28,11 +36,6 @@ void ATestGameMode::BeginPlay()
 
 		}
 	}
-}
-
-void ATestGameMode::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
 }
 
 void ATestGameMode::BeginNetwork()
@@ -46,7 +49,6 @@ void ATestGameMode::BeginNetwork()
 
 	ANetworkController* controller = GetNetworkController();
 	Protocol::C2S_EnterIdentityServer packet;
-	packet.set_error(0);
 	controller->Send(FIdentityPacketHandler::MakeSendBuffer(controller, packet));
 
 	mClientHUD->ShowWidgetFromName(TEXT("Test"));

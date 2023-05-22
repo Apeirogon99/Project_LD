@@ -80,6 +80,12 @@ void FNetworkSession::NetworkLoop()
 		return;
 	}
 
+	//if (false == CheackDisconnect())
+	//{
+	//	RegisterDisconnect(TEXT("Server is down"));
+	//	return;
+	//}
+
 	bool oldRecving = static_cast<bool>(Default::SESSION_IS_RECVING);
 	mIsRecving.CompareExchange(oldRecving, static_cast<bool>(Default::SESSION_IS_FREE));
 
@@ -116,10 +122,19 @@ void FNetworkSession::PossessToController(ANetworkController* controller, FPosse
 		return;
 	}
 
-	bool isConnectController;
 	mController = controller;
-	isConnectController = mController->ConnectToSession(SharedThis(this), inPossessCallback);
+	if (nullptr == mController)
+	{
+		return;
+	}
+
+	const bool isConnectController = mController->ConnectToSession(SharedThis(this), inPossessCallback);
+
 	mIsPossess.Store(isConnectController);
+	if (isConnectController)
+	{
+		mController->ExecutePossessCallBack(isConnectController);
+	}
 }
 
 void FNetworkSession::UnPossessToController(FUnPossessCallBack inUnPossessCallBack)
@@ -127,11 +142,16 @@ void FNetworkSession::UnPossessToController(FUnPossessCallBack inUnPossessCallBa
 	if (nullptr == mController)
 	{
 		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::UnPossessToController] : Invalid possess controller", ELogLevel::Error);
+		return;
 	}
 
-	bool isDisconnectController;
-	isDisconnectController = mController->DisconnectToSession(inUnPossessCallBack);
+	const bool isDisconnectController = mController->DisconnectToSession(inUnPossessCallBack);
+
 	mIsPossess.Store(!isDisconnectController);
+	if (isDisconnectController)
+	{
+		mController->ExecuteUnPossessCallBack(isDisconnectController);
+	}
 	mController = nullptr;
 }
 
@@ -140,15 +160,16 @@ ANetworkController* FNetworkSession::GetNetworkController()
 	return mController;
 }
 
-bool FNetworkSession::IsPossessController()
+bool FNetworkSession::IsPossessController() const
 {
 	if (nullptr == mController)
 	{
 		return false;
 	}
+	
+	const bool isConnect = mController->IsConnectedToSession();
 
-	bool isConnect = mController->IsConnectedToSession();
-	bool isPossess = mIsPossess.Load();
+	const bool isPossess = mIsPossess.Load();
 
 	return isConnect && isPossess;
 }
@@ -176,10 +197,43 @@ bool FNetworkSession::RegisterConnect(const FString& inAddr, const uint16 inPort
 	newIpAddr->SetIp(pareIp.Value);
 	newIpAddr->SetPort(inPort);
 
-	bool connRet = mSocket->Connect(newIpAddr.Get());
-	if (false == connRet)
+	//bool isOpen = IsServerOpen(newIpAddr);
+	//if (!isOpen)
+	//{
+	//	UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Server is not open", ELogLevel::Error);
+	//	return false;
+	//}
+
+	double TimeoutSeconds = 0.1f;
+	bool bNonBlocking = true;
+	mSocket->SetNonBlocking(bNonBlocking);
+
+	bool bConnected = mSocket->Connect(*newIpAddr);
+	if (!bConnected)
 	{
-		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Failed Connect", ELogLevel::Error);
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : failure connect server", ELogLevel::Error);
+		return false;
+	}
+
+	if (bConnected)
+	{
+		double StartTime = FPlatformTime::Seconds();
+		double ElapsedTime = 0.0;
+		while (ElapsedTime < TimeoutSeconds)
+		{
+
+			if (mSocket->GetConnectionState() == ESocketConnectionState::SCS_Connected)
+			{
+				UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : success connect server", ELogLevel::Warning);
+				mSocket->SetNonBlocking(!bNonBlocking);
+				return true;
+			}
+
+			FPlatformProcess::Sleep(0.01);
+			ElapsedTime = FPlatformTime::Seconds() - StartTime;
+		}
+
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : server connection timed outr", ELogLevel::Error);
 		return false;
 	}
 
@@ -301,7 +355,8 @@ void FNetworkSession::ProcessRecv(int32 numOfBytes)
 
 	if (mController)
 	{
-		bool recvResult = mController->OnRecv(mRecvBuffer, mRecvBuffer->GetUsedSize());
+		int32 usedSize = mRecvBuffer->GetUsedSize();
+		bool recvResult = mController->OnRecv(mRecvBuffer, usedSize);
 		if (false == recvResult)
 		{
 			RegisterDisconnect(L"OnRecv Overflow");
@@ -328,6 +383,53 @@ bool FNetworkSession::CanRecv()
 
 	return IsData && IsRecv && IsPossess;
 
+}
+
+bool FNetworkSession::CheackDisconnect()
+{
+	mSocket->SetNonBlocking(true);
+
+	int32	bytesRead;
+	uint8	dummy;
+	bool	result = false;
+	result = mSocket->Recv(&dummy, 1, bytesRead, ESocketReceiveFlags::Peek);
+
+	mSocket->SetNonBlocking(false);
+	return result;
+}
+
+bool FNetworkSession::IsServerOpen(const TSharedRef<FInternetAddr>& inIpAddr)
+{
+	bool isPingSuccessful = false;
+	FSocket* Socket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateSocket(NAME_Stream, TEXT("default"), true);
+
+	uint32 remoteIP = 0;
+	inIpAddr->GetIp(remoteIP);
+	
+	TSharedPtr<FInternetAddr> RemoteAddr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->CreateInternetAddr();
+	RemoteAddr->SetIp(remoteIP);
+	//RemoteAddr->SetPort(0);  // ICMP 프로토콜은 포트를 사용하지 않음
+
+	// 소켓 열기
+	if (Socket->Connect(*RemoteAddr))
+	{
+		uint8 RequestData[32] = { 0 };
+		int32 BytesSent;
+		if (Socket->Send(RequestData, sizeof(RequestData), BytesSent))
+		{
+			uint8 ResponseData[1024];
+			int32 BytesReceived;
+			if (Socket->Recv(ResponseData, sizeof(ResponseData), BytesReceived))
+			{
+				isPingSuccessful = true;
+			}
+		}
+	}
+
+	Socket->Close();
+	ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)->DestroySocket(Socket);
+
+	return isPingSuccessful;
 }
 
 void FNetworkSession::Connect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack)
@@ -448,14 +550,9 @@ void FNetworkSession::Send(SendBufferPtr FSendBuffer)
 
 }
 
-const int64 FNetworkSession::GetServerTimeStamp()
+UNetworkTimeStamp* FNetworkSession::GetTimeStamp()
 {
-	return mTimeStamp->GetClientTimeStamp();
-}
-
-void FNetworkSession::SetTimeStamp(const int64 inTimeStamp)
-{
-	mTimeStamp->SetClientTimeStamp(inTimeStamp);
+	return mTimeStamp;
 }
 
 bool FNetworkSession::IsConnected() const

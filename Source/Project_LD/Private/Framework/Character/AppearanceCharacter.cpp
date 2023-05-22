@@ -116,6 +116,8 @@ void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& I
 	SetSkeletalPartMesh(mBoots,		InCharacterEquipment.mBoots);
 	SetSkeletalPartMesh(mWeapon_L,	InCharacterEquipment.mWeapon_L);
 	SetSkeletalPartMesh(mWeapon_R,	InCharacterEquipment.mWeapon_R);
+
+	mCharacterData.mEquipment = InCharacterEquipment;
 }
 
 void AAppearanceCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance)
@@ -169,6 +171,7 @@ void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterP
 	USkeletalMeshComponent* meshRoot = GetMesh();
 	meshRoot->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 	meshRoot->SetAnimation(animationAsset);
+	meshRoot->PlayAnimation(animationAsset, false);
 
 	int32 maxChild = meshRoot->GetNumChildrenComponents();
 	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
@@ -178,6 +181,32 @@ void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterP
 		{
 			partMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 			partMesh->SetAnimation(animationAsset);
+			partMesh->PlayAnimation(animationAsset, false);
+		}
+	}
+}
+
+void AAppearanceCharacter::UpdateDefaultAnimation()
+{
+	if (mDefaultAnimation == nullptr)
+	{
+		return;
+	}
+
+	USkeletalMeshComponent* meshRoot = GetMesh();
+	meshRoot->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	meshRoot->SetAnimInstanceClass(mDefaultAnimation->GetClass());
+	//meshRoot->PlayAnimation(mDefaultAnimation, false);
+
+	int32 maxChild = meshRoot->GetNumChildrenComponents();
+	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
+	{
+		USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
+		if (partMesh)
+		{
+			partMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+			meshRoot->SetAnimInstanceClass(mDefaultAnimation->GetClass());
+			//partMesh->PlayAnimation(mDefaultAnimation, false);
 		}
 	}
 }
