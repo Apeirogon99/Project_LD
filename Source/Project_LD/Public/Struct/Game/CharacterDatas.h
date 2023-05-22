@@ -28,8 +28,10 @@ UENUM(BlueprintType)
 enum class ECharacterPose : uint8
 {
 	None			UMETA(DisplayName = "None"),
+	Idle			UMETA(DisplayName = "Idle"),
 	Seat			UMETA(DisplayName = "Seat"),
-	Rise			UMETA(DisplayName = "Rise"),
+	StandUp			UMETA(DisplayName = "StandUp"),
+	StandDown		UMETA(DisplayName = "StandDown"),
 };
 
 UENUM()
@@ -85,37 +87,38 @@ public:
 
 	void UpdateEquipments(const FCharacterEquipment& inCharacterEquipments);
 	void UpdateEquipments(const Protocol::SCharacterEqipment& inCharacterEquipments);
+	void CompareEquipments(const FCharacterEquipment& inOtherEquipments);
 
 public:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 mHair;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 mHelmet;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 mShoulders;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 mChest;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 mBracers;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 mHands;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 mPants;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 mBoots;
 
 public:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 mWeapon_L;
 
-	UPROPERTY()
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int32 mWeapon_R;
 };
 
@@ -177,9 +180,12 @@ struct FCharacterData
 public:
 	FCharacterData();
 	FCharacterData(const FCharacterData& inCharacterData) { UpdateCharacterData(inCharacterData); }
+
 	FCharacterData& operator=(const FCharacterData& inCharacterData) { UpdateCharacterData(inCharacterData); return *this; }
+	FCharacterData& operator=(const Protocol::SCharacterData& inCharacterData) { UpdateCharacterData(inCharacterData); return *this; }
 
 	void UpdateCharacterData(const FCharacterData& inCharacterData);
+	void UpdateCharacterData(const Protocol::SCharacterData& inCharacterData);
 
 public:
 	int32					mCharacterID;

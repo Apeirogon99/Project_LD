@@ -252,6 +252,9 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 	for (int index = 0; index < maxCharacterDataSize; ++index)
 	{
 		const Protocol::SCharacterData& curCharacterData = pkt.character_data(index);
+		FCharacterData newCharacterData;
+		newCharacterData.UpdateCharacterData(curCharacterData);
+
 		FString name = UNetworkUtils::ConvertFString(curCharacterData.name());
 		int32 level = curCharacterData.level();
 		ECharacterClass characterClass = StaticCast<ECharacterClass>(curCharacterData.character_class());
@@ -344,7 +347,49 @@ bool Handle_S2C_UpdateAppearance(ANetworkController* controller, Protocol::S2C_U
 
 bool Handle_S2C_DeleteCharacter(ANetworkController* controller, Protocol::S2C_DeleteCharacter& pkt)
 {
-	return false;
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return false;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return false;
+	}
+
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+	int32 error = pkt.error();
+	if (error != GetDatabaseErrorToInt(EDBErrorType::SUCCESS))
+	{
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
+			{
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+			});
+
+		const FString description = UNetworkUtils::GetNetworkErrorToString(error);
+		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("캐릭터 삭제 실패"), description, TEXT("확인"), notificationDelegate);
+		if (ret == false)
+		{
+			return false;
+		}
+	}
+	else
+	{
+		AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
+		ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
+		if (nullptr == networkGameMode)
+		{
+			return false;
+		}
+
+		networkGameMode->RequestTravelLevel(TEXT("L_SelectCharacter"));
+	}
+
+	return true;
 }
 
 bool Handle_S2C_UpdateNickName(ANetworkController* controller, Protocol::S2C_UpdateNickName& pkt)
@@ -364,34 +409,5 @@ bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_Trave
 
 bool Handle_S2C_Test(ANetworkController* controller, Protocol::S2C_Test& pkt)
 {
-	return true;
-}
-
-bool Handle_S2C_GetRoundTripTime(ANetworkController* controller, Protocol::S2C_GetRoundTripTime& pkt)
-{
-	const int64 clientTimeStamp = controller->GetNetworkTimeStamp();
-	const int64 serverTimeStamp = pkt.time_stamp();
-	controller->SetNetworkTimeStamp(serverTimeStamp);
-
-	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
-	if (nullptr == clientHUD)
-	{
-		return false;
-	}
-
-	UW_Test* testWidget = nullptr;
-	UUserWidget* outWidget = clientHUD->GetWidgetFromName(TEXT("Test"));
-	if (outWidget == nullptr)
-	{
-		return false;
-	}
-
-	testWidget = Cast<UW_Test>(outWidget);
-	if (testWidget == nullptr)
-	{
-		return false;
-	}
-
-	testWidget->InitWidget(clientTimeStamp, serverTimeStamp);
 	return true;
 }

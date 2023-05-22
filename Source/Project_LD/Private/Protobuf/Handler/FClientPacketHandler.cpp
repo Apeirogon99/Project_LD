@@ -5,6 +5,7 @@
 #include <Network/NetworkUtils.h>
 #include <PacketUtils.h>
 #include <Protobuf/Handler/FIdentityPacketHandler.h>
+#include <Protobuf/Handler/FCommonPacketHandler.h>
 
 PacketFunc FClientPacketHandler::PacketHandler[UINT16_MAX];
 
@@ -22,6 +23,7 @@ void FClientPacketHandler::Init()
 	}
 
 	FIdentityPacketHandler::Init(PacketHandler);
+	FCommonPacketHandler::Init(PacketHandler);
 
 	UNetworkUtils::NetworkConsoleLog("PacketHandle success Init", ELogLevel::Warning);
 }
