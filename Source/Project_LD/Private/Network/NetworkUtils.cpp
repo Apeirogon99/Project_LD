@@ -52,10 +52,10 @@ std::string UNetworkUtils::ConvertString(const FString& str)
 	const wchar_t* tempWStr = *str;
 	int tempWLen = wcslen(tempWStr) + 1;
 
-	int32 tempLen = WideCharToMultiByte(CP_UTF8, 0, tempWStr, tempWLen, NULL, 0, NULL, NULL);
+	int32 tempLen = WideCharToMultiByte(949, 0, tempWStr, tempWLen, NULL, 0, NULL, NULL);
 	char* tempStr = new char[tempLen];
 
-	WideCharToMultiByte(CP_UTF8, 0, tempWStr, tempWLen, tempStr, tempLen, NULL, NULL);
+	WideCharToMultiByte(949, 0, tempWStr, tempWLen, tempStr, tempLen, NULL, NULL);
 
 	std::string outStr(tempStr);
 	delete[] tempStr;
@@ -71,12 +71,12 @@ int32 UNetworkUtils::ConvertStringToInt(const FString& str)
 FString UNetworkUtils::ConvertFString(const std::string& inStr)
 {
 	const char* tempStr = inStr.c_str();
-	int32 tempLen = strlen(tempStr) + 1;
+	const int32 tempLen = strlen(tempStr) + 1;
 
-	int32 tempWLen = MultiByteToWideChar(CP_UTF8, 0, tempStr, tempLen, NULL, 0);
+	const int32 tempWLen = MultiByteToWideChar(949, 0, tempStr, tempLen, NULL, 0);
 	wchar_t* tempWStr = new wchar_t[tempWLen];
 
-	MultiByteToWideChar(CP_UTF8, 0, tempStr, tempLen, tempWStr, tempWLen);
+	MultiByteToWideChar(949, 0, tempStr, tempLen, tempWStr, tempWLen);
 
 	FString outStr = tempWStr;
 	delete[] tempWStr;
@@ -119,5 +119,17 @@ uint32 UNetworkUtils::ConverLinerColorToInt(FLinearColor inValue)
 FString UNetworkUtils::GetNetworkErrorToString(const int32 inError)
 {
 	const std::string errorStr = GetDatabaseError(inError);
-	return ConvertFString(errorStr);
+
+	const char* tempStr = errorStr.c_str();
+	const int32 tempLen = strlen(tempStr) + 1;
+
+	const int32 tempWLen = MultiByteToWideChar(CP_UTF8, 0, tempStr, tempLen, NULL, 0);
+	wchar_t* tempWStr = new wchar_t[tempWLen];
+
+	MultiByteToWideChar(CP_UTF8, 0, tempStr, tempLen, tempWStr, tempWLen);
+
+	FString outStr = tempWStr;
+	delete[] tempWStr;
+	tempWStr = nullptr;
+	return outStr;
 }
