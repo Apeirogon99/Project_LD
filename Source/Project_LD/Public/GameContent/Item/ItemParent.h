@@ -26,19 +26,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
 	USphereComponent* Sphere;
 
-protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintSetter = SetItemObjectData, BlueprintGetter = GetItemObjectData, Category = "Component", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
 	UItemObjectData* ItemObjectData;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UFUNCTION(BlueprintSetter)
-	void SetItemObjectData(UItemObjectData* Data) { ItemObjectData = Data; }
-
-	UFUNCTION(BlueprintGetter)
-	UItemObjectData* GetItemObjectData() { return ItemObjectData; }
 	
 public:
 	virtual void PickUpItem() override;

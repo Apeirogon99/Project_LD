@@ -78,4 +78,6 @@ public:
 	FTile																IndexToTile(int Index)		const;
 	UFUNCTION(BlueprintCallable)
 	TArray<UItemObjectData*>							GetAllItems();
+	UFUNCTION(BlueprintCallable)
+	bool																	GetItemAtIndex(int index, UItemObjectData*& ItemObject);
 };

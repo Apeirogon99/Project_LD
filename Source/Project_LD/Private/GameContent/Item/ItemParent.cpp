@@ -23,6 +23,8 @@ AItemParent::AItemParent()
 void AItemParent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	ItemObjectData = NewObject<UItemObjectData>();
 }
 
 void AItemParent::PickUpItem()

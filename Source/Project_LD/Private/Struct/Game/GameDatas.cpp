@@ -43,9 +43,8 @@ FVector2D UItemObjectData::GetSize() const
     }
     return Return;
 }
-/*
-void UItemObjectData::SettingObjectData(FItemData& OtheritemData)
+
+void UItemObjectData::SettingObjectData(FItemData OtheritemData)
 {
    this->ItemData = OtheritemData;
 }
-*/

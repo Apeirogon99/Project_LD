@@ -25,6 +25,10 @@ void UACInventoryComponent::BeginPlay()
 
 	//ItemArr resize
 	InventoryData.SetNum(Colums * Rows + 1);
+	for (int i = 0; i < Colums * Rows + 1; i++)
+	{
+		InventoryData[i] = NewObject<UItemObjectData>();
+	}
 }
 
 void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -101,6 +105,7 @@ void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLe
 
 			if ((FIndex == TileData.X) && (SIndex == TileData.Y))
 			{
+				UE_LOG(LogTemp, Warning, TEXT("First Data"));
 				InventoryData[TileToIndex(LocalTile)]->firstCheck = true;
 
 				UItemObjectData* TileItemData = ItemObjectData;
@@ -110,6 +115,7 @@ void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLe
 			}
 			else
 			{
+				UE_LOG(LogTemp, Warning, TEXT("Rest Data"));
 				InventoryData[TileToIndex(LocalTile)]->firstCheck = false;
 			}
 			InventoryData[TileToIndex(LocalTile)]->ItemData = ItemObjectData->ItemData;
@@ -120,8 +126,6 @@ void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLe
 
 bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 {
-	UE_LOG(LogTemp, Warning, TEXT("TryAddItem"));
-	/*
 	if(ItemObjectData->IsValid() == true)
 	{
 		int itemIndex = 0;
@@ -130,7 +134,7 @@ bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 			if(IsRoomAvailable(ItemObjectData,itemIndex))
 			{
 				AddItemAt(ItemObjectData,itemIndex);
-				return true;
+				return true;	
 			}
 			itemIndex++;
 		}
@@ -149,8 +153,6 @@ bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 		return false;
 	}
 	return false;
-	*/
-	return false;
 }
 
 bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData, int TopLeftIndex)
@@ -168,22 +170,11 @@ bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData, int
 				FTile LocalTile = FTile();
 				LocalTile.X = FIndex;
 				LocalTile.Y = SIndex;
-
-				bool Localvalid;
-				UItemObjectData* Data;
+	
+				UItemObjectData* Data = NewObject<UItemObjectData>();
 				int  index =TileToIndex(LocalTile);
-				if (InventoryData.IsValidIndex(index))
-				{
-					Localvalid = true;
-					Data = InventoryData[index];
-				}
-				else
-				{
-					Localvalid = false;
-					Data = NewObject<UItemObjectData>();
-				}
-
-				if (Localvalid)
+				
+				if (GetItemAtIndex(index, Data))
 				{
 					if (Data->IsValid())
 					{
@@ -199,6 +190,7 @@ bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData, int
 			{
 				return false;
 			}
+			
 		}
 	}
 	return true;
@@ -220,4 +212,19 @@ FTile UACInventoryComponent::IndexToTile(int Index) const
 TArray<UItemObjectData*> UACInventoryComponent::GetAllItems()
 {
 	return InventoryObjectArr;
+}
+
+bool UACInventoryComponent::GetItemAtIndex(int index, UItemObjectData*& ItemObject)
+{
+	if (InventoryData.IsValidIndex(index))
+	{
+		ItemObject = InventoryData[index];
+		return true;
+	}
+	else
+	{
+		ItemObject = NewObject<UItemObjectData>();
+		return false;
+	}
+	return false;
 }

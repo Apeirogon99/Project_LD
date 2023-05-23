@@ -61,7 +61,7 @@ public:
 	USkeletalMesh* mesh;
 };
 
-UCLASS()
+UCLASS(Blueprintable)
 class PROJECT_LD_API UItemObjectData : public UObject
 {
 	GENERATED_BODY()
@@ -96,8 +96,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector2D GetSize() const;
 
-	//UFUNCTION(BlueprintCallable)
-	//void SettingObjectData(FItemData& OtheritemData);
+	UFUNCTION(BlueprintCallable)
+	void SettingObjectData(FItemData OtheritemData);
 };
 
 UCLASS()
