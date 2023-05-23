@@ -53,7 +53,7 @@ void UUWItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 	UDragDropOperation* DragDropOperation = UWidgetBlueprintLibrary::CreateDragDropOperation(UDragDropOperation::StaticClass());
 	this->SetVisibility(ESlateVisibility::HitTestInvisible);
 
-	DragDropOperation->Payload = ItemData.ToUObject();
+	DragDropOperation->Payload = ItemData;
 	DragDropOperation->DefaultDragVisual = this;
 	DragDropOperation->Pivot = EDragPivot::CenterCenter;
 	
@@ -81,16 +81,8 @@ FReply UUWItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPoin
 
 void UUWItem::Refresh()
 {
-	if (ItemData.rotation)
-	{
-		Size.X = ItemData.size_y * TileSize;
-		Size.Y = ItemData.size_x * TileSize;
-	}
-	else
-	{
-		Size.X = ItemData.size_x * TileSize;
-		Size.Y = ItemData.size_y * TileSize;
-	}
+	Size.X = ItemData->GetSize().X * TileSize;
+	Size.Y = ItemData->GetSize().Y * TileSize;
 	
 	BackgroundSizeBox->SetWidthOverride(Size.X);
 	BackgroundSizeBox->SetHeightOverride(Size.Y);
@@ -101,12 +93,5 @@ void UUWItem::Refresh()
 
 void UUWItem::Rotate()
 {
-	if (ItemData.rotation)
-	{
-		ItemData.rotation = 0;
-	}
-	else
-	{
-		ItemData.rotation = 1;
-	}
+	ItemData->Rotate();
 }

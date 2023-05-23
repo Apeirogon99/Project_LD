@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <Struct/Game/GameDatas.h>
 #include <Component/ACInventoryComponent.h>
 #include <Widget/Game/Inventory/StoreInven/UWGridInventory.h>
 #include "Kismet/GameplayStatics.h"

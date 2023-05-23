@@ -15,7 +15,7 @@
  * 
  */
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnRemoved, FItemData&);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnRemoved, UItemObjectData*);
 
 UCLASS(BlueprintType)
 class PROJECT_LD_API UUWItem : public UUserWidget
@@ -47,7 +47,7 @@ public:
 	float TileSize;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	FItemData ItemData;
+	UItemObjectData* ItemData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	FVector2D Size;

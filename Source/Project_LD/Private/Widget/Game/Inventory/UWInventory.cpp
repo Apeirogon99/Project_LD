@@ -41,11 +41,7 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	UE_LOG(LogTemp, Warning, TEXT("On Drop Item"));
 
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
-	/*
-	UObject* payload =Operation->Payload;
-	FItemData ItemData = FItemData().UObjectToFItemData(payload);
-	*/
-	FItemData ItemData = Cast<UItemDataObject>(Operation->Payload)->ItemData;
+	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
 
 	AActor* Owner = ACInventory->GetOwner();
 	//아이템 소환

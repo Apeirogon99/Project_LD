@@ -4,9 +4,7 @@
 
 #include "CoreMinimal.h"
 #include <Struct/Game/GameDatas.h>
-#include <Engine/EngineTypes.h>
 #include <Engine/Classes/Components/SphereComponent.h>
-#include "GameFramework/Actor.h"
 #include <Component/ACInventoryComponent.h>
 #include <Framework/Interface/InventoryInterface.h>
 #include <Framework/Character/GameCharacter.h>
@@ -30,20 +28,17 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintSetter = SetItemObjectData, BlueprintGetter = GetItemObjectData, Category = "Component", meta = (AllowPrivateAccess = "true"))
-	FItemData ItemObjectData;
+	UItemObjectData* ItemObjectData;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	void OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
 	UFUNCTION(BlueprintSetter)
-	void SetItemObjectData(FItemData Data) { ItemObjectData = Data; }
+	void SetItemObjectData(UItemObjectData* Data) { ItemObjectData = Data; }
 
 	UFUNCTION(BlueprintGetter)
-	FItemData GetItemObjectData() { return ItemObjectData; }
+	UItemObjectData* GetItemObjectData() { return ItemObjectData; }
 	
 public:
 	virtual void PickUpItem() override;

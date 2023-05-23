@@ -24,7 +24,7 @@ void UACInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 
 	//ItemArr resize
-	ItemDataArr.SetNum(Colums * Rows + 1);
+	InventoryData.SetNum(Colums * Rows + 1);
 }
 
 void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -50,33 +50,33 @@ void UACInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 	}
 }
 
-void UACInventoryComponent::RemoveItem(FItemData& ItemObjectData)
+void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 {
-	if (ItemObjectData.IsValid() == true)
+	if (ItemObjectData->IsValid() == true)
 	{
-		int X = ItemObjectData.position_x;
-		int Y = ItemObjectData.position_y;
-		int sizeX = ItemObjectData.size_x;
-		int sizeY = ItemObjectData.size_y;
+		int X = ItemObjectData->position_x;
+		int Y = ItemObjectData->position_y;
+		int sizeX = ItemObjectData->GetSize().X;
+		int sizeY = ItemObjectData->GetSize().Y;
 
 		for (int FIndex = X; FIndex < X + sizeX; FIndex++)
 		{
 			for (int SIndex = Y; SIndex < Y + sizeY; SIndex++)
 			{
-				ItemDataArr[FIndex + SIndex * Colums] = FValidFirstItemData();
+				InventoryData[FIndex + SIndex * Colums] = NewObject<UItemObjectData>();
 			}
 		}
 
 		int Index = 0;
-		for (FItemData Data : TileItemDataArr)
+		for (UItemObjectData*& Data : InventoryObjectArr)
 		{
-			if (Data.position_x == ItemObjectData.position_x)
+			if (Data->position_x == ItemObjectData->position_x)
 			{
-				if (Data.position_y == ItemObjectData.position_y)
+				if (Data->position_y == ItemObjectData->position_y)
 				{
-					if (Data.category_id == ItemObjectData.category_id)
+					if (Data->ItemData.category_id == ItemObjectData->ItemData.category_id)
 					{
-						TileItemDataArr.RemoveAt(Index);
+						InventoryObjectArr.RemoveAt(Index);
 					}
 				}
 			}
@@ -85,12 +85,11 @@ void UACInventoryComponent::RemoveItem(FItemData& ItemObjectData)
 	}
 }
 
-void UACInventoryComponent::AddItemAt(FItemData& ItemObjectData, int TopLeftIndex)
+void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex)
 {
 	FTile TileData = IndexToTile(TopLeftIndex);
-	FTile checkRotationData = GetItemDataXY(ItemObjectData);
-	int X = checkRotationData.X;
-	int Y = checkRotationData.Y;
+	int X = ItemObjectData->GetSize().X;
+	int Y = ItemObjectData->GetSize().Y;
 
 	for (int FIndex = TileData.X; FIndex < TileData.X + X; FIndex++)
 	{
@@ -99,49 +98,34 @@ void UACInventoryComponent::AddItemAt(FItemData& ItemObjectData, int TopLeftInde
 			FTile LocalTile = FTile();
 			LocalTile.X = FIndex;
 			LocalTile.Y = SIndex;
+
 			if ((FIndex == TileData.X) && (SIndex == TileData.Y))
 			{
-				ItemDataArr[TileToIndex(LocalTile)].first = true;
-				
-				FItemData TileItemData = ItemObjectData;
-				TileItemData.position_x = LocalTile.X;
-				TileItemData.position_y = LocalTile.Y;
-				TileItemDataArr.Add(TileItemData);
+				InventoryData[TileToIndex(LocalTile)]->firstCheck = true;
+
+				UItemObjectData* TileItemData = ItemObjectData;
+				TileItemData->position_x = LocalTile.X;
+				TileItemData->position_y = LocalTile.Y;
+				InventoryObjectArr.Add(TileItemData);
 			}
 			else
 			{
-				ItemDataArr[TileToIndex(LocalTile)].first = false;
+				InventoryData[TileToIndex(LocalTile)]->firstCheck = false;
 			}
-			ItemDataArr[TileToIndex(LocalTile)].ItemObjectData = ItemObjectData;
+			InventoryData[TileToIndex(LocalTile)]->ItemData = ItemObjectData->ItemData;
 		}
 	}
 	IsChange = true;
 }
 
-FTile UACInventoryComponent::GetItemDataXY(FItemData ItemData)
+bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 {
-	FTile Tile;
-	if (ItemData.rotation)
-	{
-		Tile.X = ItemData.size_y;
-		Tile.Y = ItemData.size_x;
-		return Tile;
-	}
-	else
-	{
-		Tile.X = ItemData.size_x;
-		Tile.Y = ItemData.size_y;
-		return Tile;
-	}
-	return Tile;
-}
-
-bool UACInventoryComponent::TryAddItem(FItemData& ItemObjectData)
-{
-	if(ItemObjectData.IsValid() == true)
+	UE_LOG(LogTemp, Warning, TEXT("TryAddItem"));
+	/*
+	if(ItemObjectData->IsValid() == true)
 	{
 		int itemIndex = 0;
-		for (FValidFirstItemData& itemData : ItemDataArr)
+		for (UItemObjectData*& itemData : InventoryData)
 		{
 			if(IsRoomAvailable(ItemObjectData,itemIndex))
 			{
@@ -151,9 +135,9 @@ bool UACInventoryComponent::TryAddItem(FItemData& ItemObjectData)
 			itemIndex++;
 		}
 		
-		ItemObjectData.rotation == 0 ? ItemObjectData.rotation = 1 : ItemObjectData.rotation = 0;
+		ItemObjectData->Rotate();
 		itemIndex = 0;
-		for (FValidFirstItemData& itemData : ItemDataArr)
+		for (UItemObjectData*& itemData : InventoryData)
 		{
 			if(IsRoomAvailable(ItemObjectData,itemIndex))
 			{
@@ -165,14 +149,15 @@ bool UACInventoryComponent::TryAddItem(FItemData& ItemObjectData)
 		return false;
 	}
 	return false;
+	*/
+	return false;
 }
 
-bool UACInventoryComponent::IsRoomAvailable(FItemData& ItemObjectData, int TopLeftIndex)
+bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData, int TopLeftIndex)
 {
 	FTile TileData = IndexToTile(TopLeftIndex);
-	FTile checkRotationData = GetItemDataXY(ItemObjectData);
-	int X = checkRotationData.X;
-	int Y = checkRotationData.Y;
+	int X = ItemObjectData->GetSize().X;
+	int Y = ItemObjectData->GetSize().Y;
 
 	for (int FIndex = TileData.X; FIndex < TileData.X + X; FIndex++)
 	{
@@ -184,11 +169,23 @@ bool UACInventoryComponent::IsRoomAvailable(FItemData& ItemObjectData, int TopLe
 				LocalTile.X = FIndex;
 				LocalTile.Y = SIndex;
 
-				FReturnItemAtIndex Data = FReturnItemAtIndex();
-				Data=GetItemAtIndex(TileToIndex(LocalTile));
-				if (Data.valid)
+				bool Localvalid;
+				UItemObjectData* Data;
+				int  index =TileToIndex(LocalTile);
+				if (InventoryData.IsValidIndex(index))
 				{
-					if (Data.ItemObjectData.IsValid() == true)
+					Localvalid = true;
+					Data = InventoryData[index];
+				}
+				else
+				{
+					Localvalid = false;
+					Data = NewObject<UItemObjectData>();
+				}
+
+				if (Localvalid)
+				{
+					if (Data->IsValid())
 					{
 						return false;
 					}
@@ -220,23 +217,7 @@ FTile UACInventoryComponent::IndexToTile(int Index) const
 	return Node;
 }
 
-FReturnItemAtIndex UACInventoryComponent::GetItemAtIndex(int Index)
+TArray<UItemObjectData*> UACInventoryComponent::GetAllItems()
 {
-	FReturnItemAtIndex RData;
-	if(ItemDataArr.IsValidIndex(Index))
-	{
-		RData.valid = true;
-		RData.ItemObjectData = ItemDataArr[Index].ItemObjectData;
-	}
-	else
-	{
-		RData.valid = false;
-		RData.ItemObjectData = FItemData();
-	}
-	return RData;
-}
-
-TArray<FItemData> UACInventoryComponent::GetAllItems()
-{
-	return TileItemDataArr;
+	return InventoryObjectArr;
 }

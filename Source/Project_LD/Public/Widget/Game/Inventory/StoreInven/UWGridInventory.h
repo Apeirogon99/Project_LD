@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <Struct/Game/GameDatas.h>
 #include <Component/ACInventoryComponent.h>
 #include <UMG/Public/Components/Border.h>
 #include <UMG/Public/Components/CanvasPanel.h>
@@ -75,19 +76,16 @@ public:
 	void CreateLineSegments();
 
 	UFUNCTION(BlueprintCallable)
-	void CallRemoved_Single(FItemData& ItemData);
+	void CallRemoved_Single(UItemObjectData*& ItemData);
 
 	UFUNCTION(BlueprintCallable)
 	void Refresh();
 
 	UFUNCTION(BlueprintCallable)
-	FItemData GetPayload(UDragDropOperation* Operator);
+	void GetPayload(UDragDropOperation* Operator, UItemObjectData*& Payload) const;
 
 	UFUNCTION(BlueprintCallable)
-	UItemDataObject* GetPayloadObject(UDragDropOperation* Operator) const;
-
-	UFUNCTION(BlueprintCallable)
-	bool IsRoomAvailableForPayload(FItemData Payload) const;
+	bool IsRoomAvailableForPayload(UItemObjectData* Payload) const;
 
 	UFUNCTION(BlueprintCallable)
 	FMousePositionReturn MousePositionInTile(FVector2D MousePosition);

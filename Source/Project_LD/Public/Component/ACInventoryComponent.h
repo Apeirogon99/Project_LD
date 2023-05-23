@@ -24,37 +24,9 @@ struct PROJECT_LD_API FTile
 	GENERATED_USTRUCT_BODY()
 
 	FTile() : X(0), Y(0) {}
-	FTile(int32 X, int32 Y) : X(X), Y(Y) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile") int32 X;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile") int32 Y;
-};
-
-USTRUCT(BlueprintType)
-struct PROJECT_LD_API FReturnItemAtIndex
-{
-	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Return") bool valid;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Return") FItemData ItemObjectData;
-};
-
-USTRUCT(BlueprintType)
-struct PROJECT_LD_API FValidFirstItemData
-{
-	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Valid") bool first = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Valid") FItemData ItemObjectData;
-};
-
-USTRUCT(BlueprintType)
-struct PROJECT_LD_API FTileItemData
-{
-	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Valid") FTile TileIndex;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Valid") FItemData ItemObjectData;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -83,32 +55,27 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FValidFirstItemData> ItemDataArr;
+	TArray<UItemObjectData*> InventoryData;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FItemData> TileItemDataArr;
+	TArray<UItemObjectData*> InventoryObjectArr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsChange;
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void																	RemoveItem(FItemData& ItemObjectData);
+	void																	RemoveItem(UItemObjectData* ItemObjectData);
 	UFUNCTION(BlueprintCallable)
-	void																	AddItemAt(FItemData& ItemObjectData, int TopLeftIndex);
+	void																	AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex);
 	UFUNCTION(BlueprintCallable)
-	bool																	TryAddItem(FItemData& ItemObjectData);
+	bool																	TryAddItem(UItemObjectData* ItemObjectData);
 	UFUNCTION(BlueprintCallable)
-	bool																	IsRoomAvailable(FItemData& ItemObjectData, int TopLeftIndex);
+	bool																	IsRoomAvailable(UItemObjectData* ItemObjectData, int TopLeftIndex);
 	UFUNCTION(BlueprintCallable)
 	int																	TileToIndex(FTile Tile)	const;
 	UFUNCTION(BlueprintCallable)
 	FTile																IndexToTile(int Index)		const;
 	UFUNCTION(BlueprintCallable)
-	FReturnItemAtIndex										GetItemAtIndex(int Index);
-	UFUNCTION(BlueprintCallable)
-	TArray<FItemData>										GetAllItems();
-
-	FTile																GetItemDataXY(FItemData ItemData);
-	
+	TArray<UItemObjectData*>							GetAllItems();
 };

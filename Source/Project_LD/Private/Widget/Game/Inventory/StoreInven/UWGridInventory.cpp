@@ -43,15 +43,18 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
-	FItemData Data = GetPayload(InOperation);
+	UItemObjectData* Data = Cast<UItemObjectData>(Cast<UDragDropOperation>(InOperation)->Payload);
 	if (IsRoomAvailableForPayload(Data))
 	{
-		Data = GetPayload(InOperation);
-		ACInventory->AddItemAt(Data, ACInventory->TileToIndex(FTile(DraggedItemTopLeftTile.X, DraggedItemTopLeftTile.Y)));
+		GetPayload(InOperation, Data);
+		FTile tile;
+		tile.X = DraggedItemTopLeftTile.X;
+		tile.Y = DraggedItemTopLeftTile.Y;
+		ACInventory->AddItemAt(Data, ACInventory->TileToIndex(tile));
 	}
 	else
 	{
-		Data = GetPayload(InOperation);
+		GetPayload(InOperation, Data);
 		if (!ACInventory->TryAddItem(Data))
 		{
 			//Spawn Item
@@ -68,7 +71,7 @@ bool UUWGridInventory::NativeOnDragOver(const FGeometry& InGeometry, const FDrag
 	FMousePositionReturn MousePositionbool = MousePositionInTile(MousePosition_Local);
 
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
-	UItemDataObject* ItemData = Cast<UItemDataObject>(Operation->Payload);
+	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
 	int32 RightSelect;
 	int32 DownSelect;
 
@@ -143,7 +146,7 @@ void UUWGridInventory::CreateLineSegments()
 	}	
 }
 
-void UUWGridInventory::CallRemoved_Single(FItemData& ItemData)
+void UUWGridInventory::CallRemoved_Single(UItemObjectData*& ItemData)
 {
 	UE_LOG(LogTemp, Warning, TEXT("CallRemoved_Single"));
 	ACInventory->RemoveItem(ItemData);
@@ -153,8 +156,8 @@ void UUWGridInventory::Refresh()
 {
 	GridCanvas_Panel->ClearChildren();
 
-	TArray<FItemData> AllItem = ACInventory->GetAllItems();
-	for (FItemData Data : AllItem)
+	TArray<UItemObjectData*> AllItem = GetACInventory()->GetAllItems();
+	for (UItemObjectData*& Data : AllItem)
 	{
 		if (IsValid(ImageAsset))
 		{
@@ -169,39 +172,40 @@ void UUWGridInventory::Refresh()
 
 				UCanvasPanelSlot* Local_Slot = Cast<UCanvasPanelSlot>(GridCanvas_Panel->AddChild(ItemImageWidget));
 				Local_Slot->SetAutoSize(true);
-				float X = Data.position_x * TileSize;
-				float Y = Data.position_y * TileSize;
+				float X = Data->position_x * TileSize;
+				float Y = Data->position_y * TileSize;
 				Local_Slot->SetPosition(FVector2D(X, Y));
 			}
 		}
 	}
 }
-
-FItemData UUWGridInventory::GetPayload(UDragDropOperation* Operator)
+/*
+void UUWGridInventory::GetPayload(UDragDropOperation* Operator, UItemObjectData*& Payload)
 {
 	if (IsValid(Operator))
 	{
-		return Cast<UItemDataObject>(Operator->Payload)->ItemData;
+		return Cast<UItemObjectData>(Operator->Payload);
 	}
-
-	return FItemData();
+	return NewObject<UItemObjectData>();
 }
-
-UItemDataObject* UUWGridInventory::GetPayloadObject(UDragDropOperation* Operator) const
+*/
+void UUWGridInventory::GetPayload(UDragDropOperation* Operator,UItemObjectData*& Payload) const
 {
-	UItemDataObject* Object = NewObject<UItemDataObject>();
 	if (IsValid(Operator))
 	{
-		Object = Cast<UItemDataObject>(Operator->Payload);
+		Payload = Cast<UItemObjectData>(Operator->Payload);
 	}
-	return Object;
+	Payload = NewObject<UItemObjectData>();
 }
 
-bool UUWGridInventory::IsRoomAvailableForPayload(FItemData Payload) const
+bool UUWGridInventory::IsRoomAvailableForPayload(UItemObjectData* Payload) const
 {
-	if (Payload.IsValid())
+	if (Payload->IsValid())
 	{
-		return ACInventory->IsRoomAvailable(Payload, ACInventory->TileToIndex(FTile(DraggedItemTopLeftTile.X, DraggedItemTopLeftTile.Y)));
+		FTile tile;
+		tile.X = DraggedItemTopLeftTile.X;
+		tile.Y = DraggedItemTopLeftTile.Y;
+		return ACInventory->IsRoomAvailable(Payload, ACInventory->TileToIndex(tile));
 	}
 
 	return false;

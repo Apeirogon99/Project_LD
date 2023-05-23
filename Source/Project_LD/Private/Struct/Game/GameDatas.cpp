@@ -3,35 +3,33 @@
 
 #include "Struct/Game/GameDatas.h"
 
-uint32 GetTypeHash(const FItemData& ItemData)
+void UItemObjectData::Rotate()
 {
-    return FCrc::MemCrc32(&ItemData, sizeof(FItemData));
-}
-
-UObject* FItemData::ToUObject() const
-{
-    UItemDataObject* ItemObject = NewObject<UItemDataObject>();//(GetTransientPackage(), NAME_None);
-    ItemObject->ItemData = *this;
-
-    return ItemObject;
-}
-
-FItemData FItemData::UObjectToFItemData(UObject* Object) const
-{
-    UItemDataObject* ObjectData = Cast<UItemDataObject>(Object);
-    FItemData ItemData;
-    if (ObjectData)
+    if (rotation)
     {
-        ItemData = ObjectData->ItemData;
+        rotation = 0;
     }
-
-    return ItemData;
+    else
+    {
+        rotation = 1;
+    }
 }
 
-FVector2D UItemDataObject::GetSize()
+bool UItemObjectData::IsValid()
+{
+    if (ItemData.category_id == 0)
+        return false;
+    if (ItemData.size_x == 0)
+        return false;
+    if (ItemData.size_y == 0)
+        return false;
+    return true;
+}
+
+FVector2D UItemObjectData::GetSize() const
 {
     FVector2D Return;
-    if (ItemData.rotation)
+    if (rotation)
     {
         Return.X = ItemData.size_y;
         Return.Y = ItemData.size_x;
@@ -45,15 +43,9 @@ FVector2D UItemDataObject::GetSize()
     }
     return Return;
 }
-
-void UItemDataObject::Rotate()
+/*
+void UItemObjectData::SettingObjectData(FItemData& OtheritemData)
 {
-    if (ItemData.rotation)
-    {
-        ItemData.rotation = 0;
-    }
-    else
-    {
-        ItemData.rotation = 1;
-    }
+   this->ItemData = OtheritemData;
 }
+*/

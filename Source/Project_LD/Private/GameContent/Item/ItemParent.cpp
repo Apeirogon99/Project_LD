@@ -22,28 +22,7 @@ AItemParent::AItemParent()
 // Called when the game starts or when spawned
 void AItemParent::BeginPlay()
 {
-	AActor::BeginPlay();
-
-	/*
-	//itemObjectData 생성 확인
-	if (ItemObjectData==nullptr)
-	{
-		UE_LOG(Logtemp, warning, TEXT("ItemObjectData is Not Init"));
-	}
-	*/
-
-	/*
-	//BeginOverlap 함수 설정
-	if (Sphere = GetOwner()->FindComponentByClass<USphereComponent>())
-	{
-		Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItemParent::OnActorBeginOverlap);
-	}
-	*/
-}
-
-void AItemParent::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	//캐릭터와 아이템이 닿은 경우 Pickup Widget을 생성
+	Super::BeginPlay();
 }
 
 void AItemParent::PickUpItem()
