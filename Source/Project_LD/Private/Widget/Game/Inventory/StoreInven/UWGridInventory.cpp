@@ -35,8 +35,6 @@ FReply UUWGridInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, co
 {
 	Super::NativeOnMouseButtonDown(MyGeometry, MouseEvent);
 
-	UE_LOG(LogTemp, Warning, TEXT("UUWGridInventory::NativeOnMouseButtonDown"));
-
 
 	return FReply::Handled();
 }
@@ -45,8 +43,6 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
-	UE_LOG(LogTemp, Warning, TEXT("UUWGridInventory::NativeOnDrop"));
-	/*
 	UItemObjectData* Data = Cast<UItemObjectData>(Cast<UDragDropOperation>(InOperation)->Payload);
 	if (IsRoomAvailableForPayload(Data))
 	{
@@ -64,15 +60,13 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 			//Spawn Item
 		}
 	}
-	*/
+	
 	return true;
 }
 
 bool UUWGridInventory::NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDragOver(InGeometry, InDragDropEvent, InOperation);
-
-	UE_LOG(LogTemp, Warning, TEXT("UUWGridInventory::NativeOnDragOver"));
 
 	FVector2D MousePosition_Local = InGeometry.AbsoluteToLocal(InDragDropEvent.GetScreenSpacePosition());
 	FMousePositionReturn MousePositionbool = MousePositionInTile(MousePosition_Local);
@@ -101,16 +95,12 @@ void UUWGridInventory::NativeOnDragEnter(const FGeometry& InGeometry, const FDra
 {
 	Super::NativeOnDragEnter(InGeometry, InDragDropEvent, InOperation);
 
-	UE_LOG(LogTemp, Warning, TEXT("UUWGridInventory::NativeOnDragEnter"));
-
 	DrawDropLocation = true;
 }
 
 void UUWGridInventory::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDragLeave(InDragDropEvent, InOperation);
-
-	UE_LOG(LogTemp, Warning, TEXT("UUWGridInventory::NativeOnDragLeave"));
 
 	DrawDropLocation = false;
 }
@@ -195,7 +185,10 @@ void UUWGridInventory::GetPayload(UDragDropOperation* Operator,UItemObjectData*&
 	{
 		Payload = Cast<UItemObjectData>(Operator->Payload);
 	}
-	Payload = NewObject<UItemObjectData>();
+	else
+	{
+		Payload = NewObject<UItemObjectData>();
+	}
 }
 
 bool UUWGridInventory::IsRoomAvailableForPayload(UItemObjectData* Payload) const
