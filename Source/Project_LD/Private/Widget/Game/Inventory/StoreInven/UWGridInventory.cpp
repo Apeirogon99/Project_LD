@@ -12,7 +12,6 @@ void UUWGridInventory::NativeConstruct()
 	TSubclassOf<UUWItem> ImageWidgetAsset = StaticLoadClass(UUWItem::StaticClass(), NULL, TEXT("WidgetBlueprint'/Game/TestFolder/TestCharacter/widget/BW_Item.BW_Item_C'"));
 	if (ImageWidgetAsset)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ImageWidget Succeeded"));
 		ImageAsset = ImageWidgetAsset;
 	}
 
@@ -36,6 +35,9 @@ FReply UUWGridInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, co
 {
 	Super::NativeOnMouseButtonDown(MyGeometry, MouseEvent);
 
+	UE_LOG(LogTemp, Warning, TEXT("UUWGridInventory::NativeOnMouseButtonDown"));
+
+
 	return FReply::Handled();
 }
 
@@ -43,6 +45,8 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
+	UE_LOG(LogTemp, Warning, TEXT("UUWGridInventory::NativeOnDrop"));
+	/*
 	UItemObjectData* Data = Cast<UItemObjectData>(Cast<UDragDropOperation>(InOperation)->Payload);
 	if (IsRoomAvailableForPayload(Data))
 	{
@@ -60,12 +64,15 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 			//Spawn Item
 		}
 	}
+	*/
 	return true;
 }
 
 bool UUWGridInventory::NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDragOver(InGeometry, InDragDropEvent, InOperation);
+
+	UE_LOG(LogTemp, Warning, TEXT("UUWGridInventory::NativeOnDragOver"));
 
 	FVector2D MousePosition_Local = InGeometry.AbsoluteToLocal(InDragDropEvent.GetScreenSpacePosition());
 	FMousePositionReturn MousePositionbool = MousePositionInTile(MousePosition_Local);
@@ -94,12 +101,16 @@ void UUWGridInventory::NativeOnDragEnter(const FGeometry& InGeometry, const FDra
 {
 	Super::NativeOnDragEnter(InGeometry, InDragDropEvent, InOperation);
 
+	UE_LOG(LogTemp, Warning, TEXT("UUWGridInventory::NativeOnDragEnter"));
+
 	DrawDropLocation = true;
 }
 
 void UUWGridInventory::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDragLeave(InDragDropEvent, InOperation);
+
+	UE_LOG(LogTemp, Warning, TEXT("UUWGridInventory::NativeOnDragLeave"));
 
 	DrawDropLocation = false;
 }
@@ -148,7 +159,6 @@ void UUWGridInventory::CreateLineSegments()
 
 void UUWGridInventory::CallRemoved_Single(UItemObjectData*& ItemData)
 {
-	UE_LOG(LogTemp, Warning, TEXT("CallRemoved_Single"));
 	ACInventory->RemoveItem(ItemData);
 }
 
@@ -179,16 +189,6 @@ void UUWGridInventory::Refresh()
 		}
 	}
 }
-/*
-void UUWGridInventory::GetPayload(UDragDropOperation* Operator, UItemObjectData*& Payload)
-{
-	if (IsValid(Operator))
-	{
-		return Cast<UItemObjectData>(Operator->Payload);
-	}
-	return NewObject<UItemObjectData>();
-}
-*/
 void UUWGridInventory::GetPayload(UDragDropOperation* Operator,UItemObjectData*& Payload) const
 {
 	if (IsValid(Operator))

@@ -38,8 +38,6 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
-	UE_LOG(LogTemp, Warning, TEXT("On Drop Item"));
-
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
 	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
 

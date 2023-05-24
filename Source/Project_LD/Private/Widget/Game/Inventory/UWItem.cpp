@@ -21,6 +21,8 @@ void UUWItem::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
+	ItemData = NewObject<UItemObjectData>();
+
 	FTimerHandle InitTimer;
 	GetWorld()->GetTimerManager().SetTimer(InitTimer, this, &UUWItem::Refresh, 0.001f, false);
 }
@@ -59,11 +61,11 @@ void UUWItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 	
 	if (OnRemoved.IsBound() == true)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Item::DragDetected Item Address %d"), &ItemData);
+
 		OnRemoved.Broadcast(ItemData);
 	}
 	RemoveFromParent();
-
+	
 	OutOperation = DragDropOperation;
 }
 
@@ -71,7 +73,6 @@ FReply UUWItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPoin
 {
 	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 	FEventReply Reply;
-
 	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		Reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent,this,EKeys::LeftMouseButton);

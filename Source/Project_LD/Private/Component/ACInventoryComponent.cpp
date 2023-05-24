@@ -62,6 +62,7 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 		int Y = ItemObjectData->position_y;
 		int sizeX = ItemObjectData->GetSize().X;
 		int sizeY = ItemObjectData->GetSize().Y;
+		UE_LOG(LogTemp, Warning, TEXT("UACInventoryComponent::RemoveItem X %d Y %d sizeX %d sizeY %d"), X, Y, sizeX, sizeY);
 
 		for (int FIndex = X; FIndex < X + sizeX; FIndex++)
 		{
@@ -81,6 +82,7 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 					if (Data->ItemData.category_id == ItemObjectData->ItemData.category_id)
 					{
 						InventoryObjectArr.RemoveAt(Index);
+						break;
 					}
 				}
 			}
@@ -105,20 +107,14 @@ void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLe
 
 			if ((FIndex == TileData.X) && (SIndex == TileData.Y))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("First Data"));
-				InventoryData[TileToIndex(LocalTile)]->firstCheck = true;
-
 				UItemObjectData* TileItemData = ItemObjectData;
 				TileItemData->position_x = LocalTile.X;
 				TileItemData->position_y = LocalTile.Y;
 				InventoryObjectArr.Add(TileItemData);
 			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Rest Data"));
-				InventoryData[TileToIndex(LocalTile)]->firstCheck = false;
-			}
 			InventoryData[TileToIndex(LocalTile)]->ItemData = ItemObjectData->ItemData;
+			InventoryData[TileToIndex(LocalTile)]->position_x = LocalTile.X;
+			InventoryData[TileToIndex(LocalTile)]->position_y = LocalTile.Y;
 		}
 	}
 	IsChange = true;

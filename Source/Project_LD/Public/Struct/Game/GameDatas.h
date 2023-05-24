@@ -67,9 +67,7 @@ class PROJECT_LD_API UItemObjectData : public UObject
 	GENERATED_BODY()
 
 public:
-	UItemObjectData() : ItemData(FItemData()), position_x(-1), position_y(-1), rotation(0), firstCheck(0) {}
-
-	//UItemObjectData(const FObjectInitializer& ObjectInitializer);
+	UItemObjectData() : ItemData(FItemData()), position_x(-1), position_y(-1), rotation(0) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	FItemData ItemData;
@@ -82,9 +80,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	int32 rotation;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Check")
-	bool firstCheck;
 
 public:
 	UFUNCTION(BlueprintCallable)
