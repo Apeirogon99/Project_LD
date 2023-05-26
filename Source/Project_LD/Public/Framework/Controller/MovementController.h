@@ -34,6 +34,10 @@ public:
 	void SetNewMoveDestination(const FVector DestLocation);
 	void MoveDestination(const FVector DestLocation);
 
+public:
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UParticleSystem* mMouseCursorParticle;
+
 private:
 	bool IsMoveToMouseCursor;
 };

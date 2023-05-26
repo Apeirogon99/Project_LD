@@ -11,10 +11,11 @@
 #include <Network/NetworkCharacter.h>
 #include <Framework/Character/AppearanceCharacter.h>
 #include <Blueprint/AIBlueprintHelperLibrary.h>
+#include <Kismet/GameplayStatics.h>
 
 AMovementController::AMovementController()
 {
-	
+	IsMoveToMouseCursor = false;
 }
 
 AMovementController::~AMovementController()
@@ -75,6 +76,9 @@ void AMovementController::MoveToMouseCursor()
 
 void AMovementController::SetNewMoveDestination(const FVector DestLocation)
 {
+
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, FVector(DestLocation.X, DestLocation.Y, (DestLocation.Z + 1.0f)), FRotator::ZeroRotator, true);
+
 	//TODO: 서버에게 보낼 값
 	ANetworkController* controller = Cast<ANetworkController>(this);
 
