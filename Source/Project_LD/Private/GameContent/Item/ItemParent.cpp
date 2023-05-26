@@ -19,12 +19,6 @@ AItemParent::AItemParent()
 
 	ItemId = 1;
 
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableObeject(TEXT("DataTable'/Game/TestFolder/TestDataTable.TestDataTable'"));
-	if (DataTableObeject.Succeeded())
-	{
-		DataTable = DataTableObeject.Object;
-	}
-
 	Icon = nullptr;
 }
 
@@ -43,12 +37,6 @@ AItemParent::AItemParent(int32 id)
 
 	ItemId = id;
 
-	static ConstructorHelpers::FObjectFinder<UDataTable> DataTableObeject(TEXT("DataTable'/Game/TestFolder/TestDataTable.TestDataTable'"));
-	if (DataTableObeject.Succeeded())
-	{
-		DataTable = DataTableObeject.Object;
-	}
-
 	Icon = nullptr;
 }
 
@@ -59,7 +47,8 @@ void AItemParent::BeginPlay()
 
 	ItemObjectData = NewObject<UItemObjectData>();
 
-	FItemData* ItemTable = DataTable->FindRow<FItemData>(FName(*(FString::FormatAsNumber(ItemId))), FString(""));
+	ULDGameInstance* Instance=Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+	FItemData* ItemTable = Instance->GetItemData(ItemId);
 
 	ItemObjectData->ItemData = *ItemTable;
 	ItemObjectDataInit();

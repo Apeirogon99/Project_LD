@@ -19,7 +19,7 @@
 
 AGameCharacter::AGameCharacter()
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget> MainWidgetAsset(TEXT("WidgetBlueprint'/Game/TestFolder/TestCharacter/widget/BW_Inventory.BW_Inventory_C'"));
+	static ConstructorHelpers::FClassFinder<UUserWidget> MainWidgetAsset(TEXT("WidgetBlueprint'/Game/Blueprint/Widget/Game/Inventory/BW_Inventory.BW_Inventory_C'"));
 	if (MainWidgetAsset.Succeeded())
 	{
 		MainWidgetClass = MainWidgetAsset.Class;
@@ -148,15 +148,4 @@ void AGameCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
-	/*
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		FHitResult TraceHitResult;
-		PC->GetHitResultUnderCursor(ECC_Visibility, true, TraceHitResult);
-		FVector CursorFV = TraceHitResult.ImpactNormal;
-		FRotator CursorR = CursorFV.Rotation();
-		CursorToWorld->SetWorldLocation(TraceHitResult.Location);
-		CursorToWorld->SetWorldRotation(CursorR);
-	}
-	*/
 }

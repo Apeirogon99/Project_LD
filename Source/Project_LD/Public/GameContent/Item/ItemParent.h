@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <Framework/Gameinstance/LDGameInstance.h>
 #include <Struct/Game/GameDatas.h>
 #include <Engine/Classes/Components/SphereComponent.h>
 #include <Component/ACInventoryComponent.h>

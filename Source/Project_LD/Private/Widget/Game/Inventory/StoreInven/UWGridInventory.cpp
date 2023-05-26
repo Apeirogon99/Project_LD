@@ -9,7 +9,7 @@ void UUWGridInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TSubclassOf<UUWItem> ImageWidgetAsset = StaticLoadClass(UUWItem::StaticClass(), NULL, TEXT("WidgetBlueprint'/Game/TestFolder/TestCharacter/widget/BW_Item.BW_Item_C'"));
+	TSubclassOf<UUWItem> ImageWidgetAsset = StaticLoadClass(UUWItem::StaticClass(), NULL, TEXT("WidgetBlueprint'/Game/Blueprint/Widget/Game/Inventory/BW_Item.BW_Item_C'"));
 	if (ImageWidgetAsset)
 	{
 		ImageAsset = ImageWidgetAsset;

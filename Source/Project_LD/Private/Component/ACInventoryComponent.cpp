@@ -62,7 +62,6 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 		int Y = ItemObjectData->position_y;
 		int sizeX = ItemObjectData->GetSize().X;
 		int sizeY = ItemObjectData->GetSize().Y;
-		UE_LOG(LogTemp, Warning, TEXT("UACInventoryComponent::RemoveItem X %d Y %d sizeX %d sizeY %d"), X, Y, sizeX, sizeY);
 
 		for (int FIndex = X; FIndex < X + sizeX; FIndex++)
 		{
