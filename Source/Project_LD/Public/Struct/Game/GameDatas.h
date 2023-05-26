@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "UObject/Object.h"
 #include <Engine/SkeletalMesh.h>
+#include "Engine/Texture2D.h"
 #include "GameDatas.generated.h"
 
 USTRUCT(BlueprintType)

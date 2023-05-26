@@ -18,16 +18,26 @@ class PROJECT_LD_API AItemParent : public AActor, public IInventoryInterface
 public:	
 	// Sets default values for this actor's properties
 	AItemParent();
+	AItemParent(int32 id);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	UStaticMeshComponent* StaticMeshComponent;
+	USkeletalMeshComponent* SkeletalMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
 	USphereComponent* Sphere;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Image")
+
+	UTexture2D* Icon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UItemObjectData* ItemObjectData;
+
+private:
+	class UDataTable* DataTable;
+
+	int32 ItemId;
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,4 +45,7 @@ protected:
 	
 public:
 	virtual void PickUpItem() override;
+
+private:
+	void ItemObjectDataInit();
 };

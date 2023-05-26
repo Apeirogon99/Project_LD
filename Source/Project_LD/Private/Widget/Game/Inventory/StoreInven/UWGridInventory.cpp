@@ -35,7 +35,33 @@ FReply UUWGridInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, co
 {
 	Super::NativeOnMouseButtonDown(MyGeometry, MouseEvent);
 
+	return FReply::Handled();
+}
 
+FReply UUWGridInventory::NativeOnPreviewKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	Super::NativeOnPreviewKeyDown(InGeometry, InKeyEvent);	
+
+	if (InKeyEvent.GetKey() == EKeys::R)
+	{
+		UDragDropOperation* Operator = UWidgetBlueprintLibrary::GetDragDroppingContent();
+		UItemObjectData* payload;
+		GetPayload(Operator, payload);
+
+		if (IsValid(payload))
+		{
+			if (Operator != nullptr)
+			{
+				UUWItem* ItemWidget = Cast<UUWItem>(Operator->DefaultDragVisual);
+				if (ItemWidget)
+				{
+					payload->Rotate();
+					ItemWidget->Refresh();
+					return FReply::Handled();
+				}
+			}
+		}
+	}
 	return FReply::Handled();
 }
 
@@ -165,7 +191,7 @@ void UUWGridInventory::Refresh()
 			if (ItemImageWidget)
 			{
 				ItemImageWidget->TileSize = TileSize;
-				ItemImageWidget->ItemData = Data;
+				ItemImageWidget->ItemObjectData = Data;
 
 				//Bind Remove
 				ItemImageWidget->OnRemoved.AddUFunction(this, FName("CallRemoved_Single"));
@@ -179,6 +205,7 @@ void UUWGridInventory::Refresh()
 		}
 	}
 }
+
 void UUWGridInventory::GetPayload(UDragDropOperation* Operator,UItemObjectData*& Payload) const
 {
 	if (IsValid(Operator))

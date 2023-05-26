@@ -15,13 +15,17 @@ void UUWItem::NativeConstruct()
 	ItemImage = Cast<UImage>(GetWidgetFromName(TEXT("ItemImage")));
 
 	bIsFocusable = true;
+
+	IsEnter = false;
+
+	ItemImage->SetBrushFromTexture(ItemObjectData->ItemData.icon);
 }
 
 void UUWItem::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	ItemData = NewObject<UItemObjectData>();
+	ItemObjectData = NewObject<UItemObjectData>();
 
 	FTimerHandle InitTimer;
 	GetWorld()->GetTimerManager().SetTimer(InitTimer, this, &UUWItem::Refresh, 0.001f, false);
@@ -55,14 +59,13 @@ void UUWItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 	UDragDropOperation* DragDropOperation = UWidgetBlueprintLibrary::CreateDragDropOperation(UDragDropOperation::StaticClass());
 	this->SetVisibility(ESlateVisibility::HitTestInvisible);
 
-	DragDropOperation->Payload = ItemData;
+	DragDropOperation->Payload = ItemObjectData;
 	DragDropOperation->DefaultDragVisual = this;
 	DragDropOperation->Pivot = EDragPivot::CenterCenter;
-	
+
 	if (OnRemoved.IsBound() == true)
 	{
-
-		OnRemoved.Broadcast(ItemData);
+		OnRemoved.Broadcast(ItemObjectData);
 	}
 	RemoveFromParent();
 	
@@ -72,18 +75,37 @@ void UUWItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 FReply UUWItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+
 	FEventReply Reply;
 	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		Reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent,this,EKeys::LeftMouseButton);
 	}
+	IsEnter = true;
 	return Reply.NativeReply;
+}
+
+FReply UUWItem::NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseButtonUp(InGeometry, InMouseEvent);
+
+	IsEnter = false;
+	return FReply::Handled();
 }
 
 void UUWItem::Refresh()
 {
-	Size.X = ItemData->GetSize().X * TileSize;
-	Size.Y = ItemData->GetSize().Y * TileSize;
+	if (ItemObjectData->rotation)
+	{
+		ItemImage->SetRenderTransformAngle(90.0f);
+	}
+	else
+	{
+		ItemImage->SetRenderTransformAngle(0.0f);
+	}
+
+	Size.X = ItemObjectData->GetSize().X * TileSize;
+	Size.Y = ItemObjectData->GetSize().Y * TileSize;
 	
 	BackgroundSizeBox->SetWidthOverride(Size.X);
 	BackgroundSizeBox->SetHeightOverride(Size.Y);
@@ -94,5 +116,5 @@ void UUWItem::Refresh()
 
 void UUWItem::Rotate()
 {
-	ItemData->Rotate();
+	ItemObjectData->Rotate();
 }

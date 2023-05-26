@@ -29,8 +29,9 @@ protected:
 
 	virtual void NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& MouseEvent) override;
-	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation);
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent);
+	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
@@ -47,10 +48,13 @@ public:
 	float TileSize;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	UItemObjectData* ItemData;
+	UItemObjectData* ItemObjectData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	FVector2D Size;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	bool IsEnter;
 
 	FOnRemoved OnRemoved;
 
