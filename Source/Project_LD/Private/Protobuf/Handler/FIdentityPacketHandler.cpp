@@ -340,11 +340,6 @@ bool Handle_S2C_CreateCharacter(ANetworkController* controller, Protocol::S2C_Cr
 	return true;
 }
 
-bool Handle_S2C_UpdateAppearance(ANetworkController* controller, Protocol::S2C_UpdateAppearance& pkt)
-{
-	return false;
-}
-
 bool Handle_S2C_DeleteCharacter(ANetworkController* controller, Protocol::S2C_DeleteCharacter& pkt)
 {
 	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
@@ -392,22 +387,7 @@ bool Handle_S2C_DeleteCharacter(ANetworkController* controller, Protocol::S2C_De
 	return true;
 }
 
-bool Handle_S2C_UpdateNickName(ANetworkController* controller, Protocol::S2C_UpdateNickName& pkt)
-{
-	return false;
-}
-
-bool Handle_S2C_TravelLevel(ANetworkController* controller, Protocol::S2C_TravelLevel& pkt)
-{
-	return false;
-}
-
 bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_TravelServer& pkt)
 {
 	return false;
-}
-
-bool Handle_S2C_Test(ANetworkController* controller, Protocol::S2C_Test& pkt)
-{
-	return true;
 }

@@ -1,0 +1,17 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Network/NetworkGameMode.h"
+#include "GM_Game.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class PROJECT_LD_API AGM_Game : public ANetworkGameMode
+{
+	GENERATED_BODY()
+	
+};
