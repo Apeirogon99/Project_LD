@@ -1,6 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "GameContent/Item/ItemParent.h"
 
 // Sets default values
@@ -9,29 +8,36 @@ AItemParent::AItemParent()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	//StaticMesh
-	StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
-	RootComponent = StaticMeshComponent;
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+	RootComponent = SkeletalMeshComponent;
 
 	//Sphere Collision
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
 	Sphere->InitSphereRadius(50.0f);
 	Sphere->SetupAttachment(RootComponent);
-
 	Sphere->SetCollisionProfileName(TEXT("OverlapAll"));
 
-	/*
-	//Default(바구니) item을 StaticMesh로 저장
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> StaticMesh(TEXT("/Game/Medieval_Village/meshes/props/SM_basket_01.SM_basket_01")); 
-	if (StaticMesh.Succeeded())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("StaticMesh is Succeeded"));
-		StaticMeshComponent->SetStaticMesh(StaticMesh.Object);
-		Sphere->SetCollisionProfileName(TEXT("OverlapAll"));
-	}
-	*/
+	ItemId = 1;
 
-	//ItemObjectData = NewObject<FItemData>();
+	Icon = nullptr;
+}
+
+AItemParent::AItemParent(int32 id)
+{
+	PrimaryActorTick.bCanEverTick = false;
+
+	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+	RootComponent = SkeletalMeshComponent;
+
+	//Sphere Collision
+	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
+	Sphere->InitSphereRadius(50.0f);
+	Sphere->SetupAttachment(RootComponent);
+	Sphere->SetCollisionProfileName(TEXT("OverlapAll"));
+
+	ItemId = id;
+
+	Icon = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -39,26 +45,30 @@ void AItemParent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	/*
-	//itemObjectData 생성 확인
-	if (ItemObjectData==nullptr)
-	{
-		UE_LOG(Logtemp, warning, TEXT("ItemObjectData is Not Init"));
-	}
-	*/
+	ItemObjectData = NewObject<UItemObjectData>();
 
-	/*
-	//BeginOverlap 함수 설정
-	if (Sphere = GetOwner()->FindComponentByClass<USphereComponent>())
-	{
-		Sphere->OnComponentBeginOverlap.AddDynamic(this, &AItemParent::OnActorBeginOverlap);
-	}
-	*/
+	ULDGameInstance* Instance=Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+	FItemData* ItemTable = Instance->GetItemData(ItemId);
+
+	ItemObjectData->ItemData = *ItemTable;
+	ItemObjectDataInit();
 }
 
-void AItemParent::OnActorBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AItemParent::PickUpItem()
 {
-	//캐릭터와 아이템이 닿은 경우 Pickup Widget을 생성
+	AActor* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
+	if (PlayerPawn != nullptr)
+	{
+		if (Cast<AGameCharacter>(PlayerPawn)->InventoryComponent->TryAddItem(ItemObjectData))
+		{
+			Destroy();
+		}
+	}
 }
 
-//아이템을 얻는 과정은 인터페이스로 제작 예정
+void AItemParent::ItemObjectDataInit()
+{
+	//Mesh
+	SkeletalMeshComponent->SetSkeletalMesh(ItemObjectData->ItemData.mesh);
+	Icon = ItemObjectData->ItemData.icon;
+}

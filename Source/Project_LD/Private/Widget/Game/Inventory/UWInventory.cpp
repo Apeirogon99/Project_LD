@@ -1,24 +1,48 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Widget/Game/Inventory/UWInventory.h"
 
 void UUWInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	InventoryStore = Cast<UUWGridInventory>(GetWidgetFromName(TEXT("InventoryStore")));
+	GridInventory = this->WidgetTree->FindWidget(FName(TEXT("BW_GridInventory")));
+	if (GridInventory != nullptr)
+	{
+		UUWGridInventory* GridInven = Cast<UUWGridInventory>(GridInventory);
+		GridInven->Init(ACInventory, TileSize);
+	}
+
+	BackgroundBorder = Cast<UBorder>(GetWidgetFromName(TEXT("BackgroundBorder")));
+	BackgroundBlur = Cast<UBackgroundBlur>(GetWidgetFromName(TEXT("BackgroundBlur")));
 }
 
 void UUWInventory::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-
-	FTimerHandle TimerHandle;
-	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UUWInventory::DelayInit, 0.01f, false);
 }
 
-void UUWInventory::DelayInit()
+void UUWInventory::NativeDestruct()
 {
-	InventoryStore->Init(ACInventory, TileSize);
+	Super::NativeDestruct();
+}
+
+FReply UUWInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
+{
+	Super::NativeOnMouseButtonDown(MyGeometry, MouseEvent);
+
+	return FReply::Handled();
+}
+
+bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
+
+	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
+	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
+
+	AActor* Owner = ACInventory->GetOwner();
+	//아이템 소환
+	 
+	return false;
 }

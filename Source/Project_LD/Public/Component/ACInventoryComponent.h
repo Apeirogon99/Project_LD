@@ -4,17 +4,18 @@
 
 #include "CoreMinimal.h"
 #include <Struct/Game/GameDatas.h>
-//#include <Struct/Inven/EquipmentData.h>
 #include "Components/ActorComponent.h"
 #include "ACInventoryComponent.generated.h"
+
+DECLARE_MULTICAST_DELEGATE(FOnInventoryChanged);
 
 USTRUCT(BlueprintType)
 struct PROJECT_LD_API FLine
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Line) FVector2D Start;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Line) FVector2D End;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Line") FVector2D Start;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Line") FVector2D End;
 };
 
 USTRUCT(BlueprintType)
@@ -22,8 +23,10 @@ struct PROJECT_LD_API FTile
 {
 	GENERATED_USTRUCT_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Tile) int32 X;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Tile) int32 Y;
+	FTile() : X(0), Y(0) {}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile") int32 X;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile") int32 Y;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -38,50 +41,43 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Form") int Colums;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Form") int Rows;
-	/*
-private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintSetter = SetItemDataArr, BlueprintGetter = GetItemDataArr, meta = (AllowPrivateAccess = "true"))
-	TArray<FItemData> ItemDataArr;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintSetter = SetIsChange, BlueprintGetter = GetIsChange, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int Colums;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int Rows;
+	
+	FOnInventoryChanged OnInventoryChanged;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<UItemObjectData*> InventoryData;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<UItemObjectData*> InventoryObjectArr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsChange;
 
 public:
-	//Getter
-	UFUNCTION(BlueprintGetter)
-	bool GetIsChange() const { return IsChange; }
-	
-	UFUNCTION(BlueprintGetter)
-	TArray<FItemData> GetItemDataArr() { return ItemDataArr; }
-
-	//Setter
-	UFUNCTION(BlueprintSetter)
-	void SetIsChange(bool Change) { IsChange = Change; }
-
-	UFUNCTION(BlueprintSetter)
-	void SetItemDataArr(TArray<FItemData> Data) { ItemDataArr = Data; }
-	
-public:
-	void																	RemoveItem(FItemData ItemData);
-	void																	AddItemAt(FItemData ItemData, int TopLeftIndex);
-	bool																	TryAddItem(FItemData ItemData);
-	bool																	IsRoomAvailable(FItemData ItemData, int TopLeftIndex);
-	int																	TileToIndex(FTile Tile) const;
-	FTile																IndexToTile(int Index) const;
-	TArray<TMap<FItemData, FTile>>				GetAllItems();
-	TArray<FItemData>										GetItems() const;
-	TArray<FEquipmentData>								GetEquipment() const;
-
-private:
-	//return Bool, ItemObjectData
-	FItemData					GetItemAtIndex(int index);
-	void								Init_EquipmentData();
-	*/
+	UFUNCTION(BlueprintCallable)
+	void																	RemoveItem(UItemObjectData* ItemObjectData);
+	UFUNCTION(BlueprintCallable)
+	void																	AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex);
+	UFUNCTION(BlueprintCallable)
+	bool																	TryAddItem(UItemObjectData* ItemObjectData);
+	UFUNCTION(BlueprintCallable)
+	bool																	IsRoomAvailable(UItemObjectData* ItemObjectData, int TopLeftIndex);
+	UFUNCTION(BlueprintCallable)
+	int																	TileToIndex(FTile Tile)	const;
+	UFUNCTION(BlueprintCallable)
+	FTile																IndexToTile(int Index)		const;
+	UFUNCTION(BlueprintCallable)
+	TArray<UItemObjectData*>							GetAllItems();
+	UFUNCTION(BlueprintCallable)
+	bool																	GetItemAtIndex(int index, UItemObjectData*& ItemObject);
 };
