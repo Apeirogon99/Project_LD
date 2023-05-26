@@ -11,6 +11,7 @@
 
 #include <IdentityPacket.pb.h>
 #include <CommonPacket.pb.h>
+#include <GamePacket.pb.h>
 
 class ANetworkController;
 
@@ -44,8 +45,16 @@ enum class EPakcetID : uint16
 	S2C_EnterGameServer = 2001,
 	C2S_LeaveGameServer = 2002,
 	S2C_LeaveGameServer = 2003,
-	C2S_MovementCharacter = 2004,
-	S2C_MovementCharacter = 2005,
+	S2C_AppearCharacter = 2004,
+	S2C_DisAppearCharacter = 2005,
+	C2S_MovementCharacter = 2006,
+	S2C_MovementCharacter = 2007,
+	C2S_InsertInventory = 2008,
+	S2C_InsertInventory = 2009,
+	C2S_UpdateInventory = 2010,
+	S2C_UpdateInventory = 2011,
+	C2S_DeleteInventory = 2012,
+	S2C_DeleteInventory = 2013,
 
 	S2C_ReplicatedServerTimeStamp = 9000,
 };
@@ -91,6 +100,7 @@ private:
 private:
 	friend class FIdentityPacketHandler;
 	friend class FCommonPacketHandler;
+	friend class FGamePacketHandler;
 
 public:
 	static PacketFunc PacketHandler[UINT16_MAX];

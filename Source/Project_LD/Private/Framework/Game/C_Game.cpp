@@ -3,3 +3,10 @@
 
 #include "Framework/Game/C_Game.h"
 
+AC_Game::AC_Game()
+{
+}
+
+AC_Game::~AC_Game()
+{
+}

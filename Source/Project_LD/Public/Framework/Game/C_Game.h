@@ -13,5 +13,9 @@ UCLASS()
 class PROJECT_LD_API AC_Game : public AAppearanceCharacter
 {
 	GENERATED_BODY()
+
+public:
+	AC_Game();
+	~AC_Game();
 	
 };

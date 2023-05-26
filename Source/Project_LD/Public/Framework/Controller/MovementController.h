@@ -13,5 +13,27 @@ UCLASS()
 class PROJECT_LD_API AMovementController : public ANetworkController
 {
 	GENERATED_BODY()
+
+public:
+	AMovementController();
+	~AMovementController();
 	
+public:
+	void PlayerTick(float DeltaTime) override;
+	void SetupInputComponent() override;
+
+	void OnSetDestinationPressed();
+	void OnSetDestinationReleased();
+	void OnSetCameraZoomAxis(const float inValue);
+
+public:
+	void SwitchMovementMode();
+	void MoveToMouseCursor();
+
+public:
+	void SetNewMoveDestination(const FVector DestLocation);
+	void MoveDestination(const FVector DestLocation);
+
+private:
+	bool IsMoveToMouseCursor;
 };

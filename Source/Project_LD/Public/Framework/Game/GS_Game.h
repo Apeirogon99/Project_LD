@@ -13,5 +13,12 @@ UCLASS()
 class PROJECT_LD_API AGS_Game : public ANetworkGameState
 {
 	GENERATED_BODY()
+
+public:
+	AGS_Game();
+	~AGS_Game();
+
+public:
+	AController* FindPlayerController(const int64 inRemoteID);
 	
 };

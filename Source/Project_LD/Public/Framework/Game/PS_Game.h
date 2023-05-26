@@ -13,5 +13,17 @@ UCLASS()
 class PROJECT_LD_API APS_Game : public ANetworkPlayerState
 {
 	GENERATED_BODY()
+
+public:
+	APS_Game();
+	~APS_Game();
+
+public:
+	void Init(const int64 inRemoteID);
 	
+public:
+	int64 GetRemoteID();
+
+public:
+	int64 mRemoteID;
 };
