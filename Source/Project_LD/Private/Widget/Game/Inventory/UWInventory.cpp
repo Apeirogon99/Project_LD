@@ -6,13 +6,6 @@ void UUWInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	GridInventory = this->WidgetTree->FindWidget(FName(TEXT("BW_GridInventory")));
-	if (GridInventory != nullptr)
-	{
-		UUWGridInventory* GridInven = Cast<UUWGridInventory>(GridInventory);
-		GridInven->Init(ACInventory, TileSize);
-	}
-
 	BackgroundBorder = Cast<UBorder>(GetWidgetFromName(TEXT("BackgroundBorder")));
 	BackgroundBlur = Cast<UBackgroundBlur>(GetWidgetFromName(TEXT("BackgroundBlur")));
 }
@@ -45,4 +38,20 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	//아이템 소환
 	 
 	return false;
+}
+
+void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, float size)
+{
+	ACInventory = InventoryComponent;
+	this->TileSize = size;
+
+	GridInventory = this->WidgetTree->FindWidget(FName(TEXT("BW_GridInventory")));
+	if (GridInventory != nullptr)
+	{
+		if (IsValid(ACInventory))
+		{
+			UUWGridInventory* GridInven = Cast<UUWGridInventory>(GridInventory);
+			GridInven->Init(ACInventory, size);
+		}
+	}
 }

@@ -46,4 +46,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "default")
 	float TileSize;
+
+public:
+	UFUNCTION()
+	void InitInventory(UACInventoryComponent* InventoryComponent, float size);
 };

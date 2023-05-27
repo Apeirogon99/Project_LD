@@ -19,12 +19,6 @@
 
 AGameCharacter::AGameCharacter()
 {
-	static ConstructorHelpers::FClassFinder<UUserWidget> MainWidgetAsset(TEXT("WidgetBlueprint'/Game/Blueprint/Widget/Game/Inventory/BW_Inventory.BW_Inventory_C'"));
-	if (MainWidgetAsset.Succeeded())
-	{
-		MainWidgetClass = MainWidgetAsset.Class;
-	}
-
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.f);
 
 	bUseControllerRotationPitch = false;
@@ -77,37 +71,7 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("ToggleInventory", IE_Pressed, this, &AGameCharacter::OpenInventory);
 	PlayerInputComponent->BindAction("InteractItem", IE_Pressed, this, &AGameCharacter::InteractItem);
-}
-
-void AGameCharacter::OpenInventory()
-{
-	if (InventoryWidget->IsInViewport())
-	{
-		InventoryWidget->RemoveFromParent();
-		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		if (PlayerController != nullptr)
-		{
-			FInputModeGameOnly InputMode;
-			PlayerController->SetInputMode(InputMode);
-			PlayerController->bShowMouseCursor = false;
-			Cast<UUWGridInventory>(InventoryWidget->GridInventory)->LineArr.Reset();
-		}
-	}
-	else
-	{
-		InventoryWidget->AddToViewport();
-		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-		if (PlayerController != nullptr)
-		{
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			InputMode.SetHideCursorDuringCapture(false);
-			PlayerController->SetInputMode(InputMode);
-			PlayerController->bShowMouseCursor = true;
-		}
-	}
 }
 
 void AGameCharacter::InteractItem()
@@ -131,17 +95,6 @@ void AGameCharacter::InteractItem()
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (IsValid(MainWidgetClass))
-	{
-		InventoryWidget = Cast<UUWInventory>(CreateWidget(GetWorld(), MainWidgetClass));
-
-		if (InventoryWidget)
-		{
-			InventoryWidget->TileSize = 50.0f;
-			InventoryWidget->ACInventory = InventoryComponent;
-		}
-	}
 }
 
 void AGameCharacter::Tick(float DeltaSeconds)

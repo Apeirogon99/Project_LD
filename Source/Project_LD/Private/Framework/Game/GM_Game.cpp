@@ -8,6 +8,7 @@
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
 #include "GameFramework/SpectatorPawn.h"
+#include <Widget/Handler/ClientHUD.h>
 
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FGamePacketHandler.h>
@@ -88,6 +89,8 @@ void AGM_Game::BeginNetwork()
 	Protocol::C2S_EnterGameServer enterPacket;
 	enterPacket.set_token(token);
 	controller->Send(FGamePacketHandler::MakeSendBuffer(controller, enterPacket));
+
+	GetClientHUD()->ShowWidgetFromName(FString(TEXT("MainGame")));
 }
 
 ACharacter* AGM_Game::SpawnCharacter(FVector inLocation, FVector inVelocity, FRotator inRotator)

@@ -27,4 +27,21 @@ public:
 	virtual bool	OnConnect() override;
 	virtual bool	OnDisconnect() override;
 
+protected:
+	virtual void SetupInputComponent() override;
+
+private:
+	UPROPERTY()
+	UUserWidget* Inven;
+
+	UPROPERTY()
+	class AClientHUD* ClientHUD;
+
+	bool InvenIsOpen;
+
+public:
+	void OpenInventory();
+
+	void InvenTimer();
 };
+	
