@@ -1,6 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameContent/Item/ItemParent.h"
+#include "Components/SphereComponent.h"
+#include "Component/ACInventoryComponent.h">"
+#include "Framework/Game/C_Game.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AItemParent::AItemParent()
@@ -17,25 +21,8 @@ AItemParent::AItemParent()
 	Sphere->SetupAttachment(RootComponent);
 	Sphere->SetCollisionProfileName(TEXT("OverlapAll"));
 
-	ItemId = 1;
-
-	Icon = nullptr;
-}
-
-AItemParent::AItemParent(int32 id)
-{
-	PrimaryActorTick.bCanEverTick = false;
-
-	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
-	RootComponent = SkeletalMeshComponent;
-
-	//Sphere Collision
-	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
-	Sphere->InitSphereRadius(50.0f);
-	Sphere->SetupAttachment(RootComponent);
-	Sphere->SetCollisionProfileName(TEXT("OverlapAll"));
-
-	ItemId = id;
+	mItemCode = -1;
+	mGameObjectId = -1;
 
 	Icon = nullptr;
 }
@@ -44,14 +31,6 @@ AItemParent::AItemParent(int32 id)
 void AItemParent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	ItemObjectData = NewObject<UItemObjectData>();
-
-	ULDGameInstance* Instance=Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	FItemData* ItemTable = Instance->GetItemData(ItemId);
-
-	ItemObjectData->ItemData = *ItemTable;
-	ItemObjectDataInit();
 }
 
 void AItemParent::PickUpItem()
@@ -59,11 +38,26 @@ void AItemParent::PickUpItem()
 	AActor* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (PlayerPawn != nullptr)
 	{
-		if (Cast<AGameCharacter>(PlayerPawn)->InventoryComponent->TryAddItem(ItemObjectData))
+		if (Cast<AC_Game>(PlayerPawn)->InventoryComponent->TryAddItem(ItemObjectData))
 		{
 			Destroy();
 		}
 	}
+}
+
+void AItemParent::Init(int32 Code, int32 GameObjectId)
+{
+	mItemCode = Code;
+	mGameObjectId = GameObjectId;
+
+	ItemObjectData = NewObject<UItemObjectData>();
+
+	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+	FItemData* ItemTable = Instance->GetItemData(mItemCode);
+
+	ItemObjectData->ItemData = *ItemTable;
+	ItemObjectDataInit();
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, GetActorLocation(), FRotator::ZeroRotator, true);
 }
 
 void AItemParent::ItemObjectDataInit()

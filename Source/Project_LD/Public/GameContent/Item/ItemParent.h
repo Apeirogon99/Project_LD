@@ -3,12 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <Framework/Gameinstance/LDGameInstance.h>
-#include <Struct/Game/GameDatas.h>
-#include <Engine/Classes/Components/SphereComponent.h>
-#include <Component/ACInventoryComponent.h>
-#include <Framework/Interface/InventoryInterface.h>
-#include <Framework/Character/GameCharacter.h>
+#include "Framework/Gameinstance/LDGameInstance.h"
+#include "Struct/Game/GameDatas.h"
+#include "Framework/Interface/InventoryInterface.h"
 #include "ItemParent.generated.h"
 
 UCLASS()
@@ -19,33 +16,34 @@ class PROJECT_LD_API AItemParent : public AActor, public IInventoryInterface
 public:	
 	// Sets default values for this actor's properties
 	AItemParent();
-	AItemParent(int32 id);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	USkeletalMeshComponent* SkeletalMeshComponent;
+	class USkeletalMeshComponent* SkeletalMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	USphereComponent* Sphere;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Image")
-
-	UTexture2D* Icon;
+	class USphereComponent* Sphere;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	UItemObjectData* ItemObjectData;
+	class UItemObjectData* ItemObjectData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Image")
+	UTexture2D* Icon;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UParticleSystem* mMouseCursorParticle;
 
 private:
-	class UDataTable* DataTable;
-
-	int32 ItemId;
+	UDataTable* DataTable;
+	int32 mItemCode;
+	int32 mGameObjectId;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	
 public:
 	virtual void PickUpItem() override;
+	void Init(int32 Code, int32 GameObjectId);
 
 private:
 	void ItemObjectDataInit();
