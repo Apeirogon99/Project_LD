@@ -6,7 +6,7 @@
 #include <Network/NetworkController.h>
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Main/W_MainGame.h>
-#include <Framework/Character/GameCharacter.h>
+#include <Framework/Game/C_Game.h>
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Network/NetworkUtils.h>
 
@@ -86,7 +86,7 @@ void APC_Game::OnPossess(APawn* InPawn)
 	}
 
 	UUWInventory* inventory			= Cast<UUWInventory>(widget);
-	AGameCharacter* gameCharacter	= Cast<AGameCharacter>(InPawn);
+	AC_Game* gameCharacter	= Cast<AC_Game>(InPawn);
 
 	if (inventory && gameCharacter)
 	{

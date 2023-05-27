@@ -2,7 +2,7 @@
 
 #include "GameContent/Item/ItemParent.h"
 #include "Components/SphereComponent.h"
-#include "Component/ACInventoryComponent.h">"
+#include "Component/ACInventoryComponent.h"
 #include "Framework/Game/C_Game.h"
 #include "Kismet/GameplayStatics.h"
 

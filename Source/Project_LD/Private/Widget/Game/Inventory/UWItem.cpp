@@ -2,8 +2,15 @@
 
 
 #include "Widget/Game/Inventory/UWItem.h"
+
+#include "Components/SizeBox.h"
+#include "Components/Image.h"
+#include "Components/Border.h"
 #include "Components/CanvasPanelSlot.h"
+
 #include "TimerManager.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+
 #include "Kismet/GameplayStatics.h"
 
 void UUWItem::NativeConstruct()

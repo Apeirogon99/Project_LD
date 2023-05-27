@@ -3,20 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <Struct/Game/GameDatas.h>
-#include <Component/ACInventoryComponent.h>
-#include <Widget/Game/Inventory/StoreInven/UWGridInventory.h>
-#include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
-#include "Blueprint/WidgetTree.h"
-#include "Blueprint/DragDropOperation.h"
-#include "Components/Border.h"
-#include "Components/BackgroundBlur.h"
+#include "Struct/Game/GameDatas.h"
+#include "Component/ACInventoryComponent.h"
 #include "UWInventory.generated.h"
 
 /**
  * 
  */
+class UBorder;
+class UBackgroundBlur;
+
 UCLASS()
 class PROJECT_LD_API UUWInventory : public UUserWidget
 {

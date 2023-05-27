@@ -3,14 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <Struct/Game/GameDatas.h>
-#include <Component/ACInventoryComponent.h>
-#include <UMG/Public/Components/Border.h>
-#include <UMG/Public/Components/CanvasPanel.h>
+#include "Component/ACInventoryComponent.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/CanvasPanelSlot.h"
-#include "Kismet/GameplayStatics.h"
-#include "Containers/Array.h"
 #include "UWGridInventory.generated.h"
 
 /**
@@ -55,10 +49,10 @@ public:
 	TArray<FLine> LineArr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
-	UBorder* GridBorder;
+	class UBorder* GridBorder;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
-	UCanvasPanel* GridCanvas_Panel;
+	class UCanvasPanel* GridCanvas_Panel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
 	TSubclassOf<UUserWidget> ImageAsset;

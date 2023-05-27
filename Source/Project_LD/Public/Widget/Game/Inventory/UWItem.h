@@ -3,17 +3,16 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <UMG/Public/Components/SizeBox.h>
-#include <UMG/Public/Components/Border.h>
-#include <UMG/Public/Components/Image.h>
-#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Blueprint/UserWidget.h"
-#include <Struct/Game/GameDatas.h>
+#include "Struct/Game/GameDatas.h"
 #include "UWItem.generated.h"
 
 /**
  * 
  */
+class USizeBox;
+class UBorder;
+class UImage;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnRemoved, UItemObjectData*);
 

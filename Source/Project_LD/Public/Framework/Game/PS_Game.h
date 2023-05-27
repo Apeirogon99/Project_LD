@@ -19,6 +19,31 @@ public:
 	~APS_Game();
 
 public:
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Attack", meta = (AllowPrivateAccess = "true"))
+	float AttackRange;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Attack", meta = (AllowPrivateAccess = "true"))
+	float AttackRadius;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Health", meta = (AllowPrivateAccess = "true"))
+	float MaxHealth;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Health", meta = (AllowPrivateAccess = "true"))
+	float CurrentHealth;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Mana", meta = (AllowPrivateAccess = "true"))
+	float MaxMana;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Mana", meta = (AllowPrivateAccess = "true"))
+	float CurrentMana;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Level", meta = (AllowPrivateAccess = "true"))
+	int32 CharacterLevel;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Condition", meta = (AllowPrivateAccess = "true"))
+	bool IsAttacking;
+
+public:
 	void Init(const int64 inRemoteID);
 	
 public:

@@ -35,19 +35,6 @@ AC_Game::AC_Game()
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("PlayerCharacter"));
 
-	/**Character Status Setting**/
-
-	//Attack Range
-	AttackRange = 200.0f;	AttackRadius = 50.0f;
-	//Attack Info
-	IsAttacking = false;
-	//Health
-	MaxHealth = 100.0f;	CurrentHealth = 100.0f;
-	//Mana
-	MaxMana = 100.0f;		CurrentMana = 100.0f;
-	//Character Level
-	CharacterLevel = 1;
-
 	InventoryComponent = CreateDefaultSubobject<UACInventoryComponent>(TEXT("InventoryComponent"));
 
 	PrimaryActorTick.bCanEverTick = true;

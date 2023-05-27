@@ -1,6 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Widget/Game/Inventory/UWInventory.h"
+#include "Game/Inventory/UWInventory.h"
+#include "Game/Inventory/StoreInven/UWGridInventory.h"
+#include "Blueprint/WidgetTree.h"
+#include "Blueprint/DragDropOperation.h"
+
+#include "Component/ACInventoryComponent.h"
+#include "Components/Border.h"
+#include "Components/BackgroundBlur.h"
+
+#include "Kismet/GameplayStatics.h"
 
 void UUWInventory::NativeConstruct()
 {

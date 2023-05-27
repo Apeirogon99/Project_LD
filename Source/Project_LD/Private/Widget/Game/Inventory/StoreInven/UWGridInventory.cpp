@@ -2,7 +2,16 @@
 
 #include "Widget/Game/Inventory/StoreInven/UWGridInventory.h"
 #include "Widget/Game/Inventory/UWItem.h"
+
+#include "Blueprint/DragDropOperation.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+
 #include "Components/CanvasPanelSlot.h"
+#include "Components/Border.h"
+#include "Components/CanvasPanel.h"
+#include <Component/ACInventoryComponent.h>
+
+#include "Kismet/GameplayStatics.h"
 
 
 void UUWGridInventory::NativeConstruct()

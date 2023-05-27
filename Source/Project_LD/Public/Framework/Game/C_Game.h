@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Component/ACInventoryComponent.h"
 #include "Framework/Character/AppearanceCharacter.h"
 #include "C_Game.generated.h"
 
@@ -23,41 +24,17 @@ public:
 protected:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* GameCameraComponent;
+	class UCameraComponent* GameCameraComponent;
 
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
+	class USpringArmComponent* CameraBoom;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (AllowPrivateAccess = "true"))
-		class UACInventoryComponent* InventoryComponent;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
-		float AttackRange;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
-		float AttackRadius;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Health", meta = (AllowPrivateAccess = "true"))
-		float MaxHealth;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Health", meta = (AllowPrivateAccess = "true"))
-		float CurrentHealth;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Mana", meta = (AllowPrivateAccess = "true"))
-		float MaxMana;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Mana", meta = (AllowPrivateAccess = "true"))
-		float CurrentMana;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Level", meta = (AllowPrivateAccess = "true"))
-		int32 CharacterLevel;
-
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Condition", meta = (AllowPrivateAccess = "true"))
-		bool IsAttacking;
+	UACInventoryComponent* InventoryComponent;
 
 public:
 	UFUNCTION()
-		void InteractItem();
+	void InteractItem();
 };
