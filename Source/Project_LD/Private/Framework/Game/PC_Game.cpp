@@ -10,6 +10,11 @@
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Network/NetworkUtils.h>
 
+#include <Game/C_Game.h>
+#include <Game/GM_Game.h>
+#include <Game/PS_Game.h>
+#include <Game/GS_Game.h>
+
 APC_Game::APC_Game()
 {
 	SwitchMovementMode();
@@ -56,6 +61,17 @@ bool APC_Game::OnDisconnect()
 void APC_Game::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
+
+	AGM_Game* gameMode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gameMode)
+	{
+		return;
+	}
+
+	if (this != gameMode->GetNetworkController())
+	{
+		return;
+	}
 
 	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetHUD());
 	if (nullptr == clientHUD)
