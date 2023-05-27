@@ -17,7 +17,7 @@ struct FItemData : public FTableRowBase
 
 public:
 	FItemData() : category_id(0), character_class_id(0), race_id(0), tier_id(0), name(TEXT("")), description(TEXT(""))
-		, cost(0), level(0), rate(1), size_x(0), size_y(0), icon(nullptr), mesh(nullptr) {}
+		, cost(0), level(0), size_x(0), size_y(0), icon(nullptr), mesh(nullptr) {}
 
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	//int32	id;
@@ -45,9 +45,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	int32	level;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32	rate;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	int32	size_x;
