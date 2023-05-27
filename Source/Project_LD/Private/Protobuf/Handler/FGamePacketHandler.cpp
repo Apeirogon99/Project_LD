@@ -35,6 +35,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     APawn* oldCharacter = controller->GetPawn();
     if (oldCharacter)
     {
+        controller->UnPossess();
         oldCharacter->Destroy();
     }
 
@@ -54,6 +55,20 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
 
 bool Handle_S2C_LeaveGameServer(ANetworkController* controller, Protocol::S2C_LeaveGameServer& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    gameMode->RequestDisconnectServer();
+
     return true;
 }
 
@@ -106,6 +121,38 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
 
 bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C_DisAppearCharacter& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+    
+    const int64 remoteID = pkt.remote_id();
+    AController* remoteController = gameState->FindPlayerController(remoteID);
+
+    APlayerState* playerState = remoteController->GetPlayerState<APlayerState>();
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+    gameState->RemovePlayerState(playerState);
+    playerState->Destroy();
+
+    APawn* character = remoteController->GetPawn();
+    if (character)
+    {
+        remoteController->UnPossess();
+        character->Destroy();
+    }
+
+    remoteController->Destroy();
+
     return true;
 }
 
