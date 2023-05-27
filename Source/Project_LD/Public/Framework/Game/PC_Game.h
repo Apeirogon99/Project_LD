@@ -27,21 +27,14 @@ public:
 	virtual bool	OnConnect() override;
 	virtual bool	OnDisconnect() override;
 
+public:
+	virtual void	OnPossess(APawn* InPawn) override;
+
 protected:
 	virtual void SetupInputComponent() override;
 
-private:
-	UPROPERTY()
-	UUserWidget* Inven;
-
-	UPROPERTY()
-	class AClientHUD* ClientHUD;
-
-	bool InvenIsOpen;
-
 public:
-	void OpenInventory();
-
-	void InvenTimer();
+	void SwitchUIMode();
+	void SwitchInventory();
 };
 	

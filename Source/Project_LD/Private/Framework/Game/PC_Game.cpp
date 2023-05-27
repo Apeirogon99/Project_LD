@@ -13,8 +13,6 @@
 APC_Game::APC_Game()
 {
 	SwitchMovementMode();
-
-	InvenIsOpen = false;
 }
 
 APC_Game::~APC_Game()
@@ -24,13 +22,6 @@ APC_Game::~APC_Game()
 void APC_Game::BeginPlay()
 {
 	Super::BeginPlay();
-
-	ClientHUD = Cast<AClientHUD>(GetHUD());
-	if (IsValid(ClientHUD))
-	{
-		FTimerHandle InvenInitTimer;
-		GetWorldTimerManager().SetTimer(InvenInitTimer, this, &APC_Game::InvenTimer, 0.01f, false);
-	}
 }
 
 bool APC_Game::OnRecvPacket(BYTE* buffer, const uint32 len)
@@ -62,56 +53,76 @@ bool APC_Game::OnDisconnect()
 	return true;
 }
 
+void APC_Game::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
+	if (nullptr == widget)
+	{
+		return;
+	}
+
+	UUWInventory* inventory			= Cast<UUWInventory>(widget);
+	AGameCharacter* gameCharacter	= Cast<AGameCharacter>(InPawn);
+
+	if (inventory && gameCharacter)
+	{
+		inventory->InitInventory(gameCharacter->InventoryComponent, 50.0f);
+	}
+}
+
 void APC_Game::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("ToggleInventory",IE_Pressed,this,&APC_Game::OpenInventory);
+	InputComponent->BindAction("ToggleInventory",IE_Pressed,this,&APC_Game::SwitchInventory);
 }
 
-void APC_Game::OpenInventory()
+void APC_Game::SwitchUIMode()
 {
-	if (ClientHUD)
-	{
-		Inven = ClientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
-		if (IsValid(Inven))
-		{
-			UUWInventory* Inventory = Cast<UUWInventory>(Inven);
-			if (InvenIsOpen)
-			{
-				InvenIsOpen = !InvenIsOpen;
-				ClientHUD->CleanWidgetFromName(FString(TEXT("Inventory")));
-				FInputModeGameOnly InputMode;
-				SetInputMode(InputMode);
-				bShowMouseCursor = true;
-			}
-			else
-			{
-				InvenIsOpen = !InvenIsOpen;
-				ClientHUD->ShowWidgetFromName(FString(TEXT("Inventory")));
-				FInputModeGameAndUI InputMode;
-				InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-				InputMode.SetHideCursorDuringCapture(false);
-				SetInputMode(InputMode);
-				bShowMouseCursor = true;
-			}
-		}
-	}
+	FInputModeGameAndUI inputMode;
+	inputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	inputMode.SetHideCursorDuringCapture(false);
+	SetInputMode(inputMode);
+	bShowMouseCursor = true;
 }
 
-void APC_Game::InvenTimer()
+void APC_Game::SwitchInventory()
 {
-	Inven = ClientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
-	if (IsValid(Inven))
+	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetHUD());
+	if (nullptr == clientHUD)
 	{
-		UUWInventory* UWInventory = Cast<UUWInventory>(Inven);
-		if (IsValid(GetPawn()))
-		{
-			AGameCharacter* GameCharacter = Cast<AGameCharacter>(GetPawn());
-			if (IsValid(GameCharacter))
-			{
-				UWInventory->InitInventory(Cast<AGameCharacter>(GetPawn())->InventoryComponent, 50.0f);
-			}
-		}
+		return;
 	}
+
+	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
+	if (nullptr == widget)
+	{
+		return;
+	}
+
+	UUWInventory* Inventory = Cast<UUWInventory>(widget);
+
+	static bool isIventoryOpen = false;
+	if (isIventoryOpen)
+	{
+		isIventoryOpen = !isIventoryOpen;
+		clientHUD->CleanWidgetFromName(FString(TEXT("Inventory")));
+		SwitchMovementMode();
+	}
+	else
+	{
+		isIventoryOpen = !isIventoryOpen;
+		clientHUD->ShowWidgetFromName(FString(TEXT("Inventory")));
+		SwitchUIMode();
+	}
+	
+	
 }
