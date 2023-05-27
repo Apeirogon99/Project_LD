@@ -150,6 +150,33 @@ struct S2C_MovementCharacterDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 S2C_MovementCharacterDefaultTypeInternal _S2C_MovementCharacter_default_instance_;
+PROTOBUF_CONSTEXPR C2S_LoadInventory::C2S_LoadInventory(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.timestamp_)*/int64_t{0}
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct C2S_LoadInventoryDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR C2S_LoadInventoryDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~C2S_LoadInventoryDefaultTypeInternal() {}
+  union {
+    C2S_LoadInventory _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 C2S_LoadInventoryDefaultTypeInternal _C2S_LoadInventory_default_instance_;
+PROTOBUF_CONSTEXPR S2C_LoadInventory::S2C_LoadInventory(
+    ::_pbi::ConstantInitialized): _impl_{
+    /*decltype(_impl_.item_)*/{}
+  , /*decltype(_impl_.error_)*/0
+  , /*decltype(_impl_._cached_size_)*/{}} {}
+struct S2C_LoadInventoryDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR S2C_LoadInventoryDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~S2C_LoadInventoryDefaultTypeInternal() {}
+  union {
+    S2C_LoadInventory _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 S2C_LoadInventoryDefaultTypeInternal _S2C_LoadInventory_default_instance_;
 PROTOBUF_CONSTEXPR C2S_InsertInventory::C2S_InsertInventory(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.item_)*/nullptr
@@ -250,7 +277,7 @@ struct S2C_RollbackInventoryDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 S2C_RollbackInventoryDefaultTypeInternal _S2C_RollbackInventory_default_instance_;
 }  // namespace Protocol
-static ::_pb::Metadata file_level_metadata_GamePacket_2eproto[15];
+static ::_pb::Metadata file_level_metadata_GamePacket_2eproto[17];
 static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_GamePacket_2eproto = nullptr;
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_GamePacket_2eproto = nullptr;
 
@@ -319,6 +346,21 @@ const uint32_t TableStruct_GamePacket_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
   PROTOBUF_FIELD_OFFSET(::Protocol::S2C_MovementCharacter, _impl_.timestamp_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S2C_MovementCharacter, _impl_.transform_),
   ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Protocol::C2S_LoadInventory, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::Protocol::C2S_LoadInventory, _impl_.timestamp_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Protocol::S2C_LoadInventory, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::Protocol::S2C_LoadInventory, _impl_.item_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S2C_LoadInventory, _impl_.error_),
+  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protocol::C2S_InsertInventory, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
@@ -385,13 +427,15 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 39, -1, -1, sizeof(::Protocol::S2C_DisAppearCharacter)},
   { 46, -1, -1, sizeof(::Protocol::C2S_MovementCharacter)},
   { 54, -1, -1, sizeof(::Protocol::S2C_MovementCharacter)},
-  { 63, -1, -1, sizeof(::Protocol::C2S_InsertInventory)},
-  { 71, -1, -1, sizeof(::Protocol::S2C_InsertInventory)},
-  { 80, -1, -1, sizeof(::Protocol::C2S_UpdateInventory)},
-  { 88, -1, -1, sizeof(::Protocol::S2C_UpdateInventory)},
-  { 95, -1, -1, sizeof(::Protocol::C2S_DeleteInventory)},
-  { 103, -1, -1, sizeof(::Protocol::S2C_DeleteInventory)},
-  { 112, -1, -1, sizeof(::Protocol::S2C_RollbackInventory)},
+  { 63, -1, -1, sizeof(::Protocol::C2S_LoadInventory)},
+  { 70, -1, -1, sizeof(::Protocol::S2C_LoadInventory)},
+  { 78, -1, -1, sizeof(::Protocol::C2S_InsertInventory)},
+  { 86, -1, -1, sizeof(::Protocol::S2C_InsertInventory)},
+  { 95, -1, -1, sizeof(::Protocol::C2S_UpdateInventory)},
+  { 103, -1, -1, sizeof(::Protocol::S2C_UpdateInventory)},
+  { 110, -1, -1, sizeof(::Protocol::C2S_DeleteInventory)},
+  { 118, -1, -1, sizeof(::Protocol::S2C_DeleteInventory)},
+  { 127, -1, -1, sizeof(::Protocol::S2C_RollbackInventory)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -403,6 +447,8 @@ static const ::_pb::Message* const file_default_instances[] = {
   &::Protocol::_S2C_DisAppearCharacter_default_instance_._instance,
   &::Protocol::_C2S_MovementCharacter_default_instance_._instance,
   &::Protocol::_S2C_MovementCharacter_default_instance_._instance,
+  &::Protocol::_C2S_LoadInventory_default_instance_._instance,
+  &::Protocol::_S2C_LoadInventory_default_instance_._instance,
   &::Protocol::_C2S_InsertInventory_default_instance_._instance,
   &::Protocol::_S2C_InsertInventory_default_instance_._instance,
   &::Protocol::_C2S_UpdateInventory_default_instance_._instance,
@@ -429,29 +475,32 @@ const char descriptor_table_protodef_GamePacket_2eproto[] PROTOBUF_SECTION_VARIA
   "\'\n\ttransform\030\002 \001(\0132\024.Protocol.STransform"
   "\"f\n\025S2C_MovementCharacter\022\021\n\tremote_id\030\001"
   " \001(\003\022\021\n\ttimestamp\030\002 \001(\003\022\'\n\ttransform\030\003 \001"
-  "(\0132\024.Protocol.STransform\"G\n\023C2S_InsertIn"
-  "ventory\022\021\n\ttimestamp\030\001 \001(\003\022\035\n\004item\030\002 \001(\013"
-  "2\017.Protocol.SItem\"V\n\023S2C_InsertInventory"
-  "\022\021\n\tremote_id\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Prot"
-  "ocol.SItem\022\r\n\005error\030\003 \001(\005\"G\n\023C2S_UpdateI"
-  "nventory\022\021\n\ttimestamp\030\001 \001(\003\022\035\n\004item\030\002 \001("
-  "\0132\017.Protocol.SItem\"$\n\023S2C_UpdateInventor"
-  "y\022\r\n\005error\030\001 \001(\005\"G\n\023C2S_DeleteInventory\022"
-  "\021\n\ttimestamp\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Proto"
-  "col.SItem\"V\n\023S2C_DeleteInventory\022\021\n\tremo"
-  "te_id\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Protocol.SIt"
-  "em\022\r\n\005error\030\003 \001(\005\"I\n\025S2C_RollbackInvento"
-  "ry\022\021\n\tremote_id\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Pr"
-  "otocol.SItemb\006proto3"
+  "(\0132\024.Protocol.STransform\"&\n\021C2S_LoadInve"
+  "ntory\022\021\n\ttimestamp\030\001 \001(\003\"A\n\021S2C_LoadInve"
+  "ntory\022\035\n\004item\030\001 \003(\0132\017.Protocol.SItem\022\r\n\005"
+  "error\030\002 \001(\005\"G\n\023C2S_InsertInventory\022\021\n\tti"
+  "mestamp\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Protocol.S"
+  "Item\"V\n\023S2C_InsertInventory\022\021\n\tremote_id"
+  "\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Protocol.SItem\022\r\n"
+  "\005error\030\003 \001(\005\"G\n\023C2S_UpdateInventory\022\021\n\tt"
+  "imestamp\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Protocol."
+  "SItem\"$\n\023S2C_UpdateInventory\022\r\n\005error\030\001 "
+  "\001(\005\"G\n\023C2S_DeleteInventory\022\021\n\ttimestamp\030"
+  "\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Protocol.SItem\"V\n\023"
+  "S2C_DeleteInventory\022\021\n\tremote_id\030\001 \001(\003\022\035"
+  "\n\004item\030\002 \001(\0132\017.Protocol.SItem\022\r\n\005error\030\003"
+  " \001(\005\"I\n\025S2C_RollbackInventory\022\021\n\tremote_"
+  "id\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Protocol.SItemb"
+  "\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_GamePacket_2eproto_deps[1] = {
   &::descriptor_table_PacketStruct_2eproto,
 };
 static ::_pbi::once_flag descriptor_table_GamePacket_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_GamePacket_2eproto = {
-    false, false, 1180, descriptor_table_protodef_GamePacket_2eproto,
+    false, false, 1287, descriptor_table_protodef_GamePacket_2eproto,
     "GamePacket.proto",
-    &descriptor_table_GamePacket_2eproto_once, descriptor_table_GamePacket_2eproto_deps, 1, 15,
+    &descriptor_table_GamePacket_2eproto_once, descriptor_table_GamePacket_2eproto_deps, 1, 17,
     schemas, file_default_instances, TableStruct_GamePacket_2eproto::offsets,
     file_level_metadata_GamePacket_2eproto, file_level_enum_descriptors_GamePacket_2eproto,
     file_level_service_descriptors_GamePacket_2eproto,
@@ -2130,6 +2179,399 @@ void S2C_MovementCharacter::InternalSwap(S2C_MovementCharacter* other) {
 
 // ===================================================================
 
+class C2S_LoadInventory::_Internal {
+ public:
+};
+
+C2S_LoadInventory::C2S_LoadInventory(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:Protocol.C2S_LoadInventory)
+}
+C2S_LoadInventory::C2S_LoadInventory(const C2S_LoadInventory& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  C2S_LoadInventory* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.timestamp_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_impl_.timestamp_ = from._impl_.timestamp_;
+  // @@protoc_insertion_point(copy_constructor:Protocol.C2S_LoadInventory)
+}
+
+inline void C2S_LoadInventory::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.timestamp_){int64_t{0}}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+}
+
+C2S_LoadInventory::~C2S_LoadInventory() {
+  // @@protoc_insertion_point(destructor:Protocol.C2S_LoadInventory)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void C2S_LoadInventory::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+}
+
+void C2S_LoadInventory::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void C2S_LoadInventory::Clear() {
+// @@protoc_insertion_point(message_clear_start:Protocol.C2S_LoadInventory)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.timestamp_ = int64_t{0};
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* C2S_LoadInventory::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // int64 timestamp = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          _impl_.timestamp_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* C2S_LoadInventory::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Protocol.C2S_LoadInventory)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int64 timestamp = 1;
+  if (this->_internal_timestamp() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt64ToArray(1, this->_internal_timestamp(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Protocol.C2S_LoadInventory)
+  return target;
+}
+
+size_t C2S_LoadInventory::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Protocol.C2S_LoadInventory)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // int64 timestamp = 1;
+  if (this->_internal_timestamp() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_timestamp());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData C2S_LoadInventory::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    C2S_LoadInventory::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*C2S_LoadInventory::GetClassData() const { return &_class_data_; }
+
+
+void C2S_LoadInventory::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<C2S_LoadInventory*>(&to_msg);
+  auto& from = static_cast<const C2S_LoadInventory&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:Protocol.C2S_LoadInventory)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from._internal_timestamp() != 0) {
+    _this->_internal_set_timestamp(from._internal_timestamp());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void C2S_LoadInventory::CopyFrom(const C2S_LoadInventory& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Protocol.C2S_LoadInventory)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool C2S_LoadInventory::IsInitialized() const {
+  return true;
+}
+
+void C2S_LoadInventory::InternalSwap(C2S_LoadInventory* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_.timestamp_, other->_impl_.timestamp_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata C2S_LoadInventory::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_GamePacket_2eproto_getter, &descriptor_table_GamePacket_2eproto_once,
+      file_level_metadata_GamePacket_2eproto[8]);
+}
+
+// ===================================================================
+
+class S2C_LoadInventory::_Internal {
+ public:
+};
+
+void S2C_LoadInventory::clear_item() {
+  _impl_.item_.Clear();
+}
+S2C_LoadInventory::S2C_LoadInventory(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor(arena, is_message_owned);
+  // @@protoc_insertion_point(arena_constructor:Protocol.S2C_LoadInventory)
+}
+S2C_LoadInventory::S2C_LoadInventory(const S2C_LoadInventory& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  S2C_LoadInventory* const _this = this; (void)_this;
+  new (&_impl_) Impl_{
+      decltype(_impl_.item_){from._impl_.item_}
+    , decltype(_impl_.error_){}
+    , /*decltype(_impl_._cached_size_)*/{}};
+
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_impl_.error_ = from._impl_.error_;
+  // @@protoc_insertion_point(copy_constructor:Protocol.S2C_LoadInventory)
+}
+
+inline void S2C_LoadInventory::SharedCtor(
+    ::_pb::Arena* arena, bool is_message_owned) {
+  (void)arena;
+  (void)is_message_owned;
+  new (&_impl_) Impl_{
+      decltype(_impl_.item_){arena}
+    , decltype(_impl_.error_){0}
+    , /*decltype(_impl_._cached_size_)*/{}
+  };
+}
+
+S2C_LoadInventory::~S2C_LoadInventory() {
+  // @@protoc_insertion_point(destructor:Protocol.S2C_LoadInventory)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void S2C_LoadInventory::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  _impl_.item_.~RepeatedPtrField();
+}
+
+void S2C_LoadInventory::SetCachedSize(int size) const {
+  _impl_._cached_size_.Set(size);
+}
+
+void S2C_LoadInventory::Clear() {
+// @@protoc_insertion_point(message_clear_start:Protocol.S2C_LoadInventory)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  _impl_.item_.Clear();
+  _impl_.error_ = 0;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* S2C_LoadInventory::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // repeated .Protocol.SItem item = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_item(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 error = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+          _impl_.error_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* S2C_LoadInventory::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:Protocol.S2C_LoadInventory)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // repeated .Protocol.SItem item = 1;
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_item_size()); i < n; i++) {
+    const auto& repfield = this->_internal_item(i);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+        InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
+  }
+
+  // int32 error = 2;
+  if (this->_internal_error() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_error(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:Protocol.S2C_LoadInventory)
+  return target;
+}
+
+size_t S2C_LoadInventory::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:Protocol.S2C_LoadInventory)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // repeated .Protocol.SItem item = 1;
+  total_size += 1UL * this->_internal_item_size();
+  for (const auto& msg : this->_impl_.item_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  // int32 error = 2;
+  if (this->_internal_error() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_error());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData S2C_LoadInventory::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
+    S2C_LoadInventory::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*S2C_LoadInventory::GetClassData() const { return &_class_data_; }
+
+
+void S2C_LoadInventory::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+  auto* const _this = static_cast<S2C_LoadInventory*>(&to_msg);
+  auto& from = static_cast<const S2C_LoadInventory&>(from_msg);
+  // @@protoc_insertion_point(class_specific_merge_from_start:Protocol.S2C_LoadInventory)
+  GOOGLE_DCHECK_NE(&from, _this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  _this->_impl_.item_.MergeFrom(from._impl_.item_);
+  if (from._internal_error() != 0) {
+    _this->_internal_set_error(from._internal_error());
+  }
+  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void S2C_LoadInventory::CopyFrom(const S2C_LoadInventory& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:Protocol.S2C_LoadInventory)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool S2C_LoadInventory::IsInitialized() const {
+  return true;
+}
+
+void S2C_LoadInventory::InternalSwap(S2C_LoadInventory* other) {
+  using std::swap;
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.item_.InternalSwap(&other->_impl_.item_);
+  swap(_impl_.error_, other->_impl_.error_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata S2C_LoadInventory::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_GamePacket_2eproto_getter, &descriptor_table_GamePacket_2eproto_once,
+      file_level_metadata_GamePacket_2eproto[9]);
+}
+
+// ===================================================================
+
 class C2S_InsertInventory::_Internal {
  public:
   static const ::Protocol::SItem& item(const C2S_InsertInventory* msg);
@@ -2355,7 +2797,7 @@ void C2S_InsertInventory::InternalSwap(C2S_InsertInventory* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata C2S_InsertInventory::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_GamePacket_2eproto_getter, &descriptor_table_GamePacket_2eproto_once,
-      file_level_metadata_GamePacket_2eproto[8]);
+      file_level_metadata_GamePacket_2eproto[10]);
 }
 
 // ===================================================================
@@ -2613,7 +3055,7 @@ void S2C_InsertInventory::InternalSwap(S2C_InsertInventory* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata S2C_InsertInventory::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_GamePacket_2eproto_getter, &descriptor_table_GamePacket_2eproto_once,
-      file_level_metadata_GamePacket_2eproto[9]);
+      file_level_metadata_GamePacket_2eproto[11]);
 }
 
 // ===================================================================
@@ -2843,7 +3285,7 @@ void C2S_UpdateInventory::InternalSwap(C2S_UpdateInventory* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata C2S_UpdateInventory::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_GamePacket_2eproto_getter, &descriptor_table_GamePacket_2eproto_once,
-      file_level_metadata_GamePacket_2eproto[10]);
+      file_level_metadata_GamePacket_2eproto[12]);
 }
 
 // ===================================================================
@@ -3021,7 +3463,7 @@ void S2C_UpdateInventory::InternalSwap(S2C_UpdateInventory* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata S2C_UpdateInventory::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_GamePacket_2eproto_getter, &descriptor_table_GamePacket_2eproto_once,
-      file_level_metadata_GamePacket_2eproto[11]);
+      file_level_metadata_GamePacket_2eproto[13]);
 }
 
 // ===================================================================
@@ -3251,7 +3693,7 @@ void C2S_DeleteInventory::InternalSwap(C2S_DeleteInventory* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata C2S_DeleteInventory::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_GamePacket_2eproto_getter, &descriptor_table_GamePacket_2eproto_once,
-      file_level_metadata_GamePacket_2eproto[12]);
+      file_level_metadata_GamePacket_2eproto[14]);
 }
 
 // ===================================================================
@@ -3509,7 +3951,7 @@ void S2C_DeleteInventory::InternalSwap(S2C_DeleteInventory* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata S2C_DeleteInventory::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_GamePacket_2eproto_getter, &descriptor_table_GamePacket_2eproto_once,
-      file_level_metadata_GamePacket_2eproto[13]);
+      file_level_metadata_GamePacket_2eproto[15]);
 }
 
 // ===================================================================
@@ -3739,7 +4181,7 @@ void S2C_RollbackInventory::InternalSwap(S2C_RollbackInventory* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata S2C_RollbackInventory::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_GamePacket_2eproto_getter, &descriptor_table_GamePacket_2eproto_once,
-      file_level_metadata_GamePacket_2eproto[14]);
+      file_level_metadata_GamePacket_2eproto[16]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
@@ -3776,6 +4218,14 @@ Arena::CreateMaybeMessage< ::Protocol::C2S_MovementCharacter >(Arena* arena) {
 template<> PROTOBUF_NOINLINE ::Protocol::S2C_MovementCharacter*
 Arena::CreateMaybeMessage< ::Protocol::S2C_MovementCharacter >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Protocol::S2C_MovementCharacter >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Protocol::C2S_LoadInventory*
+Arena::CreateMaybeMessage< ::Protocol::C2S_LoadInventory >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Protocol::C2S_LoadInventory >(arena);
+}
+template<> PROTOBUF_NOINLINE ::Protocol::S2C_LoadInventory*
+Arena::CreateMaybeMessage< ::Protocol::S2C_LoadInventory >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Protocol::S2C_LoadInventory >(arena);
 }
 template<> PROTOBUF_NOINLINE ::Protocol::C2S_InsertInventory*
 Arena::CreateMaybeMessage< ::Protocol::C2S_InsertInventory >(Arena* arena) {

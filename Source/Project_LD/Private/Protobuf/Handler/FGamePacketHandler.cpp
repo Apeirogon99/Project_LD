@@ -184,6 +184,11 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     return true;
 }
 
+bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_LoadInventory& pkt)
+{
+    return false;
+}
+
 bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_InsertInventory& pkt)
 {
     return true;

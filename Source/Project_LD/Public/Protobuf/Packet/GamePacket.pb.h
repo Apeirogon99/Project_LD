@@ -63,6 +63,9 @@ extern C2S_InsertInventoryDefaultTypeInternal _C2S_InsertInventory_default_insta
 class C2S_LeaveGameServer;
 struct C2S_LeaveGameServerDefaultTypeInternal;
 extern C2S_LeaveGameServerDefaultTypeInternal _C2S_LeaveGameServer_default_instance_;
+class C2S_LoadInventory;
+struct C2S_LoadInventoryDefaultTypeInternal;
+extern C2S_LoadInventoryDefaultTypeInternal _C2S_LoadInventory_default_instance_;
 class C2S_MovementCharacter;
 struct C2S_MovementCharacterDefaultTypeInternal;
 extern C2S_MovementCharacterDefaultTypeInternal _C2S_MovementCharacter_default_instance_;
@@ -87,6 +90,9 @@ extern S2C_InsertInventoryDefaultTypeInternal _S2C_InsertInventory_default_insta
 class S2C_LeaveGameServer;
 struct S2C_LeaveGameServerDefaultTypeInternal;
 extern S2C_LeaveGameServerDefaultTypeInternal _S2C_LeaveGameServer_default_instance_;
+class S2C_LoadInventory;
+struct S2C_LoadInventoryDefaultTypeInternal;
+extern S2C_LoadInventoryDefaultTypeInternal _S2C_LoadInventory_default_instance_;
 class S2C_MovementCharacter;
 struct S2C_MovementCharacterDefaultTypeInternal;
 extern S2C_MovementCharacterDefaultTypeInternal _S2C_MovementCharacter_default_instance_;
@@ -102,6 +108,7 @@ template<> ::Protocol::C2S_DeleteInventory* Arena::CreateMaybeMessage<::Protocol
 template<> ::Protocol::C2S_EnterGameServer* Arena::CreateMaybeMessage<::Protocol::C2S_EnterGameServer>(Arena*);
 template<> ::Protocol::C2S_InsertInventory* Arena::CreateMaybeMessage<::Protocol::C2S_InsertInventory>(Arena*);
 template<> ::Protocol::C2S_LeaveGameServer* Arena::CreateMaybeMessage<::Protocol::C2S_LeaveGameServer>(Arena*);
+template<> ::Protocol::C2S_LoadInventory* Arena::CreateMaybeMessage<::Protocol::C2S_LoadInventory>(Arena*);
 template<> ::Protocol::C2S_MovementCharacter* Arena::CreateMaybeMessage<::Protocol::C2S_MovementCharacter>(Arena*);
 template<> ::Protocol::C2S_UpdateInventory* Arena::CreateMaybeMessage<::Protocol::C2S_UpdateInventory>(Arena*);
 template<> ::Protocol::S2C_AppearCharacter* Arena::CreateMaybeMessage<::Protocol::S2C_AppearCharacter>(Arena*);
@@ -110,6 +117,7 @@ template<> ::Protocol::S2C_DisAppearCharacter* Arena::CreateMaybeMessage<::Proto
 template<> ::Protocol::S2C_EnterGameServer* Arena::CreateMaybeMessage<::Protocol::S2C_EnterGameServer>(Arena*);
 template<> ::Protocol::S2C_InsertInventory* Arena::CreateMaybeMessage<::Protocol::S2C_InsertInventory>(Arena*);
 template<> ::Protocol::S2C_LeaveGameServer* Arena::CreateMaybeMessage<::Protocol::S2C_LeaveGameServer>(Arena*);
+template<> ::Protocol::S2C_LoadInventory* Arena::CreateMaybeMessage<::Protocol::S2C_LoadInventory>(Arena*);
 template<> ::Protocol::S2C_MovementCharacter* Arena::CreateMaybeMessage<::Protocol::S2C_MovementCharacter>(Arena*);
 template<> ::Protocol::S2C_RollbackInventory* Arena::CreateMaybeMessage<::Protocol::S2C_RollbackInventory>(Arena*);
 template<> ::Protocol::S2C_UpdateInventory* Arena::CreateMaybeMessage<::Protocol::S2C_UpdateInventory>(Arena*);
@@ -1419,6 +1427,322 @@ class S2C_MovementCharacter final :
 };
 // -------------------------------------------------------------------
 
+class C2S_LoadInventory final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.C2S_LoadInventory) */ {
+ public:
+  inline C2S_LoadInventory() : C2S_LoadInventory(nullptr) {}
+  ~C2S_LoadInventory() override;
+  explicit PROTOBUF_CONSTEXPR C2S_LoadInventory(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  C2S_LoadInventory(const C2S_LoadInventory& from);
+  C2S_LoadInventory(C2S_LoadInventory&& from) noexcept
+    : C2S_LoadInventory() {
+    *this = ::std::move(from);
+  }
+
+  inline C2S_LoadInventory& operator=(const C2S_LoadInventory& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline C2S_LoadInventory& operator=(C2S_LoadInventory&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const C2S_LoadInventory& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const C2S_LoadInventory* internal_default_instance() {
+    return reinterpret_cast<const C2S_LoadInventory*>(
+               &_C2S_LoadInventory_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    8;
+
+  friend void swap(C2S_LoadInventory& a, C2S_LoadInventory& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(C2S_LoadInventory* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(C2S_LoadInventory* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  C2S_LoadInventory* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<C2S_LoadInventory>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const C2S_LoadInventory& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const C2S_LoadInventory& from) {
+    C2S_LoadInventory::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(C2S_LoadInventory* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.C2S_LoadInventory";
+  }
+  protected:
+  explicit C2S_LoadInventory(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTimestampFieldNumber = 1,
+  };
+  // int64 timestamp = 1;
+  void clear_timestamp();
+  int64_t timestamp() const;
+  void set_timestamp(int64_t value);
+  private:
+  int64_t _internal_timestamp() const;
+  void _internal_set_timestamp(int64_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.C2S_LoadInventory)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    int64_t timestamp_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_GamePacket_2eproto;
+};
+// -------------------------------------------------------------------
+
+class S2C_LoadInventory final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S2C_LoadInventory) */ {
+ public:
+  inline S2C_LoadInventory() : S2C_LoadInventory(nullptr) {}
+  ~S2C_LoadInventory() override;
+  explicit PROTOBUF_CONSTEXPR S2C_LoadInventory(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  S2C_LoadInventory(const S2C_LoadInventory& from);
+  S2C_LoadInventory(S2C_LoadInventory&& from) noexcept
+    : S2C_LoadInventory() {
+    *this = ::std::move(from);
+  }
+
+  inline S2C_LoadInventory& operator=(const S2C_LoadInventory& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline S2C_LoadInventory& operator=(S2C_LoadInventory&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const S2C_LoadInventory& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const S2C_LoadInventory* internal_default_instance() {
+    return reinterpret_cast<const S2C_LoadInventory*>(
+               &_S2C_LoadInventory_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    9;
+
+  friend void swap(S2C_LoadInventory& a, S2C_LoadInventory& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(S2C_LoadInventory* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(S2C_LoadInventory* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  S2C_LoadInventory* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<S2C_LoadInventory>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const S2C_LoadInventory& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const S2C_LoadInventory& from) {
+    S2C_LoadInventory::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(S2C_LoadInventory* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.S2C_LoadInventory";
+  }
+  protected:
+  explicit S2C_LoadInventory(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kItemFieldNumber = 1,
+    kErrorFieldNumber = 2,
+  };
+  // repeated .Protocol.SItem item = 1;
+  int item_size() const;
+  private:
+  int _internal_item_size() const;
+  public:
+  void clear_item();
+  ::Protocol::SItem* mutable_item(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem >*
+      mutable_item();
+  private:
+  const ::Protocol::SItem& _internal_item(int index) const;
+  ::Protocol::SItem* _internal_add_item();
+  public:
+  const ::Protocol::SItem& item(int index) const;
+  ::Protocol::SItem* add_item();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem >&
+      item() const;
+
+  // int32 error = 2;
+  void clear_error();
+  int32_t error() const;
+  void set_error(int32_t value);
+  private:
+  int32_t _internal_error() const;
+  void _internal_set_error(int32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:Protocol.S2C_LoadInventory)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem > item_;
+    int32_t error_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_GamePacket_2eproto;
+};
+// -------------------------------------------------------------------
+
 class C2S_InsertInventory final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.C2S_InsertInventory) */ {
  public:
@@ -1467,7 +1791,7 @@ class C2S_InsertInventory final :
                &_C2S_InsertInventory_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    10;
 
   friend void swap(C2S_InsertInventory& a, C2S_InsertInventory& b) {
     a.Swap(&b);
@@ -1635,7 +1959,7 @@ class S2C_InsertInventory final :
                &_S2C_InsertInventory_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    11;
 
   friend void swap(S2C_InsertInventory& a, S2C_InsertInventory& b) {
     a.Swap(&b);
@@ -1814,7 +2138,7 @@ class C2S_UpdateInventory final :
                &_C2S_UpdateInventory_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    12;
 
   friend void swap(C2S_UpdateInventory& a, C2S_UpdateInventory& b) {
     a.Swap(&b);
@@ -1982,7 +2306,7 @@ class S2C_UpdateInventory final :
                &_S2C_UpdateInventory_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    13;
 
   friend void swap(S2C_UpdateInventory& a, S2C_UpdateInventory& b) {
     a.Swap(&b);
@@ -2130,7 +2454,7 @@ class C2S_DeleteInventory final :
                &_C2S_DeleteInventory_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    14;
 
   friend void swap(C2S_DeleteInventory& a, C2S_DeleteInventory& b) {
     a.Swap(&b);
@@ -2298,7 +2622,7 @@ class S2C_DeleteInventory final :
                &_S2C_DeleteInventory_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    13;
+    15;
 
   friend void swap(S2C_DeleteInventory& a, S2C_DeleteInventory& b) {
     a.Swap(&b);
@@ -2477,7 +2801,7 @@ class S2C_RollbackInventory final :
                &_S2C_RollbackInventory_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    14;
+    16;
 
   friend void swap(S2C_RollbackInventory& a, S2C_RollbackInventory& b) {
     a.Swap(&b);
@@ -3356,6 +3680,91 @@ inline void S2C_MovementCharacter::set_allocated_transform(::Protocol::STransfor
 
 // -------------------------------------------------------------------
 
+// C2S_LoadInventory
+
+// int64 timestamp = 1;
+inline void C2S_LoadInventory::clear_timestamp() {
+  _impl_.timestamp_ = int64_t{0};
+}
+inline int64_t C2S_LoadInventory::_internal_timestamp() const {
+  return _impl_.timestamp_;
+}
+inline int64_t C2S_LoadInventory::timestamp() const {
+  // @@protoc_insertion_point(field_get:Protocol.C2S_LoadInventory.timestamp)
+  return _internal_timestamp();
+}
+inline void C2S_LoadInventory::_internal_set_timestamp(int64_t value) {
+  
+  _impl_.timestamp_ = value;
+}
+inline void C2S_LoadInventory::set_timestamp(int64_t value) {
+  _internal_set_timestamp(value);
+  // @@protoc_insertion_point(field_set:Protocol.C2S_LoadInventory.timestamp)
+}
+
+// -------------------------------------------------------------------
+
+// S2C_LoadInventory
+
+// repeated .Protocol.SItem item = 1;
+inline int S2C_LoadInventory::_internal_item_size() const {
+  return _impl_.item_.size();
+}
+inline int S2C_LoadInventory::item_size() const {
+  return _internal_item_size();
+}
+inline ::Protocol::SItem* S2C_LoadInventory::mutable_item(int index) {
+  // @@protoc_insertion_point(field_mutable:Protocol.S2C_LoadInventory.item)
+  return _impl_.item_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem >*
+S2C_LoadInventory::mutable_item() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S2C_LoadInventory.item)
+  return &_impl_.item_;
+}
+inline const ::Protocol::SItem& S2C_LoadInventory::_internal_item(int index) const {
+  return _impl_.item_.Get(index);
+}
+inline const ::Protocol::SItem& S2C_LoadInventory::item(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S2C_LoadInventory.item)
+  return _internal_item(index);
+}
+inline ::Protocol::SItem* S2C_LoadInventory::_internal_add_item() {
+  return _impl_.item_.Add();
+}
+inline ::Protocol::SItem* S2C_LoadInventory::add_item() {
+  ::Protocol::SItem* _add = _internal_add_item();
+  // @@protoc_insertion_point(field_add:Protocol.S2C_LoadInventory.item)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem >&
+S2C_LoadInventory::item() const {
+  // @@protoc_insertion_point(field_list:Protocol.S2C_LoadInventory.item)
+  return _impl_.item_;
+}
+
+// int32 error = 2;
+inline void S2C_LoadInventory::clear_error() {
+  _impl_.error_ = 0;
+}
+inline int32_t S2C_LoadInventory::_internal_error() const {
+  return _impl_.error_;
+}
+inline int32_t S2C_LoadInventory::error() const {
+  // @@protoc_insertion_point(field_get:Protocol.S2C_LoadInventory.error)
+  return _internal_error();
+}
+inline void S2C_LoadInventory::_internal_set_error(int32_t value) {
+  
+  _impl_.error_ = value;
+}
+inline void S2C_LoadInventory::set_error(int32_t value) {
+  _internal_set_error(value);
+  // @@protoc_insertion_point(field_set:Protocol.S2C_LoadInventory.error)
+}
+
+// -------------------------------------------------------------------
+
 // C2S_InsertInventory
 
 // int64 timestamp = 1;
@@ -4075,6 +4484,10 @@ inline void S2C_RollbackInventory::set_allocated_item(::Protocol::SItem* item) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
