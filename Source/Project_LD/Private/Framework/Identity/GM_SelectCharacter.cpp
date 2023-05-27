@@ -61,7 +61,6 @@ void AGM_SelectCharacter::BeginNetwork()
 	if (networkController)
 	{
 		Protocol::C2S_LoadCharacters loadCharactersPacket;
-		loadCharactersPacket.set_server_id(1);
 		SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, loadCharactersPacket);
 		networkController->Send(pakcetBuffer);
 	}

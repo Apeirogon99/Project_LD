@@ -218,7 +218,17 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 
 bool Handle_S2C_LoadServer(ANetworkController* controller, Protocol::S2C_LoadServer& pkt)
 {
-	return false;
+	return true;
+}
+
+bool Handle_S2C_SelectServer(ANetworkController* controller, Protocol::S2C_SelectServer& pkt)
+{
+	return true;
+}
+
+bool Handle_S2C_StartGame(ANetworkController* controller, Protocol::S2C_StartGame& pkt)
+{
+	return true;
 }
 
 bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_LoadCharacters& pkt)

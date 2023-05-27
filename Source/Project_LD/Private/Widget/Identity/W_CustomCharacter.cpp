@@ -127,7 +127,6 @@ void UW_CustomCharacter::Click_Create()
 			FString fName = UNetworkUtils::ConvertFString(name);
 
 			Protocol::SCharacterData* characterData = createCharacterPacket.mutable_character_data();
-			createCharacterPacket.set_remote_id(1);
 			createCharacterPacket.set_server_id(1);
 
 			if (mCurrentDummyCharacter)

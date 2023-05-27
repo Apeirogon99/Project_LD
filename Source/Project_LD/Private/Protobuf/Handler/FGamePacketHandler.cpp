@@ -170,7 +170,7 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
         return false;
     }
 
-    const int64 remoteID = pkt.remoteid();
+    const int64 remoteID = pkt.remote_id();
     AController* remoteController = gameState->FindPlayerController(remoteID);
 
     AMovementController* movementController = StaticCast<AMovementController*>(remoteController);
@@ -195,6 +195,11 @@ bool Handle_S2C_UpdateInventory(ANetworkController* controller, Protocol::S2C_Up
 }
 
 bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_DeleteInventory& pkt)
+{
+    return true;
+}
+
+bool Handle_S2C_RollbackInventory(ANetworkController* controller, Protocol::S2C_RollbackInventory& pkt)
 {
     return true;
 }
