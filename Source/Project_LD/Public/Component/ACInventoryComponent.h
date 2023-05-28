@@ -48,20 +48,20 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int Colums;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int Rows;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int mColums;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int mRows;
 	
 	FOnInventoryChanged OnInventoryChanged;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UItemObjectData*> InventoryData;
+	TArray<UItemObjectData*> mInventoryData;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<UItemObjectData*> InventoryObjectArr;
+	TArray<UItemObjectData*> mInventoryObjectArr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool IsChange;
+	bool mIsChange;
 
 public:
 	UFUNCTION(BlueprintCallable)

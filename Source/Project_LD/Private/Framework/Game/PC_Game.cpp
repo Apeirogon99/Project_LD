@@ -85,7 +85,7 @@ void APC_Game::OnPossess(APawn* InPawn)
 		return;
 	}
 
-	UUWInventory* inventory			= Cast<UUWInventory>(widget);
+	UUWInventory* inventory	= Cast<UUWInventory>(widget);
 	AC_Game* gameCharacter	= Cast<AC_Game>(InPawn);
 
 	if (inventory && gameCharacter)

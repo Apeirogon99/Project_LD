@@ -146,8 +146,8 @@ void UUWGridInventory::Init(UACInventoryComponent* InventoryComponent, float Siz
 	mTileSize = Size;
 	if (mACInventory != nullptr)
 	{
-		float SizeX = GetACInventory()->Colums * GetTileSize();
-		float SizeY = GetACInventory()->Rows * GetTileSize();
+		float SizeX = GetACInventory()->mColums * GetTileSize();
+		float SizeY = GetACInventory()->mRows * GetTileSize();
 
 		UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(GridBorder->Slot);
 		CanvasSlot->SetSize(FVector2D(SizeX, SizeY));
@@ -161,22 +161,22 @@ void UUWGridInventory::Init(UACInventoryComponent* InventoryComponent, float Siz
 void UUWGridInventory::CreateLineSegments()
 {
 	//Vertical
-	for (int Index = 0; Index < GetACInventory()->Colums + 1; Index++)
+	for (int Index = 0; Index < GetACInventory()->mColums + 1; Index++)
 	{
 		float X_Local = Index * mTileSize;
 		FLine makeLine;
 		makeLine.Start = FVector2D(X_Local, 0.0f);
-		makeLine.End = FVector2D(X_Local, GetACInventory()->Rows * mTileSize);
+		makeLine.End = FVector2D(X_Local, GetACInventory()->mRows * mTileSize);
 		
 		LineArr.Add(makeLine);
 	}
 	//Horizantal
-	for (int Index = 0; Index < GetACInventory()->Rows + 1; Index++)
+	for (int Index = 0; Index < GetACInventory()->mRows + 1; Index++)
 	{
 		float Y_Local = Index * mTileSize;
 		FLine makeLine;
 		makeLine.Start = FVector2D(0.0f, Y_Local);
-		makeLine.End = FVector2D(GetACInventory()->Colums * mTileSize, Y_Local);
+		makeLine.End = FVector2D(GetACInventory()->mColums * mTileSize, Y_Local);
 
 		LineArr.Add(makeLine);
 	}	
