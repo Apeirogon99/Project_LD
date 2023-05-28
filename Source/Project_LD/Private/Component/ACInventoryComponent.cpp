@@ -3,7 +3,7 @@
 
 #include "Component/ACInventoryComponent.h"
 
-
+/*
 // Sets default values for this component's properties
 UACInventoryComponent::UACInventoryComponent()
 {
@@ -223,3 +223,4 @@ bool UACInventoryComponent::GetItemAtIndex(int index, UItemObjectData*& ItemObje
 	}
 	return false;
 }
+*/

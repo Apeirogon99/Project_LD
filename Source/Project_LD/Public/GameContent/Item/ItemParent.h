@@ -19,6 +19,9 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
+	class USceneComponent* mSceneComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
 	class USkeletalMeshComponent* mSkeletalMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
@@ -42,7 +45,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 public:
-	virtual void PickUpItem() override;
+	virtual void PickUpItem(AC_Game* Player) override;
 	void Init(int32 Code, int32 GameObjectId);
 
 private:

@@ -3,37 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include <Struct/Game/GameDatas.h>
 #include "Components/ActorComponent.h"
 #include "ACInventoryComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnInventoryChanged);
-
-USTRUCT(BlueprintType)
-struct PROJECT_LD_API FLine
-{
-	GENERATED_USTRUCT_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Line") FVector2D Start;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Line") FVector2D End;
-};
-
-USTRUCT(BlueprintType)
-struct PROJECT_LD_API FTile
-{
-	GENERATED_USTRUCT_BODY()
-
-	FTile() : X(0), Y(0) {}
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile") int32 X;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile") int32 Y;
-};
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_LD_API UACInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	
+	/*
 public:	
 	// Sets default values for this component's properties
 	UACInventoryComponent();
@@ -79,5 +57,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<UItemObjectData*>							GetAllItems();
 	UFUNCTION(BlueprintCallable)
-	bool																	GetItemAtIndex(int index, UItemObjectData*& ItemObject);
+	bool																	GetItemAtIndex(int index, UItemObjectData*& ItemObject);*/
 };

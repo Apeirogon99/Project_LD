@@ -9,7 +9,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Border.h"
 #include "Components/CanvasPanel.h"
-#include <Component/ACInventoryComponent.h>
+#include <Game/PS_Game.h>
 
 #include "Kismet/GameplayStatics.h"
 
@@ -37,7 +37,10 @@ void UUWGridInventory::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	mACInventory->OnInventoryChanged.Clear();
+	if (mPlayerState->OnInventoryChanged.IsBound())
+	{
+		mPlayerState->OnInventoryChanged.Unbind();
+	}
 }
 
 FReply UUWGridInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
@@ -85,12 +88,13 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 		FTile tile;
 		tile.X = mDraggedItemTopLeftTile.X;
 		tile.Y = mDraggedItemTopLeftTile.Y;
-		mACInventory->AddItemAt(Data, mACInventory->TileToIndex(tile));
+		//mACInventory->AddItemAt(Data, mACInventory->TileToIndex(tile));
+		mPlayerState->AddItemAt(Data, mPlayerState->TileToIndex(tile));
 	}
 	else
 	{
 		GetPayload(InOperation, Data);
-		if (!mACInventory->TryAddItem(Data))
+		if (!mPlayerState->TryAddItem(Data))
 		{
 			//Spawn Item
 		}
@@ -140,43 +144,44 @@ void UUWGridInventory::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, 
 	mDrawDropLocation = false;
 }
 
-void UUWGridInventory::Init(UACInventoryComponent* InventoryComponent, float Size)
+void UUWGridInventory::Init(APS_Game* PlayerState, float Size)
 {
-	mACInventory = InventoryComponent;
 	mTileSize = Size;
-	if (mACInventory != nullptr)
+	mPlayerState = PlayerState;
+
+	if (mPlayerState != nullptr)
 	{
-		float SizeX = GetACInventory()->mColums * GetTileSize();
-		float SizeY = GetACInventory()->mRows * GetTileSize();
+		float SizeX = mPlayerState->mColums * GetTileSize();
+		float SizeY = mPlayerState->mRows * GetTileSize();
 
 		UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(GridBorder->Slot);
 		CanvasSlot->SetSize(FVector2D(SizeX, SizeY));
 
 		CreateLineSegments();
 		Refresh();
-		mACInventory->OnInventoryChanged.AddUFunction(this, FName("Refresh"));
+		mPlayerState->OnInventoryChanged.BindUFunction(this, FName("Refresh"));
 	}
 }
 
 void UUWGridInventory::CreateLineSegments()
 {
 	//Vertical
-	for (int Index = 0; Index < GetACInventory()->mColums + 1; Index++)
+	for (int Index = 0; Index < mPlayerState->mColums + 1; Index++)
 	{
 		float X_Local = Index * mTileSize;
 		FLine makeLine;
 		makeLine.Start = FVector2D(X_Local, 0.0f);
-		makeLine.End = FVector2D(X_Local, GetACInventory()->mRows * mTileSize);
+		makeLine.End = FVector2D(X_Local, mPlayerState->mRows * mTileSize);
 		
 		LineArr.Add(makeLine);
 	}
 	//Horizantal
-	for (int Index = 0; Index < GetACInventory()->mRows + 1; Index++)
+	for (int Index = 0; Index < mPlayerState->mRows + 1; Index++)
 	{
 		float Y_Local = Index * mTileSize;
 		FLine makeLine;
 		makeLine.Start = FVector2D(0.0f, Y_Local);
-		makeLine.End = FVector2D(GetACInventory()->mColums * mTileSize, Y_Local);
+		makeLine.End = FVector2D(mPlayerState->mColums * mTileSize, Y_Local);
 
 		LineArr.Add(makeLine);
 	}	
@@ -184,14 +189,14 @@ void UUWGridInventory::CreateLineSegments()
 
 void UUWGridInventory::CallRemoved_Single(UItemObjectData*& ItemData)
 {
-	mACInventory->RemoveItem(ItemData);
+	mPlayerState->RemoveItem(ItemData);
 }
 
 void UUWGridInventory::Refresh()
 {
 	GridCanvas_Panel->ClearChildren();
 
-	TArray<UItemObjectData*> AllItem = GetACInventory()->GetAllItems();
+	TArray<UItemObjectData*> AllItem = mPlayerState->GetAllItems();
 	for (UItemObjectData*& Data : AllItem)
 	{
 		if (IsValid(mImageAsset))
@@ -234,7 +239,7 @@ bool UUWGridInventory::IsRoomAvailableForPayload(UItemObjectData* Payload) const
 		FTile tile;
 		tile.X = mDraggedItemTopLeftTile.X;
 		tile.Y = mDraggedItemTopLeftTile.Y;
-		return mACInventory->IsRoomAvailable(Payload, mACInventory->TileToIndex(tile));
+		return mPlayerState->IsRoomAvailable(Payload, mPlayerState->TileToIndex(tile));
 	}
 
 	return false;

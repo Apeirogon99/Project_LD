@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include <Game/C_Game.h>
 #include "InventoryInterface.generated.h"
 
 // This class does not need to be modified.
@@ -23,5 +24,5 @@ class PROJECT_LD_API IInventoryInterface
 		// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interface")
-	virtual void PickUpItem();
+	virtual void PickUpItem(AC_Game* Player) = 0;
 };

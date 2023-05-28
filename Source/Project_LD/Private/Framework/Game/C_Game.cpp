@@ -64,7 +64,7 @@ void AC_Game::InteractItem()
 			AItemParent* Item = Cast<AItemParent>(Actor);
 			if (Item != nullptr)
 			{
-				Item->PickUpItem();
+				Item->PickUpItem(this);
 			}
 		}
 	}

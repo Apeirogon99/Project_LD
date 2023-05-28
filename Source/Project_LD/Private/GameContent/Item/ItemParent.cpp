@@ -6,14 +6,19 @@
 #include "Framework/Game/C_Game.h"
 #include "Kismet/GameplayStatics.h"
 
+#include <Game/PS_Game.h>
+
 // Sets default values
 AItemParent::AItemParent()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	mSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+	RootComponent = mSceneComponent;
+
 	mSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
-	RootComponent = mSkeletalMeshComponent;
+	mSkeletalMeshComponent->SetupAttachment(RootComponent);
 
 	//Sphere Collision
 	mSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
@@ -33,15 +38,24 @@ void AItemParent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AItemParent::PickUpItem()
+void AItemParent::PickUpItem(AC_Game* Player)
 {
-	AActor* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
-	if (PlayerPawn != nullptr)
+	AC_Game* Character = Player;
+
+	if (Character == nullptr)
 	{
-		if (Cast<AC_Game>(PlayerPawn)->mInventoryComponent->TryAddItem(mItemObjectData))
-		{
-			Destroy();
-		}
+		return;
+	}
+
+	APS_Game* PlayerState = Character->GetPlayerState<APS_Game>();
+	if (PlayerState == nullptr)
+	{
+		return;
+	}
+
+	if (PlayerState->TryAddItem(mItemObjectData))
+	{
+		Destroy();
 	}
 }
 

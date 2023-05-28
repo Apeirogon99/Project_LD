@@ -85,12 +85,19 @@ void APC_Game::OnPossess(APawn* InPawn)
 		return;
 	}
 
+	APS_Game* playerState = GetPlayerState<APS_Game>();
+	if (playerState == nullptr)
+	{
+		return;
+	}
+
 	UUWInventory* inventory	= Cast<UUWInventory>(widget);
 	AC_Game* gameCharacter	= Cast<AC_Game>(InPawn);
 
 	if (inventory && gameCharacter)
 	{
-		inventory->InitInventory(gameCharacter->mInventoryComponent, 50.0f);
+		playerState->Init();
+		inventory->InitInventory(playerState, 50.0f);
 	}
 }
 
@@ -139,6 +146,4 @@ void APC_Game::SwitchInventory()
 		clientHUD->ShowWidgetFromName(FString(TEXT("Inventory")));
 		SwitchUIMode();
 	}
-	
-	
 }

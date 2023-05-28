@@ -5,7 +5,7 @@
 #include "Blueprint/WidgetTree.h"
 #include "Blueprint/DragDropOperation.h"
 
-#include "Component/ACInventoryComponent.h"
+#include <Game/PS_Game.h>
 #include "Components/Border.h"
 #include "Components/BackgroundBlur.h"
 
@@ -43,24 +43,23 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
 	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
 
-	AActor* Owner = mACInventory->GetOwner();
 	//아이템 소환
 	 
 	return false;
 }
 
-void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, float size)
+void UUWInventory::InitInventory(APS_Game* PlayerState, float TileSize)
 {
-	mACInventory = InventoryComponent;
-	this->mTileSize = size;
+	mTileSize = TileSize;
+	mPlayerState = PlayerState;
 
 	GridInventory = this->WidgetTree->FindWidget(FName(TEXT("BW_GridInventory")));
 	if (GridInventory != nullptr)
 	{
-		if (IsValid(mACInventory))
+		if (IsValid(mPlayerState))
 		{
 			UUWGridInventory* GridInven = Cast<UUWGridInventory>(GridInventory);
-			GridInven->Init(mACInventory, size);
+			GridInven->Init(mPlayerState, mTileSize);
 		}
 	}
 }
