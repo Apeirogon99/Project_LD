@@ -23,16 +23,16 @@ void UUWItem::NativeConstruct()
 
 	bIsFocusable = true;
 
-	IsEnter = false;
+	mIsEnter = false;
 
-	ItemImage->SetBrushFromTexture(ItemObjectData->ItemData.icon);
+	ItemImage->SetBrushFromTexture(mItemObjectData->ItemData.icon);
 }
 
 void UUWItem::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	ItemObjectData = NewObject<UItemObjectData>();
+	mItemObjectData = NewObject<UItemObjectData>();
 
 	FTimerHandle InitTimer;
 	GetWorld()->GetTimerManager().SetTimer(InitTimer, this, &UUWItem::Refresh, 0.001f, false);
@@ -66,13 +66,13 @@ void UUWItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 	UDragDropOperation* DragDropOperation = UWidgetBlueprintLibrary::CreateDragDropOperation(UDragDropOperation::StaticClass());
 	this->SetVisibility(ESlateVisibility::HitTestInvisible);
 
-	DragDropOperation->Payload = ItemObjectData;
+	DragDropOperation->Payload = mItemObjectData;
 	DragDropOperation->DefaultDragVisual = this;
 	DragDropOperation->Pivot = EDragPivot::CenterCenter;
 
 	if (OnRemoved.IsBound() == true)
 	{
-		OnRemoved.Broadcast(ItemObjectData);
+		OnRemoved.Broadcast(mItemObjectData);
 	}
 	RemoveFromParent();
 	
@@ -88,7 +88,7 @@ FReply UUWItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPoin
 	{
 		Reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent,this,EKeys::LeftMouseButton);
 	}
-	IsEnter = true;
+	mIsEnter = true;
 	return Reply.NativeReply;
 }
 
@@ -96,13 +96,13 @@ FReply UUWItem::NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointe
 {
 	Super::NativeOnMouseButtonUp(InGeometry, InMouseEvent);
 
-	IsEnter = false;
+	mIsEnter = false;
 	return FReply::Handled();
 }
 
 void UUWItem::Refresh()
 {
-	if (ItemObjectData->rotation)
+	if (mItemObjectData->rotation)
 	{
 		ItemImage->SetRenderTransformAngle(90.0f);
 	}
@@ -111,17 +111,17 @@ void UUWItem::Refresh()
 		ItemImage->SetRenderTransformAngle(0.0f);
 	}
 
-	Size.X = ItemObjectData->GetSize().X * TileSize;
-	Size.Y = ItemObjectData->GetSize().Y * TileSize;
+	mSize.X = mItemObjectData->GetSize().X * mTileSize;
+	mSize.Y = mItemObjectData->GetSize().Y * mTileSize;
 	
-	BackgroundSizeBox->SetWidthOverride(Size.X);
-	BackgroundSizeBox->SetHeightOverride(Size.Y);
+	BackgroundSizeBox->SetWidthOverride(mSize.X);
+	BackgroundSizeBox->SetHeightOverride(mSize.Y);
 
 	UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(ItemImage->Slot);
-	CanvasSlot->SetSize(Size);
+	CanvasSlot->SetSize(mSize);
 }
 
 void UUWItem::Rotate()
 {
-	ItemObjectData->Rotate();
+	mItemObjectData->Rotate();
 }

@@ -44,16 +44,16 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	float TileSize;
+	float mTileSize;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	UItemObjectData* ItemObjectData;
+	UItemObjectData* mItemObjectData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	FVector2D Size;
+	FVector2D mSize;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	bool IsEnter;
+	bool mIsEnter;
 
 	FOnRemoved OnRemoved;
 

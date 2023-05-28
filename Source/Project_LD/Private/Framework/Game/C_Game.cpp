@@ -22,20 +22,20 @@ AC_Game::AC_Game()
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->SetUsingAbsoluteRotation(true);
-	CameraBoom->TargetArmLength = 1600.f;
-	CameraBoom->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
-	CameraBoom->bDoCollisionTest = false;
+	mCameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	mCameraBoom->SetupAttachment(RootComponent);
+	mCameraBoom->SetUsingAbsoluteRotation(true);
+	mCameraBoom->TargetArmLength = 1600.f;
+	mCameraBoom->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
+	mCameraBoom->bDoCollisionTest = false;
 
-	GameCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
-	GameCameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	GameCameraComponent->bUsePawnControlRotation = false;
+	mGameCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
+	mGameCameraComponent->SetupAttachment(mCameraBoom, USpringArmComponent::SocketName);
+	mGameCameraComponent->bUsePawnControlRotation = false;
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("PlayerCharacter"));
 
-	InventoryComponent = CreateDefaultSubobject<UACInventoryComponent>(TEXT("InventoryComponent"));
+	mInventoryComponent = CreateDefaultSubobject<UACInventoryComponent>(TEXT("InventoryComponent"));
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;

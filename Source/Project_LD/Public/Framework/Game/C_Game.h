@@ -24,15 +24,15 @@ public:
 protected:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* GameCameraComponent;
+	class UCameraComponent* mGameCameraComponent;
 
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+	class USpringArmComponent* mCameraBoom;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (AllowPrivateAccess = "true"))
-	UACInventoryComponent* InventoryComponent;
+	UACInventoryComponent* mInventoryComponent;
 
 public:
 	UFUNCTION()

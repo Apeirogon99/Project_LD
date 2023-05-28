@@ -90,7 +90,7 @@ void APC_Game::OnPossess(APawn* InPawn)
 
 	if (inventory && gameCharacter)
 	{
-		inventory->InitInventory(gameCharacter->InventoryComponent, 50.0f);
+		inventory->InitInventory(gameCharacter->mInventoryComponent, 50.0f);
 	}
 }
 

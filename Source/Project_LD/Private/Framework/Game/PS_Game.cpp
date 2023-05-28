@@ -8,17 +8,17 @@ APS_Game::APS_Game()
 	/**Character Status Setting**/
 
 	//Attack Range
-	AttackRange = 200.0f;	AttackRadius = 50.0f;
+	mAttackRange = 200.0f;	mAttackRadius = 50.0f;
 	//Attack Info
-	IsAttacking = false;
+	mIsAttacking = false;
 	//Health
-	MaxHealth = 100.0f;	CurrentHealth = 100.0f;
+	mMaxHealth = 100.0f;	mCurrentHealth = 100.0f;
 	//Mana
-	MaxMana = 100.0f;		CurrentMana = 100.0f;
+	mMaxMana = 100.0f;		mCurrentMana = 100.0f;
 	//Character Level
-	CharacterLevel = 1;
+	mCharacterLevel = 1;
 
-	IsAttacking = false;
+	mIsAttacking = false;
 }
 
 APS_Game::~APS_Game()

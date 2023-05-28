@@ -12,19 +12,19 @@ AItemParent::AItemParent()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	SkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
-	RootComponent = SkeletalMeshComponent;
+	mSkeletalMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
+	RootComponent = mSkeletalMeshComponent;
 
 	//Sphere Collision
-	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
-	Sphere->InitSphereRadius(50.0f);
-	Sphere->SetupAttachment(RootComponent);
-	Sphere->SetCollisionProfileName(TEXT("OverlapAll"));
+	mSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
+	mSphere->InitSphereRadius(50.0f);
+	mSphere->SetupAttachment(RootComponent);
+	mSphere->SetCollisionProfileName(TEXT("OverlapAll"));
 
 	mItemCode = -1;
 	mGameObjectId = -1;
 
-	Icon = nullptr;
+	mIcon = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -38,7 +38,7 @@ void AItemParent::PickUpItem()
 	AActor* PlayerPawn = GetWorld()->GetFirstPlayerController()->GetPawn();
 	if (PlayerPawn != nullptr)
 	{
-		if (Cast<AC_Game>(PlayerPawn)->InventoryComponent->TryAddItem(ItemObjectData))
+		if (Cast<AC_Game>(PlayerPawn)->mInventoryComponent->TryAddItem(mItemObjectData))
 		{
 			Destroy();
 		}
@@ -50,12 +50,12 @@ void AItemParent::Init(int32 Code, int32 GameObjectId)
 	mItemCode = Code;
 	mGameObjectId = GameObjectId;
 
-	ItemObjectData = NewObject<UItemObjectData>();
+	mItemObjectData = NewObject<UItemObjectData>();
 
 	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	FItemData* ItemTable = Instance->GetItemData(mItemCode);
 
-	ItemObjectData->ItemData = *ItemTable;
+	mItemObjectData->ItemData = *ItemTable;
 	ItemObjectDataInit();
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, GetActorLocation(), FRotator::ZeroRotator, true);
 }
@@ -63,6 +63,6 @@ void AItemParent::Init(int32 Code, int32 GameObjectId)
 void AItemParent::ItemObjectDataInit()
 {
 	//Mesh
-	SkeletalMeshComponent->SetSkeletalMesh(ItemObjectData->ItemData.mesh);
-	Icon = ItemObjectData->ItemData.icon;
+	mSkeletalMeshComponent->SetSkeletalMesh(mItemObjectData->ItemData.mesh);
+	mIcon = mItemObjectData->ItemData.icon;
 }

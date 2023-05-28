@@ -19,22 +19,22 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	class USkeletalMeshComponent* SkeletalMeshComponent;
+	class USkeletalMeshComponent* mSkeletalMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	class USphereComponent* Sphere;
+	class USphereComponent* mSphere;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	class UItemObjectData* ItemObjectData;
+	UItemObjectData* mItemObjectData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Image")
-	UTexture2D* Icon;
+	UTexture2D* mIcon;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	UParticleSystem* mMouseCursorParticle;
 
 private:
-	UDataTable* DataTable;
+	UDataTable* mDataTable;
 	int32 mItemCode;
 	int32 mGameObjectId;
 

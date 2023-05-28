@@ -20,28 +20,28 @@ public:
 
 public:
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Attack", meta = (AllowPrivateAccess = "true"))
-	float AttackRange;
+	float mAttackRange;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Attack", meta = (AllowPrivateAccess = "true"))
-	float AttackRadius;
+	float mAttackRadius;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Health", meta = (AllowPrivateAccess = "true"))
-	float MaxHealth;
+	float mMaxHealth;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Health", meta = (AllowPrivateAccess = "true"))
-	float CurrentHealth;
+	float mCurrentHealth;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Mana", meta = (AllowPrivateAccess = "true"))
-	float MaxMana;
+	float mMaxMana;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Mana", meta = (AllowPrivateAccess = "true"))
-	float CurrentMana;
+	float mCurrentMana;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Level", meta = (AllowPrivateAccess = "true"))
-	int32 CharacterLevel;
+	int32 mCharacterLevel;
 
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "PlayerState | Condition", meta = (AllowPrivateAccess = "true"))
-	bool IsAttacking;
+	bool mIsAttacking;
 
 public:
 	void Init(const int64 inRemoteID);

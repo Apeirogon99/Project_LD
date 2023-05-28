@@ -21,7 +21,7 @@ void UUWGridInventory::NativeConstruct()
 	TSubclassOf<UUWItem> ImageWidgetAsset = StaticLoadClass(UUWItem::StaticClass(), NULL, TEXT("WidgetBlueprint'/Game/Blueprint/Widget/Game/Inventory/BW_Item.BW_Item_C'"));
 	if (ImageWidgetAsset)
 	{
-		ImageAsset = ImageWidgetAsset;
+		mImageAsset = ImageWidgetAsset;
 	}
 
 	GridBorder = Cast<UBorder>(GetWidgetFromName(TEXT("GridBorder")));
@@ -37,7 +37,7 @@ void UUWGridInventory::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	ACInventory->OnInventoryChanged.Clear();
+	mACInventory->OnInventoryChanged.Clear();
 }
 
 FReply UUWGridInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
@@ -83,14 +83,14 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 	{
 		GetPayload(InOperation, Data);
 		FTile tile;
-		tile.X = DraggedItemTopLeftTile.X;
-		tile.Y = DraggedItemTopLeftTile.Y;
-		ACInventory->AddItemAt(Data, ACInventory->TileToIndex(tile));
+		tile.X = mDraggedItemTopLeftTile.X;
+		tile.Y = mDraggedItemTopLeftTile.Y;
+		mACInventory->AddItemAt(Data, mACInventory->TileToIndex(tile));
 	}
 	else
 	{
 		GetPayload(InOperation, Data);
-		if (!ACInventory->TryAddItem(Data))
+		if (!mACInventory->TryAddItem(Data))
 		{
 			//Spawn Item
 		}
@@ -121,7 +121,7 @@ bool UUWGridInventory::NativeOnDragOver(const FGeometry& InGeometry, const FDrag
 	float ClampValue_Y = ItemData->GetSize().Y - DownSelect;
 	makeIntPoint.Y = FMath::Clamp(ClampValue_Y, 0.0f, ClampValue_Y);
 
-	DraggedItemTopLeftTile = FIntPoint(FMath::TruncToInt(MousePosition_Local.X / TileSize), FMath::TruncToInt(MousePosition_Local.Y / TileSize)) - (makeIntPoint / 2);
+	mDraggedItemTopLeftTile = FIntPoint(FMath::TruncToInt(MousePosition_Local.X / mTileSize), FMath::TruncToInt(MousePosition_Local.Y / mTileSize)) - (makeIntPoint / 2);
 
 	return true;
 }
@@ -130,21 +130,21 @@ void UUWGridInventory::NativeOnDragEnter(const FGeometry& InGeometry, const FDra
 {
 	Super::NativeOnDragEnter(InGeometry, InDragDropEvent, InOperation);
 
-	DrawDropLocation = true;
+	mDrawDropLocation = true;
 }
 
 void UUWGridInventory::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDragLeave(InDragDropEvent, InOperation);
 
-	DrawDropLocation = false;
+	mDrawDropLocation = false;
 }
 
 void UUWGridInventory::Init(UACInventoryComponent* InventoryComponent, float Size)
 {
-	ACInventory = InventoryComponent;
-	TileSize = Size;
-	if (ACInventory != nullptr)
+	mACInventory = InventoryComponent;
+	mTileSize = Size;
+	if (mACInventory != nullptr)
 	{
 		float SizeX = GetACInventory()->Colums * GetTileSize();
 		float SizeY = GetACInventory()->Rows * GetTileSize();
@@ -154,7 +154,7 @@ void UUWGridInventory::Init(UACInventoryComponent* InventoryComponent, float Siz
 
 		CreateLineSegments();
 		Refresh();
-		ACInventory->OnInventoryChanged.AddUFunction(this, FName("Refresh"));
+		mACInventory->OnInventoryChanged.AddUFunction(this, FName("Refresh"));
 	}
 }
 
@@ -163,20 +163,20 @@ void UUWGridInventory::CreateLineSegments()
 	//Vertical
 	for (int Index = 0; Index < GetACInventory()->Colums + 1; Index++)
 	{
-		float X_Local = Index * TileSize;
+		float X_Local = Index * mTileSize;
 		FLine makeLine;
 		makeLine.Start = FVector2D(X_Local, 0.0f);
-		makeLine.End = FVector2D(X_Local, GetACInventory()->Rows * TileSize);
+		makeLine.End = FVector2D(X_Local, GetACInventory()->Rows * mTileSize);
 		
 		LineArr.Add(makeLine);
 	}
 	//Horizantal
 	for (int Index = 0; Index < GetACInventory()->Rows + 1; Index++)
 	{
-		float Y_Local = Index * TileSize;
+		float Y_Local = Index * mTileSize;
 		FLine makeLine;
 		makeLine.Start = FVector2D(0.0f, Y_Local);
-		makeLine.End = FVector2D(GetACInventory()->Colums * TileSize, Y_Local);
+		makeLine.End = FVector2D(GetACInventory()->Colums * mTileSize, Y_Local);
 
 		LineArr.Add(makeLine);
 	}	
@@ -184,7 +184,7 @@ void UUWGridInventory::CreateLineSegments()
 
 void UUWGridInventory::CallRemoved_Single(UItemObjectData*& ItemData)
 {
-	ACInventory->RemoveItem(ItemData);
+	mACInventory->RemoveItem(ItemData);
 }
 
 void UUWGridInventory::Refresh()
@@ -194,21 +194,21 @@ void UUWGridInventory::Refresh()
 	TArray<UItemObjectData*> AllItem = GetACInventory()->GetAllItems();
 	for (UItemObjectData*& Data : AllItem)
 	{
-		if (IsValid(ImageAsset))
+		if (IsValid(mImageAsset))
 		{
-			UUWItem* ItemImageWidget = Cast<UUWItem>(CreateWidget(GetWorld(), ImageAsset));
+			UUWItem* ItemImageWidget = Cast<UUWItem>(CreateWidget(GetWorld(), mImageAsset));
 			if (ItemImageWidget)
 			{
-				ItemImageWidget->TileSize = TileSize;
-				ItemImageWidget->ItemObjectData = Data;
+				ItemImageWidget->mTileSize = mTileSize;
+				ItemImageWidget->mItemObjectData = Data;
 
 				//Bind Remove
 				ItemImageWidget->OnRemoved.AddUFunction(this, FName("CallRemoved_Single"));
 
 				UCanvasPanelSlot* Local_Slot = Cast<UCanvasPanelSlot>(GridCanvas_Panel->AddChild(ItemImageWidget));
 				Local_Slot->SetAutoSize(true);
-				float X = Data->position_x * TileSize;
-				float Y = Data->position_y * TileSize;
+				float X = Data->position_x * mTileSize;
+				float Y = Data->position_y * mTileSize;
 				Local_Slot->SetPosition(FVector2D(X, Y));
 			}
 		}
@@ -232,9 +232,9 @@ bool UUWGridInventory::IsRoomAvailableForPayload(UItemObjectData* Payload) const
 	if (Payload->IsValid())
 	{
 		FTile tile;
-		tile.X = DraggedItemTopLeftTile.X;
-		tile.Y = DraggedItemTopLeftTile.Y;
-		return ACInventory->IsRoomAvailable(Payload, ACInventory->TileToIndex(tile));
+		tile.X = mDraggedItemTopLeftTile.X;
+		tile.Y = mDraggedItemTopLeftTile.Y;
+		return mACInventory->IsRoomAvailable(Payload, mACInventory->TileToIndex(tile));
 	}
 
 	return false;
@@ -243,7 +243,7 @@ bool UUWGridInventory::IsRoomAvailableForPayload(UItemObjectData* Payload) const
 FMousePositionReturn UUWGridInventory::MousePositionInTile(FVector2D MousePosition)
 {
 	FMousePositionReturn Return = FMousePositionReturn();
-	Return.Right = FMath::Fmod(MousePosition.X, TileSize) > (TileSize / 2.0f);
-	Return.Down = FMath::Fmod(MousePosition.Y, TileSize) > (TileSize / 2.0f);
+	Return.Right = FMath::Fmod(MousePosition.X, mTileSize) > (mTileSize / 2.0f);
+	Return.Down = FMath::Fmod(MousePosition.Y, mTileSize) > (mTileSize / 2.0f);
 	return Return;
 }

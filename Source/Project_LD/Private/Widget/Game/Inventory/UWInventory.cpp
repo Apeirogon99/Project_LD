@@ -43,7 +43,7 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
 	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
 
-	AActor* Owner = ACInventory->GetOwner();
+	AActor* Owner = mACInventory->GetOwner();
 	//아이템 소환
 	 
 	return false;
@@ -51,16 +51,16 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 
 void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, float size)
 {
-	ACInventory = InventoryComponent;
-	this->TileSize = size;
+	mACInventory = InventoryComponent;
+	this->mTileSize = size;
 
 	GridInventory = this->WidgetTree->FindWidget(FName(TEXT("BW_GridInventory")));
 	if (GridInventory != nullptr)
 	{
-		if (IsValid(ACInventory))
+		if (IsValid(mACInventory))
 		{
 			UUWGridInventory* GridInven = Cast<UUWGridInventory>(GridInventory);
-			GridInven->Init(ACInventory, size);
+			GridInven->Init(mACInventory, size);
 		}
 	}
 }

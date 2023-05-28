@@ -39,10 +39,10 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	UACInventoryComponent* ACInventory;
+	UACInventoryComponent* mACInventory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "default")
-	float TileSize;
+	float mTileSize;
 
 public:
 	UFUNCTION()

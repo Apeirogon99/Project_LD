@@ -40,10 +40,10 @@ protected:
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetACInventory, Category = "Component")
-	UACInventoryComponent* ACInventory;
+	UACInventoryComponent* mACInventory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetTileSize, BlueprintSetter = SetTileSize, Category = "Default", meta = (AllowPrivateAccess = "true"))
-	float TileSize;
+	float mTileSize;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (AllowPrivateAccess = "true"))
 	TArray<FLine> LineArr;
@@ -55,13 +55,13 @@ public:
 	class UCanvasPanel* GridCanvas_Panel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
-	TSubclassOf<UUserWidget> ImageAsset;
+	TSubclassOf<UUserWidget> mImageAsset;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drag Drop")
-	bool DrawDropLocation;
+	bool mDrawDropLocation;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drag Drop")
-	FIntPoint DraggedItemTopLeftTile;
+	FIntPoint mDraggedItemTopLeftTile;
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -87,14 +87,14 @@ public:
 
 public:
 	UFUNCTION(BlueprintSetter)
-	void SetTileSize(float size) { this->TileSize = size; }
+	void SetTileSize(float size) { this->mTileSize = size; }
 
 	UFUNCTION(BlueprintGetter)
-	float GetTileSize() const { return TileSize; }
+	float GetTileSize() const { return mTileSize; }
 
 	UFUNCTION(BlueprintGetter)
 	TArray<FLine> GetLineArr() { return LineArr; }
 
 	UFUNCTION(BlueprintGetter)
-	UACInventoryComponent* GetACInventory() { return ACInventory; }
+	UACInventoryComponent* GetACInventory() { return mACInventory; }
 };
