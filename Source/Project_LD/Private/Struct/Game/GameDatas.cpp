@@ -51,7 +51,7 @@ void UItemObjectData::SettingObjectData(FItemData OtheritemData)
 
 void UItemObjectData::Clear()
 {
-    ItemData = FItemData();
+    ItemData.Clear();
     position_x = -1;
     position_y = -1;
     rotation = 0;

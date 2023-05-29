@@ -23,6 +23,7 @@ public:
 	~APS_Game();
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (AllowPrivateAccess = "true"))
 	UACInventoryComponent* mInventoryComponent;
 
 public:

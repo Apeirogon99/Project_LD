@@ -5,20 +5,21 @@
 #include "Component/ACInventoryComponent.h"
 #include "Framework/Game/C_Game.h"
 #include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystem.h"
 
 #include <Game/PS_Game.h>
 #include <Game/GM_Game.h>
 #include <Game/PC_Game.h>
 
+#include <UObject/ConstructorHelpers.h>
+
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FGamePacketHandler.h>
-
-#include <UObject/ConstructorHelpers.h>
 
 // Sets default values
 AItemParent::AItemParent()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	mSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
@@ -42,6 +43,32 @@ AItemParent::AItemParent()
 	if (BagMesh.Succeeded())
 	{
 		mSkeletalMeshComponent->SetSkeletalMesh(BagMesh.Object);
+	}
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleSystemNormal(TEXT("ParticleSystem'/Game/GameContent/Particle/Item/P_Status_ItemHighlight_Normal.P_Status_ItemHighlight_Normal'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleSystemRare(TEXT("ParticleSystem'/Game/GameContent/Particle/Item/P_Status_ItemHighlight_Rare.P_Status_ItemHighlight_Rare'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleSystemEpic(TEXT("ParticleSystem'/Game/GameContent/Particle/Item/P_Status_ItemHighlight_Epic.P_Status_ItemHighlight_Epic'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleSystemUnique(TEXT("ParticleSystem'/Game/GameContent/Particle/Item/P_Status_ItemHighlight_Unique.P_Status_ItemHighlight_Unique'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleSystemLeagendary(TEXT("ParticleSystem'/Game/GameContent/Particle/Item/P_Status_ItemHighlight_Leagendary.P_Status_ItemHighlight_Leagendary'"));
+	if (ParticleSystemNormal.Succeeded())
+	{
+		mPickUpParticle.Add(ParticleSystemNormal.Object);
+	}
+	if (ParticleSystemRare.Succeeded())
+	{
+		mPickUpParticle.Add(ParticleSystemRare.Object);
+	}
+	if (ParticleSystemEpic.Succeeded())
+	{
+		mPickUpParticle.Add(ParticleSystemEpic.Object);
+	}
+	if (ParticleSystemUnique.Succeeded())
+	{
+		mPickUpParticle.Add(ParticleSystemUnique.Object);
+	}
+	if (ParticleSystemLeagendary.Succeeded())
+	{
+		mPickUpParticle.Add(ParticleSystemLeagendary.Object);
 	}
 }
 
@@ -71,22 +98,16 @@ void AItemParent::PickUpItem(AC_Game* inPlayer)
 		return;
 	}
 
-	AC_Game* player = Cast<AC_Game>(controller->GetPawn());
-	if (nullptr == player)
+	APS_Game* playerstate = controller->GetPlayerState<APS_Game>();
+	if (nullptr == playerstate)
 	{
 		return;
 	}
 
-	if (player != inPlayer)
+	if (false == playerstate->mInventoryComponent->TryAddItem(mItemObjectData))
 	{
 		return;
 	}
-
-	
-	//if (false == player->mInventoryComponent->TryAddItem(mItemObjectData))
-	//{
-	//	return;
-	//}
 
 	Protocol::C2S_InsertInventory insertInventoryPacket;
 	insertInventoryPacket.set_timestamp(controller->GetServerTimeStamp());
@@ -110,6 +131,13 @@ void AItemParent::PickUpItem(AC_Game* inPlayer)
 	controller->Send(sendBuffer);
 }
 
+void AItemParent::ItemDestroy()
+{
+	//particle ¼ÒÈ¯
+
+	this->Destroy(); 
+}
+
 void AItemParent::Init(int32 Code, int32 GameObjectId)
 {
 	mItemCode = Code;
@@ -122,7 +150,8 @@ void AItemParent::Init(int32 Code, int32 GameObjectId)
 
 	mItemObjectData->ItemData = *ItemTable;
 	ItemObjectDataInit(ItemTable->category_id);
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, GetActorLocation(), FRotator::ZeroRotator, true);
+	mItemSpawnParticle = mPickUpParticle[ItemTable->tier_id - 1];
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mItemSpawnParticle, GetActorLocation(), FRotator::ZeroRotator, true);
 }
 
 void AItemParent::ItemObjectDataInit(int32 Categoryid)

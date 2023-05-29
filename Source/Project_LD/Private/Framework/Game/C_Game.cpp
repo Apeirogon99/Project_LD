@@ -35,8 +35,6 @@ AC_Game::AC_Game()
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("PlayerCharacter"));
 
-	mInventoryComponent = CreateDefaultSubobject<UACInventoryComponent>(TEXT("InventoryComponent"));
-
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 }

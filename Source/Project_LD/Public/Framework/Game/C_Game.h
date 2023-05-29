@@ -31,10 +31,6 @@ protected:
 	class USpringArmComponent* mCameraBoom;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (AllowPrivateAccess = "true"))
-	UACInventoryComponent* mInventoryComponent;
-
-public:
 	UFUNCTION()
 	void InteractItem();
 };

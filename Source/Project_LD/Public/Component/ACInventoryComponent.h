@@ -26,10 +26,6 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int mColums;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int mRows;
 	
@@ -42,10 +38,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<UItemObjectData*> mInventoryObjectArr;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool mIsChange;
-
 public:
+	void																	Refresh();
 	void																	ChangeInvenObjectArr();
 	void																	LoadItem(int64 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation);
 	void																	ClearInventory();

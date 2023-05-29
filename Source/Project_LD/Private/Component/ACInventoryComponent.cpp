@@ -10,12 +10,10 @@ UACInventoryComponent::UACInventoryComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	mColums = 6;
 	mRows = 15;
-
-	mIsChange = false;
 }
 
 
@@ -25,8 +23,8 @@ void UACInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 
 	//ItemArr resize
-	mInventoryData.SetNum(mColums * mRows + 1);
-	for (int i = 0; i < mColums * mRows + 1; i++)
+	mInventoryData.SetNum(mColums * mRows);
+	for (int i = 0; i < mColums * mRows; i++)
 	{
 		mInventoryData[i] = NewObject<UItemObjectData>();
 	}
@@ -39,29 +37,21 @@ void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	OnInventoryChanged.Unbind();
 }
 
-
-// Called every frame
-void UACInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UACInventoryComponent::Refresh()
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if (mIsChange)
+	if (OnInventoryChanged.IsBound() == true)
 	{
-		mIsChange = false;
-		if (OnInventoryChanged.IsBound() == true)
-		{
-			ChangeInvenObjectArr();
-			OnInventoryChanged.ExecuteIfBound();
-		}
+		ChangeInvenObjectArr();
+		OnInventoryChanged.ExecuteIfBound();
 	}
 }
 
 void UACInventoryComponent::ChangeInvenObjectArr()
 {
 	//mInventoryData.Empty();
-	for (int i = 0; i < mColums * mRows + 1; i++)
+	for (int i = 0; i < mColums * mRows; i++)
 	{
-		mInventoryData[i] = NewObject<UItemObjectData>();
+		mInventoryData[i]->Clear();
 	}
 	for (UItemObjectData* Data : mInventoryObjectArr)
 	{
@@ -97,13 +87,13 @@ void UACInventoryComponent::LoadItem(int64 ObjectID, int32 ItemCode, int32 Pos_x
 	ItemObjectData->rotation = Rotation;
 
 	mInventoryObjectArr.Add(ItemObjectData);
-	mIsChange = true;
+	Refresh();
 }
 
 void UACInventoryComponent::ClearInventory()
 {
 
-	for (int i = 0; i < mColums * mRows + 1; i++)
+	for (int i = 0; i < mColums * mRows; i++)
 	{
 		mInventoryData[i]->Clear();
 	}
@@ -137,7 +127,7 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 			Index++;
 		}
 	}
-	mIsChange = true;
+	Refresh();
 }
 
 void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex)
@@ -148,7 +138,7 @@ void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLe
 	TileItemData->position_y = TileData.Y;
 	mInventoryObjectArr.Add(TileItemData);
 
-	mIsChange = true;
+	Refresh();
 }
 
 bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)

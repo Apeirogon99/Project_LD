@@ -34,7 +34,10 @@ public:
 	UTexture2D* mIcon;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	UParticleSystem* mMouseCursorParticle;
+	class UParticleSystem* mItemSpawnParticle;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TArray<UParticleSystem*> mPickUpParticle;
 
 private:
 	UDataTable* mDataTable;
@@ -46,7 +49,7 @@ protected:
 	
 public:
 	virtual void PickUpItem(AC_Game* inPlayer) override;
-	virtual void ItemDestroy() { this->Destroy(); };
+	virtual void ItemDestroy();
 	void Init(int32 Code, int32 GameObjectId);
 
 private:
