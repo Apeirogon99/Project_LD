@@ -23,4 +23,5 @@ private:
 
 public:
 	void InventoryOpenRequest();
+	void InventoryOpenResponse();
 };

@@ -48,3 +48,11 @@ void UItemObjectData::SettingObjectData(FItemData OtheritemData)
 {
    this->ItemData = OtheritemData;
 }
+
+void UItemObjectData::Clear()
+{
+    ItemData = FItemData();
+    position_x = -1;
+    position_y = -1;
+    rotation = 0;
+}

@@ -8,7 +8,9 @@
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
 
+#include <Widget/Handler/ClientHUD.h>
 #include <GameContent/Item/ItemParent.h>
+#include <Widget/Game/Main/W_MainGame.h>
 
 bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_EnterGameServer& pkt)
 {
@@ -219,6 +221,67 @@ bool Handle_S2C_CreateItem(ANetworkController* controller, Protocol::S2C_CreateI
 
 bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_LoadInventory& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    APC_Game* localController = Cast<APC_Game>(gameMode->GetNetworkController());
+    if (nullptr == localController)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = localController->GetPlayerState<APS_Game>();
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+   
+    playerState->mInventoryComponent->ClearInventory();
+
+    const int32 maxItemSize = pkt.item().size();
+    for (int32 index = 0; index < maxItemSize; ++index)
+    {
+        const Protocol::SItem&      curItem         = pkt.item(index);
+        int64	                    objectID        = curItem.object_id();
+        int32	                    itemCode        = curItem.item_code();
+
+        const Protocol::SVector2D&  invenPosition   = curItem.inven_position();
+        int32                       positionX       = invenPosition.x();
+        int32                       positionY       = invenPosition.y();
+        int32                       rotation        = curItem.rotation();
+
+        playerState->mInventoryComponent->LoadItem(objectID, itemCode, positionX, positionY, rotation);
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+    if (nullptr == widget)
+    {
+        return false;
+    }
+
+    UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+    if (nullptr == mainGameWidget)
+    {
+        return false;
+    }
+
+    mainGameWidget->InventoryOpenResponse();
+    
     return true;
 }
 

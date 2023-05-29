@@ -91,6 +91,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SettingObjectData(FItemData OtheritemData);
+
+	void Clear();
 };
 
 UCLASS()

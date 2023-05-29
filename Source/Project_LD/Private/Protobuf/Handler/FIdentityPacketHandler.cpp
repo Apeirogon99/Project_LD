@@ -279,7 +279,7 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 
 		FCharacterData characterData;
 		characterData.mName = name;
-		characterData.mLevel = 1;
+		characterData.mLevel = level;
 		characterData.mClass = characterClass;
 		characterData.mAppearance = characterAppearance;
 		characterData.mEquipment = characterEquipment;

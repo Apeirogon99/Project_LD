@@ -102,7 +102,12 @@ void UACInventoryComponent::LoadItem(int32 ObjectID, int32 ItemCode, int32 Pos_x
 
 void UACInventoryComponent::ClearInventory()
 {
-	mInventoryData.Empty();
+
+	for (int i = 0; i < mColums * mRows + 1; i++)
+	{
+		mInventoryData[i]->Clear();
+	}
+
 	mInventoryObjectArr.Empty();
 }
 
