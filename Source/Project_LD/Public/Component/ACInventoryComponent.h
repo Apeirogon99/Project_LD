@@ -47,7 +47,7 @@ public:
 
 public:
 	void																	ChangeInvenObjectArr();
-	void																	LoadItem(int32 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation);
+	void																	LoadItem(int64 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation);
 	void																	ClearInventory();
 	void																	RemoveItem(UItemObjectData* ItemObjectData);
 	void																	AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex);

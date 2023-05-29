@@ -61,46 +61,6 @@ bool APC_Game::OnDisconnect()
 void APC_Game::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
-
-	AGM_Game* gameMode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
-	if (nullptr == gameMode)
-	{
-		return;
-	}
-
-	if (this != gameMode->GetNetworkController())
-	{
-		return;
-	}
-
-	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetHUD());
-	if (nullptr == clientHUD)
-	{
-		return;
-	}
-
-	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
-	if (nullptr == widget)
-	{
-		return;
-	}
-
-	APS_Game* playerState = GetPlayerState<APS_Game>();
-	if (playerState == nullptr)
-	{
-		return;
-	}
-
-	//UUWInventory* inventory	= Cast<UUWInventory>(widget);
-	AC_Game* gameCharacter	= Cast<AC_Game>(InPawn);
-
-	/*
-	if (inventory && gameCharacter)
-	{
-		inventory->InitInventory(gameCharacter->mInventoryComponent, 50.0f);
-	}
-	*/
-
 }
 
 void APC_Game::SetupInputComponent()

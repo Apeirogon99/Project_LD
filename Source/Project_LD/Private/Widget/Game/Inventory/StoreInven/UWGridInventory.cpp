@@ -88,7 +88,6 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 		FTile tile;
 		tile.X = mDraggedItemTopLeftTile.X;
 		tile.Y = mDraggedItemTopLeftTile.Y;
-		//mACInventory->AddItemAt(Data, mACInventory->TileToIndex(tile));
 		mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
 	}
 	else

@@ -84,7 +84,7 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 	}
 }
 
-void UACInventoryComponent::LoadItem(int32 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation)
+void UACInventoryComponent::LoadItem(int64 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation)
 {
 	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	FItemData* ItemTable = Instance->GetItemData(ItemCode);
@@ -119,15 +119,7 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 		int Y = ItemObjectData->position_y;
 		int sizeX = ItemObjectData->GetSize().X;
 		int sizeY = ItemObjectData->GetSize().Y;
-/*
-		for (int FIndex = X; FIndex < X + sizeX; FIndex++)
-		{
-			for (int SIndex = Y; SIndex < Y + sizeY; SIndex++)
-			{
-				mInventoryData[FIndex + SIndex * mColums] = NewObject<UItemObjectData>();
-			}
-		}
-	*/
+
 		int Index = 0;
 		for (UItemObjectData*& Data : mInventoryObjectArr)
 		{
@@ -150,32 +142,6 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 
 void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex)
 {
-	/*
-	FTile TileData = IndexToTile(TopLeftIndex);
-	int X = ItemObjectData->GetSize().X;
-	int Y = ItemObjectData->GetSize().Y;
-
-	for (int FIndex = TileData.X; FIndex < TileData.X + X; FIndex++)
-	{
-		for (int SIndex = TileData.Y; SIndex < TileData.Y + Y; SIndex++)
-		{
-			FTile LocalTile = FTile();
-			LocalTile.X = FIndex;
-			LocalTile.Y = SIndex;
-
-			if ((FIndex == TileData.X) && (SIndex == TileData.Y))
-			{
-				UItemObjectData* TileItemData = ItemObjectData;
-				TileItemData->position_x = LocalTile.X;
-				TileItemData->position_y = LocalTile.Y;
-				mInventoryObjectArr.Add(TileItemData);
-			}
-			mInventoryData[TileToIndex(LocalTile)]->ItemData = ItemObjectData->ItemData;
-			mInventoryData[TileToIndex(LocalTile)]->position_x = LocalTile.X;
-			mInventoryData[TileToIndex(LocalTile)]->position_y = LocalTile.Y;	
-		}
-	}
-	*/
 	FTile TileData = IndexToTile(TopLeftIndex);
 	UItemObjectData* TileItemData = ItemObjectData;
 	TileItemData->position_x = TileData.X;
