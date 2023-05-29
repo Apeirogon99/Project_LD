@@ -91,14 +91,16 @@ void APC_Game::OnPossess(APawn* InPawn)
 		return;
 	}
 
-	UUWInventory* inventory	= Cast<UUWInventory>(widget);
+	//UUWInventory* inventory	= Cast<UUWInventory>(widget);
 	AC_Game* gameCharacter	= Cast<AC_Game>(InPawn);
 
+	/*
 	if (inventory && gameCharacter)
 	{
-		playerState->Init();
-		inventory->InitInventory(playerState, 50.0f);
+		inventory->InitInventory(gameCharacter->mInventoryComponent, 50.0f);
 	}
+	*/
+
 }
 
 void APC_Game::SetupInputComponent()
@@ -125,25 +127,13 @@ void APC_Game::SwitchInventory()
 		return;
 	}
 
-	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
+	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
 	if (nullptr == widget)
 	{
 		return;
 	}
 
-	UUWInventory* Inventory = Cast<UUWInventory>(widget);
+	UW_MainGame* maingame = Cast<UW_MainGame>(widget);
 
-	static bool isIventoryOpen = false;
-	if (isIventoryOpen)
-	{
-		isIventoryOpen = !isIventoryOpen;
-		clientHUD->CleanWidgetFromName(FString(TEXT("Inventory")));
-		SwitchMovementMode();
-	}
-	else
-	{
-		isIventoryOpen = !isIventoryOpen;
-		clientHUD->ShowWidgetFromName(FString(TEXT("Inventory")));
-		SwitchUIMode();
-	}
+	maingame->InventoryOpenRequest();
 }

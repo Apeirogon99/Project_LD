@@ -13,6 +13,8 @@
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FGamePacketHandler.h>
 
+#include <UObject/ConstructorHelpers.h>
+
 // Sets default values
 AItemParent::AItemParent()
 {
@@ -35,6 +37,12 @@ AItemParent::AItemParent()
 	mGameObjectId = -1;
 
 	mIcon = nullptr;
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> BagMesh(TEXT("SkeletalMesh'/Game/Infinity_Blade_Assets/Meshes/SM_TreasureBags02.SM_TreasureBags02_SM_TreasureBags02'"));
+	if (BagMesh.Succeeded())
+	{
+		mSkeletalMeshComponent->SetSkeletalMesh(BagMesh.Object);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -113,13 +121,16 @@ void AItemParent::Init(int32 Code, int32 GameObjectId)
 	FItemData* ItemTable = Instance->GetItemData(mItemCode);
 
 	mItemObjectData->ItemData = *ItemTable;
-	ItemObjectDataInit();
+	ItemObjectDataInit(ItemTable->category_id);
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, GetActorLocation(), FRotator::ZeroRotator, true);
 }
 
-void AItemParent::ItemObjectDataInit()
+void AItemParent::ItemObjectDataInit(int32 Categoryid)
 {
 	//Mesh
-	mSkeletalMeshComponent->SetSkeletalMesh(mItemObjectData->ItemData.mesh);
+	if (Categoryid > 7)
+	{
+		mSkeletalMeshComponent->SetSkeletalMesh(mItemObjectData->ItemData.mesh);
+	}
 	mIcon = mItemObjectData->ItemData.icon;
 }

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include <Struct/Inventory/InventoryFrame.h>
+#include <Component/ACInventoryComponent.h>
 #include "UWGridInventory.generated.h"
 
 /**
@@ -39,8 +40,8 @@ protected:
 	virtual void NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 	
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player State")
-	class APS_Game* mPlayerState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UACInventoryComponent* mInventoryComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetTileSize, BlueprintSetter = SetTileSize, Category = "Default", meta = (AllowPrivateAccess = "true"))
 	float mTileSize;
@@ -65,7 +66,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-		void Init(APS_Game* PlayerState, float Size);
+	void Init(UACInventoryComponent* InvenComponent, float Size);
 
 	UFUNCTION(BlueprintCallable)
 	void CreateLineSegments();

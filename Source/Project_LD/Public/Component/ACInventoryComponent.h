@@ -4,14 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include <Struct/Game/GameDatas.h>
+#include <Struct/Inventory/InventoryFrame.h>
 #include "ACInventoryComponent.generated.h"
 
+
+DECLARE_DELEGATE(FOnInventoryChanged);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_LD_API UACInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	/*
+	
 public:	
 	// Sets default values for this component's properties
 	UACInventoryComponent();
@@ -42,20 +46,15 @@ public:
 	bool mIsChange;
 
 public:
-	UFUNCTION(BlueprintCallable)
+	void																	ChangeInvenObjectArr();
+	void																	LoadItem(int32 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation);
+	void																	ClearInventory();
 	void																	RemoveItem(UItemObjectData* ItemObjectData);
-	UFUNCTION(BlueprintCallable)
 	void																	AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex);
-	UFUNCTION(BlueprintCallable)
 	bool																	TryAddItem(UItemObjectData* ItemObjectData);
-	UFUNCTION(BlueprintCallable)
 	bool																	IsRoomAvailable(UItemObjectData* ItemObjectData, int TopLeftIndex);
-	UFUNCTION(BlueprintCallable)
+	bool																	GetItemAtIndex(int index, UItemObjectData*& ItemObject);
 	int																	TileToIndex(FTile Tile)	const;
-	UFUNCTION(BlueprintCallable)
 	FTile																IndexToTile(int Index)		const;
-	UFUNCTION(BlueprintCallable)
 	TArray<UItemObjectData*>							GetAllItems();
-	UFUNCTION(BlueprintCallable)
-	bool																	GetItemAtIndex(int index, UItemObjectData*& ItemObject);*/
 };

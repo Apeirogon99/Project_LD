@@ -48,18 +48,18 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	return false;
 }
 
-void UUWInventory::InitInventory(APS_Game* PlayerState, float TileSize)
+void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, float TileSize)
 {
+	mInvenComponent = InventoryComponent;
 	mTileSize = TileSize;
-	mPlayerState = PlayerState;
 
 	GridInventory = this->WidgetTree->FindWidget(FName(TEXT("BW_GridInventory")));
 	if (GridInventory != nullptr)
 	{
-		if (IsValid(mPlayerState))
+		if (IsValid(mInvenComponent))
 		{
 			UUWGridInventory* GridInven = Cast<UUWGridInventory>(GridInventory);
-			GridInven->Init(mPlayerState, mTileSize);
+			GridInven->Init(mInvenComponent, mTileSize);
 		}
 	}
 }

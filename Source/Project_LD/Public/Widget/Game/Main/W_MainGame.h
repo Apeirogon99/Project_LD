@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Inventory/UWInventory.h"
 #include "Blueprint/WidgetTree.h"
 #include "Blueprint/UserWidget.h"
 #include "W_MainGame.generated.h"
@@ -16,4 +15,12 @@ class PROJECT_LD_API UW_MainGame : public UUserWidget
 {
 	GENERATED_BODY()
 
+	virtual void NativeConstruct() override;
+
+
+private:
+	bool misInventoryOpen;
+
+public:
+	void InventoryOpenRequest();
 };

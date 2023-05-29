@@ -50,5 +50,5 @@ public:
 	void Init(int32 Code, int32 GameObjectId);
 
 private:
-	void ItemObjectDataInit();
+	void ItemObjectDataInit(int32 Categoryid);
 };

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Struct/Game/GameDatas.h"
+#include <Component/ACInventoryComponent.h>
 #include "UWInventory.generated.h"
 
 /**
@@ -37,8 +38,8 @@ public:
 	UBackgroundBlur* BackgroundBlur;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player State")
-	class APS_Game* mPlayerState;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UACInventoryComponent* mInvenComponent;
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "default")
@@ -46,5 +47,8 @@ public:
 
 public:
 	UFUNCTION()
-	void InitInventory(APS_Game* PlayerState, float size);
+	void InitInventory(UACInventoryComponent* InventoryComponent, float size);
+
+	void InventoryLoadRequest();
+	void InventoryLoadRespawn();
 };

@@ -2,8 +2,9 @@
 
 
 #include "Component/ACInventoryComponent.h"
+#include "Framework/Gameinstance/LDGameInstance.h"
 
-/*
+
 // Sets default values for this component's properties
 UACInventoryComponent::UACInventoryComponent()
 {
@@ -11,8 +12,8 @@ UACInventoryComponent::UACInventoryComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	mColums = 15;
-	mRows = 6;
+	mColums = 6;
+	mRows = 15;
 
 	mIsChange = false;
 }
@@ -35,7 +36,7 @@ void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	OnInventoryChanged.Clear();
+	OnInventoryChanged.Unbind();
 }
 
 
@@ -49,9 +50,60 @@ void UACInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, 
 		mIsChange = false;
 		if (OnInventoryChanged.IsBound() == true)
 		{
-			OnInventoryChanged.Broadcast();
+			ChangeInvenObjectArr();
+			OnInventoryChanged.ExecuteIfBound();
 		}
 	}
+}
+
+void UACInventoryComponent::ChangeInvenObjectArr()
+{
+	//mInventoryData.Empty();
+	for (int i = 0; i < mColums * mRows + 1; i++)
+	{
+		mInventoryData[i] = NewObject<UItemObjectData>();
+	}
+	for (UItemObjectData* Data : mInventoryObjectArr)
+	{
+		int X = Data->GetSize().X;
+		int Y = Data->GetSize().Y;
+
+		for (int XIndex = Data->position_x; XIndex < Data->position_x + X; XIndex++)
+		{
+			for (int YIndex = Data->position_y; YIndex < Data->position_y + Y; YIndex++)
+			{
+				FTile LocalTile = FTile();
+				LocalTile.X = XIndex;
+				LocalTile.Y = YIndex;
+
+				mInventoryData[TileToIndex(LocalTile)]->ItemData = Data->ItemData;
+				mInventoryData[TileToIndex(LocalTile)]->position_x = LocalTile.X;
+				mInventoryData[TileToIndex(LocalTile)]->position_y = LocalTile.Y;
+			}
+		}
+	}
+}
+
+void UACInventoryComponent::LoadItem(int32 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation)
+{
+	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+	FItemData* ItemTable = Instance->GetItemData(ItemCode);
+
+	UItemObjectData* ItemObjectData = NewObject<UItemObjectData>();
+ 
+	ItemObjectData->ItemData = *ItemTable;
+	ItemObjectData->position_x = Pos_x;
+	ItemObjectData->position_y = Pos_y;
+	ItemObjectData->rotation = Rotation;
+
+	mInventoryObjectArr.Add(ItemObjectData);
+	mIsChange = true;
+}
+
+void UACInventoryComponent::ClearInventory()
+{
+	mInventoryData.Empty();
+	mInventoryObjectArr.Empty();
 }
 
 void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
@@ -62,7 +114,7 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 		int Y = ItemObjectData->position_y;
 		int sizeX = ItemObjectData->GetSize().X;
 		int sizeY = ItemObjectData->GetSize().Y;
-
+/*
 		for (int FIndex = X; FIndex < X + sizeX; FIndex++)
 		{
 			for (int SIndex = Y; SIndex < Y + sizeY; SIndex++)
@@ -70,7 +122,7 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 				mInventoryData[FIndex + SIndex * mColums] = NewObject<UItemObjectData>();
 			}
 		}
-
+	*/
 		int Index = 0;
 		for (UItemObjectData*& Data : mInventoryObjectArr)
 		{
@@ -88,10 +140,12 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 			Index++;
 		}
 	}
+	mIsChange = true;
 }
 
 void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex)
 {
+	/*
 	FTile TileData = IndexToTile(TopLeftIndex);
 	int X = ItemObjectData->GetSize().X;
 	int Y = ItemObjectData->GetSize().Y;
@@ -113,9 +167,16 @@ void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLe
 			}
 			mInventoryData[TileToIndex(LocalTile)]->ItemData = ItemObjectData->ItemData;
 			mInventoryData[TileToIndex(LocalTile)]->position_x = LocalTile.X;
-			mInventoryData[TileToIndex(LocalTile)]->position_y = LocalTile.Y;
+			mInventoryData[TileToIndex(LocalTile)]->position_y = LocalTile.Y;	
 		}
 	}
+	*/
+	FTile TileData = IndexToTile(TopLeftIndex);
+	UItemObjectData* TileItemData = ItemObjectData;
+	TileItemData->position_x = TileData.X;
+	TileItemData->position_y = TileData.Y;
+	mInventoryObjectArr.Add(TileItemData);
+
 	mIsChange = true;
 }
 
@@ -185,7 +246,6 @@ bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData, int
 			{
 				return false;
 			}
-			
 		}
 	}
 	return true;
@@ -223,4 +283,3 @@ bool UACInventoryComponent::GetItemAtIndex(int index, UItemObjectData*& ItemObje
 	}
 	return false;
 }
-*/
