@@ -96,6 +96,16 @@ UNetworkTimeStamp* ANetworkController::GetTimeStamp()
 	return nullptr;
 }
 
+const int64 ANetworkController::GetServerTimeStamp()
+{
+	if (mNetworkSession)
+	{
+		return mNetworkSession->GetTimeStamp()->GetServerTimeStamp();
+	}
+
+	return int64();
+}
+
 void ANetworkController::Send(SendBufferPtr FSendBuffer)
 {
 	if (mNetworkSession.IsValid())

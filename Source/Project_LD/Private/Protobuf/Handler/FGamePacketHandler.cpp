@@ -8,6 +8,8 @@
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
 
+#include <GameContent/Item/ItemParent.h>
+
 bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_EnterGameServer& pkt)
 {
     UWorld* world = controller->GetWorld();
@@ -184,13 +186,70 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     return true;
 }
 
+bool Handle_S2C_CreateItem(ANetworkController* controller, Protocol::S2C_CreateItem& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    Protocol::SItem* itemInfo = pkt.mutable_item();
+    Protocol::SVector* itemPosition = itemInfo->mutable_world_position();
+
+    const int64 gameObjectID = itemInfo->object_id();
+    FVector itemLocation = FVector(itemPosition->x(), itemPosition->y(), itemPosition->z());
+    FRotator itemRotator = FRotator::ZeroRotator;
+
+    AItemParent* newItem = Cast<AItemParent>(gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, gameObjectID));
+    if (nullptr == newItem)
+    {
+        return false;
+    }
+    newItem->Init(itemInfo->item_code(), itemInfo->object_id());
+
+    return true;
+}
+
 bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_LoadInventory& pkt)
 {
-    return false;
+    return true;
 }
 
 bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_InsertInventory& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 remoteID = pkt.remote_id();
+    const int64 objectID = pkt.object_id();
+
+    AActor* gameObject = gameState->FindGameObject(objectID);
+    if (nullptr == gameObject)
+    {
+        return false;
+    }
+
+    AItemParent* item = Cast<AItemParent>(gameObject);
+    item->ItemDestroy();
+
+    gameState->RemoveGameObject(objectID);
+
     return true;
 }
 

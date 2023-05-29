@@ -7,6 +7,11 @@
 #include "Kismet/GameplayStatics.h"
 
 #include <Game/PS_Game.h>
+#include <Game/GM_Game.h>
+#include <Game/PC_Game.h>
+
+#include <Protobuf/Handler/FClientPacketHandler.h>
+#include <Protobuf/Handler/FGamePacketHandler.h>
 
 // Sets default values
 AItemParent::AItemParent()
@@ -38,25 +43,63 @@ void AItemParent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AItemParent::PickUpItem(AC_Game* Player)
+void AItemParent::PickUpItem(AC_Game* inPlayer)
 {
-	AC_Game* Character = Player;
-
-	if (Character == nullptr)
+	UWorld* world = GetWorld();
+	if (nullptr == world)
 	{
 		return;
 	}
 
-	APS_Game* PlayerState = Character->GetPlayerState<APS_Game>();
-	if (PlayerState == nullptr)
+	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+	if (nullptr == gameMode)
 	{
 		return;
 	}
 
-	if (PlayerState->TryAddItem(mItemObjectData))
+	ANetworkController* controller = gameMode->GetNetworkController();
+	if (nullptr == controller)
 	{
-		Destroy();
+		return;
 	}
+
+	AC_Game* player = Cast<AC_Game>(controller->GetPawn());
+	if (nullptr == player)
+	{
+		return;
+	}
+
+	if (player != inPlayer)
+	{
+		return;
+	}
+
+	
+	//if (false == player->mInventoryComponent->TryAddItem(mItemObjectData))
+	//{
+	//	return;
+	//}
+
+	Protocol::C2S_InsertInventory insertInventoryPacket;
+	insertInventoryPacket.set_timestamp(controller->GetServerTimeStamp());
+	Protocol::SItem* item = insertInventoryPacket.mutable_item();
+	item->set_object_id(mGameObjectId);
+	item->set_item_code(mItemCode);
+
+	Protocol::SVector* worldPosition = item->mutable_world_position();
+	FVector location = GetActorLocation();
+	worldPosition->set_x(location.X);
+	worldPosition->set_y(location.Y);
+	worldPosition->set_z(location.Z);
+
+	Protocol::SVector2D* invenPositon = item->mutable_inven_position();
+	invenPositon->set_x(mItemObjectData->position_x);
+	invenPositon->set_y(mItemObjectData->position_y);
+
+	item->set_rotation(mItemObjectData->rotation);
+
+	SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(controller, insertInventoryPacket);
+	controller->Send(sendBuffer);
 }
 
 void AItemParent::Init(int32 Code, int32 GameObjectId)

@@ -45,7 +45,8 @@ protected:
 	virtual void BeginPlay() override;
 	
 public:
-	virtual void PickUpItem(AC_Game* Player) override;
+	virtual void PickUpItem(AC_Game* inPlayer) override;
+	virtual void ItemDestroy() { this->Destroy(); };
 	void Init(int32 Code, int32 GameObjectId);
 
 private:

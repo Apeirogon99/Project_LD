@@ -47,7 +47,8 @@ public:
 public:
 	bool IsClientController();
 
-	class	UNetworkTimeStamp* GetTimeStamp();
+	class UNetworkTimeStamp* GetTimeStamp();
+	const int64 GetServerTimeStamp();
 
 	FNetworkSessionPtr GetNetworkSession() { return mNetworkSession; }
 	void Send(SendBufferPtr FSendBuffer);
