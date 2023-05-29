@@ -34,9 +34,6 @@ AItemParent::AItemParent()
 	mSphere->SetupAttachment(RootComponent);
 	mSphere->SetCollisionProfileName(TEXT("OverlapAll"));
 
-	mItemCode = -1;
-	mGameObjectId = -1;
-
 	mIcon = nullptr;
 
 	static ConstructorHelpers::FObjectFinder<USkeletalMesh> BagMesh(TEXT("SkeletalMesh'/Game/Infinity_Blade_Assets/Meshes/SM_TreasureBags02.SM_TreasureBags02_SM_TreasureBags02'"));
@@ -112,8 +109,8 @@ void AItemParent::PickUpItem(AC_Game* inPlayer)
 	Protocol::C2S_InsertInventory insertInventoryPacket;
 	insertInventoryPacket.set_timestamp(controller->GetServerTimeStamp());
 	Protocol::SItem* item = insertInventoryPacket.mutable_item();
-	item->set_object_id(mGameObjectId);
-	item->set_item_code(mItemCode);
+	item->set_object_id(mItemObjectData->ObjectID);
+	item->set_item_code(mItemObjectData->mItemCode);
 
 	Protocol::SVector* worldPosition = item->mutable_world_position();
 	FVector location = GetActorLocation();
@@ -140,13 +137,14 @@ void AItemParent::ItemDestroy()
 
 void AItemParent::Init(int32 Code, int32 GameObjectId)
 {
-	mItemCode = Code;
-	mGameObjectId = GameObjectId;
 
 	mItemObjectData = NewObject<UItemObjectData>();
 
+	mItemObjectData->mItemCode = Code;
+	mItemObjectData->ObjectID = GameObjectId;
+
 	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	FItemData* ItemTable = Instance->GetItemData(mItemCode);
+	FItemData* ItemTable = Instance->GetItemData(mItemObjectData->mItemCode);
 
 	mItemObjectData->ItemData = *ItemTable;
 	ItemObjectDataInit(ItemTable->category_id);

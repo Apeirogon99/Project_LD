@@ -41,8 +41,6 @@ public:
 
 private:
 	UDataTable* mDataTable;
-	int32 mItemCode;
-	int32 mGameObjectId;
 
 protected:
 	virtual void BeginPlay() override;

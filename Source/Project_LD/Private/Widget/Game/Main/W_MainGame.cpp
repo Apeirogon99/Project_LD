@@ -13,7 +13,7 @@ void UW_MainGame::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	misInventoryOpen = false;
+	misInventoryOpen = true;
 }
 
 void UW_MainGame::InventoryOpenRequest()
@@ -72,6 +72,9 @@ void UW_MainGame::InventoryOpenResponse()
 	}
 
 	misInventoryOpen = !misInventoryOpen;
-	clientHUD->ShowWidgetFromName(FString(TEXT("Inventory")));
-	playerController->SwitchUIMode();
+	if (misInventoryOpen)
+	{
+		clientHUD->ShowWidgetFromName(FString(TEXT("Inventory")));
+		playerController->SwitchUIMode();
+	}
 }

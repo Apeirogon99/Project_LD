@@ -81,6 +81,8 @@ void UACInventoryComponent::LoadItem(int64 ObjectID, int32 ItemCode, int32 Pos_x
 
 	UItemObjectData* ItemObjectData = NewObject<UItemObjectData>();
  
+	ItemObjectData->ObjectID = ObjectID;
+	ItemObjectData->mItemCode = ItemCode;
 	ItemObjectData->ItemData = *ItemTable;
 	ItemObjectData->position_x = Pos_x;
 	ItemObjectData->position_y = Pos_y;
@@ -143,6 +145,11 @@ void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLe
 
 bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 {
+	if (nullptr == ItemObjectData)
+	{
+		return false;
+	}
+
 	if(ItemObjectData->IsValid() == true)
 	{
 		int itemIndex = 0;

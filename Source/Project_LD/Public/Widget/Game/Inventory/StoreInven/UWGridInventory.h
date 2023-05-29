@@ -86,6 +86,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FMousePositionReturn MousePositionInTile(FVector2D MousePosition);
 
+	void Update(const int64 inObjectID, const int32 inItemID, const int32 inPositionX, const int32 inPositionY, const int32 inRotation);
+
 public:
 	UFUNCTION(BlueprintSetter)
 	void SetTileSize(float size) { this->mTileSize = size; }

@@ -80,10 +80,13 @@ class PROJECT_LD_API UItemObjectData : public UObject
 	GENERATED_BODY()
 
 public:
-	UItemObjectData() : ObjectID(-1), position_x(-1), position_y(-1), rotation(0) {}
+	UItemObjectData() : ObjectID(-1), mItemCode(-1), position_x(-1), position_y(-1), rotation(0) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	int64 ObjectID;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	int32 mItemCode;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	FItemData ItemData;
