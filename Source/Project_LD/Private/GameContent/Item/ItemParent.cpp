@@ -3,9 +3,14 @@
 #include "GameContent/Item/ItemParent.h"
 #include "Components/SphereComponent.h"
 #include "Component/ACInventoryComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Framework/Game/C_Game.h"
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+#include <Widget/Game/Item/W_ItemName.h>
+#include "Camera/CameraComponent.h"
 
 #include <Game/PS_Game.h>
 #include <Game/GM_Game.h>
@@ -20,7 +25,7 @@
 AItemParent::AItemParent()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	mSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	RootComponent = mSceneComponent;
@@ -67,12 +72,49 @@ AItemParent::AItemParent()
 	{
 		mPickUpParticle.Add(ParticleSystemLeagendary.Object);
 	}
+
+	mItemSpawnParticleComponent = nullptr;
+
+	TSubclassOf<UW_ItemName> NameWidgetAsset = StaticLoadClass(UW_ItemName::StaticClass(), NULL, TEXT("WidgetBlueprint'/Game/Blueprint/Widget/Game/Item/BW_ItemName.BW_ItemName_C'"));
+	if (NameWidgetAsset)
+	{
+		mItemNameClass = NameWidgetAsset;
+	}
+
+	mItemNameWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("NameWidget"));
+	mItemNameWidgetComponent->SetupAttachment(RootComponent);
+	mItemNameWidgetComponent->SetWidgetClass(mItemNameClass);
+	mItemNameWidgetComponent->SetCollisionProfileName(TEXT("NoCollision"));
+	mItemNameWidgetComponent->SetRelativeLocationAndRotation(FVector(0.f,0.f,60.f),FRotator(30.f,-180.f,0.f));
+	
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> ParticleSystemGain(TEXT("ParticleSystem'/Game/GameContent/Particle/Item/P_PickUp.P_PickUp'"));
+	if (ParticleSystemGain.Succeeded())
+	{
+		mItemGainParticle = ParticleSystemGain.Object;
+	}
+
+	mPlayer = nullptr;
 }
 
 // Called when the game starts or when spawned
 void AItemParent::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AItemParent::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	/*
+	if (mPlayer)
+	{
+		mItemNameWidgetComponent->SetWorldRotation((mPlayer->GetCameraComponent()->GetComponentLocation() - mItemNameWidgetComponent->GetComponentLocation()).Rotation());
+	}
+	else
+	{
+		FindPlayer();
+	}
+	*/
 }
 
 void AItemParent::PickUpItem(AC_Game* inPlayer)
@@ -107,32 +149,19 @@ void AItemParent::PickUpItem(AC_Game* inPlayer)
 	}
 
 	playerstate->mInventoryComponent->SetInventoryPacket(mItemObjectData, EInventoryType::Insert);
-
-	/*Protocol::C2S_InsertInventory insertInventoryPacket;
-	insertInventoryPacket.set_timestamp(controller->GetServerTimeStamp());
-	Protocol::SItem* item = insertInventoryPacket.mutable_item();
-	item->set_object_id(mItemObjectData->ObjectID);
-	item->set_item_code(mItemObjectData->mItemCode);
-
-	Protocol::SVector* worldPosition = item->mutable_world_position();
-	FVector location = GetActorLocation();
-	worldPosition->set_x(location.X);
-	worldPosition->set_y(location.Y);
-	worldPosition->set_z(location.Z);
-
-	Protocol::SVector2D* invenPositon = item->mutable_inven_position();
-	invenPositon->set_x(mItemObjectData->position_x);
-	invenPositon->set_y(mItemObjectData->position_y);
-
-	item->set_rotation(mItemObjectData->rotation);
-
-	SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(controller, insertInventoryPacket);
-	controller->Send(sendBuffer);*/
 }
 
 void AItemParent::ItemDestroy()
 {
 	//particle ¼ÒÈ¯
+	if (mItemSpawnParticleComponent)
+	{
+		mItemSpawnParticleComponent->DeactivateSystem();
+		mItemSpawnParticleComponent->DestroyComponent();
+		mItemSpawnParticleComponent = nullptr;
+	}
+
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mItemGainParticle, GetActorLocation(), FRotator::ZeroRotator, true);
 
 	this->Destroy(); 
 }
@@ -145,13 +174,64 @@ void AItemParent::Init(int32 Code, int32 GameObjectId)
 	mItemObjectData->mItemCode = Code;
 	mItemObjectData->ObjectID = GameObjectId;
 
+	//Data Table
 	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	FItemData* ItemTable = Instance->GetItemData(mItemObjectData->mItemCode);
-
 	mItemObjectData->ItemData = *ItemTable;
 	ItemObjectDataInit(ItemTable->category_id);
+
+	//Widget
+	if (mItemNameWidgetComponent)
+	{
+		UUserWidget* namewidget = mItemNameWidgetComponent->GetWidget();
+		if (namewidget)
+		{
+			UW_ItemName* itemnamewidget = Cast<UW_ItemName>(namewidget);
+			if (itemnamewidget)
+			{
+				itemnamewidget->SetNameText(ItemTable->name);
+				itemnamewidget->SetDesiredSizeInViewport(FVector2D(1000.f, 1000.f));
+			}
+		}
+	}
+		
+	//Particle
 	mItemSpawnParticle = mPickUpParticle[ItemTable->tier_id - 1];
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mItemSpawnParticle, GetActorLocation(), FRotator::ZeroRotator, true);
+	if (mItemSpawnParticle)
+	{
+		mItemSpawnParticleComponent = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mItemSpawnParticle, GetActorLocation(), FRotator::ZeroRotator, true);
+	}
+}
+
+void AItemParent::FindPlayer()
+{
+	/*
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+	if (nullptr == gameMode)
+	{
+		return;
+	}
+
+	ANetworkController* controller = gameMode->GetNetworkController();
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	AC_Game* player = Cast<AC_Game>(controller->GetPawn());
+	if (nullptr == player)
+	{
+		return;
+	}
+
+	mPlayer = player;
+	*/
 }
 
 void AItemParent::ItemObjectDataInit(int32 Categoryid)

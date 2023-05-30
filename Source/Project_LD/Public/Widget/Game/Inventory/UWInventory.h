@@ -32,10 +32,7 @@ public:
 	UWidget* GridInventory;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
-	UBorder* BackgroundBorder;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
-	UBackgroundBlur* BackgroundBlur;
+		UBorder* BackgroundBorder;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")

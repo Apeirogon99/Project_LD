@@ -9,6 +9,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Border.h"
 #include "Components/CanvasPanel.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -84,21 +85,27 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 	if (IsRoomAvailableForPayload(Data))
 	{
 		GetPayload(InOperation, Data);
-		FTile tile;
-		tile.X = mDraggedItemTopLeftTile.X;
-		tile.Y = mDraggedItemTopLeftTile.Y;
+		if (Data->IsValid())
+		{
+			FTile tile;
+			tile.X = mDraggedItemTopLeftTile.X;
+			tile.Y = mDraggedItemTopLeftTile.Y;
 
-		mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
+			mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
 
-		mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Update);
+			mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Update);
+		}
 	}
 	else
 	{
 		GetPayload(InOperation, Data);
-		if (!mInventoryComponent->TryAddItem(Data))
+		if (Data->IsValid())
 		{
-			//Spawn Item
-			mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Remove);
+			if (!mInventoryComponent->TryAddItem(Data))
+			{
+				//Spawn Item
+				mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Remove);
+			}
 		}
 	}
 	
@@ -212,11 +219,17 @@ void UUWGridInventory::Refresh()
 				//Bind Remove
 				ItemImageWidget->OnRemoved.AddUFunction(this, FName("CallRemoved_Single"));
 
-				UCanvasPanelSlot* Local_Slot = Cast<UCanvasPanelSlot>(GridCanvas_Panel->AddChild(ItemImageWidget));
-				Local_Slot->SetAutoSize(true);
-				float X = Data->position_x * mTileSize;
-				float Y = Data->position_y * mTileSize;
-				Local_Slot->SetPosition(FVector2D(X, Y));
+				UPanelSlot* LocalPanelSlot = GridCanvas_Panel->AddChild(ItemImageWidget);
+				UCanvasPanelSlot* Local_Slot = Cast<UCanvasPanelSlot>(LocalPanelSlot);
+				
+				float sizeX = Data->GetSize().X * mTileSize;
+				float sizeY = Data->GetSize().Y * mTileSize;
+
+				Local_Slot->SetSize(FVector2D(sizeX, sizeY));
+
+				float posX = Data->position_x * mTileSize;
+				float posY = Data->position_y * mTileSize;
+				Local_Slot->SetPosition(FVector2D(posX, posY));
 			}
 		}
 	}

@@ -76,6 +76,7 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 				mInventoryData[TileToIndex(LocalTile)]->ItemData = Data->ItemData;
 				mInventoryData[TileToIndex(LocalTile)]->position_x = LocalTile.X;
 				mInventoryData[TileToIndex(LocalTile)]->position_y = LocalTile.Y;
+				mInventoryData[TileToIndex(LocalTile)]->rotation = Data->rotation;
 			}
 		}
 	}

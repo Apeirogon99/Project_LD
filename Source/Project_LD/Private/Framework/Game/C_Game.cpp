@@ -25,7 +25,7 @@ AC_Game::AC_Game()
 	mCameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	mCameraBoom->SetupAttachment(RootComponent);
 	mCameraBoom->SetUsingAbsoluteRotation(true);
-	mCameraBoom->TargetArmLength = 1600.f;
+	mCameraBoom->TargetArmLength = 1000.f;
 	mCameraBoom->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
 	mCameraBoom->bDoCollisionTest = false;
 

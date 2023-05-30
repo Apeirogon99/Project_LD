@@ -16,7 +16,6 @@ void UUWInventory::NativeConstruct()
 	Super::NativeConstruct();
 
 	BackgroundBorder = Cast<UBorder>(GetWidgetFromName(TEXT("BackgroundBorder")));
-	BackgroundBlur = Cast<UBackgroundBlur>(GetWidgetFromName(TEXT("BackgroundBlur")));
 }
 
 void UUWInventory::NativeOnInitialized()

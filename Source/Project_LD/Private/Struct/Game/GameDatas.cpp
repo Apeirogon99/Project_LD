@@ -17,6 +17,8 @@ void UItemObjectData::Rotate()
 
 bool UItemObjectData::IsValid()
 {
+    if (ObjectID == -1)
+        return false;
     if (ItemData.category_id == 0)
         return false;
     if (ItemData.size_x == 0)

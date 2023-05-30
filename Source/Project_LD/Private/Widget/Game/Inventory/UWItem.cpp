@@ -10,6 +10,7 @@
 
 #include "TimerManager.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -113,12 +114,15 @@ void UUWItem::Refresh()
 
 	mSize.X = mItemObjectData->GetSize().X * mTileSize;
 	mSize.Y = mItemObjectData->GetSize().Y * mTileSize;
-	
+
 	BackgroundSizeBox->SetWidthOverride(mSize.X);
 	BackgroundSizeBox->SetHeightOverride(mSize.Y);
 
-	UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(ItemImage->Slot);
-	CanvasSlot->SetSize(mSize);
+	UCanvasPanelSlot* ImageCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(ItemImage);
+	if (ImageCanvasSlot)
+	{
+		ImageCanvasSlot->SetSize(mSize*0.7f);
+	}
 }
 
 void UUWItem::Rotate()
