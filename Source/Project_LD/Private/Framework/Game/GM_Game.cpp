@@ -104,7 +104,7 @@ ACharacter* AGM_Game::SpawnCharacter(FVector inLocation, FVector inVelocity, FRo
 
 		FRotator newRotator = inRotator;
 		FVector newLocation = inLocation;
-
+		
 		AC_Game* Character = world->SpawnActor<AC_Game>(DefaultPawnClass, newLocation, newRotator, spawnParams);
 		return Character;
 	}

@@ -188,7 +188,7 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     return true;
 }
 
-bool Handle_S2C_CreateItem(ANetworkController* controller, Protocol::S2C_CreateItem& pkt)
+bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt)
 {
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
@@ -202,21 +202,40 @@ bool Handle_S2C_CreateItem(ANetworkController* controller, Protocol::S2C_CreateI
         return false;
     }
 
-    Protocol::SItem* itemInfo = pkt.mutable_item();
-    Protocol::SVector* itemPosition = itemInfo->mutable_world_position();
-
-    const int64 gameObjectID = itemInfo->object_id();
-    FVector itemLocation = FVector(itemPosition->x(), itemPosition->y(), itemPosition->z());
-    FRotator itemRotator = FRotator::ZeroRotator;
-
-    AItemParent* newItem = Cast<AItemParent>(gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, gameObjectID));
-    if (nullptr == newItem)
+    const int32 maxItemSize = pkt.item().size();
+    for (int32 index = 0; index < maxItemSize; ++index)
     {
-        return false;
+        const Protocol::SItem& curItem = pkt.item(index);
+        int64 objectID          = curItem.object_id();
+        int32 itemCode          = curItem.item_code();
+
+        const Protocol::SVector& itemPosition = curItem.world_position();
+        float worldPositionX    = itemPosition.x();
+        float worldPositionY    = itemPosition.y();
+        float worldPositionZ    = itemPosition.z();
+
+        FVector itemLocation = FVector(worldPositionX, worldPositionY, worldPositionZ);
+        FRotator itemRotator = FRotator::ZeroRotator;
+
+        AItemParent* newItem = Cast<AItemParent>(gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, objectID));
+        if (nullptr == newItem)
+        {
+            return false;
+        }
+        newItem->Init(itemCode, objectID);
     }
-    newItem->Init(itemInfo->item_code(), itemInfo->object_id());
 
     return true;
+}
+
+bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2C_DisAppearGameObject& pkt)
+{
+    return true;
+}
+
+bool Handle_S2C_DestroyItem(ANetworkController* controller, Protocol::S2C_DestroyItem& pkt)
+{
+    return false;
 }
 
 bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_LoadInventory& pkt)
