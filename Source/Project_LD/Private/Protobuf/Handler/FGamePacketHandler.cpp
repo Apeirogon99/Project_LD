@@ -350,9 +350,33 @@ bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_De
         return false;
     }
 
-    pkt.remote_id();
-    pkt.item();
-    pkt.error();
+    const int32 error = pkt.error();
+    if (0 != error)
+    {
+
+    }
+
+    const int64 remoteID = pkt.remote_id();
+    APC_Game* gameController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
+    if (nullptr == gameController)
+    {
+        return false;
+    }
+
+    const Protocol::SItem& itemInfo = pkt.item();
+    const Protocol::SVector& worldPosition = itemInfo.world_position();
+
+    const int32 itemCode        = itemInfo.item_code();
+    const int64 gameObjectID    = itemInfo.object_id();
+    FVector itemLocation        = FVector(worldPosition.x(), worldPosition.y(), worldPosition.z());
+    FRotator itemRotator        = FRotator::ZeroRotator;
+
+    AItemParent* newItem = Cast<AItemParent>(gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, gameObjectID));
+    if (nullptr == newItem)
+    {
+        return false;
+    }
+    newItem->Init(itemCode, gameObjectID);
 
     return true;
 }

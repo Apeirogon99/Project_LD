@@ -44,7 +44,8 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
 
 	//아이템 소환
-	 
+	mInvenComponent->SetInventoryPacket(ItemData, EInventoryType::Remove);
+
 	return false;
 }
 

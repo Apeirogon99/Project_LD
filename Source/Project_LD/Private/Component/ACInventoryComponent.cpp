@@ -3,7 +3,11 @@
 
 #include "Component/ACInventoryComponent.h"
 #include "Framework/Gameinstance/LDGameInstance.h"
+#include <Game/PS_Game.h>
+#include <Game/GM_Game.h>
 
+#include <Protobuf/Handler/FClientPacketHandler.h>
+#include <Protobuf/Handler/FGamePacketHandler.h>
 
 // Sets default values for this component's properties
 UACInventoryComponent::UACInventoryComponent()
@@ -53,6 +57,7 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 	{
 		mInventoryData[i]->Clear();
 	}
+
 	for (UItemObjectData* Data : mInventoryObjectArr)
 	{
 		int X = Data->GetSize().X;
@@ -66,6 +71,8 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 				LocalTile.X = XIndex;
 				LocalTile.Y = YIndex;
 
+				mInventoryData[TileToIndex(LocalTile)]->ObjectID = Data->ObjectID;
+				mInventoryData[TileToIndex(LocalTile)]->mItemCode = Data->mItemCode;
 				mInventoryData[TileToIndex(LocalTile)]->ItemData = Data->ItemData;
 				mInventoryData[TileToIndex(LocalTile)]->position_x = LocalTile.X;
 				mInventoryData[TileToIndex(LocalTile)]->position_y = LocalTile.Y;
@@ -107,25 +114,16 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 {
 	if (ItemObjectData->IsValid() == true)
 	{
-		int X = ItemObjectData->position_x;
-		int Y = ItemObjectData->position_y;
-		int sizeX = ItemObjectData->GetSize().X;
-		int sizeY = ItemObjectData->GetSize().Y;
 
 		int Index = 0;
 		for (UItemObjectData*& Data : mInventoryObjectArr)
 		{
-			if (Data->position_x == ItemObjectData->position_x)
+			if (Data->ObjectID == ItemObjectData->ObjectID)
 			{
-				if (Data->position_y == ItemObjectData->position_y)
-				{
-					if (Data->ItemData.category_id == ItemObjectData->ItemData.category_id)
-					{
-						mInventoryObjectArr.RemoveAt(Index);
-						break;
-					}
-				}
+				mInventoryObjectArr.RemoveAt(Index);
+				break;
 			}
+
 			Index++;
 		}
 	}
@@ -135,11 +133,9 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex)
 {
 	FTile TileData = IndexToTile(TopLeftIndex);
-	UItemObjectData* TileItemData = ItemObjectData;
-	TileItemData->position_x = TileData.X;
-	TileItemData->position_y = TileData.Y;
-	mInventoryObjectArr.Add(TileItemData);
-
+	ItemObjectData->position_x = TileData.X;
+	ItemObjectData->position_y = TileData.Y;
+	mInventoryObjectArr.Add(ItemObjectData);
 	Refresh();
 }
 
@@ -235,6 +231,24 @@ FTile UACInventoryComponent::IndexToTile(int Index) const
 TArray<UItemObjectData*> UACInventoryComponent::GetAllItems()
 {
 	return mInventoryObjectArr;
+}
+
+void UACInventoryComponent::SetInventoryPacket(const UItemObjectData* inItemData, const EInventoryType& inType)
+{
+	switch (inType)
+	{
+	case EInventoryType::Insert:
+		InventoryPacket<Protocol::C2S_InsertInventory>(inItemData);
+		break;
+	case EInventoryType::Update:
+		InventoryPacket<Protocol::C2S_UpdateInventory>(inItemData);
+		break;
+	case EInventoryType::Remove:
+		InventoryPacket<Protocol::C2S_DeleteInventory>(inItemData);
+		break;
+	default:
+		break;
+	}
 }
 
 bool UACInventoryComponent::GetItemAtIndex(int index, UItemObjectData*& ItemObject)

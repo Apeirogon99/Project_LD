@@ -106,7 +106,9 @@ void AItemParent::PickUpItem(AC_Game* inPlayer)
 		return;
 	}
 
-	Protocol::C2S_InsertInventory insertInventoryPacket;
+	playerstate->mInventoryComponent->SetInventoryPacket(mItemObjectData, EInventoryType::Insert);
+
+	/*Protocol::C2S_InsertInventory insertInventoryPacket;
 	insertInventoryPacket.set_timestamp(controller->GetServerTimeStamp());
 	Protocol::SItem* item = insertInventoryPacket.mutable_item();
 	item->set_object_id(mItemObjectData->ObjectID);
@@ -125,7 +127,7 @@ void AItemParent::PickUpItem(AC_Game* inPlayer)
 	item->set_rotation(mItemObjectData->rotation);
 
 	SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(controller, insertInventoryPacket);
-	controller->Send(sendBuffer);
+	controller->Send(sendBuffer);*/
 }
 
 void AItemParent::ItemDestroy()
