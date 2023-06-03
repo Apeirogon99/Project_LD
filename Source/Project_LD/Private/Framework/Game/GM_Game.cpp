@@ -16,6 +16,8 @@
 
 #include <UObject/ConstructorHelpers.h>
 
+#define NETWORK_LOCAL 1
+
 AGM_Game::AGM_Game()
 {
 
@@ -51,16 +53,27 @@ void AGM_Game::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AGM_Game::InitNetwork()
 {
+
+	FString ip;
+#if NETWORK_LOCAL
+	ip = FString(TEXT("192.168.123.112"));
+#else
+	//ip = FString(TEXT("125.180.66.59"));
+	ip = FString(TEXT("127.0.0.1"));
+#endif // Local
+
+	//ec2-52-78-191-130.ap-northeast-2.compute.amazonaws.com
+	//52.78.191.130
 	if (true == IsConnectedServer())
 	{
-		if (false == RequestKeepConnectServer(TEXT("116.41.116.247"), 10000))
+		if (false == RequestKeepConnectServer(ip, 10000))
 		{
 			NetworkGameModeLog(FString(TEXT("failed to requset keep connect server")));
 		}
 	}
 	else
 	{
-		if (false == RequestConnectServer(TEXT("116.41.116.247"), 10000))
+		if (false == RequestConnectServer(ip, 10000))
 		{
 			NetworkGameModeLog(FString(TEXT("failed to requset connect server")));
 		}

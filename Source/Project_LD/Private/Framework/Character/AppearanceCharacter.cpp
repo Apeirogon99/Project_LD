@@ -96,10 +96,10 @@ void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& I
 		switch (currentRace)
 		{
 		case ECharacterRace::Male:
-			SetSkeletalPartMesh(mPants, 130);
+			SetSkeletalPartMesh(mPants, 2);
 			break;
 		case ECharacterRace::Female:
-			SetSkeletalPartMesh(mPants, 100);
+			SetSkeletalPartMesh(mPants, 12);
 			break;
 		case ECharacterRace::Orc:
 			SetSkeletalPartMesh(mPants, 160);

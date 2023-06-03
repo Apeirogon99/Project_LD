@@ -180,6 +180,7 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 		return false;
 	}
 
+	clientHUD->CleanWidgetFromName(TEXT("EditBox"));
 	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
 
 	int32 result = pkt.error();
@@ -203,7 +204,8 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 		notificationDelegate.BindLambda([=]()
 			{
 				clientHUD->CleanWidgetFromName(TEXT("Notification"));
-				clientHUD->ShowWidgetFromName(TEXT("LoginScreen"));
+				clientHUD->CleanWidgetFromName(TEXT("Singup"));
+				clientHUD->ShowWidgetFromName(TEXT("Singin"));
 			});
 
 		bool error = UWidgetUtils::SetNotification(clientHUD, TEXT("회원 가입 성공"), UNetworkUtils::GetNetworkErrorToString(result), TEXT("로그인 하기"), notificationDelegate);
