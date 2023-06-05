@@ -37,10 +37,6 @@ void UUWGridInventory::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	if (mInventoryComponent->OnInventoryChanged.IsBound())
-	{
-		mInventoryComponent->OnInventoryChanged.Unbind();
-	}
 }
 
 FReply UUWGridInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)

@@ -38,7 +38,10 @@ void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	OnInventoryChanged.Unbind();
+	if (OnInventoryChanged.IsBound())
+	{
+		OnInventoryChanged.Unbind();
+	}
 }
 
 void UACInventoryComponent::Refresh()
