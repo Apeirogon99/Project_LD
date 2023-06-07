@@ -56,10 +56,11 @@ public:
 public:
 	//Use NetworkSession Callback
 	virtual bool	OnRecv(FRecvBuffer* buffer, int32 len) sealed;
-	virtual bool	OnRecvPacket(BYTE* buffer, const uint32 len) { return true; };
-	virtual bool	OnSend(int32 len) { return true; };
-	virtual bool	OnConnect() { return true; };
-	virtual bool	OnDisconnect() { return true; };
+	virtual bool	OnRecvPacket(BYTE* buffer, const uint32 len) { return true; }
+	virtual bool	OnSend(int32 len) { return true; }
+	virtual bool	OnConnect() { return true; }
+	virtual bool	OnDisconnect() { return true; }
+	virtual bool	OnTick() { return true; }
 
 public:
 	void ExecutePossessCallBack(const bool inResult);

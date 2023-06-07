@@ -14,7 +14,7 @@
 #include <Network/NetworkController.h>
 #include <Network/NetworkTimeStamp.h>
 
-FNetworkSession::FNetworkSession() : mRecvBuffer(nullptr), mSendBufferQueue(nullptr), mService(nullptr), mController(nullptr), mTimeStamp(nullptr)
+FNetworkSession::FNetworkSession() : mRecvBuffer(nullptr), mSendBufferQueue(nullptr), mService(nullptr), mController(nullptr), mTimeStamp(nullptr), mTickDelayTime(1.0f)
 {
 	mRecvBuffer			= new FRecvBuffer(static_cast<uint32>(Default::MAX_RECV_BUFFER));
 	mSendBufferQueue	= new FSendBufferQueue(static_cast<uint32>(Default::MAX_SEND_QUEUE));
@@ -102,6 +102,15 @@ void FNetworkSession::NetworkLoop()
 	{
 		FPlatformProcess::Sleep(timeToSleep);
 	}
+	
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("%f"), secondsThisTickTook), ELogLevel::Warning);
+
+	//mTickDelayTime -= secondsThisTickTook;
+	//if (mTickDelayTime < 0)
+	//{
+	//	mController->OnTick();
+	//	mTickDelayTime = 1;
+	//}
 }
 
 void FNetworkSession::Prepare(UNetworkService* service)

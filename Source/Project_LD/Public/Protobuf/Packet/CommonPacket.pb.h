@@ -27,6 +27,7 @@
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/arena.h>
 #include <google/protobuf/arenastring.h>
+#include <google/protobuf/generated_message_bases.h>
 #include <google/protobuf/generated_message_util.h>
 #include <google/protobuf/metadata_lite.h>
 #include <google/protobuf/generated_message_reflection.h>
@@ -49,6 +50,9 @@ struct TableStruct_CommonPacket_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_CommonPacket_2eproto;
 namespace Protocol {
+class C2S_ReplicatedServerTimeStamp;
+struct C2S_ReplicatedServerTimeStampDefaultTypeInternal;
+extern C2S_ReplicatedServerTimeStampDefaultTypeInternal _C2S_ReplicatedServerTimeStamp_default_instance_;
 class C2S_TravelServer;
 struct C2S_TravelServerDefaultTypeInternal;
 extern C2S_TravelServerDefaultTypeInternal _C2S_TravelServer_default_instance_;
@@ -60,6 +64,7 @@ struct S2C_TravelServerDefaultTypeInternal;
 extern S2C_TravelServerDefaultTypeInternal _S2C_TravelServer_default_instance_;
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
+template<> ::Protocol::C2S_ReplicatedServerTimeStamp* Arena::CreateMaybeMessage<::Protocol::C2S_ReplicatedServerTimeStamp>(Arena*);
 template<> ::Protocol::C2S_TravelServer* Arena::CreateMaybeMessage<::Protocol::C2S_TravelServer>(Arena*);
 template<> ::Protocol::S2C_ReplicatedServerTimeStamp* Arena::CreateMaybeMessage<::Protocol::S2C_ReplicatedServerTimeStamp>(Arena*);
 template<> ::Protocol::S2C_TravelServer* Arena::CreateMaybeMessage<::Protocol::S2C_TravelServer>(Arena*);
@@ -67,6 +72,124 @@ PROTOBUF_NAMESPACE_CLOSE
 namespace Protocol {
 
 // ===================================================================
+
+class C2S_ReplicatedServerTimeStamp final :
+    public ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase /* @@protoc_insertion_point(class_definition:Protocol.C2S_ReplicatedServerTimeStamp) */ {
+ public:
+  inline C2S_ReplicatedServerTimeStamp() : C2S_ReplicatedServerTimeStamp(nullptr) {}
+  explicit PROTOBUF_CONSTEXPR C2S_ReplicatedServerTimeStamp(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  C2S_ReplicatedServerTimeStamp(const C2S_ReplicatedServerTimeStamp& from);
+  C2S_ReplicatedServerTimeStamp(C2S_ReplicatedServerTimeStamp&& from) noexcept
+    : C2S_ReplicatedServerTimeStamp() {
+    *this = ::std::move(from);
+  }
+
+  inline C2S_ReplicatedServerTimeStamp& operator=(const C2S_ReplicatedServerTimeStamp& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline C2S_ReplicatedServerTimeStamp& operator=(C2S_ReplicatedServerTimeStamp&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const C2S_ReplicatedServerTimeStamp& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const C2S_ReplicatedServerTimeStamp* internal_default_instance() {
+    return reinterpret_cast<const C2S_ReplicatedServerTimeStamp*>(
+               &_C2S_ReplicatedServerTimeStamp_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  friend void swap(C2S_ReplicatedServerTimeStamp& a, C2S_ReplicatedServerTimeStamp& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(C2S_ReplicatedServerTimeStamp* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(C2S_ReplicatedServerTimeStamp* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  C2S_ReplicatedServerTimeStamp* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<C2S_ReplicatedServerTimeStamp>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyFrom;
+  inline void CopyFrom(const C2S_ReplicatedServerTimeStamp& from) {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyImpl(*this, from);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeFrom;
+  void MergeFrom(const C2S_ReplicatedServerTimeStamp& from) {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeImpl(*this, from);
+  }
+  public:
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "Protocol.C2S_ReplicatedServerTimeStamp";
+  }
+  protected:
+  explicit C2S_ReplicatedServerTimeStamp(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:Protocol.C2S_ReplicatedServerTimeStamp)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+  };
+  friend struct ::TableStruct_CommonPacket_2eproto;
+};
+// -------------------------------------------------------------------
 
 class S2C_ReplicatedServerTimeStamp final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.S2C_ReplicatedServerTimeStamp) */ {
@@ -116,7 +239,7 @@ class S2C_ReplicatedServerTimeStamp final :
                &_S2C_ReplicatedServerTimeStamp_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    1;
 
   friend void swap(S2C_ReplicatedServerTimeStamp& a, S2C_ReplicatedServerTimeStamp& b) {
     a.Swap(&b);
@@ -275,7 +398,7 @@ class C2S_TravelServer final :
                &_C2S_TravelServer_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    2;
 
   friend void swap(C2S_TravelServer& a, C2S_TravelServer& b) {
     a.Swap(&b);
@@ -450,7 +573,7 @@ class S2C_TravelServer final :
                &_S2C_TravelServer_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   friend void swap(S2C_TravelServer& a, S2C_TravelServer& b) {
     a.Swap(&b);
@@ -562,6 +685,10 @@ class S2C_TravelServer final :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// C2S_ReplicatedServerTimeStamp
+
+// -------------------------------------------------------------------
+
 // S2C_ReplicatedServerTimeStamp
 
 // int64 time_stamp = 1;
@@ -755,6 +882,8 @@ inline void S2C_TravelServer::set_allocated_error(std::string* error) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

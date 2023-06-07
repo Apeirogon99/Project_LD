@@ -8,6 +8,7 @@
 #include <Widget/Game/Main/W_MainGame.h>
 #include <Framework/Game/C_Game.h>
 #include <Protobuf/Handler/FClientPacketHandler.h>
+#include <Protobuf/Handler/FCommonPacketHandler.h>
 #include <Network/NetworkUtils.h>
 
 #include <Game/C_Game.h>
@@ -55,6 +56,14 @@ bool APC_Game::OnConnect()
 
 bool APC_Game::OnDisconnect()
 {
+	return true;
+}
+
+bool APC_Game::OnTick()
+{
+	Protocol::C2S_ReplicatedServerTimeStamp timeStampPacket;
+	SendBufferPtr pakcetBuffer = FCommonPacketHandler::MakeSendBuffer(this, timeStampPacket);
+	this->Send(pakcetBuffer);
 	return true;
 }
 

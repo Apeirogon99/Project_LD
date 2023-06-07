@@ -48,7 +48,22 @@ void UNetworkService::Tick(float DeltaTime)
 
 	if (mNetworkSession)
 	{
-		mNetworkSession->NetworkLoop();
+		if (mNetworkSession->CanRecv())
+		{
+			mNetworkSession->NetworkLoop();
+		}
+
+		static float tickTimer = 0.0f;
+		tickTimer += DeltaTime;
+
+		if (tickTimer >= 1.0f)
+		{
+			if (mNetworkSession)
+			{
+				mNetworkSession->GetNetworkController()->OnTick();
+			}
+			tickTimer = 0.0f;
+		}
 	}
 	
 	mLastTickFrame = GFrameCounter;
@@ -91,7 +106,7 @@ bool UNetworkService::IsTickable() const
 		return false;
 	}
 
-	return mbIsCreateOnRunning && mNetworkSession->CanRecv();
+	return mbIsCreateOnRunning;
 }
 
 FNetworkSessionPtr UNetworkService::GetNetworkSession()

@@ -1,4 +1,5 @@
 #include "FGamePacketHandler.h"
+#include <FCommonPacketHandler.h>
 
 #include <Framework/Controller/MovementController.h>
 
@@ -53,6 +54,10 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
 
     const int64 newRemoteID = pkt.remote_id();
     playerState->Init(newRemoteID);
+
+    Protocol::C2S_ReplicatedServerTimeStamp timePacket;
+    SendBufferPtr pakcetBuffer = FCommonPacketHandler::MakeSendBuffer(controller, timePacket);
+    controller->Send(pakcetBuffer);
 
     return true;
 }

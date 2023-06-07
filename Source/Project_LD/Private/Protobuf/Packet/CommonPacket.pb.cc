@@ -40,6 +40,17 @@ namespace _pb = ::PROTOBUF_NAMESPACE_ID;
 namespace _pbi = _pb::internal;
 
 namespace Protocol {
+PROTOBUF_CONSTEXPR C2S_ReplicatedServerTimeStamp::C2S_ReplicatedServerTimeStamp(
+    ::_pbi::ConstantInitialized) {}
+struct C2S_ReplicatedServerTimeStampDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR C2S_ReplicatedServerTimeStampDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~C2S_ReplicatedServerTimeStampDefaultTypeInternal() {}
+  union {
+    C2S_ReplicatedServerTimeStamp _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 C2S_ReplicatedServerTimeStampDefaultTypeInternal _C2S_ReplicatedServerTimeStamp_default_instance_;
 PROTOBUF_CONSTEXPR S2C_ReplicatedServerTimeStamp::S2C_ReplicatedServerTimeStamp(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.time_stamp_)*/int64_t{0}
@@ -83,11 +94,17 @@ struct S2C_TravelServerDefaultTypeInternal {
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 S2C_TravelServerDefaultTypeInternal _S2C_TravelServer_default_instance_;
 }  // namespace Protocol
-static ::_pb::Metadata file_level_metadata_CommonPacket_2eproto[3];
+static ::_pb::Metadata file_level_metadata_CommonPacket_2eproto[4];
 static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_CommonPacket_2eproto = nullptr;
 static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_CommonPacket_2eproto = nullptr;
 
 const uint32_t TableStruct_CommonPacket_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::Protocol::C2S_ReplicatedServerTimeStamp, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protocol::S2C_ReplicatedServerTimeStamp, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -114,30 +131,33 @@ const uint32_t TableStruct_CommonPacket_2eproto::offsets[] PROTOBUF_SECTION_VARI
   PROTOBUF_FIELD_OFFSET(::Protocol::S2C_TravelServer, _impl_.error_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::Protocol::S2C_ReplicatedServerTimeStamp)},
-  { 8, -1, -1, sizeof(::Protocol::C2S_TravelServer)},
-  { 17, -1, -1, sizeof(::Protocol::S2C_TravelServer)},
+  { 0, -1, -1, sizeof(::Protocol::C2S_ReplicatedServerTimeStamp)},
+  { 6, -1, -1, sizeof(::Protocol::S2C_ReplicatedServerTimeStamp)},
+  { 14, -1, -1, sizeof(::Protocol::C2S_TravelServer)},
+  { 23, -1, -1, sizeof(::Protocol::S2C_TravelServer)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
+  &::Protocol::_C2S_ReplicatedServerTimeStamp_default_instance_._instance,
   &::Protocol::_S2C_ReplicatedServerTimeStamp_default_instance_._instance,
   &::Protocol::_C2S_TravelServer_default_instance_._instance,
   &::Protocol::_S2C_TravelServer_default_instance_._instance,
 };
 
 const char descriptor_table_protodef_CommonPacket_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\022CommonPacket.proto\022\010Protocol\"E\n\035S2C_Re"
-  "plicatedServerTimeStamp\022\022\n\ntime_stamp\030\001 "
-  "\001(\003\022\020\n\010utc_time\030\002 \001(\003\"J\n\020C2S_TravelServe"
-  "r\022\r\n\005token\030\001 \001(\014\022\021\n\tglobal_id\030\002 \001(\005\022\024\n\014c"
-  "haracter_id\030\003 \001(\005\"!\n\020S2C_TravelServer\022\r\n"
-  "\005error\030\001 \001(\014b\006proto3"
+  "\n\022CommonPacket.proto\022\010Protocol\"\037\n\035C2S_Re"
+  "plicatedServerTimeStamp\"E\n\035S2C_Replicate"
+  "dServerTimeStamp\022\022\n\ntime_stamp\030\001 \001(\003\022\020\n\010"
+  "utc_time\030\002 \001(\003\"J\n\020C2S_TravelServer\022\r\n\005to"
+  "ken\030\001 \001(\014\022\021\n\tglobal_id\030\002 \001(\005\022\024\n\014characte"
+  "r_id\030\003 \001(\005\"!\n\020S2C_TravelServer\022\r\n\005error\030"
+  "\001 \001(\014b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_CommonPacket_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_CommonPacket_2eproto = {
-    false, false, 220, descriptor_table_protodef_CommonPacket_2eproto,
+    false, false, 253, descriptor_table_protodef_CommonPacket_2eproto,
     "CommonPacket.proto",
-    &descriptor_table_CommonPacket_2eproto_once, nullptr, 0, 3,
+    &descriptor_table_CommonPacket_2eproto_once, nullptr, 0, 4,
     schemas, file_default_instances, TableStruct_CommonPacket_2eproto::offsets,
     file_level_metadata_CommonPacket_2eproto, file_level_enum_descriptors_CommonPacket_2eproto,
     file_level_service_descriptors_CommonPacket_2eproto,
@@ -149,6 +169,46 @@ PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_CommonPa
 // Force running AddDescriptors() at dynamic initialization time.
 PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_CommonPacket_2eproto(&descriptor_table_CommonPacket_2eproto);
 namespace Protocol {
+
+// ===================================================================
+
+class C2S_ReplicatedServerTimeStamp::_Internal {
+ public:
+};
+
+C2S_ReplicatedServerTimeStamp::C2S_ReplicatedServerTimeStamp(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase(arena, is_message_owned) {
+  // @@protoc_insertion_point(arena_constructor:Protocol.C2S_ReplicatedServerTimeStamp)
+}
+C2S_ReplicatedServerTimeStamp::C2S_ReplicatedServerTimeStamp(const C2S_ReplicatedServerTimeStamp& from)
+  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  C2S_ReplicatedServerTimeStamp* const _this = this; (void)_this;
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:Protocol.C2S_ReplicatedServerTimeStamp)
+}
+
+
+
+
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData C2S_ReplicatedServerTimeStamp::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyImpl,
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeImpl,
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*C2S_ReplicatedServerTimeStamp::GetClassData() const { return &_class_data_; }
+
+
+
+
+
+
+
+::PROTOBUF_NAMESPACE_ID::Metadata C2S_ReplicatedServerTimeStamp::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_CommonPacket_2eproto_getter, &descriptor_table_CommonPacket_2eproto_once,
+      file_level_metadata_CommonPacket_2eproto[0]);
+}
 
 // ===================================================================
 
@@ -358,7 +418,7 @@ void S2C_ReplicatedServerTimeStamp::InternalSwap(S2C_ReplicatedServerTimeStamp* 
 ::PROTOBUF_NAMESPACE_ID::Metadata S2C_ReplicatedServerTimeStamp::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_CommonPacket_2eproto_getter, &descriptor_table_CommonPacket_2eproto_once,
-      file_level_metadata_CommonPacket_2eproto[0]);
+      file_level_metadata_CommonPacket_2eproto[1]);
 }
 
 // ===================================================================
@@ -616,7 +676,7 @@ void C2S_TravelServer::InternalSwap(C2S_TravelServer* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata C2S_TravelServer::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_CommonPacket_2eproto_getter, &descriptor_table_CommonPacket_2eproto_once,
-      file_level_metadata_CommonPacket_2eproto[1]);
+      file_level_metadata_CommonPacket_2eproto[2]);
 }
 
 // ===================================================================
@@ -814,12 +874,16 @@ void S2C_TravelServer::InternalSwap(S2C_TravelServer* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata S2C_TravelServer::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_CommonPacket_2eproto_getter, &descriptor_table_CommonPacket_2eproto_once,
-      file_level_metadata_CommonPacket_2eproto[2]);
+      file_level_metadata_CommonPacket_2eproto[3]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace Protocol
 PROTOBUF_NAMESPACE_OPEN
+template<> PROTOBUF_NOINLINE ::Protocol::C2S_ReplicatedServerTimeStamp*
+Arena::CreateMaybeMessage< ::Protocol::C2S_ReplicatedServerTimeStamp >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::Protocol::C2S_ReplicatedServerTimeStamp >(arena);
+}
 template<> PROTOBUF_NOINLINE ::Protocol::S2C_ReplicatedServerTimeStamp*
 Arena::CreateMaybeMessage< ::Protocol::S2C_ReplicatedServerTimeStamp >(Arena* arena) {
   return Arena::CreateMessageInternal< ::Protocol::S2C_ReplicatedServerTimeStamp >(arena);

@@ -25,11 +25,13 @@ protected:
 
 public:
 	void		UpdateTimeStamp(const int64 inServerTimeStamp);
+	void		UpdateTimeStamp2(const int64 inServerTimeStamp);
 	void		UpdateUtcDelta(const int64 inServerUtcTime);
 
 	const int64	GetServerTimeStamp();
 	const int64 GetTimeStampDelta();
 	const int64 GetUtcTimeStampDelta();
+	const int64 GetUtcTime();
 
 public:
 	std::chrono::steady_clock::time_point mClock;

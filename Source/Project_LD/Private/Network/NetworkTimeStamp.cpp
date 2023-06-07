@@ -59,6 +59,18 @@ void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp)
 	}
 }
 
+void UNetworkTimeStamp::UpdateTimeStamp2(const int64 inServerTimeStamp)
+{
+	if (mTimeStamp == 0)
+	{
+		mTimeStamp = inServerTimeStamp;
+	}
+	else
+	{
+		mTimeStamp = inServerTimeStamp - mUtcTimeStampDelta;
+	}
+}
+
 void UNetworkTimeStamp::UpdateUtcDelta(const int64 inServerUtcTime)
 {
 	FDateTime currentUtcTimeStamp = FDateTime::UtcNow();
@@ -75,6 +87,11 @@ const int64 UNetworkTimeStamp::GetServerTimeStamp()
 const int64 UNetworkTimeStamp::GetUtcTimeStampDelta()
 {
 	return mUtcTimeStampDelta;
+}
+
+const int64 UNetworkTimeStamp::GetUtcTime()
+{
+	return mUtcTimeStamp;
 }
 
 const int64 UNetworkTimeStamp::GetTimeStampDelta()
