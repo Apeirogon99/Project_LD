@@ -2,6 +2,7 @@
 
 
 #include "Network/NetworkTimeStamp.h"
+#include <NetworkUtils.h>
 #include <chrono>
 
 UNetworkTimeStamp::UNetworkTimeStamp() : mTimeStamp(0), mTimeStampDelta(0), mSumTimeStampDelta(0), mNumTimeStampDelta(1), mUtcTimeStamp(0), mUtcTimeStampDelta(0)
@@ -12,25 +13,19 @@ UNetworkTimeStamp::~UNetworkTimeStamp()
 {
 }
 
-const int64 UNetworkTimeStamp::GetDurationTimeStamp()
+void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp, const int64 inServerUtcTime)
 {
-	return int64();
-}
+	UNetworkUtils::NetworkConsoleLog(FString(TEXT("Update Time Stamp")), ELogLevel::Warning);
 
-const int64 UNetworkTimeStamp::GetUtcDurationTimeStamp()
-{
 	FDateTime currentUtcTimeStamp = FDateTime::UtcNow();
-	const int64 newClientUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
-	const int64 oldClientUtcTimeStmap = mUtcTimeStamp;
-	const int64 tempUtcDurationTimeStmap = (newClientUtcTimeStamp - oldClientUtcTimeStmap) + mUtcTimeStampDelta;
-	return tempUtcDurationTimeStmap;
-}
+	mUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
+	mUtcTimeStampDelta = mUtcTimeStamp - inServerUtcTime;
 
-void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp)
-{
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Utc Time [%lld - %lld = %lld]"), mUtcTimeStamp, inServerUtcTime, mUtcTimeStampDelta), ELogLevel::Warning);
+
 	if (mTimeStamp == 0)
 	{
-		mTimeStamp = inServerTimeStamp;
+		mTimeStamp		= inServerTimeStamp;
 	}
 	else
 	{
@@ -57,31 +52,14 @@ void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp)
 			mTimeStampDelta += (TargetWorldTimeSecondsDelta - mTimeStampDelta) * 0.5;
 		}
 	}
-}
 
-void UNetworkTimeStamp::UpdateTimeStamp2(const int64 inServerTimeStamp)
-{
-	if (mTimeStamp == 0)
-	{
-		mTimeStamp = inServerTimeStamp;
-	}
-	else
-	{
-		mTimeStamp = inServerTimeStamp - mUtcTimeStampDelta;
-	}
-}
-
-void UNetworkTimeStamp::UpdateUtcDelta(const int64 inServerUtcTime)
-{
-	FDateTime currentUtcTimeStamp = FDateTime::UtcNow();
-	mUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
-	mUtcTimeStampDelta = mUtcTimeStamp - inServerUtcTime;
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Server Time %lld"), mTimeStampDelta), ELogLevel::Warning);
 
 }
 
 const int64 UNetworkTimeStamp::GetServerTimeStamp()
 {
-	return mTimeStamp + GetUtcDurationTimeStamp();
+	return mTimeStamp + mTimeStampDelta;
 }
 
 const int64 UNetworkTimeStamp::GetUtcTimeStampDelta()
@@ -99,3 +77,14 @@ const int64 UNetworkTimeStamp::GetTimeStampDelta()
 	return mTimeStampDelta;
 }
 
+const int64 UNetworkTimeStamp::GetUtcDurationTimeStamp()
+{
+	FDateTime currentUtcTimeStamp = FDateTime::UtcNow();
+	const int64 newClientUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
+	const int64 oldClientUtcTimeStmap = mUtcTimeStamp;
+	const int64 tempUtcDurationTimeStmap = (newClientUtcTimeStamp - oldClientUtcTimeStmap);
+
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Duration [%lld - %lld = %lld]"), newClientUtcTimeStamp, oldClientUtcTimeStmap, tempUtcDurationTimeStmap), ELogLevel::Warning);
+
+	return tempUtcDurationTimeStmap;
+}

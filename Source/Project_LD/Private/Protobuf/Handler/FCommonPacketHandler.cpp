@@ -27,44 +27,12 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 
 	//클라이언트가 유추한 시간
 	const int64 clientTimeStamp = timeStamp->GetServerTimeStamp();
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("%lld, %lld"), clientTimeStamp), ELogLevel::Warning);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Prediction [%lld] - [%lld] = [%lld]"), clientTimeStamp, pkt.time_stamp(), clientTimeStamp - pkt.time_stamp()), ELogLevel::Warning);
 
-	//서버의 UTC시간과 클라이언트의 UTC시간의 차이를 구함 (절대시간)
-	const int64 serverUtcTimeStamp = pkt.utc_time();
-	timeStamp->UpdateUtcDelta(serverUtcTimeStamp);
-	//const int64 utcTimeStampDelta = timeStamp->GetTimeStampDelta();
-
-	//서버 시간
+	//서버 시간으로 업데이트
 	const int64 serverTimeStamp = pkt.time_stamp();
-	timeStamp->UpdateTimeStamp2(serverTimeStamp);
-
-	const int64 clientTimeStamp2 = timeStamp->GetServerTimeStamp();
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[%lld] %lld - %lld = %lld"), clientTimeStamp2, timeStamp->GetUtcTime(), serverUtcTimeStamp, timeStamp->GetUtcTimeStampDelta()), ELogLevel::Warning);
-
-	//보정 후 시간
-	//const int64 updateTimeStamp = (clientTimeStamp - serverTimeStamp);
-	//timeStamp->UpdateTimeStamp(updateTimeStamp);
-
-	//TEST Widget
-	//AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
-	//if (nullptr == clientHUD)
-	//{
-	//	return false;
-	//}
-
-	//UW_Test* testWidget = nullptr;
-	//UUserWidget* outWidget = clientHUD->GetWidgetFromName(TEXT("Test"));
-	//if (outWidget)
-	//{
-	//	testWidget = Cast<UW_Test>(outWidget);
-	//	if (testWidget == nullptr)
-	//	{
-	//		return false;
-	//	}
-
-	//	testWidget->Update(clientTimeStamp, serverTimeStamp, utcTimeStampDelta, updateTimeStamp);
-	//	return true;
-	//}
+	const int64 serverUtcTime = pkt.utc_time();
+	timeStamp->UpdateTimeStamp(serverTimeStamp, serverUtcTime);
 
 	return true;
 }
