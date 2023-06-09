@@ -6,6 +6,7 @@
 #include "Blueprint/DragDropOperation.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
 
+#include <Component/ACInventoryComponent.h>
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Border.h"
 #include "Components/CanvasPanel.h"
@@ -37,6 +38,13 @@ void UUWGridInventory::NativeDestruct()
 {
 	Super::NativeDestruct();
 
+	if (mInventoryComponent)
+	{
+		if (mInventoryComponent->OnInventoryChanged.IsBound())
+		{
+			mInventoryComponent->OnInventoryChanged.Unbind();
+		}
+	}
 }
 
 FReply UUWGridInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)

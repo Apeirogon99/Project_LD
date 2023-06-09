@@ -17,11 +17,15 @@ class PROJECT_LD_API UW_MainGame : public UUserWidget
 
 	virtual void NativeConstruct() override;
 
+private:
+	UPROPERTY(meta = (BindWidget))
+	class UButton* Btn_Inventory;
 
 private:
 	bool misInventoryOpen;
 
 public:
+	UFUNCTION()
 	void InventoryOpenRequest();
 	void InventoryOpenResponse();
 };

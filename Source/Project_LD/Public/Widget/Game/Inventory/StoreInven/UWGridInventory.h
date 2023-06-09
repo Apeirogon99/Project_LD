@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include <Struct/Inventory/InventoryFrame.h>
-#include <Component/ACInventoryComponent.h>
 #include "UWGridInventory.generated.h"
 
 /**
@@ -19,6 +18,10 @@ struct PROJECT_LD_API FMousePositionReturn
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Position") bool Right;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Position") bool Down;
 };
+
+class UBorder;
+class UCanvasPanel;
+class UACInventoryComponent;
 
 UCLASS()
 class PROJECT_LD_API UUWGridInventory : public UUserWidget
@@ -50,10 +53,10 @@ public:
 	TArray<FLine> LineArr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
-	class UBorder* GridBorder;
+	UBorder* GridBorder;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
-	class UCanvasPanel* GridCanvas_Panel;
+	UCanvasPanel* GridCanvas_Panel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
 	TSubclassOf<UUserWidget> mImageAsset;

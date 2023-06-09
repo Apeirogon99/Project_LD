@@ -17,7 +17,7 @@ UACInventoryComponent::UACInventoryComponent()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	mColums = 6;
-	mRows = 15;
+	mRows = 10;
 }
 
 

@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Struct/Game/GameDatas.h"
-#include <Component/ACInventoryComponent.h>
 #include "UWInventory.generated.h"
 
 /**
@@ -13,6 +12,9 @@
  */
 class UBorder;
 class UBackgroundBlur;
+class UTextBlock;
+class UButton;
+class UACInventoryComponent;
 
 UCLASS()
 class PROJECT_LD_API UUWInventory : public UUserWidget
@@ -29,15 +31,32 @@ protected:
 
 public:
 	UPROPERTY()
-	UWidget* GridInventory;
+	UWidget* mGridInventory;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
-		UBorder* BackgroundBorder;
+	UPROPERTY()
+	UWidget* mEquipmentWindow;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Border", meta = (BindWidget))
+	UBorder* BackgroundBorder;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Title", meta = (BindWidget))
+	UTextBlock* TB_InvenTitle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Button", meta = (BindWidget))
+	UButton* Btn_CloseInventory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Money", meta = (BindWidget))
+	UTextBlock* TB_Gold;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Money", meta = (BindWidget))
+	UTextBlock* TB_Silver;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Money", meta = (BindWidget))
+	UTextBlock* TB_Bronze;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UACInventoryComponent* mInvenComponent;
-
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "default")
 	float mTileSize;
@@ -45,6 +64,11 @@ public:
 public:
 	UFUNCTION()
 	void InitInventory(UACInventoryComponent* InventoryComponent, float size);
+
+	UFUNCTION()
+	void CloseInventory();
+
+	void RefreshMoney(int32 moneyGold, int32 moneySilver, int32 moneyBronze);
 
 	void InventoryLoadRequest();
 	void InventoryLoadRespawn();
