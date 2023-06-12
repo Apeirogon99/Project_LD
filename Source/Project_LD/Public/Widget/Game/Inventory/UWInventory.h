@@ -22,8 +22,7 @@ UCLASS()
 class PROJECT_LD_API UUWInventory : public UUserWidget
 {
 	GENERATED_BODY()
-
-		/*
+	
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
@@ -31,14 +30,41 @@ protected:
 
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
-	*/
+	
 public:
 	UPROPERTY()
 	UWidget* mGridInventory;
 
-	//UPROPERTY()
-	//UWidget* mInvenFrame;
-	/*
+	UPROPERTY()
+	UWidget* mInvenFrame;
+
+	UPROPERTY()
+	UWidget* mEquipHelmet;
+
+	UPROPERTY()
+	UWidget* mEquipShoulders;
+
+	UPROPERTY()
+	UWidget* mEquipChest;
+
+	UPROPERTY()
+	UWidget* mEquipBracers;
+
+	UPROPERTY()
+	UWidget* mEquipHands;
+
+	UPROPERTY()
+	UWidget* mEquipPants;
+
+	UPROPERTY()
+	UWidget* mEquipBoots;
+
+	UPROPERTY()
+	UWidget* mEquipLeftWeapon;
+	
+	UPROPERTY()
+	UWidget* mEquipRightWeapon;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Detail | Canvas", meta = (BindWidget))
 	UCanvasPanel* DetailCanvas;
 
@@ -146,7 +172,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Detail | TextBlock | Mana", meta = (BindWidget))
 	UTextBlock* TB_DTManaRegeneration;
-	*/
+	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UACInventoryComponent* mInvenComponent;
@@ -157,7 +183,7 @@ public:
 public:
 	UFUNCTION()
 	void InitInventory(UACInventoryComponent* InventoryComponent, float size);
-	/*
+	
 	UFUNCTION()
 	void CloseInventory();
 
@@ -165,7 +191,7 @@ public:
 	void ToggleDetailPanel();
 
 	void RefreshMoney(int32 money);
-	*/
+	
 	void InventoryLoadRequest();
 	void InventoryLoadRespawn();
 };

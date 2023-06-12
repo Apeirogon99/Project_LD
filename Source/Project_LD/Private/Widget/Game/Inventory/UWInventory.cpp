@@ -2,6 +2,7 @@
 
 #include "Game/Inventory/UWInventory.h"
 #include "Game/Inventory/StoreInven/UWGridInventory.h"
+#include <Widget/Game/Item/W_ItemSpace.h>
 
 #include "Blueprint/WidgetTree.h"
 #include "Blueprint/DragDropOperation.h"
@@ -24,7 +25,6 @@
 
 #include "Kismet/GameplayStatics.h"
 
-/*
 void UUWInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -112,7 +112,7 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 
 	return false;
 }
-*/
+
 void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, float TileSize)
 {
 	mInvenComponent = InventoryComponent;
@@ -128,7 +128,6 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		}
 	}
 
-	/*
 	mInvenFrame = this->WidgetTree->FindWidget(FName(TEXT("BW_InvenFrame")));
 	if (mInvenFrame != nullptr)
 	{
@@ -138,9 +137,98 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 			InventoryFrame->Init(mInvenComponent);
 		}
 	}
-	*/
+
+	mEquipHelmet = this->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceHelmet")));
+	if (mEquipHelmet != nullptr)
+	{
+		if (IsValid(mEquipHelmet))
+		{
+			UW_ItemSpace* EquipHelmet = Cast<UW_ItemSpace>(mEquipHelmet);
+			EquipHelmet->Init(mInvenComponent);
+		}
+	}
+
+	mEquipShoulders = this->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceShoulders")));
+	if (mEquipShoulders != nullptr)
+	{
+		if (IsValid(mEquipShoulders))
+		{
+			UW_ItemSpace* EquipShoudler = Cast<UW_ItemSpace>(mEquipShoulders);
+			EquipShoudler->Init(mInvenComponent);
+		}
+	}
+
+	mEquipChest = this->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceChest")));
+	if (mEquipChest != nullptr)
+	{
+		if (IsValid(mEquipChest))
+		{
+			UW_ItemSpace* EquipChest = Cast<UW_ItemSpace>(mEquipChest);
+			EquipChest->Init(mInvenComponent);
+		}
+	}
+
+	mEquipBracers = this->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceBracers")));
+	if (mEquipBracers != nullptr)
+	{
+		if (IsValid(mEquipBracers))
+		{
+			UW_ItemSpace* EquipBracers = Cast<UW_ItemSpace>(mEquipBracers);
+			EquipBracers->Init(mInvenComponent);
+		}
+	}
+
+	mEquipHands = this->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceHands")));
+	if (mEquipHands != nullptr)
+	{
+		if (IsValid(mEquipHands))
+		{
+			UW_ItemSpace* EquipHands = Cast<UW_ItemSpace>(mEquipHands);
+			EquipHands->Init(mInvenComponent);
+		}
+	}
+
+	mEquipPants = this->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpacePants")));
+	if (mEquipPants != nullptr)
+	{
+		if (IsValid(mEquipPants))
+		{
+			UW_ItemSpace* EquipPants = Cast<UW_ItemSpace>(mEquipPants);
+			EquipPants->Init(mInvenComponent);
+		}
+	}
+
+	mEquipBoots = this->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceBoots")));
+	if (mEquipBoots != nullptr)
+	{
+		if (IsValid(mEquipBoots))
+		{
+			UW_ItemSpace* EquipBoots = Cast<UW_ItemSpace>(mEquipBoots);
+			EquipBoots->Init(mInvenComponent);
+		}
+	}
+
+	mEquipLeftWeapon = this->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceLeftWeapon")));
+	if (mEquipLeftWeapon != nullptr)
+	{
+		if (IsValid(mEquipLeftWeapon))
+		{
+			UW_ItemSpace* EquipLeftWeapon = Cast<UW_ItemSpace>(mEquipLeftWeapon);
+			EquipLeftWeapon->Init(mInvenComponent);
+		}
+	}
+
+	mEquipRightWeapon = this->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceRightWeapon")));
+	if (mEquipRightWeapon != nullptr)
+	{
+		if (IsValid(mEquipRightWeapon))
+		{
+			UW_ItemSpace* EquipRightWeapon = Cast<UW_ItemSpace>(mEquipRightWeapon);
+			EquipRightWeapon->Init(mInvenComponent);
+		}
+	}
 }
-/*
+
 void UUWInventory::CloseInventory()
 {
 	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
@@ -182,5 +270,3 @@ void UUWInventory::RefreshMoney(int32 money)
 {
 
 }
-
-*/

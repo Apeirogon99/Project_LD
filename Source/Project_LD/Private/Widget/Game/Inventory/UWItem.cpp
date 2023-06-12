@@ -26,8 +26,6 @@ void UUWItem::NativeConstruct()
 
 	mIsEnter = false;
 
-	mIsInInventory = false;
-
 	ItemImage->SetBrushFromTexture(mItemObjectData->ItemData.icon);
 }
 

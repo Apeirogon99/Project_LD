@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include <Struct/Game/CharacterDatas.h>
 #include "W_SelectCharacter.generated.h"
 
 class UW_SelectCharacterButton;

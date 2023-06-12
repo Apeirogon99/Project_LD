@@ -5,26 +5,21 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Struct/Game/GameDatas.h"
-#include "UWItem.generated.h"
+#include "UWEquipItem.generated.h"
 
 /**
  * 
  */
-class USizeBox;
 class UBorder;
 class UImage;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnRemoved, UItemObjectData*);
-
-UCLASS(BlueprintType)
-class PROJECT_LD_API UUWItem : public UUserWidget
+UCLASS()
+class PROJECT_LD_API UUWEquipItem : public UUserWidget
 {
 	GENERATED_BODY()
 	
 protected:
 	virtual void NativeConstruct() override;
-	virtual void NativeOnInitialized() override;
-	virtual void NativeDestruct() override;
 
 	virtual void NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& MouseEvent) override;
@@ -34,33 +29,20 @@ protected:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	USizeBox* BackgroundSizeBox;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UBorder* BackgroundBorder;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UImage* ItemImage;
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	float mTileSize;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	UItemObjectData* mItemObjectData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	FVector2D mSize;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	bool mIsEnter;
 
-	FOnRemoved OnRemoved;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	TArray<UTexture2D*> mFrameTextureArr;
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void Refresh();
-
-	UFUNCTION(BlueprintCallable)
-	void Rotate();
+	void SetImage();
 };

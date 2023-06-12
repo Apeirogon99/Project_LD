@@ -12,6 +12,7 @@
 class UCanvasPanel;
 class USizeBox;
 class UImage;
+class UACInventoryComponent;
 
 UCLASS()
 class PROJECT_LD_API UW_ItemSpace : public UUserWidget
@@ -20,6 +21,7 @@ class PROJECT_LD_API UW_ItemSpace : public UUserWidget
 	
 protected:
 	virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
 
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
@@ -30,8 +32,14 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Size")
 	float mSizeY;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Size")
+	int32 mCategoryId;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
 	TSubclassOf<UUserWidget> mImageAsset;
+
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	TArray<UTexture2D*> mTextureArr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (BindWidget))
 	UCanvasPanel* ItemCanvas;
@@ -44,4 +52,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (BindWidget))
 	UImage* ImgSlot;
+
+	bool bRigthItemCategory;
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UACInventoryComponent* mInvenComponent;
+
+public:
+	void Init(UACInventoryComponent* InvenComponent);
 };
