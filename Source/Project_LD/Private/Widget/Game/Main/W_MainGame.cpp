@@ -17,13 +17,7 @@ void UW_MainGame::NativeConstruct()
 	Btn_Inventory = Cast<UButton>(GetWidgetFromName(TEXT("Btn_Inventory")));
 	if (Btn_Inventory != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Btn_Inventory exist"));
-
 		Btn_Inventory->OnClicked.AddDynamic(this, &UW_MainGame::InventoryOpenRequest);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Btn_Inventory null"));
 	}
 
 	misInventoryOpen = true;

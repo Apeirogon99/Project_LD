@@ -124,6 +124,8 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 							UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
 							Local_CanvasSlot->SetAnchors(FAnchors(0.f,0.f,1.f,1.f));
 							Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
+
+							//Item ÀåÂø
 						}
 					}
 				}
