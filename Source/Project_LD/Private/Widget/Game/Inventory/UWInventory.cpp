@@ -8,12 +8,14 @@
 
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Main/W_MainGame.h>
-#include <Widget/Game/Equipment/UWEquipmentWindow.h>
+#include <Widget/Game/Inventory/UWInvenFrame.h>
 
 #include <Game/PS_Game.h>
 #include <Game/GM_Game.h>
 #include <Game/PC_Game.h>
 
+#include "Components/CanvasPanel.h"
+#include "Components/Image.h"
 #include "Components/Border.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
@@ -22,37 +24,63 @@
 
 #include "Kismet/GameplayStatics.h"
 
+/*
 void UUWInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	BackgroundBorder = Cast<UBorder>(GetWidgetFromName(TEXT("BackgroundBorder")));
-	TB_InvenTitle = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_InvenTitle")));
-	Btn_CloseInventory = Cast<UButton>(GetWidgetFromName(TEXT("Btn_CloseInventory")));
-	TB_Gold = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Gold")));
-	TB_Silver = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Silver")));
-	TB_Bronze = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Bronze")));
+	DetailCanvas = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("DetailCanvas")));
 
-	if (TB_InvenTitle)
-	{
-		TB_InvenTitle->SetText(FText::FromString("Inventory"));
-	}
+	BackgroundBorder = Cast<UBorder>(GetWidgetFromName(TEXT("BackgroundBorder")));
+	
+	Btn_CloseInventory = Cast<UButton>(GetWidgetFromName(TEXT("Btn_CloseInventory")));
+	Btn_DetailStatus = Cast<UButton>(GetWidgetFromName(TEXT("Btn_DetailStatus")));
+
+	TB_Level = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Level")));
+	TB_CharacterName = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_CharacterName")));
+	TB_Power = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Power")));
+	TB_Armor = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Armor")));
+	TB_Health = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Health")));
+	TB_Mana = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Mana")));
+
+	Img_Power = Cast<UImage>(GetWidgetFromName(TEXT("Img_Power")));
+	Img_Armor = Cast<UImage>(GetWidgetFromName(TEXT("Img_Armor")));
+	Img_Health = Cast<UImage>(GetWidgetFromName(TEXT("Img_Health")));
+	Img_Mana = Cast<UImage>(GetWidgetFromName(TEXT("Img_Mana")));
+
+	TB_DTAttackDamage = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTAttackDamage")));
+	TB_DTAbilityPower = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTAbilityPower")));
+	TB_DTAttackSpeed = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTAttackSpeed")));
+	TB_DTCriticalStrikeChance = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTCriticalStrikeChance")));
+	TB_DTCriticalStrikeDamage = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTCriticalStrikeDamage")));
+	TB_DTArmorPenetration = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTArmorPenetration")));
+	TB_DTMagePenetration = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTMagePenetration")));
+	TB_DTAbilityHaste = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTAbilityHaste")));
+	TB_DTMovementSpeed = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTMovementSpeed")));
+	TB_DTRange = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTRange")));
+	TB_DTArmor = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTArmor")));
+	TB_DTTenacity = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTTenacity")));
+	TB_DTMagicResistance = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTMagicResistance")));
+	TB_DTSlowResist = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTSlowResist")));
+	TB_DTHealth = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTHealth")));
+	TB_DTHealthReneration = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTHealthReneration")));
+	TB_DTLifeSteal = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTLifeSteal")));
+	TB_DTPhysicalVamp = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTPhysicalVamp")));
+	TB_DTOmnivamp = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTOmnivamp")));
+	TB_DTHealAndShieldPower = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTHealAndShieldPower")));
+	TB_DTMana = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTMana")));
+	TB_DTManaRegeneration = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTManaRegeneration")));
+
 	if (Btn_CloseInventory)
 	{
 		Btn_CloseInventory->OnClicked.AddDynamic(this, &UUWInventory::CloseInventory);
 	}
-	if (TB_Gold)
+	if (Btn_DetailStatus)
 	{
-		TB_Gold->SetText(FText::FromString("150"));
+		Btn_DetailStatus->OnClicked.AddDynamic(this, &UUWInventory::ToggleDetailPanel);
 	}
-	if (TB_Silver)
-	{
-		TB_Silver->SetText(FText::FromString("50"));
-	}
-	if (TB_Bronze)
-	{
-		TB_Bronze->SetText(FText::FromString("250"));
-	}
+
+	DetailCanvas->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UUWInventory::NativeOnInitialized()
@@ -75,7 +103,7 @@ FReply UUWInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const 
 bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
-
+	
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
 	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
 
@@ -84,7 +112,7 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 
 	return false;
 }
-
+*/
 void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, float TileSize)
 {
 	mInvenComponent = InventoryComponent;
@@ -100,17 +128,19 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		}
 	}
 
-	mEquipmentWindow = this->WidgetTree->FindWidget(FName(TEXT("BW_EquipmentWindow")));
-	if (mEquipmentWindow != nullptr)
+	/*
+	mInvenFrame = this->WidgetTree->FindWidget(FName(TEXT("BW_InvenFrame")));
+	if (mInvenFrame != nullptr)
 	{
-		if (IsValid(mEquipmentWindow))
+		if (IsValid(mInvenFrame))
 		{
-			UUWEquipmentWindow* equipmentwindow = Cast<UUWEquipmentWindow>(mEquipmentWindow);
-			equipmentwindow->Init(mInvenComponent);
+			UUWInvenFrame* InventoryFrame = Cast<UUWInvenFrame>(mInvenFrame);
+			InventoryFrame->Init(mInvenComponent);
 		}
 	}
+	*/
 }
-
+/*
 void UUWInventory::CloseInventory()
 {
 	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
@@ -136,18 +166,21 @@ void UUWInventory::CloseInventory()
 	wMainGame->InventoryOpenRequest();
 }
 
-void UUWInventory::RefreshMoney(int32 moneyGold, int32 moneySilver, int32 moneyBronze)
+void UUWInventory::ToggleDetailPanel()
 {
-	if (TB_Gold)
+	if (DetailCanvas->IsVisible())
 	{
-		TB_Gold->SetText(FText::FromString(FString::FromInt(moneyGold)));
+		DetailCanvas->SetVisibility(ESlateVisibility::Hidden);
 	}
-	if (TB_Silver)
+	else
 	{
-		TB_Silver->SetText(FText::FromString(FString::FromInt(moneySilver)));
-	}
-	if (TB_Bronze)
-	{
-		TB_Bronze->SetText(FText::FromString(FString::FromInt(moneyBronze)));
+		DetailCanvas->SetVisibility(ESlateVisibility::Visible);
 	}
 }
+
+void UUWInventory::RefreshMoney(int32 money)
+{
+
+}
+
+*/

@@ -57,6 +57,8 @@ public:
 
 	FOnRemoved OnRemoved;
 
+	bool mIsInInventory;
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void Refresh();

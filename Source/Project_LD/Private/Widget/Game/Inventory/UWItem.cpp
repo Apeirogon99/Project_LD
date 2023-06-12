@@ -26,6 +26,8 @@ void UUWItem::NativeConstruct()
 
 	mIsEnter = false;
 
+	mIsInInventory = false;
+
 	ItemImage->SetBrushFromTexture(mItemObjectData->ItemData.icon);
 }
 
@@ -43,7 +45,10 @@ void UUWItem::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	OnRemoved.Clear();
+	if (OnRemoved.IsBound())
+	{
+		OnRemoved.Clear();
+	}
 }
 
 void UUWItem::NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)

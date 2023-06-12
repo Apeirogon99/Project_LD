@@ -219,6 +219,7 @@ void UUWGridInventory::Refresh()
 			{
 				ItemImageWidget->mTileSize = mTileSize;
 				ItemImageWidget->mItemObjectData = Data;
+				ItemImageWidget->mIsInInventory = true;
 
 				//Bind Remove
 				ItemImageWidget->OnRemoved.AddUFunction(this, FName("CallRemoved_Single"));

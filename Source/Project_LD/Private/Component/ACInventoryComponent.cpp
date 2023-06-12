@@ -16,8 +16,8 @@ UACInventoryComponent::UACInventoryComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
-	mColums = 6;
-	mRows = 10;
+	mColums = 12;
+	mRows = 7;
 }
 
 
