@@ -234,9 +234,11 @@ bool FNetworkSession::RegisterConnect(const FString& inAddr, const uint16 inPort
 		}
 
 		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : server connection timed outr", ELogLevel::Error);
+		mSocket->SetNonBlocking(!bNonBlocking);
 		return false;
 	}
 
+	mSocket->SetNonBlocking(!bNonBlocking);
 	return true;
 }
 

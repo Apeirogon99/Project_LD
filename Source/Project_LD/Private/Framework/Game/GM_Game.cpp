@@ -56,7 +56,7 @@ void AGM_Game::InitNetwork()
 
 	FString ip;
 #if NETWORK_LOCAL
-	ip = FString(TEXT("192.168.123.112"));
+	ip = FString(TEXT("116.41.116.247"));
 #else
 	//ip = FString(TEXT("125.180.66.59"));
 	ip = FString(TEXT("127.0.0.1"));
