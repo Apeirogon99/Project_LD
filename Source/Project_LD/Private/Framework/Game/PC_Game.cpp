@@ -61,7 +61,11 @@ bool APC_Game::OnDisconnect()
 
 bool APC_Game::OnTick()
 {
+	FDateTime nowUtcTimeStamp = FDateTime::UtcNow();
+	const int64 millUtcTimeStamp = (nowUtcTimeStamp.ToUnixTimestamp() * 1000) + nowUtcTimeStamp.GetMillisecond();
+
 	Protocol::C2S_ReplicatedServerTimeStamp timeStampPacket;
+	timeStampPacket.set_utc_time(millUtcTimeStamp);
 	SendBufferPtr pakcetBuffer = FCommonPacketHandler::MakeSendBuffer(this, timeStampPacket);
 	this->Send(pakcetBuffer);
 	return true;

@@ -32,7 +32,7 @@ public:
 
 public:
 	void SetNewMoveDestination(const FVector DestLocation);
-	void MoveDestination(const FVector DestLocation);
+	void MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)

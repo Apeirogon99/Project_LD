@@ -35,11 +35,9 @@ enum class ECharacterPose : uint8
 };
 
 UENUM()
-enum class EEquipment : uint8
+enum class ECharacterPart : uint8
 {
 	None			UMETA(DisplayName = "None"),
-	Body			UMETA(DisplayName = "Body"),
-	Hair			UMETA(DisplayName = "Hair"),
 	Helmet			UMETA(DisplayName = "Helmet"),
 	Shoulders		UMETA(DisplayName = "Shoulders"),
 	Chest			UMETA(DisplayName = "Chest"),
@@ -47,19 +45,8 @@ enum class EEquipment : uint8
 	Hands			UMETA(DisplayName = "Hands"),
 	Pants			UMETA(DisplayName = "Pants"),
 	Boots			UMETA(DisplayName = "Boots"),
-
-	Back_2HL		UMETA(DisplayName = "Back_2HL"),
-	Back_Shield		UMETA(DisplayName = "Back_Shield"),
-	Back_WeaponL	UMETA(DisplayName = "Back_WeaponL"),
-	Back_WeaponR	UMETA(DisplayName = "Back_WeaponR"),
-	Back_Bow		UMETA(DisplayName = "Back_Bow"),
-	Quiver			UMETA(DisplayName = "Quiver"),
-	Weapon_R_Arrow	UMETA(DisplayName = "Weapon_R_Arrow"),
-	Weapon_Shield	UMETA(DisplayName = "Weapon_Shield"),
 	Weapon_L		UMETA(DisplayName = "Weapon_L"),
 	Weapon_R		UMETA(DisplayName = "Weapon_R"),
-	Hip_L			UMETA(DisplayName = "Hip_L"),
-	Hip_R			UMETA(DisplayName = "Hip_R")
 };
 
 UENUM()

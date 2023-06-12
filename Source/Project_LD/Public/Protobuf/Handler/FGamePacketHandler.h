@@ -27,6 +27,10 @@ enum class EPakcetID: uint16
 	C2S_DeleteInventory = 2017,
 	S2C_DeleteInventory = 2018,
 	S2C_RollbackInventory = 2019,
+	C2S_UpdateEqipment = 2020,
+	S2C_UpdateEqipment = 2021,
+	C2S_DeleteEqipment = 2022,
+	S2C_DeleteEqipment = 2023,
 };
 */
 
@@ -44,6 +48,8 @@ bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_In
 bool Handle_S2C_UpdateInventory(ANetworkController* controller, Protocol::S2C_UpdateInventory& pkt);
 bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_DeleteInventory& pkt);
 bool Handle_S2C_RollbackInventory(ANetworkController* controller, Protocol::S2C_RollbackInventory& pkt);
+bool Handle_S2C_UpdateEqipment(ANetworkController* controller, Protocol::S2C_UpdateEqipment& pkt);
+bool Handle_S2C_DeleteEqipment(ANetworkController* controller, Protocol::S2C_DeleteEqipment& pkt);
 
 class FGamePacketHandler
 {
@@ -63,6 +69,8 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_UpdateInventory)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_UpdateInventory>(Handle_S2C_UpdateInventory, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DeleteInventory)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DeleteInventory>(Handle_S2C_DeleteInventory, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_RollbackInventory)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_RollbackInventory>(Handle_S2C_RollbackInventory, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_UpdateEqipment)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_UpdateEqipment>(Handle_S2C_UpdateEqipment, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DeleteEqipment)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DeleteEqipment>(Handle_S2C_DeleteEqipment, controller, buffer, len); };
 	}
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_EnterGameServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_EnterGameServer)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LeaveGameServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LeaveGameServer)); }
@@ -71,5 +79,7 @@ public:
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_InsertInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_InsertInventory)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_UpdateInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_UpdateInventory)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_DeleteInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_DeleteInventory)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_UpdateEqipment& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_UpdateEqipment)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_DeleteEqipment& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_DeleteEqipment)); }
 
 };

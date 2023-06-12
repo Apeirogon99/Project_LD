@@ -26,5 +26,5 @@ protected:
 	virtual void BeginNetwork() override;
 
 public:
-	ACharacter* SpawnCharacter(FVector inLocation, FVector inVelocity, FRotator inRotator);
+	ACharacter* SpawnCharacter(FVector inLocation, FRotator inRotator);
 };

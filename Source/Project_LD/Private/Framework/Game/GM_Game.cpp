@@ -106,7 +106,7 @@ void AGM_Game::BeginNetwork()
 	GetClientHUD()->ShowWidgetFromName(FString(TEXT("MainGame")));
 }
 
-ACharacter* AGM_Game::SpawnCharacter(FVector inLocation, FVector inVelocity, FRotator inRotator)
+ACharacter* AGM_Game::SpawnCharacter(FVector inLocation, FRotator inRotator)
 {
 	UWorld* world = GetWorld();
 	if (world)

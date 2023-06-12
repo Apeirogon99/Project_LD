@@ -70,7 +70,6 @@ public:
 	void KeepConnect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack);
 	void Disconnect(const FString& inCause);
 	void Send(SendBufferPtr FSendBuffer);
-	void Tick();
 
 	UNetworkTimeStamp* GetTimeStamp();
 

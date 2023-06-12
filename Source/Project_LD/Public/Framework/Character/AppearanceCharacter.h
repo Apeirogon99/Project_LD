@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Network/NetworkCharacter.h"
+#include <Struct/Game/CharacterDatas.h>
 #include "AppearanceCharacter.generated.h"
 
 /**
@@ -31,6 +32,7 @@ public:
 
 	void SetSkeletalPartColor(USkeletalMeshComponent* inMesh, const FString& inParamterName, int32 inIndex, uint32 inColor);
 	void SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPart, int32 InMeshIndex);
+	void SetSkeletalPartMesh(const ECharacterPart& inCharacterPart, const int32 inGameDataID);
 
 public:
 	FLinearColor GetMeshColor(const EAppearance InAppearance);

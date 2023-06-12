@@ -27,7 +27,6 @@
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/arena.h>
 #include <google/protobuf/arenastring.h>
-#include <google/protobuf/generated_message_bases.h>
 #include <google/protobuf/generated_message_util.h>
 #include <google/protobuf/metadata_lite.h>
 #include <google/protobuf/generated_message_reflection.h>
@@ -74,9 +73,10 @@ namespace Protocol {
 // ===================================================================
 
 class C2S_ReplicatedServerTimeStamp final :
-    public ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase /* @@protoc_insertion_point(class_definition:Protocol.C2S_ReplicatedServerTimeStamp) */ {
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:Protocol.C2S_ReplicatedServerTimeStamp) */ {
  public:
   inline C2S_ReplicatedServerTimeStamp() : C2S_ReplicatedServerTimeStamp(nullptr) {}
+  ~C2S_ReplicatedServerTimeStamp() override;
   explicit PROTOBUF_CONSTEXPR C2S_ReplicatedServerTimeStamp(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
   C2S_ReplicatedServerTimeStamp(const C2S_ReplicatedServerTimeStamp& from);
@@ -149,15 +149,29 @@ class C2S_ReplicatedServerTimeStamp final :
   C2S_ReplicatedServerTimeStamp* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
     return CreateMaybeMessage<C2S_ReplicatedServerTimeStamp>(arena);
   }
-  using ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyFrom;
-  inline void CopyFrom(const C2S_ReplicatedServerTimeStamp& from) {
-    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyImpl(*this, from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const C2S_ReplicatedServerTimeStamp& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const C2S_ReplicatedServerTimeStamp& from) {
+    C2S_ReplicatedServerTimeStamp::MergeImpl(*this, from);
   }
-  using ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeFrom;
-  void MergeFrom(const C2S_ReplicatedServerTimeStamp& from) {
-    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeImpl(*this, from);
-  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
   public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(C2S_ReplicatedServerTimeStamp* other);
 
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
@@ -178,6 +192,18 @@ class C2S_ReplicatedServerTimeStamp final :
 
   // accessors -------------------------------------------------------
 
+  enum : int {
+    kUtcTimeFieldNumber = 1,
+  };
+  // int64 utc_time = 1;
+  void clear_utc_time();
+  int64_t utc_time() const;
+  void set_utc_time(int64_t value);
+  private:
+  int64_t _internal_utc_time() const;
+  void _internal_set_utc_time(int64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.C2S_ReplicatedServerTimeStamp)
  private:
   class _Internal;
@@ -186,7 +212,10 @@ class C2S_ReplicatedServerTimeStamp final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   struct Impl_ {
+    int64_t utc_time_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
+  union { Impl_ _impl_; };
   friend struct ::TableStruct_CommonPacket_2eproto;
 };
 // -------------------------------------------------------------------
@@ -314,6 +343,7 @@ class S2C_ReplicatedServerTimeStamp final :
   enum : int {
     kTimeStampFieldNumber = 1,
     kUtcTimeFieldNumber = 2,
+    kRttFieldNumber = 3,
   };
   // int64 time_stamp = 1;
   void clear_time_stamp();
@@ -333,6 +363,15 @@ class S2C_ReplicatedServerTimeStamp final :
   void _internal_set_utc_time(int64_t value);
   public:
 
+  // int64 rtt = 3;
+  void clear_rtt();
+  int64_t rtt() const;
+  void set_rtt(int64_t value);
+  private:
+  int64_t _internal_rtt() const;
+  void _internal_set_rtt(int64_t value);
+  public:
+
   // @@protoc_insertion_point(class_scope:Protocol.S2C_ReplicatedServerTimeStamp)
  private:
   class _Internal;
@@ -343,6 +382,7 @@ class S2C_ReplicatedServerTimeStamp final :
   struct Impl_ {
     int64_t time_stamp_;
     int64_t utc_time_;
+    int64_t rtt_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
   union { Impl_ _impl_; };
@@ -687,6 +727,26 @@ class S2C_TravelServer final :
 #endif  // __GNUC__
 // C2S_ReplicatedServerTimeStamp
 
+// int64 utc_time = 1;
+inline void C2S_ReplicatedServerTimeStamp::clear_utc_time() {
+  _impl_.utc_time_ = int64_t{0};
+}
+inline int64_t C2S_ReplicatedServerTimeStamp::_internal_utc_time() const {
+  return _impl_.utc_time_;
+}
+inline int64_t C2S_ReplicatedServerTimeStamp::utc_time() const {
+  // @@protoc_insertion_point(field_get:Protocol.C2S_ReplicatedServerTimeStamp.utc_time)
+  return _internal_utc_time();
+}
+inline void C2S_ReplicatedServerTimeStamp::_internal_set_utc_time(int64_t value) {
+  
+  _impl_.utc_time_ = value;
+}
+inline void C2S_ReplicatedServerTimeStamp::set_utc_time(int64_t value) {
+  _internal_set_utc_time(value);
+  // @@protoc_insertion_point(field_set:Protocol.C2S_ReplicatedServerTimeStamp.utc_time)
+}
+
 // -------------------------------------------------------------------
 
 // S2C_ReplicatedServerTimeStamp
@@ -729,6 +789,26 @@ inline void S2C_ReplicatedServerTimeStamp::_internal_set_utc_time(int64_t value)
 inline void S2C_ReplicatedServerTimeStamp::set_utc_time(int64_t value) {
   _internal_set_utc_time(value);
   // @@protoc_insertion_point(field_set:Protocol.S2C_ReplicatedServerTimeStamp.utc_time)
+}
+
+// int64 rtt = 3;
+inline void S2C_ReplicatedServerTimeStamp::clear_rtt() {
+  _impl_.rtt_ = int64_t{0};
+}
+inline int64_t S2C_ReplicatedServerTimeStamp::_internal_rtt() const {
+  return _impl_.rtt_;
+}
+inline int64_t S2C_ReplicatedServerTimeStamp::rtt() const {
+  // @@protoc_insertion_point(field_get:Protocol.S2C_ReplicatedServerTimeStamp.rtt)
+  return _internal_rtt();
+}
+inline void S2C_ReplicatedServerTimeStamp::_internal_set_rtt(int64_t value) {
+  
+  _impl_.rtt_ = value;
+}
+inline void S2C_ReplicatedServerTimeStamp::set_rtt(int64_t value) {
+  _internal_set_rtt(value);
+  // @@protoc_insertion_point(field_set:Protocol.S2C_ReplicatedServerTimeStamp.rtt)
 }
 
 // -------------------------------------------------------------------

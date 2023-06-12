@@ -96,13 +96,10 @@ void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& I
 		switch (currentRace)
 		{
 		case ECharacterRace::Male:
-			SetSkeletalPartMesh(mPants, 2);
+			SetSkeletalPartMesh(mPants, 1);
 			break;
 		case ECharacterRace::Female:
-			SetSkeletalPartMesh(mPants, 12);
-			break;
-		case ECharacterRace::Orc:
-			SetSkeletalPartMesh(mPants, 160);
+			SetSkeletalPartMesh(mPants, 11);
 			break;
 		default:
 			break;
@@ -266,6 +263,44 @@ void AAppearanceCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPar
 	}
 
 	InMeshPart->SetSkeletalMesh(NewMesh);
+}
+
+void AAppearanceCharacter::SetSkeletalPartMesh(const ECharacterPart& inCharacterPart, const int32 inGameDataID)
+{
+	switch (inCharacterPart)
+	{
+	case ECharacterPart::None:
+		break;
+	case ECharacterPart::Helmet:
+		SetSkeletalPartMesh(mHelmet, inGameDataID);
+		break;
+	case ECharacterPart::Shoulders:
+		SetSkeletalPartMesh(mShoulders, inGameDataID);
+		break;
+	case ECharacterPart::Chest:
+		SetSkeletalPartMesh(mChest, inGameDataID);
+		break;
+	case ECharacterPart::Bracers:
+		SetSkeletalPartMesh(mBracers, inGameDataID);
+		break;
+	case ECharacterPart::Hands:
+		SetSkeletalPartMesh(mHands, inGameDataID);
+		break;
+	case ECharacterPart::Pants:
+		SetSkeletalPartMesh(mPants, inGameDataID);
+		break;
+	case ECharacterPart::Boots:
+		SetSkeletalPartMesh(mBoots, inGameDataID);
+		break;
+	case ECharacterPart::Weapon_L:
+		SetSkeletalPartMesh(mWeapon_L, inGameDataID);
+		break;
+	case ECharacterPart::Weapon_R:
+		SetSkeletalPartMesh(mWeapon_R, inGameDataID);
+		break;
+	default:
+		break;
+	}
 }
 
 FLinearColor AAppearanceCharacter::GetMeshColor(const EAppearance InAppearance)

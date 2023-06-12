@@ -102,15 +102,6 @@ void FNetworkSession::NetworkLoop()
 	{
 		FPlatformProcess::Sleep(timeToSleep);
 	}
-	
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("%f"), secondsThisTickTook), ELogLevel::Warning);
-
-	//mTickDelayTime -= secondsThisTickTook;
-	//if (mTickDelayTime < 0)
-	//{
-	//	mController->OnTick();
-	//	mTickDelayTime = 1;
-	//}
 }
 
 void FNetworkSession::Prepare(UNetworkService* service)
@@ -264,7 +255,7 @@ void FNetworkSession::RegisterSend()
 {
 	if (false == IsConnected())
 	{
-		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Recv] : is not connected server", ELogLevel::Error);
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::RegisterSend] : is not connected server", ELogLevel::Error);
 		return;
 	}
 

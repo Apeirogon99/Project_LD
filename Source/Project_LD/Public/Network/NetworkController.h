@@ -49,6 +49,7 @@ public:
 
 	class UNetworkTimeStamp* GetTimeStamp();
 	const int64 GetServerTimeStamp();
+	const int64 GetClientTimeStamp();
 
 	FNetworkSessionPtr GetNetworkSession() { return mNetworkSession; }
 	void Send(SendBufferPtr FSendBuffer);

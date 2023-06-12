@@ -1,6 +1,8 @@
 #include "FGamePacketHandler.h"
 #include <FCommonPacketHandler.h>
 
+#include <Network/NetworkUtils.h>
+
 #include <Framework/Controller/MovementController.h>
 
 #include <Game/GM_Game.h>
@@ -31,7 +33,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     FVector velocity = FVector();
     FRotator rotator = FRotator::ZeroRotator;
 
-    AC_Game* newCharacter = Cast<AC_Game>(gameMode->SpawnCharacter(location, velocity, rotator));
+    AC_Game* newCharacter = Cast<AC_Game>(gameMode->SpawnCharacter(location, rotator));
     if (nullptr == newCharacter)
     {
         return false;
@@ -54,10 +56,6 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
 
     const int64 newRemoteID = pkt.remote_id();
     playerState->Init(newRemoteID);
-
-    Protocol::C2S_ReplicatedServerTimeStamp timePacket;
-    SendBufferPtr pakcetBuffer = FCommonPacketHandler::MakeSendBuffer(controller, timePacket);
-    controller->Send(pakcetBuffer);
 
     return true;
 }
@@ -95,11 +93,24 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
         return false;
     }
 
-    FVector location = FVector(0, 0, 200.0f);
-    FVector velocity = FVector();
-    FRotator rotator = FRotator::ZeroRotator;
+    APS_Game* localPlayerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == localPlayerState)
+    {
+        return false;
+    }
 
-    AC_Game* character = Cast<AC_Game>(gameMode->SpawnCharacter(location, velocity, rotator));
+    if (pkt.remote_id() == localPlayerState->GetRemoteID())
+    {
+        return true;
+    }
+
+    const int64                     newRemoteID             = pkt.remote_id();
+    const int64                     lastMovementTimeStamp   = pkt.timestamp();
+    FVector                         oldMovementLocation     = FVector(pkt.old_location().x(), pkt.old_location().y(), pkt.old_location().z());
+    FVector                         newMovementLocation     = FVector(pkt.new_location().x(), pkt.new_location().y(), pkt.new_location().z());
+    const Protocol::SCharacterData& characterData           = pkt.character_data();
+
+    AC_Game* character = Cast<AC_Game>(gameMode->SpawnCharacter(FVector::ZeroVector, FRotator::ZeroRotator));
     if (nullptr == character)
     {
         return false;
@@ -107,6 +118,20 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     character->SpawnDefaultController();
 
     AController* aiController = character->GetController();
+    if (nullptr == aiController)
+    {
+        return false;
+    }
+
+    AMovementController* movementController = StaticCast<AMovementController*>(aiController);
+    if (nullptr == movementController)
+    {
+        return false;
+    }
+    const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
+    const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
+    movementController->MoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
+
     aiController->InitPlayerState();
     APS_Game* playerState = aiController->GetPlayerState<APS_Game>();
     if (nullptr == playerState)
@@ -114,7 +139,6 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
         return false;
     }
 
-    const int64 newRemoteID = pkt.remote_id();
     character->SetPlayerState(playerState);
     playerState->Init(newRemoteID);
 
@@ -181,15 +205,25 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
 
     const int64 remoteID = pkt.remote_id();
     AController* remoteController = gameState->FindPlayerController(remoteID);
+    if (nullptr == remoteController)
+    {
+        return true;
+    }
 
     AMovementController* movementController = StaticCast<AMovementController*>(remoteController);
-    Protocol::STransform* transform = pkt.mutable_transform();
-    Protocol::SVector* position = transform->mutable_position();
+    if (nullptr == movementController)
+    {
+        return false;
+    }
 
-    FVector newDestination;
-    newDestination.Set(position->x(), position->y(), position->z());
+    const int64 lastMovementTimeStamp = pkt.timestamp();
+    const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
+    const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
 
-    movementController->MoveDestination(newDestination);
+    FVector     oldMovementLocation = FVector(pkt.old_location().x(), pkt.old_location().y(), pkt.old_location().z());
+    FVector     newMovementLocation = FVector(pkt.new_location().x(), pkt.new_location().y(), pkt.new_location().z());
+
+    movementController->MoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
     return true;
 }
 
@@ -406,6 +440,16 @@ bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_De
 }
 
 bool Handle_S2C_RollbackInventory(ANetworkController* controller, Protocol::S2C_RollbackInventory& pkt)
+{
+    return true;
+}
+
+bool Handle_S2C_UpdateEqipment(ANetworkController* controller, Protocol::S2C_UpdateEqipment& pkt)
+{
+    return true;
+}
+
+bool Handle_S2C_DeleteEqipment(ANetworkController* controller, Protocol::S2C_DeleteEqipment& pkt)
 {
     return true;
 }

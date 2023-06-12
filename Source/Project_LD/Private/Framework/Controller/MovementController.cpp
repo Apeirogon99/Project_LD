@@ -9,6 +9,9 @@
 #include <Protobuf/Handler/FGamePacketHandler.h>
 
 #include <Network/NetworkCharacter.h>
+#include <Framework/Game/C_Game.h>
+#include <GameFramework/PawnMovementComponent.h>
+
 #include <Framework/Character/AppearanceCharacter.h>
 #include <Blueprint/AIBlueprintHelperLibrary.h>
 #include <Kismet/GameplayStatics.h>
@@ -31,6 +34,7 @@ void AMovementController::PlayerTick(float DeltaTime)
 		MoveToMouseCursor();
 		IsMoveToMouseCursor = false;
 	}
+
 }
 
 void AMovementController::SetupInputComponent()
@@ -81,25 +85,67 @@ void AMovementController::SetNewMoveDestination(const FVector DestLocation)
 
 	//TODO: 서버에게 보낼 값
 	ANetworkController* controller = Cast<ANetworkController>(this);
+	if (nullptr == controller)
+	{
+		return;
+	}
 
 	Protocol::C2S_MovementCharacter movementPacket;
-	Protocol::STransform* newTransform = movementPacket.mutable_transform();
-	Protocol::SVector* newPosition = newTransform->mutable_position();
-	
-	newPosition->set_x(DestLocation.X);
-	newPosition->set_y(DestLocation.Y);
-	newPosition->set_z(DestLocation.Z);
+	const int64 serverTimeStamp = controller->GetServerTimeStamp();
+	movementPacket.set_timestamp(serverTimeStamp);
+
+	APawn* pawn = controller->GetPawn();
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
+	FVector pawnLocation = pawn->GetActorLocation();
+	Protocol::SVector* oldMovementLocation = movementPacket.mutable_old_location();
+	oldMovementLocation->set_x(pawnLocation.X);
+	oldMovementLocation->set_y(pawnLocation.Y);
+	oldMovementLocation->set_z(pawnLocation.Z);
+
+	Protocol::SVector* newMovementLocation = movementPacket.mutable_new_location();
+	newMovementLocation->set_x(DestLocation.X);
+	newMovementLocation->set_y(DestLocation.Y);
+	newMovementLocation->set_z(pawnLocation.Z);
 
 	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(controller, movementPacket);
 	controller->Send(pakcetBuffer);
 }
 
-void AMovementController::MoveDestination(const FVector DestLocation)
+void AMovementController::MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
 {
-	//TODO: 서버에서 받는 값
-	APawn* const MyPawn = GetPawn();
-	if (MyPawn)
+
+	APawn* pawn = this->GetPawn();
+	if (nullptr == pawn)
 	{
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
+		return;
+	}
+
+	FVector		direction = inNewMovementLocation - inOldMovementLocation;
+	direction.Normalize();
+
+	FRotator	rotation = direction.Rotation();
+	FVector		velocity = rotation.Vector() * pawn->GetMovementComponent()->GetMaxSpeed();
+	float		duration = inTime / 1000.0f;
+	FVector		deadReckoningLocation = inOldMovementLocation + pawn->GetVelocity() * duration + 0.5f * velocity * duration * duration;
+
+	float distance1 = FVector::Distance(deadReckoningLocation, inOldMovementLocation);
+	float distance2 = FVector::Distance(inNewMovementLocation, inOldMovementLocation);
+
+	if (distance1 >= distance2)
+	{
+		pawn->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
+		pawn->SetActorRotation(rotation);
+
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("%ws"), *inNewMovementLocation.ToString()), ELogLevel::Warning);
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("%ws"), *pawn->GetActorLocation().ToString()), ELogLevel::Warning);
+	}
+	else
+	{
+		pawn->SetActorLocation(deadReckoningLocation, false, nullptr, ETeleportType::ResetPhysics);
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 	}
 }
