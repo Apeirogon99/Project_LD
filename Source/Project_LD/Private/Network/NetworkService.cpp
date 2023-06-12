@@ -60,7 +60,10 @@ void UNetworkService::Tick(float DeltaTime)
 		{
 			if (mNetworkSession)
 			{
-				mNetworkSession->GetNetworkController()->OnTick();
+				if (mNetworkSession->GetNetworkController())
+				{
+					mNetworkSession->GetNetworkController()->OnTick();
+				}
 			}
 			tickTimer = 0.0f;
 		}
