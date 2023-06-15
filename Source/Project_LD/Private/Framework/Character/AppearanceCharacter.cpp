@@ -84,8 +84,14 @@ void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& I
 		return;
 	}
 
-	SetSkeletalPartMesh(mHair,		InCharacterEquipment.mHair);
-	SetSkeletalPartMesh(mHelmet,	InCharacterEquipment.mHelmet);
+	if (InCharacterEquipment.mHelmet == 0)
+	{
+		SetSkeletalPartMesh(mHair, InCharacterEquipment.mHair);
+	}
+	else
+	{
+		SetSkeletalPartMesh(mHelmet, InCharacterEquipment.mHelmet);
+	}
 	SetSkeletalPartMesh(mShoulders, InCharacterEquipment.mShoulders);
 	SetSkeletalPartMesh(mChest,		InCharacterEquipment.mChest);
 	SetSkeletalPartMesh(mBracers,	InCharacterEquipment.mBracers);
