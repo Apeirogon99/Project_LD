@@ -5,39 +5,19 @@
 #include "Components/Border.h"
 #include <Blueprint/WidgetBlueprintLibrary.h>
 
-void UUWEquipItem::NativeConstruct()
+void UUWEquipItem::NativePreConstruct()
 {
-	BackgroundBorder = Cast<UBorder>(GetWidgetFromName(TEXT("BackgroundBorder")));
-	ItemImage = Cast<UImage>(GetWidgetFromName(TEXT("ItemImage")));
+	Super::NativePreConstruct();
+}
 
-	UTexture2D* Texture2DNormal = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Common/Tier/T_Normal_Frame.T_Normal_Frame'"));
-	UTexture2D* Texture2DRare = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Common/Tier/T_Rare_Frame.T_Rare_Frame'"));
-	UTexture2D* Texture2DEpic = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Common/Tier/T_Epic_Frame.T_Epic_Frame"));
-	UTexture2D* Texture2DMythic = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Common/Tier/T_Mythic_Frame.T_Mythic_Frame'"));
-	UTexture2D* Texture2DLegendary = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Common/Tier/T_Legendary_Frame.T_Legendary_Frame'"));
+void UUWEquipItem::NativeDestruct()
+{
+	Super::NativeDestruct();
 
-	if (Texture2DNormal)
+	if (OnEquipItemRemoved.IsBound() == true)
 	{
-		mFrameTextureArr.Add(Texture2DNormal);
+		OnEquipItemRemoved.Unbind();
 	}
-	if (Texture2DRare)
-	{
-		mFrameTextureArr.Add(Texture2DRare);
-	}
-	if (Texture2DEpic)
-	{
-		mFrameTextureArr.Add(Texture2DEpic);
-	}
-	if (Texture2DMythic)
-	{
-		mFrameTextureArr.Add(Texture2DMythic);
-	}
-	if (Texture2DLegendary)
-	{
-		mFrameTextureArr.Add(Texture2DLegendary);
-	}
-
-	mIsEnter = false;
 }
 
 void UUWEquipItem::NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
@@ -65,6 +45,10 @@ void UUWEquipItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPoin
 	DragDropOperation->DefaultDragVisual = this;
 	DragDropOperation->Pivot = EDragPivot::CenterCenter;
 
+	if (OnEquipItemRemoved.IsBound() == true)
+	{
+		OnEquipItemRemoved.ExecuteIfBound();
+	}
 	RemoveFromParent();
 
 	OutOperation = DragDropOperation;
@@ -88,6 +72,7 @@ FReply UUWEquipItem::NativeOnMouseButtonUp(const FGeometry& InGeometry, const FP
 	Super::NativeOnMouseButtonUp(InGeometry, InMouseEvent);
 
 	mIsEnter = false;
+
 	return FReply::Handled();
 }
 
@@ -97,21 +82,54 @@ void UUWEquipItem::SetImage()
 	{
 		if (mItemObjectData->IsValid())
 		{
-			if (BackgroundBorder)
+			if (ItemBackgroundImage)
 			{
-				FSlateBrush BorderImageBrush;
-				BorderImageBrush.SetResourceObject(mFrameTextureArr[mItemObjectData->ItemData.tier_id - 1]);
-				BorderImageBrush.ImageSize = FVector2D(
-					mFrameTextureArr[mItemObjectData->ItemData.tier_id - 1]->GetSizeX(),
-					mFrameTextureArr[mItemObjectData->ItemData.tier_id - 1]->GetSizeY()
-				);
-				
-				BackgroundBorder->SetBrush(BorderImageBrush);
+				ItemBackgroundImage->SetBrushFromTexture(mFrameTextureArr[mItemObjectData->ItemData.tier_id - 1]);
 			}
 			if (ItemImage)
 			{
 				ItemImage->SetBrushFromTexture(mItemObjectData->ItemData.icon);
 			}
 		}
+	}
+} 
+
+void UUWEquipItem::Init()
+{
+	if (bIsFirst)
+	{
+		bIsFirst = false;
+		BackgroundBorder = Cast<UBorder>(GetWidgetFromName(TEXT("BackgroundBorder")));
+		ItemBackgroundImage = Cast<UImage>(GetWidgetFromName(TEXT("ItemBackgroundImage")));
+		ItemImage = Cast<UImage>(GetWidgetFromName(TEXT("ItemImage")));
+
+		UTexture2D* Texture2DNormal = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Common/Tier/T_Normal_Frame.T_Normal_Frame'"));
+		UTexture2D* Texture2DRare = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Common/Tier/T_Rare_Frame.T_Rare_Frame'"));
+		UTexture2D* Texture2DEpic = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Common/Tier/T_Epic_Frame.T_Epic_Frame'"));
+		UTexture2D* Texture2DMythic = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Common/Tier/T_Mythic_Frame.T_Mythic_Frame'"));
+		UTexture2D* Texture2DLegendary = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Common/Tier/T_Legendary_Frame.T_Legendary_Frame'"));
+
+		if (Texture2DNormal)
+		{
+			mFrameTextureArr.Add(Texture2DNormal);
+		}
+		if (Texture2DRare)
+		{
+			mFrameTextureArr.Add(Texture2DRare);
+		}
+		if (Texture2DEpic)
+		{
+			mFrameTextureArr.Add(Texture2DEpic);
+		}
+		if (Texture2DMythic)
+		{
+			mFrameTextureArr.Add(Texture2DMythic);
+		}
+		if (Texture2DLegendary)
+		{
+			mFrameTextureArr.Add(Texture2DLegendary);
+		}
+
+		mIsEnter = false;
 	}
 }

@@ -54,6 +54,7 @@ public:
 	UImage* ImgSlot;
 
 	bool bRigthItemCategory;
+	bool bExist;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
@@ -61,4 +62,7 @@ public:
 
 public:
 	void Init(UACInventoryComponent* InvenComponent);
+
+	UFUNCTION()
+	void FalseExist();
 };

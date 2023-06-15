@@ -4,6 +4,7 @@
 #include "Game/Inventory/StoreInven/UWGridInventory.h"
 #include <Widget/Game/Item/W_ItemSpace.h>
 
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Blueprint/WidgetTree.h"
 #include "Blueprint/DragDropOperation.h"
 
@@ -15,6 +16,7 @@
 #include <Game/GM_Game.h>
 #include <Game/PC_Game.h>
 
+#include "Components/CanvasPanelSlot.h"
 #include "Components/CanvasPanel.h"
 #include "Components/Image.h"
 #include "Components/Border.h"
@@ -81,6 +83,7 @@ void UUWInventory::NativeConstruct()
 	}
 
 	DetailCanvas->SetVisibility(ESlateVisibility::Hidden);
+	BackgroundBorder->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UUWInventory::NativeOnInitialized()
@@ -109,6 +112,8 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 
 	//아이템 소환
 	mInvenComponent->SetInventoryPacket(ItemData, EInventoryType::Remove);
+
+	BackgroundBorder->SetVisibility(ESlateVisibility::Hidden);
 
 	return false;
 }
@@ -259,10 +264,20 @@ void UUWInventory::ToggleDetailPanel()
 	if (DetailCanvas->IsVisible())
 	{
 		DetailCanvas->SetVisibility(ESlateVisibility::Hidden);
+		UCanvasPanelSlot* FrameCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(mInvenFrame);
+		if (FrameCanvasSlot)
+		{
+			FrameCanvasSlot->SetSize(FVector2D(680.f, 0.f));
+		}
 	}
 	else
 	{
 		DetailCanvas->SetVisibility(ESlateVisibility::Visible);
+		UCanvasPanelSlot* FrameCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(mInvenFrame);
+		if (FrameCanvasSlot)
+		{
+			FrameCanvasSlot->SetSize(FVector2D(1000.f, 0.f));
+		}
 	}
 }
 

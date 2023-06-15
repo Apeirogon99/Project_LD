@@ -2,9 +2,14 @@
 
 #include "Widget/Game/Inventory/StoreInven/UWGridInventory.h"
 #include "Widget/Game/Inventory/UWItem.h"
+#include "WIdget/Game/Inventory/UWInventory.h"
 
 #include "Blueprint/DragDropOperation.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
+
+#include <Game/GM_Game.h>
+#include <Game/PC_Game.h>
+#include <Widget/Handler/ClientHUD.h>
 
 #include <Component/ACInventoryComponent.h>
 #include "Components/CanvasPanelSlot.h"
@@ -19,7 +24,7 @@ void UUWGridInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	TSubclassOf<UUWItem> ImageWidgetAsset = StaticLoadClass(UUWItem::StaticClass(), NULL, TEXT("WidgetBlueprint'/Game/Blueprint/Widget/Game/Inventory/BW_Item.BW_Item_C'"));
+	TSubclassOf<UUWItem> ImageWidgetAsset = StaticLoadClass(UUWItem::StaticClass(), NULL, TEXT("WidgetBlueprint'/Game/Blueprint/Widget/Game/Inventory/Item/BW_Item.BW_Item_C'"));
 	if (ImageWidgetAsset)
 	{
 		mImageAsset = ImageWidgetAsset;
@@ -112,6 +117,27 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 			}
 		}
 	}
+
+	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return false;
+	}
+
+	APC_Game* playerController = Cast<APC_Game>(gamemode->GetNetworkController());
+	if (GetOwningPlayer() != playerController)
+	{
+		return false;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(gamemode->GetClientHUD());
+	if (nullptr == clientHUD)
+	{
+		return false;
+	}
+
+	UUserWidget* LocalInventory = clientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
+	Cast<UUWInventory>(LocalInventory)->BackgroundBorder->SetVisibility(ESlateVisibility::Hidden);
 	
 	return true;
 }
@@ -119,6 +145,27 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 bool UUWGridInventory::NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDragOver(InGeometry, InDragDropEvent, InOperation);
+
+	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return false;
+	}
+
+	APC_Game* playerController = Cast<APC_Game>(gamemode->GetNetworkController());
+	if (GetOwningPlayer() != playerController)
+	{
+		return false;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(gamemode->GetClientHUD());
+	if (nullptr == clientHUD)
+	{
+		return false;
+	}
+
+	UUserWidget* LocalInventory = clientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
+	Cast<UUWInventory>(LocalInventory)->BackgroundBorder->SetVisibility(ESlateVisibility::Visible);
 
 	FVector2D MousePosition_Local = InGeometry.AbsoluteToLocal(InDragDropEvent.GetScreenSpacePosition());
 	FMousePositionReturn MousePositionbool = MousePositionInTile(MousePosition_Local);

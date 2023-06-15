@@ -13,13 +13,16 @@
 class UBorder;
 class UImage;
 
+DECLARE_DELEGATE(FOnEquipItemRemoved);
+
 UCLASS()
 class PROJECT_LD_API UUWEquipItem : public UUserWidget
 {
 	GENERATED_BODY()
 	
 protected:
-	virtual void NativeConstruct() override;
+	virtual void NativePreConstruct() override;
+	virtual void NativeDestruct() override;
 
 	virtual void NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& MouseEvent) override;
@@ -30,6 +33,9 @@ protected:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UBorder* BackgroundBorder;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	UImage* ItemBackgroundImage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UImage* ItemImage;
@@ -44,5 +50,12 @@ public:
 	TArray<UTexture2D*> mFrameTextureArr;
 
 public:
+	bool bIsFirst = true;
+
+	FOnEquipItemRemoved OnEquipItemRemoved;
+
+public:
 	void SetImage();
+
+	void Init();
 };

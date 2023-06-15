@@ -10,6 +10,9 @@
 /**
  * 
  */
+class UCameraComponent;
+class USpringArmComponent;
+
 UCLASS()
 class PROJECT_LD_API AC_Game : public AAppearanceCharacter
 {
@@ -19,16 +22,25 @@ public:
 	AC_Game();
 	~AC_Game();
 	
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* mGameCameraComponent;
+	UCameraComponent* mGameCameraComponent;
 
 	/** Camera boom positioning the camera above the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* mCameraBoom;
+	USpringArmComponent* mCameraBoom;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TSubclassOf<AAppearanceCharacter> PreviewBPCharacter;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	AAppearanceCharacter* spawnPreview;
 
 public:
 	UFUNCTION()
