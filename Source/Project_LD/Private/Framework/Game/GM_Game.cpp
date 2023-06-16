@@ -14,6 +14,8 @@
 #include <Protobuf/Handler/FGamePacketHandler.h>
 #include <Network/NetworkUtils.h>
 
+#include <Struct/Identity/ServerData.h>
+
 #include <UObject/ConstructorHelpers.h>
 
 #define NETWORK_LOCAL 1
@@ -55,25 +57,39 @@ void AGM_Game::InitNetwork()
 {
 
 	FString ip;
+	int32 port;
 #if NETWORK_LOCAL
 	ip = FString(TEXT("116.41.116.247"));
+	port = 10000;
 #else
 	//ip = FString(TEXT("125.180.66.59"));
 	ip = FString(TEXT("127.0.0.1"));
+	port = 10000;
 #endif // Local
 
-	//ec2-52-78-191-130.ap-northeast-2.compute.amazonaws.com
-	//52.78.191.130
+	ULDGameInstance* instance = Cast<ULDGameInstance>(GetGameInstance());
+	if (nullptr == instance)
+	{
+		return;
+	}
+
+	UServerData* serverData = instance->GetServerData();
+	if (serverData)
+	{
+		ip = serverData->GetServerIP();
+		port = serverData->GetServerPort();
+	}
+
 	if (true == IsConnectedServer())
 	{
-		if (false == RequestKeepConnectServer(ip, 10000))
+		if (false == RequestKeepConnectServer(ip, port))
 		{
 			NetworkGameModeLog(FString(TEXT("failed to requset keep connect server")));
 		}
 	}
 	else
 	{
-		if (false == RequestConnectServer(ip, 10000))
+		if (false == RequestConnectServer(ip, port))
 		{
 			NetworkGameModeLog(FString(TEXT("failed to requset connect server")));
 		}
@@ -97,7 +113,7 @@ void AGM_Game::BeginNetwork()
 		return;
 	}
 
-	std::string token = UNetworkUtils::ConvertString(instance->mToken);
+	std::string token = UNetworkUtils::ConvertString(instance->GetToken());
 
 	Protocol::C2S_EnterGameServer enterPacket;
 	enterPacket.set_token(token);

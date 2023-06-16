@@ -29,7 +29,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
         return false;
     }
 
-    FVector location = FVector(0, 0, 200.0f);
+    FVector location = FVector(0, 0, 500.0f);
     FVector velocity = FVector();
     FRotator rotator = FRotator::ZeroRotator;
 
@@ -444,7 +444,7 @@ bool Handle_S2C_RollbackInventory(ANetworkController* controller, Protocol::S2C_
     return true;
 }
 
-bool Handle_S2C_UpdateEqipment(ANetworkController* controller, Protocol::S2C_UpdateEqipment& pkt)
+bool Handle_S2C_InsertEqipment(ANetworkController* controller, Protocol::S2C_InsertEqipment& pkt)
 {
     return true;
 }

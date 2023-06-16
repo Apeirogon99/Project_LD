@@ -8,6 +8,7 @@
 #include "LDGameInstance.generated.h"
 
 class UDataTable;
+class UServerData;
 struct FItemData;
 
 /**
@@ -23,17 +24,26 @@ public:
 	~ULDGameInstance();
 
 public:
-
-	UPROPERTY(BlueprintReadOnly, Category = "Network")
-	FString mToken;
-
 	UPROPERTY()
-	FCharacterData mCharacterData;
+		FCharacterData mCharacterData;
 
 public:
-	FItemData* GetItemData(int32 inCode);
+	void SetToken(const FString& inToken);
+	void SetServerData(const int32 inServerID, const FString& inServerName, const FString& inServerIP, const int32 inServerPort);
+
+public:
+	FItemData*		GetItemData(int32 inCode);
+	FString			GetToken();
+	UServerData*	GetServerData();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UDataTable* mGameItemDataTable;
+
+private:
+	UPROPERTY()
+	FString mToken;
+
+	UPROPERTY()
+	UServerData* mServerData;
 };

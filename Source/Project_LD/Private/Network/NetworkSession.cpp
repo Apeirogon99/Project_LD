@@ -26,20 +26,9 @@ FNetworkSession::FNetworkSession() : mRecvBuffer(nullptr), mSendBufferQueue(null
 	mIsPossess = static_cast<bool>(Default::SESSION_IS_FREE);
 
 	mSocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
-	mSocket = mSocketSubsystem->CreateSocket(NAME_Stream, TEXT("NetworkSession"), false);
-
-	mSocket->SetNoDelay(true);
-	//mSocket->SetNonBlocking(true);
-
-	int32 newRecvSize = 0;
-	mSocket->SetReceiveBufferSize(16384, newRecvSize);
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Socket] Receive buffer size : %d"), newRecvSize), ELogLevel::Warning);
-
-	int32 newSendSize = 0;
-	mSocket->SetSendBufferSize(16384, newSendSize);
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Socket] Send buffer size : %d"), newSendSize), ELogLevel::Warning);
-	//mSocket->SetLinger()
 	
+	InitSocket();
+
 }
 
 FNetworkSession::~FNetworkSession()
@@ -246,9 +235,13 @@ bool FNetworkSession::RegisterDisconnect(const FString& inCause)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[FNetworkSession::Disconnect] : %s"), *inCause), ELogLevel::Error);
 
-	mSocket->Shutdown(ESocketShutdownMode::ReadWrite);
+	//mSocket->Shutdown(ESocketShutdownMode::ReadWrite);
 
 	mSocket->Close();
+
+	mSocketSubsystem->DestroySocket(mSocket);
+
+	InitSocket();
 
 	return true;
 }
@@ -568,6 +561,23 @@ bool FNetworkSession::GetHasData()
 	uint32 pendingDataSize = 0;
 	bool hasData = mSocket->HasPendingData(pendingDataSize);
 	return hasData;
+}
+
+void FNetworkSession::InitSocket()
+{
+	mSocket = mSocketSubsystem->CreateSocket(NAME_Stream, TEXT("NetworkSession"), false);
+
+	mSocket->SetNoDelay(true);
+	//mSocket->SetNonBlocking(true);
+	//mSocket->SetLinger();
+
+	int32 newRecvSize = 0;
+	mSocket->SetReceiveBufferSize(16384, newRecvSize);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Socket] Receive buffer size : %d"), newRecvSize), ELogLevel::Warning);
+
+	int32 newSendSize = 0;
+	mSocket->SetSendBufferSize(16384, newSendSize);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Socket] Send buffer size : %d"), newSendSize), ELogLevel::Warning);
 }
 
 bool FNetworkSession::ClearBuffer()

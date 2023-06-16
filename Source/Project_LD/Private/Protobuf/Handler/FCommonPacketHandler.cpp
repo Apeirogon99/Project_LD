@@ -32,3 +32,13 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 
 	return true;
 }
+
+bool Handle_S2C_TravelLevel(ANetworkController* controller, Protocol::S2C_TravelLevel& pkt)
+{
+	return true;
+}
+
+bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_TravelServer& pkt)
+{
+	return false;
+}

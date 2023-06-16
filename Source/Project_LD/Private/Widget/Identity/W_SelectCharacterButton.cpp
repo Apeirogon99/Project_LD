@@ -198,11 +198,35 @@ void UW_SelectCharacterButton::PreviousClickMode()
 
 void UW_SelectCharacterButton::StartCharacter()
 {
-	//해당 서버 아이피와 포트를 가지고 있을거니까 거기로 보내버리면됨
-	//게임 모드 불러오셈
 	APlayerController* playerControll = GetOwningPlayer();
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+	
 	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
+
+	ANetworkController* networkController = Cast<ANetworkController>(playerControll);
+	if (nullptr == networkController)
+	{
+		return;
+	}
+
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(networkController->GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return;
+	}
+
+	std::string token = UNetworkUtils::ConvertString(gameInstance->GetToken());
+
+	Protocol::C2S_StartGame startGamePacket;
+	startGamePacket.set_seat(mCharacterButtonNumber);
+	startGamePacket.set_token(token);
+
+	SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, startGamePacket);
+	networkController->Send(pakcetBuffer);
 }
 
 void UW_SelectCharacterButton::CreateCharacter()

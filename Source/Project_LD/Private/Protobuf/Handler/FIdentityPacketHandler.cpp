@@ -15,6 +15,7 @@
 
 #include <Widget/WidgetUtils.h>
 #include <Widget/Identity/W_SelectCharacter.h>
+#include <Widget/Identity/W_SelectServer.h>
 #include <Widget/Test/W_Test.h>
 
 #include <DatabaseErrorTypes.h>
@@ -92,7 +93,7 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 	else
 	{
 		FString token = UNetworkUtils::ConvertFString(pkt.token());
-		gameInstance->mToken = token;
+		gameInstance->SetToken(token);
 
 		AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
 		ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
@@ -101,11 +102,14 @@ bool Handle_S2C_Singin(ANetworkController* controller, Protocol::S2C_Singin& pkt
 			return false;
 		}
 
-		networkGameMode->RequestTravelLevel(TEXT("L_SelectCharacter"));
+		{
+			Protocol::C2S_LoadServer loadServerPacket;
+			SendBufferPtr sendBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, loadServerPacket);
+			controller->Send(sendBuffer);
+		}
 
-		//서버 선택창
-		//clientHUD->ShowWidgetFromName(TEXT("SelectServer"));
-		//clientHUD->AllSelfHitTestInvisibleButOneWidget(TEXT("Singin"));
+		clientHUD->CleanWidgetFromName(TEXT("Singin"));
+		clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
 	}
 
 	return true;
@@ -220,16 +224,107 @@ bool Handle_S2C_EmailVerified(ANetworkController* controller, Protocol::S2C_Emai
 
 bool Handle_S2C_LoadServer(ANetworkController* controller, Protocol::S2C_LoadServer& pkt)
 {
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return false;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return false;
+	}
+
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+	UUserWidget* widget = clientHUD->GetWidgetFromName(TEXT("SelectServer"));
+	if (nullptr == widget)
+	{
+		return false;
+	}
+
+	UW_SelectServer* selecServerWidget = Cast<UW_SelectServer>(widget);
+	if (nullptr == selecServerWidget)
+	{
+		return false;
+	}
+	
+	const int32 maxInfoSize = pkt.info_size();
+	for (int index = 0; index < maxInfoSize; ++index)
+	{
+		const Protocol::SServerInfo& curInfo = pkt.info(index);
+		const int32		id		= curInfo.id();
+		const FString	name	= UNetworkUtils::ConvertFString(curInfo.name());
+		const FString	state	= UNetworkUtils::ConvertFString(curInfo.state());
+		const int32		count	= curInfo.count();
+
+		selecServerWidget->CreateServerInfoWidget(id, name, state, count);
+	}
+
+	clientHUD->ShowWidgetFromName(TEXT("SelectServer"));
+
 	return true;
 }
 
 bool Handle_S2C_SelectServer(ANetworkController* controller, Protocol::S2C_SelectServer& pkt)
 {
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return false;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return false;
+	}
+
+	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+	AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
+	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
+	if (nullptr == networkGameMode)
+	{
+		return false;
+	}
+
+	networkGameMode->RequestTravelLevel(TEXT("L_SelectCharacter"));
+
 	return true;
 }
 
 bool Handle_S2C_StartGame(ANetworkController* controller, Protocol::S2C_StartGame& pkt)
 {
+	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(controller->GetGameInstance());
+	if (nullptr == gameInstance)
+	{
+		return false;
+	}
+
+	AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
+	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
+	if (nullptr == networkGameMode)
+	{
+		return false;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return false;
+	}
+
+	const int32		serverID	= pkt.server_id();
+	const FString	serverName	= UNetworkUtils::ConvertFString(pkt.server_name());
+	const FString	serverIP	= UNetworkUtils::ConvertFString(pkt.ip());
+	const int32		serverPort	= pkt.port();
+
+	gameInstance->SetServerData(serverID, serverName, serverIP, serverPort);
+	
+	networkGameMode->RequestTravelServer(serverName);
+
 	return true;
 }
 
@@ -397,9 +492,4 @@ bool Handle_S2C_DeleteCharacter(ANetworkController* controller, Protocol::S2C_De
 	}
 
 	return true;
-}
-
-bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_TravelServer& pkt)
-{
-	return false;
 }

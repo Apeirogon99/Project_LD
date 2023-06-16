@@ -18,7 +18,7 @@
 
 APC_Game::APC_Game()
 {
-	SwitchMovementMode();
+	
 }
 
 APC_Game::~APC_Game()
@@ -28,6 +28,9 @@ APC_Game::~APC_Game()
 void APC_Game::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SwitchMovementMode();
+	SwitchUIMode();
 }
 
 bool APC_Game::OnRecvPacket(BYTE* buffer, const uint32 len)

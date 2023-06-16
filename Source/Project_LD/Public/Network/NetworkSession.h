@@ -78,6 +78,7 @@ public:
 	bool GetHasData();
 
 protected:
+	void InitSocket();
 	bool ClearBuffer();
 
 private:
