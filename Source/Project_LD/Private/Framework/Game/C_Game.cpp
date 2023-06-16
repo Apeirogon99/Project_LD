@@ -37,12 +37,6 @@ AC_Game::AC_Game()
 
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("PlayerCharacter"));
 
-	static ConstructorHelpers::FClassFinder<AAppearanceCharacter> PreviewCharacter(TEXT("Blueprint'/Game/Blueprint/Widget/Game/Inventory/PreView/BP_PreViewCharacter.BP_PreViewCharacter_C'"));
-	if (PreviewCharacter.Succeeded())
-	{
-		PreviewBPCharacter = PreviewCharacter.Class;
-	}
-
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 }
@@ -55,27 +49,11 @@ AC_Game::~AC_Game()
 void AC_Game::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UWorld* world = GetWorld();
-	if (world)
-	{
-		FActorSpawnParameters spawnParams;
-		spawnParams.Owner = this;
-		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-		FVector newLocation = FVector(0.f, 0.f, -1000.f);
-		FRotator newRotator = FRotator();
-
-		spawnPreview = world->SpawnActor<AAppearanceCharacter>(PreviewBPCharacter, newLocation, newRotator, spawnParams);
-	}
 }
 
 void AC_Game::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (spawnPreview)
-	{
-		spawnPreview->Destroy();
-	}
+
 }
 
 void AC_Game::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

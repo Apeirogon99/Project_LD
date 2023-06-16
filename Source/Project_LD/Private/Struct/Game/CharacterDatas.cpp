@@ -85,7 +85,7 @@ void FCharacterStatus::UpdateCharacterStatus(const FCharacterStatus& inCharacter
 }
 
 
-FCharacterData::FCharacterData() : mCharacterID(0), mClass(ECharacterClass::None), mAppearance(), mEquipment(), mStatus()
+FCharacterData::FCharacterData() : mName(TEXT("")), mLevel(0), mClass(ECharacterClass::None), mAppearance(), mEquipment()
 {
 }
 
@@ -93,16 +93,14 @@ void FCharacterData::UpdateCharacterData(const FCharacterData& inCharacterData)
 {
 	mName				= inCharacterData.mName;
 	mLevel				= inCharacterData.mLevel;
-	mCharacterID		= inCharacterData.mCharacterID;
 	mClass				= inCharacterData.mClass;
+
 	mAppearance			= inCharacterData.mAppearance;
 	mEquipment			= inCharacterData.mEquipment;
-	mStatus				= inCharacterData.mStatus;
 }
 
 void FCharacterData::UpdateCharacterData(const Protocol::SCharacterData& inCharacterData)
 {
-	mCharacterID	= 0;
 	mName			= UNetworkUtils::ConvertFString(inCharacterData.name());
 	mLevel			= inCharacterData.level();
 	mClass			= StaticCast<ECharacterClass>(inCharacterData.character_class());
@@ -112,6 +110,4 @@ void FCharacterData::UpdateCharacterData(const Protocol::SCharacterData& inChara
 
 	const Protocol::SCharacterEqipment& eqipment = inCharacterData.eqipment();
 	mEquipment.UpdateEquipments(eqipment);
-	
-	//mStatus = inCharacterData.getStat;
 }

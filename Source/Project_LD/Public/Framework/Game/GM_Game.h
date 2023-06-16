@@ -6,6 +6,7 @@
 #include "Network/NetworkGameMode.h"
 #include "GM_Game.generated.h"
 
+class AAppearanceCharacter;
 /**
  * 
  */
@@ -26,5 +27,6 @@ protected:
 	virtual void BeginNetwork() override;
 
 public:
-	ACharacter* SpawnCharacter(FVector inLocation, FRotator inRotator);
+	ACharacter*				SpawnCharacter(FVector inLocation, FRotator inRotator);
+	AAppearanceCharacter*	GetPreviewCharacter();
 };

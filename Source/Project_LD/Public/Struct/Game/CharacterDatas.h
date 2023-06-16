@@ -167,6 +167,7 @@ struct FCharacterData
 public:
 	FCharacterData();
 	FCharacterData(const FCharacterData& inCharacterData) { UpdateCharacterData(inCharacterData); }
+	FCharacterData(const Protocol::SCharacterData& inCharacterData) { UpdateCharacterData(inCharacterData); }
 
 	FCharacterData& operator=(const FCharacterData& inCharacterData) { UpdateCharacterData(inCharacterData); return *this; }
 	FCharacterData& operator=(const Protocol::SCharacterData& inCharacterData) { UpdateCharacterData(inCharacterData); return *this; }
@@ -175,12 +176,9 @@ public:
 	void UpdateCharacterData(const Protocol::SCharacterData& inCharacterData);
 
 public:
-	int32					mCharacterID;
 	FString					mName;
 	int32					mLevel;
 	ECharacterClass			mClass;
 	FCharacterAppearance	mAppearance;
 	FCharacterEquipment		mEquipment;
-	FCharacterStatus		mStatus;
-
 };

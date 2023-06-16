@@ -36,13 +36,6 @@ protected:
 	USpringArmComponent* mCameraBoom;
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TSubclassOf<AAppearanceCharacter> PreviewBPCharacter;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AAppearanceCharacter* spawnPreview;
-
-public:
 	UFUNCTION()
 	void InteractItem();
 

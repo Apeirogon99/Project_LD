@@ -28,7 +28,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     {
         return false;
     }
-
+    
     FVector location = FVector(0, 0, 500.0f);
     FVector velocity = FVector();
     FRotator rotator = FRotator::ZeroRotator;
@@ -38,6 +38,18 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     {
         return false;
     }
+
+    FCharacterData newCharacterData = pkt.character_data();
+    newCharacter->InitializeCharacter(newCharacterData);
+    newCharacter->InitializeAppearance();
+
+    AAppearanceCharacter* preivewCharacter = Cast<AAppearanceCharacter>(gameMode->GetPreviewCharacter());
+    if (nullptr == preivewCharacter)
+    {
+        return false;
+    }
+    preivewCharacter->InitializeCharacter(newCharacterData);
+    preivewCharacter->InitializeAppearance();
 
     APawn* oldCharacter = controller->GetPawn();
     if (oldCharacter)
