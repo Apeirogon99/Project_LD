@@ -3,6 +3,7 @@
 #include "Widget/Game/Inventory/StoreInven/UWGridInventory.h"
 #include "Widget/Game/Inventory/UWItem.h"
 #include "WIdget/Game/Inventory/UWInventory.h"
+#include "Widget/Game/Item/W_ItemSpace.h"
 
 #include "Blueprint/DragDropOperation.h"
 #include "Blueprint/WidgetBlueprintLibrary.h"
@@ -11,6 +12,7 @@
 #include <Game/PC_Game.h>
 #include <Widget/Handler/ClientHUD.h>
 
+#include <Component/ACEquipment.h>
 #include <Component/ACInventoryComponent.h>
 #include "Components/CanvasPanelSlot.h"
 #include "Components/Border.h"
@@ -90,33 +92,6 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
-	UItemObjectData* Data = Cast<UItemObjectData>(Cast<UDragDropOperation>(InOperation)->Payload);
-	if (IsRoomAvailableForPayload(Data))
-	{
-		GetPayload(InOperation, Data);
-		if (Data->IsValid())
-		{
-			FTile tile;
-			tile.X = mDraggedItemTopLeftTile.X;
-			tile.Y = mDraggedItemTopLeftTile.Y;
-
-			mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
-
-			mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Update);
-		}
-	}
-	else
-	{
-		GetPayload(InOperation, Data);
-		if (Data->IsValid())
-		{
-			if (!mInventoryComponent->TryAddItem(Data))
-			{
-				//Spawn Item
-				mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Remove);
-			}
-		}
-	}
 
 	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
@@ -135,8 +110,55 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 	{
 		return false;
 	}
-
 	UUserWidget* LocalInventory = clientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
+
+	UItemObjectData* Data = Cast<UItemObjectData>(Cast<UDragDropOperation>(InOperation)->Payload);
+	if (Data->Type == EItemObjectType::Inventory)
+	{
+		if (IsRoomAvailableForPayload(Data))
+		{
+			GetPayload(InOperation, Data);
+			if (Data->IsValid())
+			{
+				FTile tile;
+				tile.X = mDraggedItemTopLeftTile.X;
+				tile.Y = mDraggedItemTopLeftTile.Y;
+
+				mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
+
+				mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Update);
+			}
+		}
+		else
+		{
+			GetPayload(InOperation, Data);
+			if (Data->IsValid())
+			{
+				if (!mInventoryComponent->TryAddItem(Data))
+				{
+					//Spawn Item
+					mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Remove);
+				}
+			}
+		}
+	}
+	if (Data->Type == EItemObjectType::Equipment)
+	{
+		if (IsRoomAvailableForPayload(Data))
+		{
+			GetPayload(InOperation, Data);
+			if (Data->IsValid())
+			{
+				FTile tile;
+				tile.X = mDraggedItemTopLeftTile.X;
+				tile.Y = mDraggedItemTopLeftTile.Y;
+
+				mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
+				mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(),Data->ItemData.category_id);
+			}
+		}
+	}
+
 	Cast<UUWInventory>(LocalInventory)->BackgroundBorder->SetVisibility(ESlateVisibility::Hidden);
 	
 	return true;
@@ -204,10 +226,11 @@ void UUWGridInventory::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, 
 	mDrawDropLocation = false;
 }
 
-void UUWGridInventory::Init(UACInventoryComponent* InvenComponent, float Size)
+void UUWGridInventory::Init(UACInventoryComponent* InvenComponent, float Size, UACEquipment* EquipmentComponent)
 {
 	mInventoryComponent = InvenComponent;
 	mTileSize = Size;
+	mEquipmentComponent = EquipmentComponent;
 
 	if (mInventoryComponent != nullptr)
 	{

@@ -88,6 +88,7 @@ void UACEquipment::LoadEquipment(const google::protobuf::RepeatedPtrField<Protoc
 			mEquipmentData[part]->ItemData = *ItemTable;
 			mEquipmentData[part]->ObjectID = curEqipment.object_id();
 			mEquipmentData[part]->mItemCode = curEqipment.item_code();
+			mEquipmentData[part]->Type = EItemObjectType::Equipment;
 
 			ChangedItemSpace(part, mEquipmentData[part]);
 		}
@@ -96,6 +97,7 @@ void UACEquipment::LoadEquipment(const google::protobuf::RepeatedPtrField<Protoc
 			mEquipmentData[part]->ItemData = FItemData();
 			mEquipmentData[part]->ObjectID = 0;
 			mEquipmentData[part]->mItemCode = 0;
+			mEquipmentData[part]->Type = EItemObjectType::Equipment;
 		}
 	}
 }

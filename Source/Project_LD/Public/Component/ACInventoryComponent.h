@@ -50,6 +50,7 @@ public:
 	TArray<UItemObjectData*> mInventoryObjectArr;
 
 public:
+	void											ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData, int32 PartID);
 	void											Refresh();
 	void											ChangeInvenObjectArr();
 	void											LoadItem(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inItems);

@@ -77,5 +77,5 @@ public:
 	UFUNCTION()
 	void Refresh(UItemObjectData* ItemData);
 
-	void ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData);
+	//void ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData);
 };

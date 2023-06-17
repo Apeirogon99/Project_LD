@@ -22,6 +22,7 @@ struct PROJECT_LD_API FMousePositionReturn
 class UBorder;
 class UCanvasPanel;
 class UACInventoryComponent;
+class UACEquipment;
 
 UCLASS()
 class PROJECT_LD_API UUWGridInventory : public UUserWidget
@@ -46,6 +47,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UACInventoryComponent* mInventoryComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
+	UACEquipment* mEquipmentComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetTileSize, BlueprintSetter = SetTileSize, Category = "Default", meta = (AllowPrivateAccess = "true"))
 	float mTileSize;
 
@@ -69,7 +73,7 @@ public:
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void Init(UACInventoryComponent* InvenComponent, float Size);
+	void Init(UACInventoryComponent* InvenComponent, float Size, UACEquipment* EquipmentComponent);
 
 	UFUNCTION(BlueprintCallable)
 	void CreateLineSegments();

@@ -19,7 +19,7 @@
 #include <UObject/ConstructorHelpers.h>
 #include <Kismet/GameplayStatics.h>
 
-#define NETWORK_LOCAL 1
+#define NETWORK_LOCAL 0
 
 AGM_Game::AGM_Game()
 {

@@ -122,6 +122,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 {
 	mInvenComponent = InventoryComponent;
 	mTileSize = TileSize;
+	mEquipmentComponent = EquipmentComponent;
 
 	mGridInventory = this->WidgetTree->FindWidget(FName(TEXT("BW_GridInventory")));
 	if (mGridInventory != nullptr)
@@ -129,7 +130,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mInvenComponent))
 		{
 			UUWGridInventory* GridInven = Cast<UUWGridInventory>(mGridInventory);
-			GridInven->Init(mInvenComponent, mTileSize);
+			GridInven->Init(mInvenComponent, mTileSize, mEquipmentComponent);
 		}
 	}
 

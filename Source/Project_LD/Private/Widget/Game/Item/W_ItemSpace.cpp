@@ -14,8 +14,6 @@
 #include "Components/SizeBox.h"
 #include "Components/Image.h"
 
-#include <Network/NetworkController.h>
-
 #include <UObject/ConstructorHelpers.h>
 
 #include <Struct/Game/GameDatas.h>
@@ -135,13 +133,14 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 								EquipmentItemSlot->Init();
 								EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
 								EquipmentItemSlot->mItemObjectData = ItemDataPayload;
+								EquipmentItemSlot->mItemObjectData->Type = EItemObjectType::Equipment;
 								EquipmentItemSlot->SetImage();
 
 								UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
 								Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
 								Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
 
-								ReplacePacket(NewObject<UItemObjectData>(), ItemDataPayload);
+								mInvenComponent->ReplacePacket(NewObject<UItemObjectData>(), ItemDataPayload, mCategoryId);
 							}
 						}
 						else
@@ -165,13 +164,14 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 									EquipmentItemSlot->Init();
 									EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
 									EquipmentItemSlot->mItemObjectData = ItemDataPayload;
+									EquipmentItemSlot->mItemObjectData->Type = EItemObjectType::Equipment;
 									EquipmentItemSlot->SetImage();
 
 									UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
 									Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
 									Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
 
-									ReplacePacket(OldItemData, ItemDataPayload);
+									mInvenComponent->ReplacePacket(OldItemData, ItemDataPayload, mCategoryId);
 								}
 							}
 							else
@@ -238,6 +238,7 @@ void UW_ItemSpace::Refresh(UItemObjectData* ItemData)
 	}
 }
 
+/*
 void UW_ItemSpace::ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData)
 {
 	ANetworkController* controller = Cast<ANetworkController>(GetOwningPlayer());
@@ -271,3 +272,4 @@ void UW_ItemSpace::ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectDa
 		controller->Send(FGamePacketHandler::MakeSendBuffer(controller, replaceEqipment));
 	}
 }
+*/

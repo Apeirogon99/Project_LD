@@ -5,6 +5,7 @@
 #include "Framework/Gameinstance/LDGameInstance.h"
 #include <Game/PS_Game.h>
 #include <Game/GM_Game.h>
+#include <Network/NetworkController.h>
 
 // Sets default values for this component's properties
 UACInventoryComponent::UACInventoryComponent()
@@ -105,6 +106,7 @@ void UACInventoryComponent::LoadItem(const google::protobuf::RepeatedPtrField<Pr
 		ItemObjectData->position_x	= invenPosition.x();
 		ItemObjectData->position_y	= invenPosition.y();
 		ItemObjectData->rotation	= curItem.rotation();
+		ItemObjectData->Type = EItemObjectType::Inventory;
 
 		mInventoryObjectArr.Add(ItemObjectData);
 	}
@@ -118,6 +120,7 @@ void UACInventoryComponent::ClearInventory()
 	for (int i = 0; i < mColums * mRows; i++)
 	{
 		mInventoryData[i]->Clear();
+		mInventoryData[i]->Type = EItemObjectType::Inventory;
 	}
 
 	mInventoryObjectArr.Empty();
@@ -201,7 +204,7 @@ bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData, int
 			if ((FIndex >= 0) && (SIndex >= 0) && (FIndex < mColums) && (SIndex < mRows))
 			{
 				FTile LocalTile = FTile();
-				LocalTile.X = FIndex;
+				LocalTile.X = FIndex;	
 				LocalTile.Y = SIndex;
 	
 				UItemObjectData* Data = NewObject<UItemObjectData>();
@@ -274,7 +277,52 @@ bool UACInventoryComponent::GetItemAtIndex(int index, UItemObjectData*& ItemObje
 	else
 	{
 		ItemObject = NewObject<UItemObjectData>();
+		ItemObject->Type = EItemObjectType::Inventory;
 		return false;
 	}
 	return false;
+}
+
+void UACInventoryComponent::ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData, int32 PartID)
+{
+	UWorld* world = GetWorld();
+	if (world == nullptr)
+	{
+		return;
+	}
+	AGM_Game* gamemode = Cast<AGM_Game>(world->GetAuthGameMode());
+	if (gamemode == nullptr)
+	{
+		return;
+	}
+	ANetworkController* controller = Cast<ANetworkController>(gamemode->GetNetworkController());
+	if (controller)
+	{
+		Protocol::C2S_ReplaceEqipment replaceEqipment;
+
+		const int64 serverTimeStamp = controller->GetServerTimeStamp();
+		replaceEqipment.set_timestamp(serverTimeStamp);
+
+		Protocol::SItem* insertInvenItem = replaceEqipment.mutable_insert_inven_item();
+		insertInvenItem->set_object_id(InvenObjectData->ObjectID);
+		insertInvenItem->set_item_code(InvenObjectData->mItemCode);
+
+		Protocol::SVector2D* insertInvenItemPositon = insertInvenItem->mutable_inven_position();
+		insertInvenItemPositon->set_x(InvenObjectData->position_x);
+		insertInvenItemPositon->set_y(InvenObjectData->position_y);
+
+		insertInvenItem->set_rotation(InvenObjectData->rotation);
+
+		Protocol::SItem* insertEqipmentItem = replaceEqipment.mutable_insert_eqip_item();
+		insertEqipmentItem->set_object_id(EquipObejctData->ObjectID);
+		insertEqipmentItem->set_item_code(EquipObejctData->mItemCode);
+
+		Protocol::SVector2D* insertEqipmentItemPositon = insertEqipmentItem->mutable_inven_position();
+		insertEqipmentItemPositon->set_x(EquipObejctData->position_x);
+		insertEqipmentItemPositon->set_y(EquipObejctData->position_y);
+
+		replaceEqipment.set_part(static_cast<Protocol::ECharacterPart>(PartID));
+
+		controller->Send(FGamePacketHandler::MakeSendBuffer(controller, replaceEqipment));
+	}
 }
