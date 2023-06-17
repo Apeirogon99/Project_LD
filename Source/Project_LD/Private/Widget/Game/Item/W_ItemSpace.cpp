@@ -44,32 +44,29 @@ void UW_ItemSpace::NativeConstruct()
 		SlotSizeBox->SetHeightOverride(mSizeY);
 	}
 
-	UTexture2D* Texture2DHelmet = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Character_Profile_inventory/Player_EQ/Icons/T_Helmet_Icon.T_Helmet_Icon'"));
-	//UTexture2D* Texture2DShoulder = LoadObject<UTexture2D>(nullptr, TEXT(""));
-	UTexture2D* Texture2DChest = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Character_Profile_inventory/Player_EQ/Icons/T_Armor_Icon.T_Armor_Icon'"));
-	//UTexture2D* Texture2DBracers = LoadObject<UTexture2D>(nullptr, TEXT(""));
-	//UTexture2D* Texture2DHands = LoadObject<UTexture2D>(nullptr, TEXT(""));
-	//UTexture2D* Texture2DPants = LoadObject<UTexture2D>(nullptr, TEXT(""));
-	UTexture2D* Texture2DBoots = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Character_Profile_inventory/Player_EQ/Icons/T_Boots_Icon.T_Boots_Icon'"));
+	UTexture2D* Texture2DHelmet = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_HelmetSlot.T_HelmetSlot'"));
+	UTexture2D* Texture2DShoulder = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_SholderSlot.T_SholderSlot'"));
+	UTexture2D* Texture2DChest = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_ArmorSlot.T_ArmorSlot'"));
+	UTexture2D* Texture2DBracers = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_BeltSlot.T_BeltSlot'"));
+	UTexture2D* Texture2DHands = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_GlovesSlot.T_GlovesSlot'"));
+	UTexture2D* Texture2DPants = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_PantsSlot.T_PantsSlot'"));
+	UTexture2D* Texture2DBoots = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_BootsSlot.T_BootsSlot'"));
 
-	UTexture2D* Texture2DLeftWeapon = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/Character_Profile_inventory/Player_EQ/Icons/T_Sword_Icon.T_Sword_Icon'"));
-	//UTexture2D* Texture2DRightWeapon = LoadObject<UTexture2D>(nullptr, TEXT(""));
+	UTexture2D* Texture2DLeftWeapon = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_WeaponSlot.T_WeaponSlot'"));
+	UTexture2D* Texture2DRightWeapon = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_WeaponSlot.T_WeaponSlot'"));
 
 	if(Texture2DHelmet)
 	{
 		mTextureArr.Add(Texture2DHelmet);
 	}
-	/*
 	if (Texture2DShoulder)
 	{
 		mTextureArr.Add(Texture2DShoulder);
 	}
-	*/
 	if (Texture2DChest)
 	{
 		mTextureArr.Add(Texture2DChest);
 	}
-	/*
 	if (Texture2DBracers)
 	{
 		mTextureArr.Add(Texture2DBracers);
@@ -82,7 +79,6 @@ void UW_ItemSpace::NativeConstruct()
 	{
 		mTextureArr.Add(Texture2DPants);
 	}
-	*/
 	if (Texture2DBoots)
 	{
 		mTextureArr.Add(Texture2DBoots);
@@ -91,16 +87,15 @@ void UW_ItemSpace::NativeConstruct()
 	{
 		mTextureArr.Add(Texture2DLeftWeapon);
 	}
-	/*
+	
 	if (Texture2DRightWeapon)
 	{
 		mTextureArr.Add(Texture2DRightWeapon);
 	}
-	*/
 	if (mCategoryId != 0)
 	{
-		ImgSlot->SetBrushFromTexture(mTextureArr[2]);
-		//ImgSlot->SetBrushFromTexture(mTextureArr[mCategoryId-1]);
+		//ImgSlot->SetBrushFromTexture(mTextureArr[2]);
+		ImgSlot->SetBrushFromTexture(mTextureArr[mCategoryId-1]);
 	}
 
 	bRigthItemCategory = false;
