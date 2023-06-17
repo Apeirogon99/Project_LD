@@ -39,18 +39,6 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
         return false;
     }
 
-    FCharacterData newCharacterData = pkt.character_data();
-    newCharacter->InitializeCharacter(newCharacterData);
-    newCharacter->InitializeAppearance();
-
-    AAppearanceCharacter* preivewCharacter = Cast<AAppearanceCharacter>(gameMode->GetPreviewCharacter());
-    if (nullptr == preivewCharacter)
-    {
-        return false;
-    }
-    preivewCharacter->InitializeCharacter(newCharacterData);
-    preivewCharacter->InitializeAppearance();
-
     APawn* oldCharacter = controller->GetPawn();
     if (oldCharacter)
     {
@@ -66,8 +54,22 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
         return false;
     }
 
-    const int64 newRemoteID = pkt.remote_id();
+    const int64     newRemoteID         = pkt.remote_id();
+    FCharacterData  newCharacterData    = pkt.character_data();
+
     playerState->Init(newRemoteID);
+    playerState->InitializeCharacterData(newCharacterData);
+
+    newCharacter->InitializeCharacter(newCharacterData);
+    newCharacter->InitializeAppearance();
+
+    AAppearanceCharacter* preivewCharacter = Cast<AAppearanceCharacter>(gameMode->GetPreviewCharacter());
+    if (nullptr == preivewCharacter)
+    {
+        return false;
+    }
+    preivewCharacter->InitializeCharacter(newCharacterData);
+    preivewCharacter->InitializeAppearance();
 
     return true;
 }
@@ -456,12 +458,25 @@ bool Handle_S2C_RollbackInventory(ANetworkController* controller, Protocol::S2C_
     return true;
 }
 
-bool Handle_S2C_InsertEqipment(ANetworkController* controller, Protocol::S2C_InsertEqipment& pkt)
+bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_ReplaceEqipment& pkt)
 {
-    return true;
-}
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
 
-bool Handle_S2C_DeleteEqipment(ANetworkController* controller, Protocol::S2C_DeleteEqipment& pkt)
-{
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int32 error = pkt.error();
+    if (0 != error)
+    {
+
+    }
+
     return true;
 }

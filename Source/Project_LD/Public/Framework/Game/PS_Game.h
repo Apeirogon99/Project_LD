@@ -34,4 +34,5 @@ public:
 
 public:
 	int64 mRemoteID;
+
 };

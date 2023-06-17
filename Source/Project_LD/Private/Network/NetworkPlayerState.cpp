@@ -3,3 +3,15 @@
 
 #include "Network/NetworkPlayerState.h"
 
+ANetworkPlayerState::ANetworkPlayerState()
+{
+}
+
+ANetworkPlayerState::~ANetworkPlayerState()
+{
+}
+
+void ANetworkPlayerState::InitializeCharacterData(const FCharacterData& InCharacterDatas)
+{
+	mCharacterData = InCharacterDatas;
+}

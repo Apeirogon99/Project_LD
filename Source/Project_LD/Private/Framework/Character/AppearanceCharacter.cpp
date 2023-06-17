@@ -3,7 +3,10 @@
 
 #include "Framework/Character/AppearanceCharacter.h"
 #include <Network/NetworkUtils.h>
+
+#include <Framework/Game/PS_Game.h>
 #include <Framework/Gameinstance/LDGameInstance.h>
+
 #include <Struct/Game/GameDatas.h>
 
 AAppearanceCharacter::AAppearanceCharacter()
@@ -71,8 +74,13 @@ AAppearanceCharacter::~AAppearanceCharacter()
 
 void AAppearanceCharacter::InitializeAppearance()
 {
+
+	APS_Game* playerState = Cast<APS_Game>(GetPlayerState());
+	const FCharacterData& characterData = playerState->GetCharacterData();
+
 	UpdateCharacterEquipment(mCharacterData.mEquipment);
 	UpdateCharacterAppearnce(mCharacterData.mAppearance);
+
 }
 
 void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment)
