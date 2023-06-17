@@ -54,22 +54,15 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
         return false;
     }
 
-    const int64     newRemoteID         = pkt.remote_id();
-    FCharacterData  newCharacterData    = pkt.character_data();
+    const int64     newRemoteID = pkt.remote_id();
+    FCharacterData  newCharacterData = pkt.character_data();
 
     playerState->Init(newRemoteID);
     playerState->InitializeCharacterData(newCharacterData);
 
-    newCharacter->InitializeCharacter(newCharacterData);
-    newCharacter->InitializeAppearance();
-
-    AAppearanceCharacter* preivewCharacter = Cast<AAppearanceCharacter>(gameMode->GetPreviewCharacter());
-    if (nullptr == preivewCharacter)
-    {
-        return false;
-    }
-    preivewCharacter->InitializeCharacter(newCharacterData);
-    preivewCharacter->InitializeAppearance();
+    //Load
+    playerState->mInventoryComponent->LoadItem(pkt.item());
+    playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
 
     return true;
 }
@@ -317,32 +310,9 @@ bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_Load
         return false;
     }
    
-    playerState->mInventoryComponent->ClearInventory();
-    const int32 maxItemSize = pkt.item().size();
-    for (int32 index = 0; index < maxItemSize; ++index)
-    {
-        const Protocol::SItem&      curItem         = pkt.item(index);
-        int64	                    objectID        = curItem.object_id();
-        int32	                    itemCode        = curItem.item_code();
-
-        const Protocol::SVector2D&  invenPosition   = curItem.inven_position();
-        int32                       positionX       = invenPosition.x();
-        int32                       positionY       = invenPosition.y();
-        int32                       rotation        = curItem.rotation();
-
-        playerState->mInventoryComponent->LoadItem(objectID, itemCode, positionX, positionY, rotation);
-    }
-
-    playerState->mEquipmentComponent->ClearEquipment();
-    const int32 maxEqipmentSize = pkt.eqipment_size();
-    for (int32 part = 0; part < maxItemSize; ++part)
-    {
-        const Protocol::SItem&      curEqipment = pkt.eqipment(part);
-        int64	                    objectID = curEqipment.object_id();
-        int32	                    itemCode = curEqipment.item_code();
-
-        playerState->mEquipmentComponent->LoadEquipment(objectID, itemCode, part + 1);
-    }
+    //Load
+    playerState->mInventoryComponent->LoadItem(pkt.item());
+    playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
 
     AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
     if (nullptr == clientHUD)

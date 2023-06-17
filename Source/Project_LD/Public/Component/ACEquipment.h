@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include <Protobuf/Handler/FClientPacketHandler.h>
+#include <Protobuf/Handler/FGamePacketHandler.h>
 #include "ACEquipment.generated.h"
 
 class UUWInventory;
@@ -34,6 +36,6 @@ public:
 	void Init(UUWInventory* inventory);
 
 	void	ClearEquipment();
-	void LoadEquipment(int64 ObjectID, int32 ItemCode, int32 PartCode);
+	void LoadEquipment(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inEqipments);
 	void ChangedItemSpace(int32 PartID, UItemObjectData* ItemData);
 };

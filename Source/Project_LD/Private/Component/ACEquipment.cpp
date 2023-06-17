@@ -38,7 +38,7 @@ void UACEquipment::Init(UUWInventory* inventory)
 {
 	UWidget* ISHelmet = inventory->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceHelmet")));
 	UWidget* ISShoulders = inventory->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceShoulders")));
-	UWidget* ISChest = inventory->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceChest	")));
+	UWidget* ISChest = inventory->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceChest")));
 	UWidget* ISBracers = inventory->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceBracers")));
 	UWidget* ISHands = inventory->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpaceHands")));
 	UWidget* ISPants = inventory->WidgetTree->FindWidget(FName(TEXT("BW_ItemSpacePants")));
@@ -71,19 +71,30 @@ void UACEquipment::ClearEquipment()
 	}
 }
 
-void UACEquipment::LoadEquipment(int64 ObjectID, int32 ItemCode, int32 PartCode)
+void UACEquipment::LoadEquipment(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inEqipments)
 {
-	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	FItemData* ItemTable = Instance->GetItemData(ItemCode);
-	
-	mEquipmentData[PartCode - 1]->ItemData = *ItemTable;
-	mEquipmentData[PartCode - 1]->ObjectID = ObjectID;
-	mEquipmentData[PartCode - 1]->mItemCode = ItemCode;
+	ClearEquipment();
 
-	ChangedItemSpace(PartCode,mEquipmentData[PartCode-1]);
+	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+
+	const int32 maxEqipmentSize = inEqipments.size();
+	for (int32 part = 0; part < maxEqipmentSize; ++part)
+	{
+		const Protocol::SItem& curEqipment = inEqipments.Get(part);
+
+		FItemData* ItemTable = Instance->GetItemData(curEqipment.item_code());
+		if (ItemTable)
+		{
+			mEquipmentData[part]->ItemData = *ItemTable;
+			mEquipmentData[part]->ObjectID = curEqipment.object_id();
+			mEquipmentData[part]->mItemCode = curEqipment.item_code();
+
+			ChangedItemSpace(part, mEquipmentData[part]);
+		}
+	}
 }
 
 void UACEquipment::ChangedItemSpace(int32 PartID, UItemObjectData* ItemData)
 {
-	mEquipmentWidget[PartID - 1]->Refresh(ItemData);
+	mEquipmentWidget[PartID]->Refresh(ItemData);
 }

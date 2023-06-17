@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include <Struct/Game/GameDatas.h>
 #include <Struct/Inventory/InventoryFrame.h>
+#include <Protobuf/Handler/FClientPacketHandler.h>
+#include <Protobuf/Handler/FGamePacketHandler.h>
 #include "ACInventoryComponent.generated.h"
 
 UENUM()
@@ -50,7 +52,7 @@ public:
 public:
 	void											Refresh();
 	void											ChangeInvenObjectArr();
-	void											LoadItem(int64 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation);
+	void											LoadItem(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inItems);
 	void											ClearInventory();
 	void											RemoveItem(UItemObjectData* ItemObjectData);
 	void											AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex);

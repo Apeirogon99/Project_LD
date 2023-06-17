@@ -20,7 +20,7 @@ void UW_MainGame::NativeConstruct()
 		Btn_Inventory->OnClicked.AddDynamic(this, &UW_MainGame::InventoryOpenRequest);
 	}
 
-	misInventoryOpen = true;
+	misInventoryOpen = false;
 }
 
 void UW_MainGame::InventoryOpenRequest()
@@ -53,8 +53,7 @@ void UW_MainGame::InventoryOpenRequest()
 	{
 		Protocol::C2S_LoadInventory loadInventoryPacket;
 		const int64 serverTimeStamp = playerController->GetServerTimeStamp();
-		loadInventoryPacket.set_timestamp(0);
-		//loadInventoryPacket.set_timestamp(serverTimeStamp);
+		loadInventoryPacket.set_timestamp(serverTimeStamp);
 		playerController->Send(FGamePacketHandler::MakeSendBuffer(playerController, loadInventoryPacket));
 	}
 }
@@ -79,10 +78,9 @@ void UW_MainGame::InventoryOpenResponse()
 		return;
 	}
 
+
 	misInventoryOpen = !misInventoryOpen;
-	if (misInventoryOpen)
-	{
-		clientHUD->ShowWidgetFromName(FString(TEXT("Inventory")));
-		playerController->SwitchUIMode();
-	}
+	clientHUD->ShowWidgetFromName(FString(TEXT("Inventory")));
+	playerController->SwitchUIMode();
+	
 }

@@ -6,9 +6,6 @@
 #include <Game/PS_Game.h>
 #include <Game/GM_Game.h>
 
-#include <Protobuf/Handler/FClientPacketHandler.h>
-#include <Protobuf/Handler/FGamePacketHandler.h>
-
 // Sets default values for this component's properties
 UACInventoryComponent::UACInventoryComponent()
 {
@@ -85,21 +82,31 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 	}
 }
 
-void UACInventoryComponent::LoadItem(int64 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation)
+void UACInventoryComponent::LoadItem(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inItems)
 {
+	ClearInventory();
+
 	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	FItemData* ItemTable = Instance->GetItemData(ItemCode);
+	const int32 maxItemSize = inItems.size();
+	for (int32 index = 0; index < maxItemSize; ++index)
+	{
+		UItemObjectData* ItemObjectData = NewObject<UItemObjectData>();
 
-	UItemObjectData* ItemObjectData = NewObject<UItemObjectData>();
- 
-	ItemObjectData->ObjectID = ObjectID;
-	ItemObjectData->mItemCode = ItemCode;
-	ItemObjectData->ItemData = *ItemTable;
-	ItemObjectData->position_x = Pos_x;
-	ItemObjectData->position_y = Pos_y;
-	ItemObjectData->rotation = Rotation;
+		const Protocol::SItem& curItem = inItems.Get(index);
+		ItemObjectData->ObjectID	= curItem.object_id();
+		ItemObjectData->mItemCode	= curItem.item_code();
 
-	mInventoryObjectArr.Add(ItemObjectData);
+		FItemData* ItemTable = Instance->GetItemData(ItemObjectData->mItemCode);
+		ItemObjectData->ItemData	= *ItemTable;
+
+		const Protocol::SVector2D& invenPosition = curItem.inven_position();
+		ItemObjectData->position_x	= invenPosition.x();
+		ItemObjectData->position_y	= invenPosition.y();
+		ItemObjectData->rotation	= curItem.rotation();
+
+		mInventoryObjectArr.Add(ItemObjectData);
+	}
+
 	Refresh();
 }
 
