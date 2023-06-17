@@ -10,6 +10,13 @@
 #include "Engine/Texture2D.h"
 #include "GameDatas.generated.h"
 
+UENUM()
+enum class EItemObjectType
+{
+	Inventory,
+	Equipment
+};
+
 USTRUCT(BlueprintType)
 struct FItemData : public FTableRowBase
 {
@@ -99,6 +106,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	int32 rotation;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	EItemObjectType Type;
 
 public:
 	UFUNCTION(BlueprintCallable)

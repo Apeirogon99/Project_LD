@@ -127,7 +127,7 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 						{
 							bExist = true;
 
-							UUWEquipItem* EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
+							EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
 							if (EquipmentItemSlot)
 							{
 								EquipmentItemSlot->Init();
@@ -139,19 +139,47 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 								Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
 								Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
 
-								mEquipmentComponent->ChangedItemSpace(mCategoryId);
+								//mEquipmentComponent->ChangedItemSpace(mCategoryId);
 								//Item 장착
 							}
 						}
 						else
 						{
-							FTile tile;
+							//아이템 교체
+						/*	FTile tile;
 							tile.X = ItemDataPayload->position_x;
 							tile.Y = ItemDataPayload->position_y;
 
 							mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
 
-							mInvenComponent->SetInventoryPacket(ItemDataPayload, EInventoryType::Update);
+							mInvenComponent->SetInventoryPacket(ItemDataPayload, EInventoryType::Update);*/
+							if (mInvenComponent->TryAddItem(EquipmentItemSlot->mItemObjectData))
+							{
+								ItemCanvas->ClearChildren();
+
+								EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
+								if (EquipmentItemSlot)
+								{
+									EquipmentItemSlot->Init();
+									EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
+									EquipmentItemSlot->mItemObjectData = ItemDataPayload;
+									EquipmentItemSlot->SetImage();
+
+									UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
+									Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
+									Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
+								}
+							}
+							else
+							{
+								FTile tile;
+								tile.X = ItemDataPayload->position_x;
+								tile.Y = ItemDataPayload->position_y;
+
+								mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
+
+								mInvenComponent->SetInventoryPacket(ItemDataPayload, EInventoryType::Update);
+							}
 						}
 					}
 				}
@@ -180,9 +208,9 @@ void UW_ItemSpace::Init(UACInventoryComponent* InvenComponent, UACEquipment* Equ
 		return; 
 	}
 	mEquipmentComponent = EquipmentComponent;
-	if (mEquipmentComponent != nullptr)
+	if (mEquipmentComponent == nullptr)
 	{
-		mEquipmentComponent->OnEquipmentChanged.AddUFunction(this, FName("Refresh"));
+		return;
 	}
 }
 
@@ -191,7 +219,21 @@ void UW_ItemSpace::FalseExist()
 	bExist = false;
 }
 
-void UW_ItemSpace::Refresh()
+void UW_ItemSpace::Refresh(UItemObjectData* ItemData)
 {
+	ItemCanvas->ClearChildren();
 
+	bExist = true;
+	EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
+	if (EquipmentItemSlot)
+	{
+		EquipmentItemSlot->Init();
+		EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
+		EquipmentItemSlot->mItemObjectData = ItemData;
+		EquipmentItemSlot->SetImage();
+
+		UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
+		Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
+		Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
+	}
 }

@@ -28,13 +28,16 @@ bool UUWInvenFrame::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEve
 	//인벤토리로 돌아감
 	if (ItemData->IsValid())
 	{
-		FTile tile;
-		tile.X = ItemData->position_x;
-		tile.Y = ItemData->position_y;
+		if (ItemData->Type == EItemObjectType::Inventory)
+		{
+			FTile tile;
+			tile.X = ItemData->position_x;
+			tile.Y = ItemData->position_y;
 
-		mInvenComponent->AddItemAt(ItemData, mInvenComponent->TileToIndex(tile));
+			mInvenComponent->AddItemAt(ItemData, mInvenComponent->TileToIndex(tile));
 
-		mInvenComponent->SetInventoryPacket(ItemData, EInventoryType::Update);
+			mInvenComponent->SetInventoryPacket(ItemData, EInventoryType::Update);
+		}
 	}
 	return false;
 }

@@ -6,10 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "ACEquipment.generated.h"
 
-DECLARE_MULTICAST_DELEGATE(FOnEquipmentChanged);
-
 class UUWInventory;
 class UW_ItemSpace;
+class UItemObjectData;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_LD_API UACEquipment : public UActorComponent
 {
@@ -31,14 +30,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
 	TArray<UItemObjectData*> mEquipmentData;
 
-	FOnEquipmentChanged OnEquipmentChanged;
-
 public:
 	void Init(UUWInventory* inventory);
 
-	void Refresh();
-
 	void	ClearEquipment();
-	void LoadItem(int64 ObjectID, int32 ItemCode, int32 PartCode);
-	void ChangedItemSpace(int32 CategoryId);
+	void LoadEquipment(int64 ObjectID, int32 ItemCode, int32 PartCode);
+	void ChangedItemSpace(int32 PartID, UItemObjectData* ItemData);
 };

@@ -14,6 +14,7 @@ class USizeBox;
 class UImage;
 class UACInventoryComponent;
 class UACEquipment;
+class UUWEquipItem;
 
 UCLASS()
 class PROJECT_LD_API UW_ItemSpace : public UUserWidget
@@ -38,6 +39,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
 	TSubclassOf<UUserWidget> mImageAsset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
+	UUWEquipItem* EquipmentItemSlot;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TArray<UTexture2D*> mTextureArr;
@@ -71,5 +75,5 @@ public:
 	void FalseExist();
 
 	UFUNCTION()
-	void Refresh();
+	void Refresh(UItemObjectData* ItemData);
 };
