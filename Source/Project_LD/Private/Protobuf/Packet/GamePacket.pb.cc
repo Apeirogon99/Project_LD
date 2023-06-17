@@ -209,6 +209,7 @@ PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORIT
 PROTOBUF_CONSTEXPR S2C_LoadInventory::S2C_LoadInventory(
     ::_pbi::ConstantInitialized): _impl_{
     /*decltype(_impl_.item_)*/{}
+  , /*decltype(_impl_.eqipment_)*/{}
   , /*decltype(_impl_.error_)*/0
   , /*decltype(_impl_._cached_size_)*/{}} {}
 struct S2C_LoadInventoryDefaultTypeInternal {
@@ -456,6 +457,7 @@ const uint32_t TableStruct_GamePacket_2eproto::offsets[] PROTOBUF_SECTION_VARIAB
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::Protocol::S2C_LoadInventory, _impl_.item_),
+  PROTOBUF_FIELD_OFFSET(::Protocol::S2C_LoadInventory, _impl_.eqipment_),
   PROTOBUF_FIELD_OFFSET(::Protocol::S2C_LoadInventory, _impl_.error_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::Protocol::C2S_InsertInventory, _internal_metadata_),
@@ -546,15 +548,15 @@ static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protode
   { 81, -1, -1, sizeof(::Protocol::S2C_DestroyItem)},
   { 88, -1, -1, sizeof(::Protocol::C2S_LoadInventory)},
   { 95, -1, -1, sizeof(::Protocol::S2C_LoadInventory)},
-  { 103, -1, -1, sizeof(::Protocol::C2S_InsertInventory)},
-  { 111, -1, -1, sizeof(::Protocol::S2C_InsertInventory)},
-  { 120, -1, -1, sizeof(::Protocol::C2S_UpdateInventory)},
-  { 128, -1, -1, sizeof(::Protocol::S2C_UpdateInventory)},
-  { 135, -1, -1, sizeof(::Protocol::C2S_DeleteInventory)},
-  { 143, -1, -1, sizeof(::Protocol::S2C_DeleteInventory)},
-  { 152, -1, -1, sizeof(::Protocol::S2C_RollbackInventory)},
-  { 160, -1, -1, sizeof(::Protocol::C2S_ReplaceEqipment)},
-  { 170, -1, -1, sizeof(::Protocol::S2C_ReplaceEqipment)},
+  { 104, -1, -1, sizeof(::Protocol::C2S_InsertInventory)},
+  { 112, -1, -1, sizeof(::Protocol::S2C_InsertInventory)},
+  { 121, -1, -1, sizeof(::Protocol::C2S_UpdateInventory)},
+  { 129, -1, -1, sizeof(::Protocol::S2C_UpdateInventory)},
+  { 136, -1, -1, sizeof(::Protocol::C2S_DeleteInventory)},
+  { 144, -1, -1, sizeof(::Protocol::S2C_DeleteInventory)},
+  { 153, -1, -1, sizeof(::Protocol::S2C_RollbackInventory)},
+  { 161, -1, -1, sizeof(::Protocol::C2S_ReplaceEqipment)},
+  { 171, -1, -1, sizeof(::Protocol::S2C_ReplaceEqipment)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -608,26 +610,27 @@ const char descriptor_table_protodef_GamePacket_2eproto[] PROTOBUF_SECTION_VARIA
   "C_DisAppearGameObject\022\021\n\tobject_id\030\001 \001(\003"
   "\"0\n\017S2C_DestroyItem\022\035\n\004item\030\001 \001(\0132\017.Prot"
   "ocol.SItem\"&\n\021C2S_LoadInventory\022\021\n\ttimes"
-  "tamp\030\001 \001(\003\"A\n\021S2C_LoadInventory\022\035\n\004item\030"
-  "\001 \003(\0132\017.Protocol.SItem\022\r\n\005error\030\002 \001(\005\"G\n"
-  "\023C2S_InsertInventory\022\021\n\ttimestamp\030\001 \001(\003\022"
-  "\035\n\004item\030\002 \001(\0132\017.Protocol.SItem\"J\n\023S2C_In"
-  "sertInventory\022\021\n\tremote_id\030\001 \001(\003\022\021\n\tobje"
-  "ct_id\030\002 \001(\003\022\r\n\005error\030\003 \001(\005\"G\n\023C2S_Update"
-  "Inventory\022\021\n\ttimestamp\030\001 \001(\003\022\035\n\004item\030\002 \001"
-  "(\0132\017.Protocol.SItem\"$\n\023S2C_UpdateInvento"
-  "ry\022\r\n\005error\030\001 \001(\005\"G\n\023C2S_DeleteInventory"
-  "\022\021\n\ttimestamp\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Prot"
-  "ocol.SItem\"V\n\023S2C_DeleteInventory\022\021\n\trem"
-  "ote_id\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Protocol.SI"
-  "tem\022\r\n\005error\030\003 \001(\005\"I\n\025S2C_RollbackInvent"
-  "ory\022\021\n\tremote_id\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.P"
-  "rotocol.SItem\"\247\001\n\023C2S_ReplaceEqipment\022\021\n"
-  "\ttimestamp\030\001 \001(\003\022*\n\021insert_inven_item\030\002 "
-  "\001(\0132\017.Protocol.SItem\022)\n\020insert_eqip_item"
-  "\030\003 \001(\0132\017.Protocol.SItem\022&\n\004part\030\004 \001(\0162\030."
-  "Protocol.ECharacterPart\"$\n\023S2C_ReplaceEq"
-  "ipment\022\r\n\005error\030\001 \001(\005b\006proto3"
+  "tamp\030\001 \001(\003\"d\n\021S2C_LoadInventory\022\035\n\004item\030"
+  "\001 \003(\0132\017.Protocol.SItem\022!\n\010eqipment\030\002 \003(\013"
+  "2\017.Protocol.SItem\022\r\n\005error\030\003 \001(\005\"G\n\023C2S_"
+  "InsertInventory\022\021\n\ttimestamp\030\001 \001(\003\022\035\n\004it"
+  "em\030\002 \001(\0132\017.Protocol.SItem\"J\n\023S2C_InsertI"
+  "nventory\022\021\n\tremote_id\030\001 \001(\003\022\021\n\tobject_id"
+  "\030\002 \001(\003\022\r\n\005error\030\003 \001(\005\"G\n\023C2S_UpdateInven"
+  "tory\022\021\n\ttimestamp\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017."
+  "Protocol.SItem\"$\n\023S2C_UpdateInventory\022\r\n"
+  "\005error\030\001 \001(\005\"G\n\023C2S_DeleteInventory\022\021\n\tt"
+  "imestamp\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Protocol."
+  "SItem\"V\n\023S2C_DeleteInventory\022\021\n\tremote_i"
+  "d\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Protocol.SItem\022\r"
+  "\n\005error\030\003 \001(\005\"I\n\025S2C_RollbackInventory\022\021"
+  "\n\tremote_id\030\001 \001(\003\022\035\n\004item\030\002 \001(\0132\017.Protoc"
+  "ol.SItem\"\247\001\n\023C2S_ReplaceEqipment\022\021\n\ttime"
+  "stamp\030\001 \001(\003\022*\n\021insert_inven_item\030\002 \001(\0132\017"
+  ".Protocol.SItem\022)\n\020insert_eqip_item\030\003 \001("
+  "\0132\017.Protocol.SItem\022&\n\004part\030\004 \001(\0162\030.Proto"
+  "col.ECharacterPart\"$\n\023S2C_ReplaceEqipmen"
+  "t\022\r\n\005error\030\001 \001(\005b\006proto3"
   ;
 static const ::_pbi::DescriptorTable* const descriptor_table_GamePacket_2eproto_deps[2] = {
   &::descriptor_table_PacketEnum_2eproto,
@@ -635,7 +638,7 @@ static const ::_pbi::DescriptorTable* const descriptor_table_GamePacket_2eproto_
 };
 static ::_pbi::once_flag descriptor_table_GamePacket_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_GamePacket_2eproto = {
-    false, false, 1789, descriptor_table_protodef_GamePacket_2eproto,
+    false, false, 1824, descriptor_table_protodef_GamePacket_2eproto,
     "GamePacket.proto",
     &descriptor_table_GamePacket_2eproto_once, descriptor_table_GamePacket_2eproto_deps, 2, 22,
     schemas, file_default_instances, TableStruct_GamePacket_2eproto::offsets,
@@ -3235,6 +3238,9 @@ class S2C_LoadInventory::_Internal {
 void S2C_LoadInventory::clear_item() {
   _impl_.item_.Clear();
 }
+void S2C_LoadInventory::clear_eqipment() {
+  _impl_.eqipment_.Clear();
+}
 S2C_LoadInventory::S2C_LoadInventory(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
@@ -3246,6 +3252,7 @@ S2C_LoadInventory::S2C_LoadInventory(const S2C_LoadInventory& from)
   S2C_LoadInventory* const _this = this; (void)_this;
   new (&_impl_) Impl_{
       decltype(_impl_.item_){from._impl_.item_}
+    , decltype(_impl_.eqipment_){from._impl_.eqipment_}
     , decltype(_impl_.error_){}
     , /*decltype(_impl_._cached_size_)*/{}};
 
@@ -3260,6 +3267,7 @@ inline void S2C_LoadInventory::SharedCtor(
   (void)is_message_owned;
   new (&_impl_) Impl_{
       decltype(_impl_.item_){arena}
+    , decltype(_impl_.eqipment_){arena}
     , decltype(_impl_.error_){0}
     , /*decltype(_impl_._cached_size_)*/{}
   };
@@ -3277,6 +3285,7 @@ S2C_LoadInventory::~S2C_LoadInventory() {
 inline void S2C_LoadInventory::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   _impl_.item_.~RepeatedPtrField();
+  _impl_.eqipment_.~RepeatedPtrField();
 }
 
 void S2C_LoadInventory::SetCachedSize(int size) const {
@@ -3290,6 +3299,7 @@ void S2C_LoadInventory::Clear() {
   (void) cached_has_bits;
 
   _impl_.item_.Clear();
+  _impl_.eqipment_.Clear();
   _impl_.error_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
@@ -3313,9 +3323,22 @@ const char* S2C_LoadInventory::_InternalParse(const char* ptr, ::_pbi::ParseCont
         } else
           goto handle_unusual;
         continue;
-      // int32 error = 2;
+      // repeated .Protocol.SItem eqipment = 2;
       case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          ptr -= 1;
+          do {
+            ptr += 1;
+            ptr = ctx->ParseMessage(_internal_add_eqipment(), ptr);
+            CHK_(ptr);
+            if (!ctx->DataAvailable(ptr)) break;
+          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<18>(ptr));
+        } else
+          goto handle_unusual;
+        continue;
+      // int32 error = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
           _impl_.error_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
@@ -3358,10 +3381,18 @@ uint8_t* S2C_LoadInventory::_InternalSerialize(
         InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
   }
 
-  // int32 error = 2;
+  // repeated .Protocol.SItem eqipment = 2;
+  for (unsigned i = 0,
+      n = static_cast<unsigned>(this->_internal_eqipment_size()); i < n; i++) {
+    const auto& repfield = this->_internal_eqipment(i);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
+        InternalWriteMessage(2, repfield, repfield.GetCachedSize(), target, stream);
+  }
+
+  // int32 error = 3;
   if (this->_internal_error() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_error(), target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_error(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -3387,7 +3418,14 @@ size_t S2C_LoadInventory::ByteSizeLong() const {
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
   }
 
-  // int32 error = 2;
+  // repeated .Protocol.SItem eqipment = 2;
+  total_size += 1UL * this->_internal_eqipment_size();
+  for (const auto& msg : this->_impl_.eqipment_) {
+    total_size +=
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
+  }
+
+  // int32 error = 3;
   if (this->_internal_error() != 0) {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_error());
   }
@@ -3411,6 +3449,7 @@ void S2C_LoadInventory::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, cons
   (void) cached_has_bits;
 
   _this->_impl_.item_.MergeFrom(from._impl_.item_);
+  _this->_impl_.eqipment_.MergeFrom(from._impl_.eqipment_);
   if (from._internal_error() != 0) {
     _this->_internal_set_error(from._internal_error());
   }
@@ -3432,6 +3471,7 @@ void S2C_LoadInventory::InternalSwap(S2C_LoadInventory* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   _impl_.item_.InternalSwap(&other->_impl_.item_);
+  _impl_.eqipment_.InternalSwap(&other->_impl_.eqipment_);
   swap(_impl_.error_, other->_impl_.error_);
 }
 

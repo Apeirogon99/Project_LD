@@ -74,13 +74,8 @@ AAppearanceCharacter::~AAppearanceCharacter()
 
 void AAppearanceCharacter::InitializeAppearance()
 {
-
-	APS_Game* playerState = Cast<APS_Game>(GetPlayerState());
-	const FCharacterData& characterData = playerState->GetCharacterData();
-
 	UpdateCharacterEquipment(mCharacterData.mEquipment);
 	UpdateCharacterAppearnce(mCharacterData.mAppearance);
-
 }
 
 void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment)

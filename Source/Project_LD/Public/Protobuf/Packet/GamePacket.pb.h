@@ -2251,7 +2251,8 @@ class S2C_LoadInventory final :
 
   enum : int {
     kItemFieldNumber = 1,
-    kErrorFieldNumber = 2,
+    kEqipmentFieldNumber = 2,
+    kErrorFieldNumber = 3,
   };
   // repeated .Protocol.SItem item = 1;
   int item_size() const;
@@ -2271,7 +2272,25 @@ class S2C_LoadInventory final :
   const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem >&
       item() const;
 
-  // int32 error = 2;
+  // repeated .Protocol.SItem eqipment = 2;
+  int eqipment_size() const;
+  private:
+  int _internal_eqipment_size() const;
+  public:
+  void clear_eqipment();
+  ::Protocol::SItem* mutable_eqipment(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem >*
+      mutable_eqipment();
+  private:
+  const ::Protocol::SItem& _internal_eqipment(int index) const;
+  ::Protocol::SItem* _internal_add_eqipment();
+  public:
+  const ::Protocol::SItem& eqipment(int index) const;
+  ::Protocol::SItem* add_eqipment();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem >&
+      eqipment() const;
+
+  // int32 error = 3;
   void clear_error();
   int32_t error() const;
   void set_error(int32_t value);
@@ -2289,6 +2308,7 @@ class S2C_LoadInventory final :
   typedef void DestructorSkippable_;
   struct Impl_ {
     ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem > item_;
+    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem > eqipment_;
     int32_t error_;
     mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   };
@@ -5064,7 +5084,44 @@ S2C_LoadInventory::item() const {
   return _impl_.item_;
 }
 
-// int32 error = 2;
+// repeated .Protocol.SItem eqipment = 2;
+inline int S2C_LoadInventory::_internal_eqipment_size() const {
+  return _impl_.eqipment_.size();
+}
+inline int S2C_LoadInventory::eqipment_size() const {
+  return _internal_eqipment_size();
+}
+inline ::Protocol::SItem* S2C_LoadInventory::mutable_eqipment(int index) {
+  // @@protoc_insertion_point(field_mutable:Protocol.S2C_LoadInventory.eqipment)
+  return _impl_.eqipment_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem >*
+S2C_LoadInventory::mutable_eqipment() {
+  // @@protoc_insertion_point(field_mutable_list:Protocol.S2C_LoadInventory.eqipment)
+  return &_impl_.eqipment_;
+}
+inline const ::Protocol::SItem& S2C_LoadInventory::_internal_eqipment(int index) const {
+  return _impl_.eqipment_.Get(index);
+}
+inline const ::Protocol::SItem& S2C_LoadInventory::eqipment(int index) const {
+  // @@protoc_insertion_point(field_get:Protocol.S2C_LoadInventory.eqipment)
+  return _internal_eqipment(index);
+}
+inline ::Protocol::SItem* S2C_LoadInventory::_internal_add_eqipment() {
+  return _impl_.eqipment_.Add();
+}
+inline ::Protocol::SItem* S2C_LoadInventory::add_eqipment() {
+  ::Protocol::SItem* _add = _internal_add_eqipment();
+  // @@protoc_insertion_point(field_add:Protocol.S2C_LoadInventory.eqipment)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::Protocol::SItem >&
+S2C_LoadInventory::eqipment() const {
+  // @@protoc_insertion_point(field_list:Protocol.S2C_LoadInventory.eqipment)
+  return _impl_.eqipment_;
+}
+
+// int32 error = 3;
 inline void S2C_LoadInventory::clear_error() {
   _impl_.error_ = 0;
 }

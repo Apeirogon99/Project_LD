@@ -318,7 +318,6 @@ bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_Load
     }
    
     playerState->mInventoryComponent->ClearInventory();
-
     const int32 maxItemSize = pkt.item().size();
     for (int32 index = 0; index < maxItemSize; ++index)
     {
@@ -332,6 +331,17 @@ bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_Load
         int32                       rotation        = curItem.rotation();
 
         playerState->mInventoryComponent->LoadItem(objectID, itemCode, positionX, positionY, rotation);
+    }
+
+    playerState->mEquipmentComponent->ClearEquipment();
+    const int32 maxEqipmentSize = pkt.eqipment_size();
+    for (int32 part = 0; part < maxItemSize; ++part)
+    {
+        const Protocol::SItem&      curEqipment = pkt.eqipment(part);
+        int64	                    objectID = curEqipment.object_id();
+        int32	                    itemCode = curEqipment.item_code();
+
+        playerState->mEquipmentComponent->LoadEquipment(objectID, itemCode, part + 1);
     }
 
     AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
