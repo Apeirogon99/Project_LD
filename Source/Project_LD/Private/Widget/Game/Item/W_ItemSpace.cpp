@@ -14,6 +14,8 @@
 #include "Components/SizeBox.h"
 #include "Components/Image.h"
 
+#include <Network/NetworkController.h>
+
 #include <UObject/ConstructorHelpers.h>
 
 #include <Struct/Game/GameDatas.h>
@@ -194,6 +196,37 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 					mInvenComponent->SetInventoryPacket(ItemDataPayload, EInventoryType::Update);
 				}
 			}
+		}
+
+		ANetworkController* controller = Cast<ANetworkController>(GetOwningPlayer());
+		if (controller)
+		{
+			Protocol::C2S_ReplaceEqipment replaceEqipment;
+
+			const int64 serverTimeStamp = controller->GetServerTimeStamp();
+			replaceEqipment.set_timestamp(serverTimeStamp);
+
+			Protocol::SItem* insertInvenItem = replaceEqipment.mutable_insert_inven_item();
+			insertInvenItem->set_object_id();
+			insertInvenItem->set_item_code();
+
+			Protocol::SVector2D* insertInvenItemPositon = insertInvenItem->mutable_inven_position();
+			insertInvenItemPositon->set_x();
+			insertInvenItemPositon->set_y();
+
+			insertInvenItem->set_rotation();
+
+			Protocol::SItem* insertEqipmentItem = replaceEqipment.mutable_insert_eqip_item();
+			insertEqipmentItem->set_object_id();
+			insertEqipmentItem->set_item_code();
+
+			Protocol::SVector2D* insertEqipmentItemPositon = insertEqipmentItem->mutable_inven_position();
+			insertEqipmentItemPositon->set_x();
+			insertEqipmentItemPositon->set_y();
+
+			replaceEqipment.set_part();
+
+			controller->Send(FGamePacketHandler::MakeSendBuffer(controller, replaceEqipment));
 		}
 	}
 
