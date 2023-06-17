@@ -17,7 +17,7 @@ void UItemObjectData::Rotate()
 
 bool UItemObjectData::IsValid()
 {
-    if (ObjectID == -1)
+    if (ObjectID == 0)
         return false;
     if (ItemData.category_id == 0)
         return false;
@@ -54,7 +54,7 @@ void UItemObjectData::SettingObjectData(FItemData OtheritemData)
 void UItemObjectData::Clear()
 {
     ItemData.Clear();
-    position_x = -1;
-    position_y = -1;
+    position_x = 0;
+    position_y = 0;
     rotation = 0;
 }

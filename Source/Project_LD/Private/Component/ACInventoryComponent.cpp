@@ -28,6 +28,7 @@ void UACInventoryComponent::BeginPlay()
 	for (int i = 0; i < mColums * mRows; i++)
 	{
 		mInventoryData[i] = NewObject<UItemObjectData>();
+		mInventoryData[i]->Type = EItemObjectType::Inventory;
 	}
 }
 
@@ -56,6 +57,7 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 	for (int i = 0; i < mColums * mRows; i++)
 	{
 		mInventoryData[i]->Clear();
+		mInventoryData[i]->Type = EItemObjectType::Inventory;
 	}
 
 	for (UItemObjectData* Data : mInventoryObjectArr)

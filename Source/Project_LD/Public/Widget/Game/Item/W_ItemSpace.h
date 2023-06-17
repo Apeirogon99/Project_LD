@@ -34,7 +34,7 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Size")
 	float mSizeY;
 
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Size")
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Id")
 	int32 mCategoryId;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
@@ -76,4 +76,6 @@ public:
 
 	UFUNCTION()
 	void Refresh(UItemObjectData* ItemData);
+
+	void ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData);
 };

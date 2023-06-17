@@ -141,8 +141,7 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 								Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
 								Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
 
-								//mEquipmentComponent->ChangedItemSpace(mCategoryId);
-								//Item ÀåÂø
+								ReplacePacket(NewObject<UItemObjectData>(), ItemDataPayload);
 							}
 						}
 						else
@@ -157,6 +156,7 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 							mInvenComponent->SetInventoryPacket(ItemDataPayload, EInventoryType::Update);*/
 							if (mInvenComponent->TryAddItem(EquipmentItemSlot->mItemObjectData))
 							{
+								UItemObjectData* OldItemData = EquipmentItemSlot->mItemObjectData;
 								ItemCanvas->ClearChildren();
 
 								EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
@@ -170,6 +170,8 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 									UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
 									Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
 									Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
+
+									ReplacePacket(OldItemData, ItemDataPayload);
 								}
 							}
 							else
@@ -179,8 +181,6 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 								tile.Y = ItemDataPayload->position_y;
 
 								mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
-
-								mInvenComponent->SetInventoryPacket(ItemDataPayload, EInventoryType::Update);
 							}
 						}
 					}
@@ -192,41 +192,8 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 					tile.Y = ItemDataPayload->position_y;
 
 					mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
-
-					mInvenComponent->SetInventoryPacket(ItemDataPayload, EInventoryType::Update);
 				}
 			}
-		}
-
-		ANetworkController* controller = Cast<ANetworkController>(GetOwningPlayer());
-		if (controller)
-		{
-			Protocol::C2S_ReplaceEqipment replaceEqipment;
-
-			const int64 serverTimeStamp = controller->GetServerTimeStamp();
-			replaceEqipment.set_timestamp(serverTimeStamp);
-
-			Protocol::SItem* insertInvenItem = replaceEqipment.mutable_insert_inven_item();
-			insertInvenItem->set_object_id();
-			insertInvenItem->set_item_code();
-
-			Protocol::SVector2D* insertInvenItemPositon = insertInvenItem->mutable_inven_position();
-			insertInvenItemPositon->set_x();
-			insertInvenItemPositon->set_y();
-
-			insertInvenItem->set_rotation();
-
-			Protocol::SItem* insertEqipmentItem = replaceEqipment.mutable_insert_eqip_item();
-			insertEqipmentItem->set_object_id();
-			insertEqipmentItem->set_item_code();
-
-			Protocol::SVector2D* insertEqipmentItemPositon = insertEqipmentItem->mutable_inven_position();
-			insertEqipmentItemPositon->set_x();
-			insertEqipmentItemPositon->set_y();
-
-			replaceEqipment.set_part();
-
-			controller->Send(FGamePacketHandler::MakeSendBuffer(controller, replaceEqipment));
 		}
 	}
 
@@ -268,5 +235,39 @@ void UW_ItemSpace::Refresh(UItemObjectData* ItemData)
 		UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
 		Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
 		Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
+	}
+}
+
+void UW_ItemSpace::ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData)
+{
+	ANetworkController* controller = Cast<ANetworkController>(GetOwningPlayer());
+	if (controller)
+	{
+		Protocol::C2S_ReplaceEqipment replaceEqipment;
+
+		const int64 serverTimeStamp = controller->GetServerTimeStamp();
+		replaceEqipment.set_timestamp(serverTimeStamp);
+
+		Protocol::SItem* insertInvenItem = replaceEqipment.mutable_insert_inven_item();
+		insertInvenItem->set_object_id(InvenObjectData->ObjectID);
+		insertInvenItem->set_item_code(InvenObjectData->mItemCode);
+
+		Protocol::SVector2D* insertInvenItemPositon = insertInvenItem->mutable_inven_position();
+		insertInvenItemPositon->set_x(InvenObjectData->position_x);
+		insertInvenItemPositon->set_y(InvenObjectData->position_y);
+
+		insertInvenItem->set_rotation(InvenObjectData->rotation);
+
+		Protocol::SItem* insertEqipmentItem = replaceEqipment.mutable_insert_eqip_item();
+		insertEqipmentItem->set_object_id(EquipObejctData->ObjectID);
+		insertEqipmentItem->set_item_code(EquipObejctData->mItemCode);
+
+		Protocol::SVector2D* insertEqipmentItemPositon = insertEqipmentItem->mutable_inven_position();
+		insertEqipmentItemPositon->set_x(EquipObejctData->position_x);
+		insertEqipmentItemPositon->set_y(EquipObejctData->position_y);
+
+		replaceEqipment.set_part(static_cast<Protocol::ECharacterPart>(mCategoryId));
+
+		controller->Send(FGamePacketHandler::MakeSendBuffer(controller, replaceEqipment));
 	}
 }

@@ -13,6 +13,7 @@
 UENUM()
 enum class EItemObjectType
 {
+	None,
 	Inventory,
 	Equipment
 };
@@ -87,7 +88,7 @@ class PROJECT_LD_API UItemObjectData : public UObject
 	GENERATED_BODY()
 
 public:
-	UItemObjectData() : ObjectID(-1), mItemCode(-1), position_x(-1), position_y(-1), rotation(0) {}
+	UItemObjectData() : ObjectID(0), mItemCode(0), position_x(0), position_y(0), rotation(0), Type(EItemObjectType::None) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	int64 ObjectID;

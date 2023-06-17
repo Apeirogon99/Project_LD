@@ -91,6 +91,12 @@ void UACEquipment::LoadEquipment(const google::protobuf::RepeatedPtrField<Protoc
 
 			ChangedItemSpace(part, mEquipmentData[part]);
 		}
+		else
+		{
+			mEquipmentData[part]->ItemData = FItemData();
+			mEquipmentData[part]->ObjectID = 0;
+			mEquipmentData[part]->mItemCode = 0;
+		}
 	}
 }
 

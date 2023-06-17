@@ -38,6 +38,10 @@ bool UUWInvenFrame::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEve
 
 			mInvenComponent->SetInventoryPacket(ItemData, EInventoryType::Update);
 		}
+		if(ItemData->Type==EItemObjectType::Equipment)
+		{
+
+		}
 	}
 	return false;
 }
