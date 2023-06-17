@@ -13,6 +13,7 @@ class UCanvasPanel;
 class USizeBox;
 class UImage;
 class UACInventoryComponent;
+class UACEquipment;
 
 UCLASS()
 class PROJECT_LD_API UW_ItemSpace : public UUserWidget
@@ -60,9 +61,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UACInventoryComponent* mInvenComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
+	UACEquipment* mEquipmentComponent;
+
 public:
-	void Init(UACInventoryComponent* InvenComponent);
+	void Init(UACInventoryComponent* InvenComponent, UACEquipment* EquipmentComponent);
 
 	UFUNCTION()
 	void FalseExist();
+
+	UFUNCTION()
+	void Refresh();
 };

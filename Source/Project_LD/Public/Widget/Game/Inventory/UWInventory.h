@@ -177,12 +177,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UACInventoryComponent* mInvenComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
+	UACEquipment* mEquipmentComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "default")
 	float mTileSize;
 
 public:
 	UFUNCTION()
-	void InitInventory(UACInventoryComponent* InventoryComponent, float size);
+	void InitInventory(UACInventoryComponent* InventoryComponent, float size, UACEquipment* EquipmentComponent);
 	
 	UFUNCTION()
 	void CloseInventory();

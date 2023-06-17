@@ -4,6 +4,7 @@
 #include "Framework/Game/PS_Game.h"
 #include <Handler/ClientHUD.h>
 #include <Widget/Game/Inventory/UWInventory.h>
+#include <Widget/Game/Item/W_ItemSpace.h>
 
 #include <GM_Game.h>
 #include <PC_Game.h>
@@ -15,6 +16,8 @@ APS_Game::APS_Game()
 	{
 		return;
 	}
+
+	mEquipmentComponent = CreateDefaultSubobject<UACEquipment>(TEXT("Equipment"));
 }
 
 APS_Game::~APS_Game()
@@ -51,7 +54,9 @@ void APS_Game::Init(const int64 inRemoteID)
 
 	UUWInventory* inventory = Cast<UUWInventory>(widget);
 
-	inventory->InitInventory(mInventoryComponent, 50.0f);
+	inventory->InitInventory(mInventoryComponent, 50.0f, mEquipmentComponent);
+
+	mEquipmentComponent->Init(inventory);
 }
 
 int64 APS_Game::GetRemoteID()

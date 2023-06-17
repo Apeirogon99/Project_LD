@@ -118,7 +118,7 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	return false;
 }
 
-void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, float TileSize)
+void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, float TileSize, UACEquipment* EquipmentComponent)
 {
 	mInvenComponent = InventoryComponent;
 	mTileSize = TileSize;
@@ -149,7 +149,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mEquipHelmet))
 		{
 			UW_ItemSpace* EquipHelmet = Cast<UW_ItemSpace>(mEquipHelmet);
-			EquipHelmet->Init(mInvenComponent);
+			EquipHelmet->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
 
@@ -159,7 +159,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mEquipShoulders))
 		{
 			UW_ItemSpace* EquipShoudler = Cast<UW_ItemSpace>(mEquipShoulders);
-			EquipShoudler->Init(mInvenComponent);
+			EquipShoudler->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
 
@@ -169,7 +169,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mEquipChest))
 		{
 			UW_ItemSpace* EquipChest = Cast<UW_ItemSpace>(mEquipChest);
-			EquipChest->Init(mInvenComponent);
+			EquipChest->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
 
@@ -179,7 +179,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mEquipBracers))
 		{
 			UW_ItemSpace* EquipBracers = Cast<UW_ItemSpace>(mEquipBracers);
-			EquipBracers->Init(mInvenComponent);
+			EquipBracers->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
 
@@ -189,7 +189,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mEquipHands))
 		{
 			UW_ItemSpace* EquipHands = Cast<UW_ItemSpace>(mEquipHands);
-			EquipHands->Init(mInvenComponent);
+			EquipHands->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
 
@@ -199,7 +199,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mEquipPants))
 		{
 			UW_ItemSpace* EquipPants = Cast<UW_ItemSpace>(mEquipPants);
-			EquipPants->Init(mInvenComponent);
+			EquipPants->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
 
@@ -209,7 +209,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mEquipBoots))
 		{
 			UW_ItemSpace* EquipBoots = Cast<UW_ItemSpace>(mEquipBoots);
-			EquipBoots->Init(mInvenComponent);
+			EquipBoots->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
 
@@ -219,7 +219,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mEquipLeftWeapon))
 		{
 			UW_ItemSpace* EquipLeftWeapon = Cast<UW_ItemSpace>(mEquipLeftWeapon);
-			EquipLeftWeapon->Init(mInvenComponent);
+			EquipLeftWeapon->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
 
@@ -229,7 +229,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mEquipRightWeapon))
 		{
 			UW_ItemSpace* EquipRightWeapon = Cast<UW_ItemSpace>(mEquipRightWeapon);
-			EquipRightWeapon->Init(mInvenComponent);
+			EquipRightWeapon->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
 }

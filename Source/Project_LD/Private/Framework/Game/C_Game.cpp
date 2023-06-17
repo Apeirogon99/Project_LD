@@ -53,7 +53,7 @@ void AC_Game::BeginPlay()
 
 void AC_Game::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-
+	Super::EndPlay(EndPlayReason);
 }
 
 void AC_Game::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

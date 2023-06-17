@@ -7,6 +7,7 @@
 
 #include "Blueprint/DragDropOperation.h"
 
+#include <Component/ACEquipment.h>
 #include <Component/ACInventoryComponent.h>
 #include "Components/CanvasPanelSlot.h"
 #include "Components/CanvasPanel.h"
@@ -138,8 +139,8 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 								Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
 								Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
 
+								mEquipmentComponent->ChangedItemSpace(mCategoryId);
 								//Item ÀåÂø
-								UE_LOG(LogTemp, Warning, TEXT("%d Item Succ"), mCategoryId);
 							}
 						}
 						else
@@ -151,8 +152,6 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 							mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
 
 							mInvenComponent->SetInventoryPacket(ItemDataPayload, EInventoryType::Update);
-
-							UE_LOG(LogTemp, Warning, TEXT("%d Item Fail"), mCategoryId);
 						}
 					}
 				}
@@ -165,8 +164,6 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 					mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
 
 					mInvenComponent->SetInventoryPacket(ItemDataPayload, EInventoryType::Update);
-
-					UE_LOG(LogTemp, Warning, TEXT("%d Item Fail"), mCategoryId);
 				}
 			}
 		}
@@ -175,12 +172,26 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	return true;
 }
 
-void UW_ItemSpace::Init(UACInventoryComponent* InvenComponent)
+void UW_ItemSpace::Init(UACInventoryComponent* InvenComponent, UACEquipment* EquipmentComponent)
 {
 	mInvenComponent = InvenComponent;
+	if (mInvenComponent == nullptr)
+	{
+		return; 
+	}
+	mEquipmentComponent = EquipmentComponent;
+	if (mEquipmentComponent != nullptr)
+	{
+		mEquipmentComponent->OnEquipmentChanged.AddUFunction(this, FName("Refresh"));
+	}
 }
 
 void UW_ItemSpace::FalseExist()
 {
 	bExist = false;
+}
+
+void UW_ItemSpace::Refresh()
+{
+
 }

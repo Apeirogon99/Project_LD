@@ -48,17 +48,17 @@ public:
 	TArray<UItemObjectData*> mInventoryObjectArr;
 
 public:
-	void						Refresh();
-	void						ChangeInvenObjectArr();
-	void						LoadItem(int64 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation);
-	void						ClearInventory();
-	void						RemoveItem(UItemObjectData* ItemObjectData);
-	void						AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex);
-	bool						TryAddItem(UItemObjectData* ItemObjectData);
-	bool						IsRoomAvailable(UItemObjectData* ItemObjectData, int TopLeftIndex);
-	bool						GetItemAtIndex(int index, UItemObjectData*& ItemObject);
-	int							TileToIndex(FTile Tile)	const;
-	FTile						IndexToTile(int Index)		const;
+	void											Refresh();
+	void											ChangeInvenObjectArr();
+	void											LoadItem(int64 ObjectID, int32 ItemCode, int32 Pos_x, int32 Pos_y, int32 Rotation);
+	void											ClearInventory();
+	void											RemoveItem(UItemObjectData* ItemObjectData);
+	void											AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex);
+	bool											TryAddItem(UItemObjectData* ItemObjectData);
+	bool											IsRoomAvailable(UItemObjectData* ItemObjectData, int TopLeftIndex);
+	bool											GetItemAtIndex(int index, UItemObjectData*& ItemObject);
+	int											TileToIndex(FTile Tile)	const;
+	FTile										IndexToTile(int Index)		const;
 	TArray<UItemObjectData*>	GetAllItems();
 
 	void SetInventoryPacket(const UItemObjectData* inItemData, const EInventoryType& inType);

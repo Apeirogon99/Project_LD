@@ -7,6 +7,7 @@
 #include <Struct/Game/GameDatas.h>
 #include <Struct/Inventory/InventoryFrame.h>
 #include <Component/ACInventoryComponent.h>
+#include <Component/ACEquipment.h>
 #include "PS_Game.generated.h"
 
 /**
@@ -25,6 +26,9 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (AllowPrivateAccess = "true"))
 	UACInventoryComponent* mInventoryComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
+	UACEquipment* mEquipmentComponent;
 
 public:
 	void Init(const int64 inRemoteID);
