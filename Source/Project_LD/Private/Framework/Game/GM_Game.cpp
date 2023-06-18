@@ -17,9 +17,8 @@
 #include <Struct/Identity/ServerData.h>
 
 #include <UObject/ConstructorHelpers.h>
-#include <Kismet/GameplayStatics.h>
 
-#define NETWORK_LOCAL 0
+#define NETWORK_LOCAL 1
 
 AGM_Game::AGM_Game()
 {
@@ -140,30 +139,4 @@ ACharacter* AGM_Game::SpawnCharacter(FVector inLocation, FRotator inRotator)
 	}
 
 	return nullptr;
-}
-
-AAppearanceCharacter* AGM_Game::GetPreviewCharacter()
-{
-
-	UWorld* world = GetWorld();
-	if (nullptr == world)
-	{
-		return nullptr;
-	}
-
-	static TSubclassOf<AAppearanceCharacter> dummyClass = LoadClass<AAppearanceCharacter>(NULL, TEXT("Blueprint'/Game/Blueprint/Widget/Game/Inventory/PreView/BP_PreViewCharacter.BP_PreViewCharacter_C'"));
-
-	AAppearanceCharacter* oldDummy = Cast<AAppearanceCharacter>(UGameplayStatics::GetActorOfClass(world, dummyClass));
-	if (oldDummy)
-	{
-		return oldDummy;
-	}
-
-	FActorSpawnParameters spawnParams;
-	spawnParams.Owner = this;
-	spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	AAppearanceCharacter* newDummyCharacter = world->SpawnActor<AAppearanceCharacter>(dummyClass, FVector(0.0f, 0.0f, -1000.0f), FRotator::ZeroRotator, spawnParams);
-
-	return newDummyCharacter;
 }

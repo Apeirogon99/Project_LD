@@ -20,7 +20,8 @@ public:
 	virtual ~AAppearanceCharacter();
 
 public:
-	void InitializeAppearance();
+	void InitCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment);
+	void UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment);
@@ -35,7 +36,13 @@ public:
 	void SetSkeletalPartMesh(const ECharacterPart& inCharacterPart, const int32 inGameDataID);
 
 public:
-	FLinearColor GetMeshColor(const EAppearance InAppearance);
+	FLinearColor				GetMeshColor(const EAppearance InAppearance);
+	const FCharacterAppearance& GetCharacterAppearance() const { return mCharacterAppearance; }
+	const FCharacterEquipment&	GetCharacterEquipment() const { return mCharacterEquipment; }
+
+protected:
+	FCharacterAppearance	mCharacterAppearance;
+	FCharacterEquipment		mCharacterEquipment;
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Appearance | Equipment")
@@ -105,7 +112,4 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
 	TArray<UAnimationAsset*> mCharacterPoses;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
-		UAnimInstance* mDefaultAnimation;
 };

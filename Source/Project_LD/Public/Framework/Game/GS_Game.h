@@ -6,6 +6,7 @@
 #include "Network/NetworkGameState.h"
 #include "GS_Game.generated.h"
 
+class AAppearanceCharacter;
 /**
  * 
  */
@@ -23,7 +24,8 @@ public:
 	AActor*		FindGameObject(const int64 inGameObject);
 	int32		RemoveGameObject(const int64 inGameObjectID);
 
-	AController*	FindPlayerController(const int64 inRemoteID);
+	AController*			FindPlayerController(const int64 inRemoteID);
+	AAppearanceCharacter*	GetPreviewCharacter();
 	
 private:
 	TMap<int64, AActor*> mGameObjects;

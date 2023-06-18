@@ -104,7 +104,7 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(const ECharacterRace InRace)
 		FRotator CharacterRotation(0.0f, -180.0f, 0.0f);
 
 		NewDummyCharacter = GetWorld()->SpawnActor<AAppearanceCharacter>(raceClass, CharacterLocation, CharacterRotation, spawnParams);
-		NewDummyCharacter->InitializeCharacter(gameinstance->mCharacterData);
+		NewDummyCharacter->InitCharacterVisual(gameinstance->mCharacterData.mAppearance, gameinstance->mCharacterData.mEquipment);
 		//NewDummyCharacter->InitializeAppearance();
 	}
 

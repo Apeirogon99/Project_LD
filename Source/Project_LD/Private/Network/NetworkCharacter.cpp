@@ -38,18 +38,3 @@ void ANetworkCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-
-void ANetworkCharacter::InitializeCharacter(const FCharacterData& InCharacterDatas)
-{
-	mCharacterData = InCharacterDatas;
-}
-
-void ANetworkCharacter::InitializeCharacter(const FCharacterData&& InCharacterDatas)
-{
-	mCharacterData = InCharacterDatas;
-}
-
-const FCharacterData& ANetworkCharacter::GetCharacterData() const
-{
-	return mCharacterData;
-}

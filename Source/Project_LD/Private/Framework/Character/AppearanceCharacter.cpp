@@ -72,15 +72,24 @@ AAppearanceCharacter::~AAppearanceCharacter()
 {
 }
 
-void AAppearanceCharacter::InitializeAppearance()
+void AAppearanceCharacter::InitCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment)
 {
-	UpdateCharacterEquipment(mCharacterData.mEquipment);
-	UpdateCharacterAppearnce(mCharacterData.mAppearance);
+	mCharacterAppearance = InCharacterAppearance;
+	mCharacterEquipment = inCharacterEquipment;
+}
+
+void AAppearanceCharacter::UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment)
+{
+	mCharacterAppearance = InCharacterAppearance;
+	mCharacterEquipment = inCharacterEquipment;
+
+	UpdateCharacterEquipment(inCharacterEquipment);
+	UpdateCharacterAppearnce(InCharacterAppearance);
 }
 
 void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment)
 {
-	ECharacterRace currentRace = mCharacterData.mAppearance.mRace;
+	ECharacterRace currentRace = mCharacterAppearance.mRace;
 	if (currentRace == ECharacterRace::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
@@ -91,10 +100,8 @@ void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& I
 	{
 		SetSkeletalPartMesh(mHair, InCharacterEquipment.mHair);
 	}
-	else
-	{
-		SetSkeletalPartMesh(mHelmet, InCharacterEquipment.mHelmet);
-	}
+
+	SetSkeletalPartMesh(mHelmet,	InCharacterEquipment.mHelmet);
 	SetSkeletalPartMesh(mShoulders, InCharacterEquipment.mShoulders);
 	SetSkeletalPartMesh(mChest,		InCharacterEquipment.mChest);
 	SetSkeletalPartMesh(mBracers,	InCharacterEquipment.mBracers);
@@ -123,12 +130,12 @@ void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& I
 	SetSkeletalPartMesh(mWeapon_L,	InCharacterEquipment.mWeapon_L);
 	SetSkeletalPartMesh(mWeapon_R,	InCharacterEquipment.mWeapon_R);
 
-	mCharacterData.mEquipment = InCharacterEquipment;
+	mCharacterEquipment = InCharacterEquipment;
 }
 
 void AAppearanceCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance)
 {
-	ECharacterRace currentRace = mCharacterData.mAppearance.mRace;
+	ECharacterRace currentRace = mCharacterAppearance.mRace;
 	if (currentRace == ECharacterRace::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
@@ -156,15 +163,20 @@ void AAppearanceCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& 
 		SetSkeletalPartColor(mHair,		TEXT("BaseColor"), 0, hairColor);		//Çì¾î
 	}
 
-	mCharacterData.mAppearance = InCharacterAppearance;
+	mCharacterAppearance = InCharacterAppearance;
 
 }
 
 void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterPose)
 {
-	
-	if (ECharacterPose::None == InCharacterPose)
+	if (mCharacterPoses.Num() == 0)
 	{
+		return;
+	}
+
+	if (ECharacterPose::Default == InCharacterPose)
+	{
+		UpdateDefaultAnimation();
 		return;
 	}
 
@@ -194,15 +206,21 @@ void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterP
 
 void AAppearanceCharacter::UpdateDefaultAnimation()
 {
-	if (mDefaultAnimation == nullptr)
+	if (mCharacterPoses.Num() == 0)
+	{
+		return;
+	}
+
+	UAnimationAsset* animationAsset = mCharacterPoses[StaticCast<int32>(0)];
+	if (animationAsset == nullptr)
 	{
 		return;
 	}
 
 	USkeletalMeshComponent* meshRoot = GetMesh();
-	meshRoot->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-	meshRoot->SetAnimInstanceClass(mDefaultAnimation->GetClass());
-	//meshRoot->PlayAnimation(mDefaultAnimation, false);
+	meshRoot->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+	meshRoot->SetAnimation(animationAsset);
+	meshRoot->PlayAnimation(animationAsset, true);
 
 	int32 maxChild = meshRoot->GetNumChildrenComponents();
 	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
@@ -210,9 +228,9 @@ void AAppearanceCharacter::UpdateDefaultAnimation()
 		USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
 		if (partMesh)
 		{
-			partMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
-			meshRoot->SetAnimInstanceClass(mDefaultAnimation->GetClass());
-			//partMesh->PlayAnimation(mDefaultAnimation, false);
+			partMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
+			partMesh->SetAnimation(animationAsset);
+			partMesh->PlayAnimation(animationAsset, true);
 		}
 	}
 }
@@ -248,8 +266,14 @@ void AAppearanceCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPar
 		return;
 	}
 
-	if (0 >= InMeshIndex)
+	if (-1 >= InMeshIndex)
 	{
+		return;
+	}
+
+	if (0 == InMeshIndex)
+	{
+		InMeshPart->SetSkeletalMesh(nullptr);
 		return;
 	}
 
@@ -319,7 +343,7 @@ FLinearColor AAppearanceCharacter::GetMeshColor(const EAppearance InAppearance)
 	FLinearColor			meshColor;
 	FString					paramterName = TEXT("BaseColor");
 
-	ECharacterRace currentRace = mCharacterData.mAppearance.mRace;
+	ECharacterRace currentRace = mCharacterAppearance.mRace;
 	if (currentRace == ECharacterRace::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetMeshColor] Race is None"), ELogLevel::Error);

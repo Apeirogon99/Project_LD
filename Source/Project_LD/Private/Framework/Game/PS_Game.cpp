@@ -8,6 +8,7 @@
 
 #include <GM_Game.h>
 #include <PC_Game.h>
+#include <C_Game.h>
 
 APS_Game::APS_Game()
 {
@@ -24,9 +25,8 @@ APS_Game::~APS_Game()
 {
 }
 
-void APS_Game::Init(const int64 inRemoteID)
+void APS_Game::InitializeLocalPlayerState()
 {
-	mRemoteID = inRemoteID;
 
 	AGM_Game* gameMode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gameMode)
@@ -59,7 +59,17 @@ void APS_Game::Init(const int64 inRemoteID)
 	mEquipmentComponent->Init(inventory);
 }
 
-int64 APS_Game::GetRemoteID()
+void APS_Game::SetRemotePlayerID(const int64 inRemoteID)
 {
-	return mRemoteID;
+	mRemoteID = inRemoteID;
+}
+
+void APS_Game::SetCharacterData(const FCharacterData& InCharacterDatas)
+{
+	mCharacterData = InCharacterDatas;
+}
+
+void APS_Game::SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment)
+{
+	mCharacterData.mEquipment = inCharacterEquipment;
 }

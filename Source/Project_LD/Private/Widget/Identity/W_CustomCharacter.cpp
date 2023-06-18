@@ -131,16 +131,14 @@ void UW_CustomCharacter::Click_Create()
 
 			if (mCurrentDummyCharacter)
 			{
-				const FCharacterData& dummyCharacterData = mCurrentDummyCharacter->GetCharacterData();
+				const FCharacterAppearance& appearance = mCurrentDummyCharacter->GetCharacterAppearance();
+				const FCharacterEquipment& eqipment = mCurrentDummyCharacter->GetCharacterEquipment();
 
 				characterData->set_name(name);
-				characterData->set_character_class(static_cast<Protocol::ECharacterClass>(dummyCharacterData.mClass));
-
-				Protocol::SCharacterAppearance* newCharacterAppearance = characterData->mutable_appearance();
-				*newCharacterAppearance = UPacketUtils::ConvertToPAppearance(dummyCharacterData.mAppearance);
-
-				Protocol::SCharacterEqipment* newCharacterEqipment = characterData->mutable_eqipment();
-				*newCharacterEqipment = UPacketUtils::ConvertToPEqipment(dummyCharacterData.mEquipment);
+				characterData->set_character_class(static_cast<Protocol::ECharacterClass>(StaticCast<int32>(mCharacterClass)));
+				characterData->mutable_appearance()->CopyFrom(UPacketUtils::ConvertToPAppearance(appearance));
+				characterData->mutable_eqipment()->CopyFrom(UPacketUtils::ConvertToPEqipment(eqipment));
+	
 			}
 
 			SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, createCharacterPacket);
@@ -299,7 +297,7 @@ void UW_CustomCharacter::SetDummyCharacter(AAppearanceCharacter* inDummyCharacte
 	IsSetupCharacter = false;
 
 	mCurrentDummyCharacter = inDummyCharacter;
-	mTempCharacterAppearance = mCurrentDummyCharacter->GetCharacterData().mAppearance;
+	mTempCharacterAppearance = mCurrentDummyCharacter->GetCharacterAppearance();
 
 	FLinearColor skin		= mCurrentDummyCharacter->GetMeshColor(EAppearance::Body);
 	FLinearColor hair		= mCurrentDummyCharacter->GetMeshColor(EAppearance::Hair);
@@ -327,8 +325,8 @@ void UW_CustomCharacter::SetDummyCharacter(AAppearanceCharacter* inDummyCharacte
 	UWidget* box = this->WidgetTree->FindWidget(FName(TEXT("EyebrowBox")));
 	if (box != nullptr)
 	{
-		const FCharacterData& data = mCurrentDummyCharacter->GetCharacterData();
-		mCurrentDummyRace = data.mAppearance.mRace;
+		const FCharacterAppearance& appearance = mCurrentDummyCharacter->GetCharacterAppearance();
+		mCurrentDummyRace = appearance.mRace;
 		if (mCurrentDummyRace == ECharacterRace::Female)
 		{
 			box->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
@@ -345,6 +343,8 @@ void UW_CustomCharacter::SetDummyCharacter(AAppearanceCharacter* inDummyCharacte
 
 void UW_CustomCharacter::SetClassText(const ECharacterClass inClass)
 {
+	mCharacterClass = inClass;
+
 	FString classStr;
 	switch (inClass)
 	{

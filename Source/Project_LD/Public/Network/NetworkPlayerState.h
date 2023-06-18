@@ -18,13 +18,4 @@ class PROJECT_LD_API ANetworkPlayerState : public APlayerState
 public:
 	ANetworkPlayerState();
 	~ANetworkPlayerState();
-	
-public:
-	void InitializeCharacterData(const FCharacterData& InCharacterDatas);
-
-public:
-	const FCharacterData& GetCharacterData() const { return mCharacterData; }
-
-protected:
-	FCharacterData	mCharacterData;
 };

@@ -22,14 +22,4 @@ protected:
 public:	
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-public:
-	void InitializeCharacter(const FCharacterData& InCharacterDatas);
-	void InitializeCharacter(const FCharacterData&& InCharacterDatas);
-
-public:
-	const FCharacterData& GetCharacterData() const;
-
-protected:
-	FCharacterData	mCharacterData;
 };

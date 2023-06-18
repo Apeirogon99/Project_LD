@@ -6,7 +6,6 @@
 #include "Network/NetworkGameMode.h"
 #include "GM_Game.generated.h"
 
-class AAppearanceCharacter;
 /**
  * 
  */
@@ -28,5 +27,4 @@ protected:
 
 public:
 	ACharacter*				SpawnCharacter(FVector inLocation, FRotator inRotator);
-	AAppearanceCharacter*	GetPreviewCharacter();
 };

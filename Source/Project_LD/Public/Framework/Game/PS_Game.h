@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Network/NetworkPlayerState.h"
+
+#include <Struct/Game/CharacterDatas.h>
 #include <Struct/Game/GameDatas.h>
+
 #include <Struct/Inventory/InventoryFrame.h>
 #include <Component/ACInventoryComponent.h>
 #include <Component/ACEquipment.h>
@@ -31,12 +34,20 @@ public:
 	UACEquipment* mEquipmentComponent;
 
 public:
-	void Init(const int64 inRemoteID);
-	
-public:
-	int64 GetRemoteID();
+	void InitializeLocalPlayerState();
+	void SetRemotePlayerID(const int64 inRemoteID);
+	void SetCharacterData(const FCharacterData& InCharacterDatas);
+	void SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment);
 
 public:
-	int64 mRemoteID;
+	const int64				GetRemoteID() const { return mRemoteID; }
+	const FCharacterData&	GetCharacterData() const { return mCharacterData; }
+
+protected:
+	UPROPERTY()
+	int64			mRemoteID;
+
+	UPROPERTY()
+	FCharacterData	mCharacterData;
 
 };

@@ -7,6 +7,8 @@
 #include <Game/PS_Game.h>
 #include <Game/GM_Game.h>
 
+#include <Kismet/GameplayStatics.h>
+
 AGS_Game::AGS_Game()
 {
 }
@@ -64,7 +66,7 @@ AController* AGS_Game::FindPlayerController(const int64 inRemoteID)
         APS_Game* playerState = Cast<APS_Game>(curPlayerState);
         if (playerState)
         {
-            if (playerState->mRemoteID == inRemoteID)
+            if (playerState->GetRemoteID() == inRemoteID)
             {
                 return playerState->GetPawn()->GetController();
             }
@@ -72,4 +74,29 @@ AController* AGS_Game::FindPlayerController(const int64 inRemoteID)
     }
 
     return nullptr;
+}
+
+AAppearanceCharacter* AGS_Game::GetPreviewCharacter()
+{
+    UWorld* world = GetWorld();
+    if (nullptr == world)
+    {
+        return nullptr;
+    }
+
+    static TSubclassOf<AAppearanceCharacter> dummyClass = LoadClass<AAppearanceCharacter>(NULL, TEXT("Blueprint'/Game/Blueprint/Widget/Game/Inventory/PreView/BP_PreViewCharacter.BP_PreViewCharacter_C'"));
+
+    AAppearanceCharacter* oldDummy = Cast<AAppearanceCharacter>(UGameplayStatics::GetActorOfClass(world, dummyClass));
+    if (oldDummy)
+    {
+        return oldDummy;
+    }
+
+    FActorSpawnParameters spawnParams;
+    spawnParams.Owner = this;
+    spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    AAppearanceCharacter* newDummyCharacter = world->SpawnActor<AAppearanceCharacter>(dummyClass, FVector(0.0f, 0.0f, -1000.0f), FRotator::ZeroRotator, spawnParams);
+
+    return newDummyCharacter;
 }

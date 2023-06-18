@@ -109,11 +109,14 @@ void UW_SelectCharacterButton::Click_Character()
 
 void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterData& inCharacterData)
 {
-	FText characterTitle = FText::FromString(FString::Printf(TEXT("%s"), *inCharacterData.mName));
+
+	mCharacterData = inCharacterData;
+
+	FText characterTitle = FText::FromString(FString::Printf(TEXT("%dLv %s"), mCharacterData.mLevel, *mCharacterData.mName));
 	mCharacterInfoText->SetText(characterTitle);
 
 	AAppearanceCharacter* NewDummyCharacter = nullptr;
-	TSubclassOf<AAppearanceCharacter> raceClass = mDummyCharacterClass[StaticCast<int32>(inCharacterData.mAppearance.mRace)];
+	TSubclassOf<AAppearanceCharacter> raceClass = mDummyCharacterClass[StaticCast<int32>(mCharacterData.mAppearance.mRace)];
 	if (raceClass)
 	{
 		FActorSpawnParameters spawnParams;
@@ -121,8 +124,7 @@ void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterData& inCharacte
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		mCharacter = GetWorld()->SpawnActor<AAppearanceCharacter>(raceClass, mCharacterLocation, mCharacterRotation, spawnParams);
-		mCharacter->InitializeCharacter(inCharacterData);
-		mCharacter->InitializeAppearance();
+		mCharacter->UpdateCharacterVisual(mCharacterData.mAppearance, mCharacterData.mEquipment);
 	}
 
 	if (mCharacter)
@@ -263,8 +265,7 @@ void UW_SelectCharacterButton::DeleteCharacter()
 		ANetworkController* controller = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode())->GetNetworkController();
 		Protocol::C2S_DeleteCharacter packet;
 
-		const FCharacterData& characterData = mCharacter->GetCharacterData();
-		packet.set_name(UNetworkUtils::ConvertString(characterData.mName));
+		packet.set_name(UNetworkUtils::ConvertString(mCharacterData.mName));
 
 		clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
 

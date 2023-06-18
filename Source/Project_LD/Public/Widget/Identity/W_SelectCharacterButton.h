@@ -111,4 +111,7 @@ private:
 
 	UPROPERTY()
 	EClickMode mClickMode;
+
+	UPROPERTY()
+	FCharacterData mCharacterData;
 };

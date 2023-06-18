@@ -140,5 +140,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Custom")
 	ECharacterRace	mCurrentDummyRace;
 
+	UPROPERTY()
+	ECharacterClass mCharacterClass;
+
 	bool IsSetupCharacter;
 };

@@ -27,7 +27,7 @@ enum class ECharacterRace : uint8
 UENUM(BlueprintType)
 enum class ECharacterPose : uint8
 {
-	None			UMETA(DisplayName = "None"),
+	Default			UMETA(DisplayName = "Default"),
 	Idle			UMETA(DisplayName = "Idle"),
 	Seat			UMETA(DisplayName = "Seat"),
 	StandUp			UMETA(DisplayName = "StandUp"),
@@ -67,10 +67,10 @@ struct FCharacterEquipment
 public:
 	FCharacterEquipment();
 	FCharacterEquipment(const FCharacterEquipment& inCharacterEquipments) { UpdateEquipments(inCharacterEquipments); }
-	FCharacterEquipment(const Protocol::SCharacterAppearance& inCharacterEquipments) { UpdateEquipments(inCharacterEquipments);}
+	FCharacterEquipment(const Protocol::SCharacterEqipment& inCharacterEquipments) { UpdateEquipments(inCharacterEquipments);}
 
 	FCharacterEquipment& operator=(const FCharacterEquipment& inCharacterEquipments) { UpdateEquipments(inCharacterEquipments); return *this; }
-	FCharacterEquipment& operator=(const Protocol::SCharacterAppearance& inCharacterEquipments) { UpdateEquipments(inCharacterEquipments); return *this; }
+	FCharacterEquipment& operator=(const Protocol::SCharacterEqipment& inCharacterEquipments) { UpdateEquipments(inCharacterEquipments); return *this; }
 
 	void UpdateEquipments(const FCharacterEquipment& inCharacterEquipments);
 	void UpdateEquipments(const Protocol::SCharacterEqipment& inCharacterEquipments);

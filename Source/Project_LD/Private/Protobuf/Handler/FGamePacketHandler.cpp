@@ -28,16 +28,36 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     {
         return false;
     }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
     
-    FVector location = FVector(0, 0, 500.0f);
-    FVector velocity = FVector();
-    FRotator rotator = FRotator::ZeroRotator;
+    const Protocol::STransform& tempTransform = pkt.transform();
+    const Protocol::SVector& tempLocation = tempTransform.location();
+    const Protocol::SRotator& tempRotator = tempTransform.rotation();
+    FVector location = FVector(tempLocation.x(), tempLocation.y(), tempLocation.z());
+    FRotator rotator = FRotator(tempRotator.pitch(), tempRotator.yaw(), tempRotator.roll());
+
+    const int64     newRemoteID = pkt.remote_id();
+    FCharacterData  newCharacterData = pkt.character_data();
 
     AC_Game* newCharacter = Cast<AC_Game>(gameMode->SpawnCharacter(location, rotator));
     if (nullptr == newCharacter)
     {
         return false;
     }
+    newCharacter->UpdateCharacterVisual(newCharacterData.mAppearance, newCharacterData.mEquipment);
+
+    AAppearanceCharacter* preivewCharacter = Cast<AAppearanceCharacter>(gameState->GetPreviewCharacter());
+    if (nullptr == preivewCharacter)
+    {
+        return false;
+    }
+    preivewCharacter->UpdateCharacterVisual(newCharacterData.mAppearance, newCharacterData.mEquipment);
+    preivewCharacter->UpdateDefaultAnimation();
 
     APawn* oldCharacter = controller->GetPawn();
     if (oldCharacter)
@@ -53,12 +73,9 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     {
         return false;
     }
-
-    const int64     newRemoteID = pkt.remote_id();
-    FCharacterData  newCharacterData = pkt.character_data();
-
-    playerState->Init(newRemoteID);
-    playerState->InitializeCharacterData(newCharacterData);
+    playerState->InitializeLocalPlayerState();
+    playerState->SetRemotePlayerID(newRemoteID);
+    playerState->SetCharacterData(newCharacterData);
 
     //Load
     playerState->mInventoryComponent->LoadItem(pkt.item());
@@ -115,7 +132,7 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     const int64                     lastMovementTimeStamp   = pkt.timestamp();
     FVector                         oldMovementLocation     = FVector(pkt.old_location().x(), pkt.old_location().y(), pkt.old_location().z());
     FVector                         newMovementLocation     = FVector(pkt.new_location().x(), pkt.new_location().y(), pkt.new_location().z());
-    const Protocol::SCharacterData& characterData           = pkt.character_data();
+    FCharacterData                  characterData           = pkt.character_data();
 
     AC_Game* character = Cast<AC_Game>(gameMode->SpawnCharacter(FVector::ZeroVector, FRotator::ZeroRotator));
     if (nullptr == character)
@@ -123,6 +140,7 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
         return false;
     }
     character->SpawnDefaultController();
+    character->UpdateCharacterVisual(characterData.mAppearance, characterData.mEquipment);
 
     AController* aiController = character->GetController();
     if (nullptr == aiController)
@@ -147,7 +165,7 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     }
 
     character->SetPlayerState(playerState);
-    playerState->Init(newRemoteID);
+    playerState->SetRemotePlayerID(newRemoteID);
 
     AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
     if (nullptr == gameState)
@@ -440,6 +458,12 @@ bool Handle_S2C_RollbackInventory(ANetworkController* controller, Protocol::S2C_
 
 bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_ReplaceEqipment& pkt)
 {
+    const int32 error = pkt.error();
+    if (0 != error)
+    {
+
+    }
+
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -452,11 +476,42 @@ bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_Re
         return false;
     }
 
-    const int32 error = pkt.error();
-    if (0 != error)
+    const int64 remoteID = pkt.remote_id();
+    AController* remoteController = gameState->FindPlayerController(remoteID);
+    if (nullptr == remoteController)
     {
-
+        return true;
     }
+
+    FCharacterEquipment updateEquipment = pkt.eqipment();
+
+    APS_Game* playerState = Cast<APS_Game>(remoteController->PlayerState);
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+    playerState->SetCharacterEqipment(updateEquipment);
+   
+
+    AC_Game* character = Cast<AC_Game>(remoteController->GetPawn());
+    if (nullptr == character)
+    {
+        return false;
+    }
+    character->UpdateCharacterEquipment(updateEquipment);
+
+    if (controller != remoteController)
+    {
+        return true;
+    }
+
+    AAppearanceCharacter* preivewCharacter = Cast<AAppearanceCharacter>(gameState->GetPreviewCharacter());
+    if (nullptr == preivewCharacter)
+    {
+        return false;
+    }
+    preivewCharacter->UpdateCharacterEquipment(updateEquipment);
+    preivewCharacter->UpdateDefaultAnimation();
 
     return true;
 }
