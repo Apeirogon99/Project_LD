@@ -83,7 +83,7 @@ void UUWInventory::NativeConstruct()
 	}
 
 	DetailCanvas->SetVisibility(ESlateVisibility::Hidden);
-	BackgroundBorder->SetVisibility(ESlateVisibility::Hidden);
+	BackgroundBorder->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UUWInventory::NativeOnInitialized()
@@ -108,14 +108,22 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 	
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
-	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
+	UItemObjectData* ItemObejctData = Cast<UItemObjectData>(Operation->Payload);
 
-	//아이템 소환
-	mInvenComponent->SetInventoryPacket(ItemData, EInventoryType::Remove);
+	if (ItemObejctData->IsValid())
+	{
+		if (ItemObejctData->Type == EItemObjectType::Inventory)
+		{
+			mInvenComponent->SetInventoryPacket(ItemObejctData, EInventoryType::Remove);
+		}
+		else if (ItemObejctData->Type == EItemObjectType::Equipment)
+		{
+			mEquipmentComponent->mEquipmentData[ItemObejctData->ItemData.category_id - 1] = ItemObejctData;
+			mEquipmentComponent->mEquipmentWidget[ItemObejctData->ItemData.category_id - 1]->ReMakeWidget(ItemObejctData);
+		}
+	}
 
-	BackgroundBorder->SetVisibility(ESlateVisibility::Hidden);
-
-	return false;
+	return true;
 }
 
 void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, float TileSize, UACEquipment* EquipmentComponent)
@@ -140,7 +148,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		if (IsValid(mInvenFrame))
 		{
 			UUWInvenFrame* InventoryFrame = Cast<UUWInvenFrame>(mInvenFrame);
-			InventoryFrame->Init(mInvenComponent);
+			InventoryFrame->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
 

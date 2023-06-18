@@ -2,8 +2,10 @@
 
 
 #include "Widget/Game/Inventory/UWInvenFrame.h"
+#include "Widget/Game/Item/W_ItemSpace.h"
 #include "Blueprint/DragDropOperation.h"
 
+#include <Component/ACEquipment.h>
 #include <Component/ACInventoryComponent.h>
 
 void UUWInvenFrame::NativeConstruct()
@@ -23,30 +25,33 @@ bool UUWInvenFrame::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEve
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
-	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
+	UItemObjectData* ItemObejctData = Cast<UItemObjectData>(Operation->Payload);
 
 	//인벤토리로 돌아감
-	if (ItemData->IsValid())
+	if (ItemObejctData->IsValid())
 	{
-		if (ItemData->Type == EItemObjectType::Inventory)
+		if (ItemObejctData->Type == EItemObjectType::Inventory)
 		{
 			FTile tile;
-			tile.X = ItemData->position_x;
-			tile.Y = ItemData->position_y;
+			tile.X = ItemObejctData->position_x;
+			tile.Y = ItemObejctData->position_y;
 
-			mInvenComponent->AddItemAt(ItemData, mInvenComponent->TileToIndex(tile));
+			mInvenComponent->AddItemAt(ItemObejctData, mInvenComponent->TileToIndex(tile));
 
-			mInvenComponent->SetInventoryPacket(ItemData, EInventoryType::Update);
+			mInvenComponent->SetInventoryPacket(ItemObejctData, EInventoryType::Update);
 		}
-		if(ItemData->Type==EItemObjectType::Equipment)
+		else if(ItemObejctData->Type==EItemObjectType::Equipment)
 		{
-
+			mEquipmentComponent->mEquipmentData[ItemObejctData->ItemData.category_id - 1] = ItemObejctData;
+			mEquipmentComponent->mEquipmentWidget[ItemObejctData->ItemData.category_id - 1]->ReMakeWidget(ItemObejctData);
 		}
 	}
-	return false;
+
+	return true;
 }
 
-void UUWInvenFrame::Init(UACInventoryComponent* InvenComponent)
+void UUWInvenFrame::Init(UACInventoryComponent* InvenComponent, UACEquipment* EquipmentComponent)
 {
 	mInvenComponent = InvenComponent;
+	mEquipmentComponent = EquipmentComponent;
 }

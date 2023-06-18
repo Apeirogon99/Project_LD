@@ -18,7 +18,6 @@ UACInventoryComponent::UACInventoryComponent()
 	mRows = 7;
 }
 
-
 // Called when the game starts
 void UACInventoryComponent::BeginPlay()
 {
@@ -33,6 +32,7 @@ void UACInventoryComponent::BeginPlay()
 	}
 }
 
+//End -> 바인드 풀기
 void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
@@ -43,6 +43,7 @@ void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	}
 }
 
+//GridInven에서 바인딩 된 델리게이트 호출
 void UACInventoryComponent::Refresh()
 {
 	if (OnInventoryChanged.IsBound() == true)
@@ -52,6 +53,7 @@ void UACInventoryComponent::Refresh()
 	}
 }
 
+//ItemObjectData가 변하면 ItemInven초기화 후 다시 쏴줌
 void UACInventoryComponent::ChangeInvenObjectArr()
 {
 	//mInventoryData.Empty();
@@ -62,7 +64,7 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 	}
 
 	for (UItemObjectData* Data : mInventoryObjectArr)
-	{
+	{	
 		int X = Data->GetSize().X;
 		int Y = Data->GetSize().Y;
 
@@ -85,6 +87,7 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 	}
 }
 
+//서버에서 아이템 정보를 받아옴
 void UACInventoryComponent::LoadItem(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inItems)
 {
 	ClearInventory();
@@ -114,6 +117,7 @@ void UACInventoryComponent::LoadItem(const google::protobuf::RepeatedPtrField<Pr
 	Refresh();
 }
 
+//아이템 Inven, InvenObject 초기화
 void UACInventoryComponent::ClearInventory()
 {
 
@@ -125,6 +129,7 @@ void UACInventoryComponent::ClearInventory()
 
 	mInventoryObjectArr.Empty();
 }
+
 
 void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 {
@@ -146,6 +151,7 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 	Refresh();
 }
 
+//아이템 습득
 void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex)
 {
 	FTile TileData = IndexToTile(TopLeftIndex);
@@ -155,6 +161,7 @@ void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLe
 	Refresh();
 }
 
+//아이템 먹기 시도
 bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 {
 	if (nullptr == ItemObjectData)
@@ -164,6 +171,7 @@ bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 
 	if(ItemObjectData->IsValid() == true)
 	{
+		//데이터 먹기
 		int itemIndex = 0;
 		for (UItemObjectData*& itemData : mInventoryData)
 		{
@@ -175,6 +183,7 @@ bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 			itemIndex++;
 		}
 		
+		//돌려서 먹어보기
 		ItemObjectData->Rotate();
 		itemIndex = 0;
 		for (UItemObjectData*& itemData : mInventoryData)
@@ -191,6 +200,7 @@ bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 	return false;
 }
 
+//먹을 수 있는 공간인지 체크
 bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData, int TopLeftIndex)
 {
 	FTile TileData = IndexToTile(TopLeftIndex);
@@ -231,11 +241,13 @@ bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData, int
 	return true;
 }
 
+//Tile값 -> Index값
 int UACInventoryComponent::TileToIndex(FTile Tile) const
 {
 	return Tile.X + Tile.Y * mColums;
 }
 
+//Index값 -> Tile값
 FTile UACInventoryComponent::IndexToTile(int Index) const
 {
 	FTile Node = FTile();
@@ -244,6 +256,7 @@ FTile UACInventoryComponent::IndexToTile(int Index) const
 	return Node;
 }
 
+//InvenObjectData 모두 가져오기
 TArray<UItemObjectData*> UACInventoryComponent::GetAllItems()
 {
 	return mInventoryObjectArr;
@@ -267,6 +280,7 @@ void UACInventoryComponent::SetInventoryPacket(const UItemObjectData* inItemData
 	}
 }
 
+//배열의 해당 부분에 아이템 존재하는지  확인
 bool UACInventoryComponent::GetItemAtIndex(int index, UItemObjectData*& ItemObject)
 {
 	if (mInventoryData.IsValidIndex(index))

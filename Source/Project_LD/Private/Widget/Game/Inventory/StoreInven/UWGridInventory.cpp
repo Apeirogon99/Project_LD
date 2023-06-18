@@ -92,29 +92,10 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
-
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
-	if (nullptr == gamemode)
-	{
-		return false;
-	}
-
-	APC_Game* playerController = Cast<APC_Game>(gamemode->GetNetworkController());
-	if (GetOwningPlayer() != playerController)
-	{
-		return false;
-	}
-
-	AClientHUD* clientHUD = Cast<AClientHUD>(gamemode->GetClientHUD());
-	if (nullptr == clientHUD)
-	{
-		return false;
-	}
-	UUserWidget* LocalInventory = clientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
-
 	UItemObjectData* Data = Cast<UItemObjectData>(Cast<UDragDropOperation>(InOperation)->Payload);
 	if (Data->Type == EItemObjectType::Inventory)
 	{
+		//공간이 있는지 파악
 		if (IsRoomAvailableForPayload(Data))
 		{
 			GetPayload(InOperation, Data);
@@ -139,6 +120,10 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 					//Spawn Item
 					mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Remove);
 				}
+				else
+				{
+					mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Update);
+				}
 			}
 		}
 	}
@@ -153,13 +138,34 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 				tile.X = mDraggedItemTopLeftTile.X;
 				tile.Y = mDraggedItemTopLeftTile.Y;
 
+				Data->Type = EItemObjectType::Inventory;
 				mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
+				mEquipmentComponent->mEquipmentData[Data->ItemData.category_id - 1]=NewObject<UItemObjectData>();
+
 				mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(),Data->ItemData.category_id);
 			}
 		}
-	}
+		else
+		{
+			GetPayload(InOperation, Data);
+			if (Data->IsValid())
+			{
+				Data->Type = EItemObjectType::Inventory;
+				if (!mInventoryComponent->TryAddItem(Data))
+				{
+					Data->Type = EItemObjectType::Equipment;
+					mEquipmentComponent->mEquipmentData[Data->ItemData.category_id - 1] = Data;
+					mEquipmentComponent->mEquipmentWidget[Data->ItemData.category_id - 1]->ReMakeWidget(Data);
+				}
+				else
+				{
+					mEquipmentComponent->mEquipmentData[Data->ItemData.category_id - 1] = NewObject<UItemObjectData>();
 
-	Cast<UUWInventory>(LocalInventory)->BackgroundBorder->SetVisibility(ESlateVisibility::Hidden);
+					mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(), Data->ItemData.category_id);
+				}
+			}
+		}
+	}
 	
 	return true;
 }
@@ -167,27 +173,6 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 bool UUWGridInventory::NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
 {
 	Super::NativeOnDragOver(InGeometry, InDragDropEvent, InOperation);
-
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
-	if (nullptr == gamemode)
-	{
-		return false;
-	}
-
-	APC_Game* playerController = Cast<APC_Game>(gamemode->GetNetworkController());
-	if (GetOwningPlayer() != playerController)
-	{
-		return false;
-	}
-
-	AClientHUD* clientHUD = Cast<AClientHUD>(gamemode->GetClientHUD());
-	if (nullptr == clientHUD)
-	{
-		return false;
-	}
-
-	UUserWidget* LocalInventory = clientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
-	Cast<UUWInventory>(LocalInventory)->BackgroundBorder->SetVisibility(ESlateVisibility::Visible);
 
 	FVector2D MousePosition_Local = InGeometry.AbsoluteToLocal(InDragDropEvent.GetScreenSpacePosition());
 	FMousePositionReturn MousePositionbool = MousePositionInTile(MousePosition_Local);
@@ -226,6 +211,7 @@ void UUWGridInventory::NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, 
 	mDrawDropLocation = false;
 }
 
+//초기화
 void UUWGridInventory::Init(UACInventoryComponent* InvenComponent, float Size, UACEquipment* EquipmentComponent)
 {
 	mInventoryComponent = InvenComponent;
@@ -246,6 +232,7 @@ void UUWGridInventory::Init(UACInventoryComponent* InvenComponent, float Size, U
 	}
 }
 
+//라인그리기
 void UUWGridInventory::CreateLineSegments()
 {
 	//Vertical
@@ -275,6 +262,7 @@ void UUWGridInventory::CallRemoved_Single(UItemObjectData*& ItemData)
 	mInventoryComponent->RemoveItem(ItemData);
 }
 
+//캔버스 초기화 후 Item 받아와서 이미지 생성
 void UUWGridInventory::Refresh()
 {
 	GridCanvas_Panel->ClearChildren();
@@ -309,6 +297,7 @@ void UUWGridInventory::Refresh()
 	}
 }
 
+//아이템 데이터 받아오기
 void UUWGridInventory::GetPayload(UDragDropOperation* Operator,UItemObjectData*& Payload) const
 {
 	if (IsValid(Operator))

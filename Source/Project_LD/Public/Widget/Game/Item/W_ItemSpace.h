@@ -77,5 +77,7 @@ public:
 	UFUNCTION()
 	void Refresh(UItemObjectData* ItemData);
 
+	void ReMakeWidget(UItemObjectData* ItemObjectDatat);
+
 	//void ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData);
 };
