@@ -266,7 +266,7 @@ bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearI
         return false;
     }
 
-    const int32 maxItemSize = pkt.item().size();
+    const int32 maxItemSize = pkt.item_size();
     for (int32 index = 0; index < maxItemSize; ++index)
     {
         const Protocol::SItem& curItem = pkt.item(index);
@@ -281,7 +281,8 @@ bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearI
         FVector itemLocation = FVector(worldPositionX, worldPositionY, worldPositionZ);
         FRotator itemRotator = FRotator::ZeroRotator;
 
-        AItemParent* newItem = Cast<AItemParent>(gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, objectID));
+        AActor* newActor = gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, objectID);
+        AItemParent* newItem = Cast<AItemParent>(newActor);
         if (nullptr == newItem)
         {
             return false;
@@ -294,6 +295,22 @@ bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearI
 
 bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2C_DisAppearGameObject& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 gameOjbectID = pkt.object_id();
+
+    gameState->RemoveGameObject(gameOjbectID);
+
     return true;
 }
 

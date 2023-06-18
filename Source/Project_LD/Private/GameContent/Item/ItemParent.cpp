@@ -117,6 +117,11 @@ void AItemParent::Tick(float DeltaSeconds)
 	*/
 }
 
+void AItemParent::Destroyed()
+{
+	ItemDestroy();
+}
+
 void AItemParent::PickUpItem(AC_Game* inPlayer)
 {
 	UWorld* world = GetWorld();
@@ -163,7 +168,7 @@ void AItemParent::ItemDestroy()
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mItemGainParticle, GetActorLocation(), FRotator::ZeroRotator, true);
 
-	this->Destroy(); 
+	//this->Destroy(); 
 }
 
 void AItemParent::Init(int32 Code, int32 GameObjectId)

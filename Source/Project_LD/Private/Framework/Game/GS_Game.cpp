@@ -52,10 +52,22 @@ AActor* AGS_Game::FindGameObject(const int64 inGameObject)
     return *gameObject;
 }
 
-int32 AGS_Game::RemoveGameObject(const int64 inGameObjectID)
+bool AGS_Game::RemoveGameObject(const int64 inGameObjectID)
 {
+    AActor* findActor = FindGameObject(inGameObjectID);
+    if (nullptr == findActor)
+    {
+        return false;
+    }
+    findActor->Destroy();
+    
     int32 result = mGameObjects.Remove(inGameObjectID);
-    return result;
+    if (result != 0)
+    {
+        return true;
+    }
+
+    return false;
 }
 
 AController* AGS_Game::FindPlayerController(const int64 inRemoteID)
