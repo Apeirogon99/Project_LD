@@ -44,7 +44,16 @@ void UW_SelectServerButton::NativeOnListItemObjectSet(UObject* ListItemObject)
 	this->mIsBackGround		= serverData->mIsBackGround;
 
 	mServerName->SetText(FText::FromString(mName));
-	mServerState->SetText(FText::FromString(mState));
+
+	if (0.5f < mState)
+	{
+		mServerState->SetText(FText::FromString(TEXT("원활")));
+	}
+	else
+	{
+		mServerState->SetText(FText::FromString(TEXT("혼잡")));
+	}
+
 	mServerCharacterCount->SetText(FText::FromString(FString::Printf(TEXT("%d"), mCharacterCount)));
 }
 
@@ -93,7 +102,7 @@ void UW_SelectServerButton::Click_SelectServerButton()
 	}
 }
 
-void UW_SelectServerButton::Init(const int32 inServerID, const FString& inName, const FString& inState, const int32 inCharacterCount, const bool inBackGround)
+void UW_SelectServerButton::Init(const int32 inServerID, const FString& inName, const float inState, const int32 inCharacterCount, const bool inBackGround)
 {
 	mServerID		= inServerID;
 	mName			= inName;

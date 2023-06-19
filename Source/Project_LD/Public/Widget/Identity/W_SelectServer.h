@@ -28,7 +28,7 @@ public:
 
 public:
 	UFUNCTION()
-		void CreateServerInfoWidget(const int32 inServerID, const FString& inName, const FString& inState, const int32 inCharacterCount);
+		void CreateServerInfoWidget(const int32 inServerID, const FString& inName, const float inState, const int32 inCharacterCount);
 
 private:
 	UPROPERTY()

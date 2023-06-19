@@ -250,14 +250,13 @@ bool Handle_S2C_LoadServer(ANetworkController* controller, Protocol::S2C_LoadSer
 		return false;
 	}
 	
-	const int32 maxInfoSize = pkt.info_size();
+	const int32 maxInfoSize = pkt.id_size();
 	for (int index = 0; index < maxInfoSize; ++index)
 	{
-		const Protocol::SServerInfo& curInfo = pkt.info(index);
-		const int32		id		= curInfo.id();
-		const FString	name	= UNetworkUtils::ConvertFString(curInfo.name());
-		const FString	state	= UNetworkUtils::ConvertFString(curInfo.state());
-		const int32		count	= curInfo.count();
+		const int32		id		= pkt.id(index);
+		const FString	name	= UNetworkUtils::ConvertFString(pkt.name(index));
+		const float		state	= pkt.state(index);
+		const int32		count	= pkt.count(index);
 
 		selecServerWidget->CreateServerInfoWidget(id, name, state, count);
 	}
@@ -317,7 +316,7 @@ bool Handle_S2C_StartGame(ANetworkController* controller, Protocol::S2C_StartGam
 	}
 
 	const int32		serverID	= pkt.server_id();
-	const FString	serverName	= UNetworkUtils::ConvertFString(pkt.server_name());
+	const FString	serverName	= UNetworkUtils::ConvertFString(pkt.travel_level());
 	const FString	serverIP	= UNetworkUtils::ConvertFString(pkt.ip());
 	const int32		serverPort	= pkt.port();
 

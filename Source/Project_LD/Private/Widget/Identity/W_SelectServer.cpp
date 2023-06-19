@@ -22,7 +22,7 @@ void UW_SelectServer::NativeConstruct()
 	}
 }
 
-void UW_SelectServer::CreateServerInfoWidget(const int32 inServerID, const FString& inName, const FString& inState, const int32 inCharacterCount)
+void UW_SelectServer::CreateServerInfoWidget(const int32 inServerID, const FString& inName, const float inState, const int32 inCharacterCount)
 {
 
 	//UServerData* newServerData = NewObject<UServerData>();

@@ -45,7 +45,7 @@ public:
 		void Click_SelectServerButton();
 
 	UFUNCTION()
-		void Init(const int32 inServerID, const FString& inName, const FString& inState, const int32 inCharacterCount, const bool inBackGround);
+		void Init(const int32 inServerID, const FString& inName, const float inState, const int32 inCharacterCount, const bool inBackGround);
 
 private:
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess = true))
@@ -58,7 +58,7 @@ private:
 		FString mName;
 
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess = true))
-		FString mState;
+		float mState;
 
 	UPROPERTY(BlueprintReadOnly, Meta = (AllowPrivateAccess = true))
 		int32 mCharacterCount;

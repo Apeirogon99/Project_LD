@@ -82,22 +82,23 @@ void UACEquipment::LoadEquipment(const google::protobuf::RepeatedPtrField<Protoc
 	{
 		const Protocol::SItem& curEqipment = inEqipments.Get(part);
 
-		FItemData* ItemTable = Instance->GetItemData(curEqipment.item_code());
-		if (ItemTable)
+		if (0 == curEqipment.item_code())
 		{
+			mEquipmentData[part]->ItemData = FItemData();
+			mEquipmentData[part]->ObjectID = 0;
+			mEquipmentData[part]->mItemCode = 0;
+			mEquipmentData[part]->Type = EItemObjectType::Equipment;
+		}
+		else
+		{
+			FItemData* ItemTable = Instance->GetItemData(curEqipment.item_code());
+
 			mEquipmentData[part]->ItemData = *ItemTable;
 			mEquipmentData[part]->ObjectID = curEqipment.object_id();
 			mEquipmentData[part]->mItemCode = curEqipment.item_code();
 			mEquipmentData[part]->Type = EItemObjectType::Equipment;
 
 			ChangedItemSpace(part, mEquipmentData[part]);
-		}
-		else
-		{
-			mEquipmentData[part]->ItemData = FItemData();
-			mEquipmentData[part]->ObjectID = 0;
-			mEquipmentData[part]->mItemCode = 0;
-			mEquipmentData[part]->Type = EItemObjectType::Equipment;
 		}
 	}
 }
