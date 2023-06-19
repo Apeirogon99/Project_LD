@@ -40,6 +40,9 @@ public:
 	UBorder* BackgroundBorder;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	UImage* ItemBackgroundImage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UImage* ItemImage;
 
 public:
@@ -54,6 +57,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	bool mIsEnter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	TArray<UTexture2D*> mFrameTextureArr;
 
 	FOnRemoved OnRemoved;
 

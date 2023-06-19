@@ -119,6 +119,8 @@ void AItemParent::Tick(float DeltaSeconds)
 
 void AItemParent::Destroyed()
 {
+	Super::Destroyed();
+
 	ItemDestroy();
 }
 
@@ -168,7 +170,7 @@ void AItemParent::ItemDestroy()
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mItemGainParticle, GetActorLocation(), FRotator::ZeroRotator, true);
 
-	//this->Destroy(); 
+	mItemNameWidgetComponent->DestroyComponent();
 }
 
 void AItemParent::Init(int32 Code, int32 GameObjectId)

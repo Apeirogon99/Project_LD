@@ -3,6 +3,7 @@
 
 #include "Component/ACEquipment.h"
 #include "Components/Widget.h"
+#include "Components/Border.h"
 #include "Framework/Gameinstance/LDGameInstance.h"
 #include <Widget/Game/Inventory/UWInventory.h>
 #include <Widget/Game/Item/W_ItemSpace.h>
@@ -106,4 +107,27 @@ void UACEquipment::LoadEquipment(const google::protobuf::RepeatedPtrField<Protoc
 void UACEquipment::ChangedItemSpace(int32 PartID, UItemObjectData* ItemData)
 {
 	mEquipmentWidget[PartID]->Refresh(ItemData);
+}
+
+void UACEquipment::CanItemDropWidgetCheck(UItemObjectData* ItemObjectData)
+{
+	for (int i = 0; i < mEquipmentData.Num(); i++)
+	{
+		if (mEquipmentWidget[i]->mCategoryId == ItemObjectData->ItemData.category_id)
+		{
+			mEquipmentWidget[i]->categoryBorder->SetBrushColor(FLinearColor(0.f, 1.0f, 0.f, 0.4f));
+		}
+		else
+		{
+			mEquipmentWidget[i]->categoryBorder->SetBrushColor(FLinearColor(1.f, 0.f, 0.f, 0.4f));
+		}
+	}
+}
+
+void UACEquipment::DropItemWidget()
+{
+	for (int i = 0; i < mEquipmentData.Num(); i++)
+	{
+		mEquipmentWidget[i]->categoryBorder->SetBrushColor(FLinearColor(1.f, 1.f, 1.f, 0.f));
+	}
 }

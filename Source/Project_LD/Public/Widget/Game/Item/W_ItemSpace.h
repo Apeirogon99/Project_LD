@@ -9,6 +9,7 @@
 /**
  * 
  */
+class UBorder;
 class UCanvasPanel;
 class USizeBox;
 class UImage;
@@ -51,6 +52,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (BindWidget))
 	USizeBox* SlotSizeBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (BindWidget))
+	UBorder* categoryBorder;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (BindWidget))
 	UImage* ImgSlotFrame;

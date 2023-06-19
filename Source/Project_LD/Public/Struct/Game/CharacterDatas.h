@@ -182,3 +182,4 @@ public:
 	FCharacterAppearance	mAppearance;
 	FCharacterEquipment		mEquipment;
 };
+

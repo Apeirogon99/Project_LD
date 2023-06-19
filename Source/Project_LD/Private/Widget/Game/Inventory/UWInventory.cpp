@@ -122,6 +122,19 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 			mEquipmentComponent->mEquipmentWidget[ItemObejctData->ItemData.category_id - 1]->ReMakeWidget(ItemObejctData);
 		}
 	}
+	mEquipmentComponent->DropItemWidget();
+
+	return true;
+}
+
+bool UUWInventory::NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
+{
+	Super::NativeOnDragOver(InGeometry, InDragDropEvent, InOperation);
+
+	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
+	UItemObjectData* ItemObjectData = Cast<UItemObjectData>(Operation->Payload);
+
+	mEquipmentComponent->CanItemDropWidgetCheck(ItemObjectData);
 
 	return true;
 }

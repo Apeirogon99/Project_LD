@@ -38,4 +38,6 @@ public:
 	void	ClearEquipment();
 	void LoadEquipment(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inEqipments);
 	void ChangedItemSpace(int32 PartID, UItemObjectData* ItemData);
+	void CanItemDropWidgetCheck(UItemObjectData* ItemObjectData);
+	void DropItemWidget();
 };

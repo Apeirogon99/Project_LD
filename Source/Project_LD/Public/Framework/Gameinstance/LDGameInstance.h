@@ -25,7 +25,7 @@ public:
 
 public:
 	UPROPERTY()
-		FCharacterData mCharacterData;
+	FCharacterData mCharacterData;
 
 public:
 	void SetToken(const FString& inToken);
@@ -39,6 +39,12 @@ public:
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UDataTable* mGameItemDataTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UDataTable* mCharacterStatusDataTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UDataTable* mCharacterStatusGrowthDataTable;
 
 private:
 	UPROPERTY()

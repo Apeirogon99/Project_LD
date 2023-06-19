@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include <Struct/Game/CharacterStatusData.h>
 #include "ACCharacterStatus.generated.h"
 
 
@@ -20,12 +21,15 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+public:
+	FStatusData* StatusData;
+	FStatusGrowthData* StatusGrowthData;
 
 public:
-	int64 id;
+	int32 mLevel;
+
+	FStatusData* CharacterStaus;
+	/*
 	int32 character_class_id;
 
 	//atttack
@@ -57,4 +61,8 @@ public:
 	//mana
 	int32 base_mana;
 	int32 base_mana_regeneration;
+	*/
+public:
+	void UpdateStatusData(int32 Level);
+	void UpdateWidgetStatusData();
 };

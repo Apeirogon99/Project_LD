@@ -174,44 +174,7 @@ void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterP
 		return;
 	}
 
-	if (ECharacterPose::Default == InCharacterPose)
-	{
-		UpdateDefaultAnimation();
-		return;
-	}
-
 	UAnimationAsset* animationAsset = mCharacterPoses[StaticCast<int32>(InCharacterPose)];
-	if (animationAsset == nullptr)
-	{
-		return;
-	}
-
-	USkeletalMeshComponent* meshRoot = GetMesh();
-	meshRoot->SetAnimationMode(EAnimationMode::AnimationSingleNode);
-	meshRoot->SetAnimation(animationAsset);
-	meshRoot->PlayAnimation(animationAsset, false);
-
-	int32 maxChild = meshRoot->GetNumChildrenComponents();
-	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
-	{
-		USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
-		if (partMesh)
-		{
-			partMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
-			partMesh->SetAnimation(animationAsset);
-			partMesh->PlayAnimation(animationAsset, false);
-		}
-	}
-}
-
-void AAppearanceCharacter::UpdateDefaultAnimation()
-{
-	if (mCharacterPoses.Num() == 0)
-	{
-		return;
-	}
-
-	UAnimationAsset* animationAsset = mCharacterPoses[StaticCast<int32>(0)];
 	if (animationAsset == nullptr)
 	{
 		return;
@@ -231,6 +194,35 @@ void AAppearanceCharacter::UpdateDefaultAnimation()
 			partMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 			partMesh->SetAnimation(animationAsset);
 			partMesh->PlayAnimation(animationAsset, true);
+		}
+	}
+}
+
+void AAppearanceCharacter::UpdateDefaultAnimation()
+{
+	/*
+	if (mCharacterPoses.Num() == 0)
+	{
+		return;
+	}*/
+
+	if (mAnimationInstance == nullptr)
+	{
+		return;
+	}
+
+	USkeletalMeshComponent* meshRoot = GetMesh();
+	meshRoot->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+	meshRoot->SetAnimClass(mAnimationInstance);
+
+	int32 maxChild = meshRoot->GetNumChildrenComponents();
+	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
+	{
+		USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
+		if (partMesh)
+		{
+			partMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
+			partMesh->SetAnimClass(mAnimationInstance);
 		}
 	}
 }

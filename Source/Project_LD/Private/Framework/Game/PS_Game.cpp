@@ -19,6 +19,10 @@ APS_Game::APS_Game()
 	}
 
 	mEquipmentComponent = CreateDefaultSubobject<UACEquipment>(TEXT("Equipment"));
+	if (mEquipmentComponent == nullptr)
+	{
+		return;
+	}
 }
 
 APS_Game::~APS_Game()
@@ -33,6 +37,8 @@ void APS_Game::InitializeLocalPlayerState()
 	{
 		return;
 	}
+	//local °Ë»ç
+	//component ºÎÂø
 
 	APC_Game* playercontroller = Cast<APC_Game>(gameMode->GetNetworkController());
 	if (nullptr == playercontroller)

@@ -166,6 +166,7 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 			}
 		}
 	}
+	mEquipmentComponent->DropItemWidget();
 	
 	return true;
 }
@@ -178,21 +179,23 @@ bool UUWGridInventory::NativeOnDragOver(const FGeometry& InGeometry, const FDrag
 	FMousePositionReturn MousePositionbool = MousePositionInTile(MousePosition_Local);
 
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
-	UItemObjectData* ItemData = Cast<UItemObjectData>(Operation->Payload);
+	UItemObjectData* ItemObjectData = Cast<UItemObjectData>(Operation->Payload);
 	int32 RightSelect;
 	int32 DownSelect;
 
 	FIntPoint makeIntPoint;
 
 	MousePositionbool.Right == true ? RightSelect = 1 : RightSelect = 0;
-	float ClampValue_X = ItemData->GetSize().X - RightSelect;
+	float ClampValue_X = ItemObjectData->GetSize().X - RightSelect;
 	makeIntPoint.X = FMath::Clamp(ClampValue_X, 0.0f, ClampValue_X);
 
 	MousePositionbool.Down == true ? DownSelect = 1 : DownSelect = 0;
-	float ClampValue_Y = ItemData->GetSize().Y - DownSelect;
+	float ClampValue_Y = ItemObjectData->GetSize().Y - DownSelect;
 	makeIntPoint.Y = FMath::Clamp(ClampValue_Y, 0.0f, ClampValue_Y);
 
 	mDraggedItemTopLeftTile = FIntPoint(FMath::TruncToInt(MousePosition_Local.X / mTileSize), FMath::TruncToInt(MousePosition_Local.Y / mTileSize)) - (makeIntPoint / 2);
+
+	mEquipmentComponent->CanItemDropWidgetCheck(ItemObjectData);
 
 	return true;
 }
@@ -330,39 +333,3 @@ FMousePositionReturn UUWGridInventory::MousePositionInTile(FVector2D MousePositi
 	Return.Down = FMath::Fmod(MousePosition.Y, mTileSize) > (mTileSize / 2.0f);
 	return Return;
 }
-
-//void UUWGridInventory::Update(const int64 inObjectID, const int32 inItemID, const int32 inPositionX, const int32 inPositionY, const int32 inRotation)
-//{
-//	UWorld* world = GetWorld();
-//	if (nullptr == world)
-//	{
-//		return;
-//	}
-//
-//	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
-//	if (nullptr == gameMode)
-//	{
-//		return;
-//	}
-//
-//	ANetworkController* controller = gameMode->GetNetworkController();
-//	if (nullptr == controller)
-//	{
-//		return;
-//	}
-//
-//	Protocol::C2S_UpdateInventory updateInventoryPacket;
-//	updateInventoryPacket.set_timestamp(controller->GetServerTimeStamp());
-//	Protocol::SItem* item = updateInventoryPacket.mutable_item();
-//	item->set_object_id(inObjectID);
-//	item->set_item_code(inItemID);
-//
-//	Protocol::SVector2D* invenPositon = item->mutable_inven_position();
-//	invenPositon->set_x(inPositionX);
-//	invenPositon->set_y(inPositionY);
-//	item->set_rotation(inRotation);
-//
-//	SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(controller, updateInventoryPacket);
-//	controller->Send(sendBuffer);
-//
-//}

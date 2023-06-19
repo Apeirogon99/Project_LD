@@ -8,6 +8,14 @@
 #include "Framework/Interface/InventoryInterface.h"
 #include "ItemParent.generated.h"
 
+class USceneComponent;
+class USkeletalMeshComponent;
+class USphereComponent;
+class UParticleSystem;
+class UParticleSystemComponent;
+class UWidgetComponent;
+class AC_Game;
+
 UCLASS()
 class PROJECT_LD_API AItemParent : public AActor, public IInventoryInterface
 {
@@ -19,13 +27,13 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	class USceneComponent* mSceneComponent;
+	USceneComponent* mSceneComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	class USkeletalMeshComponent* mSkeletalMeshComponent;
+	USkeletalMeshComponent* mSkeletalMeshComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
-	class USphereComponent* mSphere;
+	USphereComponent* mSphere;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UItemObjectData* mItemObjectData;
@@ -34,25 +42,25 @@ public:
 	UTexture2D* mIcon;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	class UParticleSystem* mItemSpawnParticle;
+	UParticleSystem* mItemSpawnParticle;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TArray<UParticleSystem*> mPickUpParticle;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	class UParticleSystem* mItemGainParticle;
+	UParticleSystem* mItemGainParticle;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	TSubclassOf<UUserWidget> mItemNameClass;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	class UParticleSystemComponent* mItemSpawnParticleComponent;
+	UParticleSystemComponent* mItemSpawnParticleComponent;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	class UWidgetComponent* mItemNameWidgetComponent;
+	UWidgetComponent* mItemNameWidgetComponent;
 
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	class AC_Game* mPlayer;
+	AC_Game* mPlayer;
 
 private:
 	UDataTable* mDataTable;

@@ -112,4 +112,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Animation")
 	TArray<UAnimationAsset*> mCharacterPoses;
+
+	UPROPERTY()
+	TSubclassOf<UAnimInstance> mAnimationInstance;
 };

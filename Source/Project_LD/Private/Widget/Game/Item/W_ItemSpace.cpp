@@ -11,6 +11,7 @@
 #include <Component/ACInventoryComponent.h>
 #include "Components/CanvasPanelSlot.h"
 #include "Components/CanvasPanel.h"
+#include "Components/Border.h"
 #include "Components/SizeBox.h"
 #include "Components/Image.h"
 
@@ -33,9 +34,10 @@ void UW_ItemSpace::NativeConstruct()
 		mImageAsset = ImageWidgetAsset;
 	}
 
+	ItemCanvas = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("ItemCanvas")));
+	categoryBorder = Cast<UBorder>(GetWidgetFromName(TEXT("categoryBorder")));
 	ImgSlotFrame = Cast<UImage>(GetWidgetFromName(TEXT("ImgSlotFrame")));
 	ImgSlot = Cast<UImage>(GetWidgetFromName(TEXT("ImgSlot")));
-	ItemCanvas = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("ItemCanvas")));
 
 	SlotSizeBox = Cast<USizeBox>(GetWidgetFromName(TEXT("SlotSizeBox")));
 	if (SlotSizeBox)
@@ -87,14 +89,13 @@ void UW_ItemSpace::NativeConstruct()
 	{
 		mTextureArr.Add(Texture2DLeftWeapon);
 	}
-	
 	if (Texture2DRightWeapon)
 	{
 		mTextureArr.Add(Texture2DRightWeapon);
 	}
+
 	if (mCategoryId != 0)
 	{
-		//ImgSlot->SetBrushFromTexture(mTextureArr[2]);
 		ImgSlot->SetBrushFromTexture(mTextureArr[mCategoryId-1]);
 	}
 
@@ -157,7 +158,7 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 									EquipmentItemSlot->SetImage();
 
 									mEquipmentComponent->mEquipmentData[mCategoryId - 1] = EquipmentItemSlot->mItemObjectData;
-
+								
 									UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
 									Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
 									Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
@@ -178,15 +179,24 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 				}
 				else
 				{
-					FTile tile;
-					tile.X = ItemDataPayload->position_x;
-					tile.Y = ItemDataPayload->position_y;
+					if (ItemDataPayload->Type == EItemObjectType::Equipment)
+					{
+						mEquipmentComponent->mEquipmentData[ItemDataPayload->ItemData.category_id - 1] = ItemDataPayload;
+						mEquipmentComponent->mEquipmentWidget[ItemDataPayload->ItemData.category_id - 1]->ReMakeWidget(ItemDataPayload);
+					}
+					else if (ItemDataPayload->Type == EItemObjectType::Inventory)
+					{
+						FTile tile;
+						tile.X = ItemDataPayload->position_x;
+						tile.Y = ItemDataPayload->position_y;
 
-					mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
+						mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
+					}
 				}
 			}
 		}
 	}
+	mEquipmentComponent->DropItemWidget();
 
 	return true;
 }

@@ -51,6 +51,8 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
         return false;
     }
     newCharacter->UpdateCharacterVisual(newCharacterData.mAppearance, newCharacterData.mEquipment);
+    newCharacter->InitCharacterAnimation();
+    newCharacter->UpdateDefaultAnimation();
 
     AAppearanceCharacter* preivewCharacter = Cast<AAppearanceCharacter>(gameState->GetPreviewCharacter());
     if (nullptr == preivewCharacter)
@@ -58,7 +60,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
         return false;
     }
     preivewCharacter->UpdateCharacterVisual(newCharacterData.mAppearance, newCharacterData.mEquipment);
-    preivewCharacter->UpdateDefaultAnimation();
+    preivewCharacter->UpdateCharacterPose(ECharacterPose::Idle);
 
     APawn* oldCharacter = controller->GetPawn();
     if (oldCharacter)
@@ -509,7 +511,7 @@ bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_Re
         return false;
     }
     playerState->SetCharacterEqipment(updateEquipment);
-   
+   //
 
     AC_Game* character = Cast<AC_Game>(remoteController->GetPawn());
     if (nullptr == character)
@@ -517,6 +519,7 @@ bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_Re
         return false;
     }
     character->UpdateCharacterEquipment(updateEquipment);
+    character->UpdateDefaultAnimation();
 
     if (controller != remoteController)
     {
@@ -529,7 +532,7 @@ bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_Re
         return false;
     }
     preivewCharacter->UpdateCharacterEquipment(updateEquipment);
-    preivewCharacter->UpdateDefaultAnimation();
+    preivewCharacter->UpdateCharacterPose(ECharacterPose::Idle);
 
     return true;
 }
