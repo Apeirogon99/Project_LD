@@ -17,6 +17,7 @@
 
 bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_EnterGameServer& pkt)
 {
+
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
