@@ -30,6 +30,8 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 	const int64 rtt = pkt.rtt();
 	timeStamp->UpdateTimeStamp(serverTimeStamp, serverUtcTime, rtt);
 
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("%lld"), timeStamp->GetServerTimeStamp()), ELogLevel::Error);
+
 	return true;
 }
 
