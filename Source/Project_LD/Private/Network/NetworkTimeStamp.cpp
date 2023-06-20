@@ -61,7 +61,7 @@ void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp, const int
 
 const int64 UNetworkTimeStamp::GetServerTimeStamp()
 {
-	return GetDurationUtcTimeStamp() - mUtcTimeStampDelta;
+	return GetDurationUtcTimeStamp();
 	//return GetClientTimeStamp() + mTimeStampDelta - mRtt;
 }
 
