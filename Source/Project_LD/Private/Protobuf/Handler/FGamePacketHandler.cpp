@@ -448,12 +448,12 @@ bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_De
 
     }
 
-    const int64 remoteID = pkt.remote_id();
-    APC_Game* gameController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
-    if (nullptr == gameController)
-    {
-        return false;
-    }
+    //const int64 remoteID = pkt.remote_id();
+    //APC_Game* gameController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
+    //if (nullptr == gameController)
+    //{
+    //    return false;
+    //}
 
     const Protocol::SItem& itemInfo = pkt.item();
     const Protocol::SVector& worldPosition = itemInfo.world_position();
