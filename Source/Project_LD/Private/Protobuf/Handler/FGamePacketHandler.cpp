@@ -144,6 +144,8 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     }
     character->SpawnDefaultController();
     character->UpdateCharacterVisual(characterData.mAppearance, characterData.mEquipment);
+    character->InitCharacterAnimation();
+    character->UpdateDefaultAnimation();
 
     AController* aiController = character->GetController();
     if (nullptr == aiController)

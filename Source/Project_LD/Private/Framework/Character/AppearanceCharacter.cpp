@@ -92,7 +92,7 @@ void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& I
 	ECharacterRace currentRace = mCharacterAppearance.mRace;
 	if (currentRace == ECharacterRace::None)
 	{
-		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
+		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::UpdateCharacterEquipment] Tribe is None"), ELogLevel::Error);
 		return;
 	}
 
@@ -138,7 +138,7 @@ void AAppearanceCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& 
 	ECharacterRace currentRace = mCharacterAppearance.mRace;
 	if (currentRace == ECharacterRace::None)
 	{
-		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetPartInformation] Tribe is None"), ELogLevel::Error);
+		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::UpdateCharacterAppearnce] Tribe is None"), ELogLevel::Error);
 		return;
 	}
 
