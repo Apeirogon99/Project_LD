@@ -25,25 +25,32 @@ bool UUWInvenFrame::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEve
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
-	UItemObjectData* ItemObejctData = Cast<UItemObjectData>(Operation->Payload);
+	UItemObjectData* ItemObjectData = Cast<UItemObjectData>(Operation->Payload);
 
 	//인벤토리로 돌아감
-	if (ItemObejctData->IsValid())
+	if (IsValid(ItemObjectData))
 	{
-		if (ItemObejctData->Type == EItemObjectType::Inventory)
+		if (ItemObjectData->IsValid())
 		{
-			FTile tile;
-			tile.X = ItemObejctData->position_x;
-			tile.Y = ItemObejctData->position_y;
+			if (ItemObjectData->Type == EItemObjectType::Inventory)
+			{
+				//인벤토리에서 온 경우 인벤토리로 재 전송
+				FTile tile;
+				tile.X = ItemObjectData->position_x;
+				tile.Y = ItemObjectData->position_y;
 
-			mInvenComponent->AddItemAt(ItemObejctData, mInvenComponent->TileToIndex(tile));
+				mInvenComponent->AddItemAt(ItemObjectData, mInvenComponent->TileToIndex(tile));
 
-			mInvenComponent->SetInventoryPacket(ItemObejctData, EInventoryType::Update);
-		}
-		else if(ItemObejctData->Type==EItemObjectType::Equipment)
-		{
-			mEquipmentComponent->mEquipmentData[ItemObejctData->ItemData.category_id - 1] = ItemObejctData;
-			mEquipmentComponent->mEquipmentWidget[ItemObejctData->ItemData.category_id - 1]->ReMakeWidget(ItemObejctData);
+				mInvenComponent->SetInventoryPacket(ItemObjectData, EInventoryType::Update);
+			}
+			else if (ItemObjectData->Type == EItemObjectType::Equipment)
+			{
+				//장비창에서 왔다면 해당 장비창으로 재 전송
+				int Index = ItemObjectData->ItemData.category_id - 1;
+
+				mEquipmentComponent->mEquipmentData[Index] = ItemObjectData;
+				mEquipmentComponent->mEquipmentWidget[Index]->ReMakeWidget(ItemObjectData);
+			}
 		}
 	}
 	mEquipmentComponent->DropItemWidget();
@@ -58,7 +65,13 @@ bool UUWInvenFrame::NativeOnDragOver(const FGeometry& InGeometry, const FDragDro
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
 	UItemObjectData* ItemObjectData = Cast<UItemObjectData>(Operation->Payload);
 	
-	mEquipmentComponent->CanItemDropWidgetCheck(ItemObjectData);
+	if (IsValid(ItemObjectData))
+	{
+		if (ItemObjectData->IsValid())
+		{
+			mEquipmentComponent->CanItemDropWidgetCheck(ItemObjectData);
+		}
+	}
 
 	return true;
 }
@@ -67,4 +80,13 @@ void UUWInvenFrame::Init(UACInventoryComponent* InvenComponent, UACEquipment* Eq
 {
 	mInvenComponent = InvenComponent;
 	mEquipmentComponent = EquipmentComponent;
+
+	if (mInvenComponent == nullptr)
+	{
+		return;
+	}
+	if (mEquipmentComponent == nullptr)
+	{
+		return;
+	}
 }

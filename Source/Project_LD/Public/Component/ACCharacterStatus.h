@@ -22,13 +22,13 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	FStatusData* StatusData;
-	FStatusGrowthData* StatusGrowthData;
+	//FStatusData* StatusData;
+	//FStatusGrowthData* StatusGrowthData;
 
 public:
-	int32 mLevel;
+	//int32 mLevel;
 
-	FStatusData* CharacterStaus;
+//	FStatusData* CharacterStaus;
 	/*
 	int32 character_class_id;
 

@@ -56,12 +56,12 @@ public:
 	void											LoadItem(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inItems);
 	void											ClearInventory();
 	void											RemoveItem(UItemObjectData* ItemObjectData);
-	void											AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex);
+	void											AddItemAt(UItemObjectData* ItemObjectData, const int TopLeftIndex);
 	bool											TryAddItem(UItemObjectData* ItemObjectData);
-	bool											IsRoomAvailable(UItemObjectData* ItemObjectData, int TopLeftIndex);
-	bool											GetItemAtIndex(int index, UItemObjectData*& ItemObject);
-	int											TileToIndex(FTile Tile)	const;
-	FTile										IndexToTile(int Index)		const;
+	bool											IsRoomAvailable(UItemObjectData* ItemObjectData, const int TopLeftIndex);
+	bool											GetItemAtIndex(const int index, UItemObjectData*& ItemObject);
+	int											TileToIndex(const FTile Tile)	const;
+	FTile										IndexToTile(const int Index)		const;
 	TArray<UItemObjectData*>	GetAllItems();
 
 	void SetInventoryPacket(const UItemObjectData* inItemData, const EInventoryType& inType);

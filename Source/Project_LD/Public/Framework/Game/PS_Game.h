@@ -38,6 +38,7 @@ public:
 	void SetRemotePlayerID(const int64 inRemoteID);
 	void SetCharacterData(const FCharacterData& InCharacterDatas);
 	void SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment);
+	void calculationStatus();
 
 public:
 	const int64				GetRemoteID() const { return mRemoteID; }
@@ -49,5 +50,8 @@ protected:
 
 	UPROPERTY()
 	FCharacterData	mCharacterData;
+
+	UPROPERTY()
+	FCharacterStatus mCharacterStatus;
 
 };

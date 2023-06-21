@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Struct/Game/GameDatas.h"
+#include "Struct/Game/CharacterDatas.h"
+#include "Struct/Game/CharacterStatusData.h"
 #include "UWInventory.generated.h"
 
 /**
@@ -195,6 +197,8 @@ public:
 
 	UFUNCTION()
 	void ToggleDetailPanel();
+
+	void UpdateStatus();
 
 	void RefreshMoney(int32 money);
 	

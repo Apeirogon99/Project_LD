@@ -152,7 +152,7 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 }
 
 //아이템 습득
-void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, int TopLeftIndex)
+void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, const int TopLeftIndex)
 {
 	FTile TileData = IndexToTile(TopLeftIndex);
 	ItemObjectData->position_x = TileData.X;
@@ -201,7 +201,7 @@ bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 }
 
 //먹을 수 있는 공간인지 체크
-bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData, int TopLeftIndex)
+bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData,const int TopLeftIndex)
 {
 	FTile TileData = IndexToTile(TopLeftIndex);
 	int X = ItemObjectData->GetSize().X;
@@ -242,13 +242,13 @@ bool UACInventoryComponent::IsRoomAvailable(UItemObjectData* ItemObjectData, int
 }
 
 //Tile값 -> Index값
-int UACInventoryComponent::TileToIndex(FTile Tile) const
+int UACInventoryComponent::TileToIndex(const FTile Tile) const
 {
 	return Tile.X + Tile.Y * mColums;
 }
 
 //Index값 -> Tile값
-FTile UACInventoryComponent::IndexToTile(int Index) const
+FTile UACInventoryComponent::IndexToTile(const int Index) const
 {
 	FTile Node = FTile();
 	Node.X = Index % mColums;
@@ -281,7 +281,7 @@ void UACInventoryComponent::SetInventoryPacket(const UItemObjectData* inItemData
 }
 
 //배열의 해당 부분에 아이템 존재하는지  확인
-bool UACInventoryComponent::GetItemAtIndex(int index, UItemObjectData*& ItemObject)
+bool UACInventoryComponent::GetItemAtIndex(const int index, UItemObjectData*& ItemObject)
 {
 	if (mInventoryData.IsValidIndex(index))
 	{

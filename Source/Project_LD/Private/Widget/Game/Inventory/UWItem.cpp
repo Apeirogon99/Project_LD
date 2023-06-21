@@ -54,8 +54,11 @@ void UUWItem::NativeConstruct()
 
 	mIsEnter = false;
 
-	ItemBackgroundImage->SetBrushFromTexture(mFrameTextureArr[mItemObjectData->ItemData.tier_id - 1]);
-	ItemImage->SetBrushFromTexture(mItemObjectData->ItemData.icon);
+	if (mItemObjectData != nullptr)
+	{
+		ItemBackgroundImage->SetBrushFromTexture(mFrameTextureArr[mItemObjectData->ItemData.tier_id - 1]);
+		ItemImage->SetBrushFromTexture(mItemObjectData->ItemData.icon);
+	}
 }
 
 void UUWItem::NativeOnInitialized()
@@ -82,14 +85,20 @@ void UUWItem::NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEven
 {
 	Super::NativeOnMouseEnter(MyGeometry, MouseEvent);
 
-	BackgroundBorder->SetBrushColor(FLinearColor(0.5f, 0.5f, 0.5f, 0.2f));
+	if (BackgroundBorder)
+	{
+		BackgroundBorder->SetBrushColor(FLinearColor(0.5f, 0.5f, 0.5f, 0.2f));
+	}
 }
 
 void UUWItem::NativeOnMouseLeave(const FPointerEvent& MouseEvent)
 {
 	Super::NativeOnMouseLeave(MouseEvent);
 
-	BackgroundBorder->SetBrushColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.5f));
+	if (BackgroundBorder)
+	{
+		BackgroundBorder->SetBrushColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.5f));
+	}
 }
 
 void UUWItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
@@ -102,6 +111,11 @@ void UUWItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEv
 	DragDropOperation->Payload = mItemObjectData;
 	DragDropOperation->DefaultDragVisual = this;
 	DragDropOperation->Pivot = EDragPivot::CenterCenter;
+
+	if (mItemObjectData == nullptr)
+	{
+		return;
+	}
 
 	if (OnRemoved.IsBound() == true)
 	{
@@ -122,6 +136,7 @@ FReply UUWItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPoin
 		Reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent,this,EKeys::LeftMouseButton);
 	}
 	mIsEnter = true;
+
 	return Reply.NativeReply;
 }
 
@@ -130,30 +145,43 @@ FReply UUWItem::NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointe
 	Super::NativeOnMouseButtonUp(InGeometry, InMouseEvent);
 
 	mIsEnter = false;
+
 	return FReply::Handled();
 }
 
 void UUWItem::Refresh()
 {
-	if (mItemObjectData->rotation)
+	if (mItemObjectData != nullptr)
 	{
-		ItemImage->SetRenderTransformAngle(90.0f);
-	}
-	else
-	{
-		ItemImage->SetRenderTransformAngle(0.0f);
-	}
+		if (!IsValid(mItemObjectData))
+		{
+			return;
+		}
+		if (!mItemObjectData->IsValid())
+		{
+			return;
+		}
 
-	mSize.X = mItemObjectData->GetSize().X * mTileSize;
-	mSize.Y = mItemObjectData->GetSize().Y * mTileSize;
+		if (mItemObjectData->rotation)
+		{
+			ItemImage->SetRenderTransformAngle(90.0f);
+		}
+		else
+		{
+			ItemImage->SetRenderTransformAngle(0.0f);
+		}
 
-	BackgroundSizeBox->SetWidthOverride(mSize.X);
-	BackgroundSizeBox->SetHeightOverride(mSize.Y);
+		mSize.X = mItemObjectData->GetSize().X * mTileSize;
+		mSize.Y = mItemObjectData->GetSize().Y * mTileSize;
 
-	UCanvasPanelSlot* ImageCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(ItemImage);
-	if (ImageCanvasSlot)
-	{
-		ImageCanvasSlot->SetSize(mSize*0.7f);
+		BackgroundSizeBox->SetWidthOverride(mSize.X);
+		BackgroundSizeBox->SetHeightOverride(mSize.Y);
+
+		UCanvasPanelSlot* ImageCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(ItemImage);
+		if (ImageCanvasSlot)
+		{
+			ImageCanvasSlot->SetSize(mSize * 0.7f);
+		}
 	}
 }
 

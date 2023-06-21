@@ -10,6 +10,8 @@
 /**
  * 
  */
+class UButton;
+
 UCLASS()
 class PROJECT_LD_API UW_MainGame : public UUserWidget
 {
@@ -19,7 +21,7 @@ class PROJECT_LD_API UW_MainGame : public UUserWidget
 
 private:
 	UPROPERTY(meta = (BindWidget))
-	class UButton* Btn_Inventory;
+	UButton* Btn_Inventory;
 
 private:
 	bool misInventoryOpen;

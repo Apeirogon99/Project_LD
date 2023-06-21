@@ -24,14 +24,20 @@ void UUWEquipItem::NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointe
 {
 	Super::NativeOnMouseEnter(MyGeometry, MouseEvent);
 
-	BackgroundBorder->SetBrushColor(FLinearColor(0.5f, 0.5f, 0.5f, 0.2f));
+	if (BackgroundBorder)
+	{
+		BackgroundBorder->SetBrushColor(FLinearColor(0.5f, 0.5f, 0.5f, 0.2f));
+	}
 }
 
 void UUWEquipItem::NativeOnMouseLeave(const FPointerEvent& MouseEvent)
 {
 	Super::NativeOnMouseLeave(MouseEvent);
 
-	BackgroundBorder->SetBrushColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.5f));
+	if (BackgroundBorder)
+	{
+		BackgroundBorder->SetBrushColor(FLinearColor(0.0f, 0.0f, 0.0f, 0.5f));
+	}
 }
 
 void UUWEquipItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
@@ -44,6 +50,11 @@ void UUWEquipItem::NativeOnDragDetected(const FGeometry& InGeometry, const FPoin
 	DragDropOperation->Payload = mItemObjectData;
 	DragDropOperation->DefaultDragVisual = this;
 	DragDropOperation->Pivot = EDragPivot::CenterCenter;
+
+	if (mItemObjectData == nullptr)
+	{
+		return;
+	}
 
 	if (OnEquipItemRemoved.IsBound() == true)
 	{
@@ -64,6 +75,7 @@ FReply UUWEquipItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const 
 		Reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent, this, EKeys::LeftMouseButton);
 	}
 	mIsEnter = true;
+
 	return Reply.NativeReply;
 }
 

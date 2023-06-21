@@ -58,11 +58,11 @@ FCharacterAppearance::FCharacterAppearance() : mRace(ECharacterRace::None), mSea
 
 void FCharacterAppearance::UpdateAppearance(const FCharacterAppearance& inCharacterAppearance)
 {
-	mRace			= inCharacterAppearance.mRace;
-	mSeat			= inCharacterAppearance.mSeat;
+	mRace					= inCharacterAppearance.mRace;
+	mSeat					= inCharacterAppearance.mSeat;
 	mSkin_Color		= inCharacterAppearance.mSkin_Color;
 	mHair_Color		= inCharacterAppearance.mHair_Color;
-	mEye_Color		= inCharacterAppearance.mEye_Color;
+	mEye_Color			= inCharacterAppearance.mEye_Color;
 	mEyebrow_Color	= inCharacterAppearance.mEyebrow_Color;
 }
 
@@ -85,15 +85,17 @@ void FCharacterStatus::UpdateCharacterStatus(const FCharacterStatus& inCharacter
 }
 
 
+
+
 FCharacterData::FCharacterData() : mName(TEXT("")), mLevel(0), mClass(ECharacterClass::None), mAppearance(), mEquipment()
 {
 }
 
 void FCharacterData::UpdateCharacterData(const FCharacterData& inCharacterData)
 {
-	mName				= inCharacterData.mName;
-	mLevel				= inCharacterData.mLevel;
-	mClass				= inCharacterData.mClass;
+	mName					= inCharacterData.mName;
+	mLevel					= inCharacterData.mLevel;
+	mClass						= inCharacterData.mClass;
 
 	mAppearance			= inCharacterData.mAppearance;
 	mEquipment			= inCharacterData.mEquipment;
@@ -103,7 +105,7 @@ void FCharacterData::UpdateCharacterData(const Protocol::SCharacterData& inChara
 {
 	mName			= UNetworkUtils::ConvertFString(inCharacterData.name());
 	mLevel			= inCharacterData.level();
-	mClass			= StaticCast<ECharacterClass>(inCharacterData.character_class());
+	mClass				= StaticCast<ECharacterClass>(inCharacterData.character_class());
 
 	const Protocol::SCharacterAppearance& appearance = inCharacterData.appearance();
 	mAppearance.UpdateAppearance(appearance);

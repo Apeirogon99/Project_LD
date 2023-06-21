@@ -19,6 +19,10 @@ void UW_MainGame::NativeConstruct()
 	{
 		Btn_Inventory->OnClicked.AddDynamic(this, &UW_MainGame::InventoryOpenRequest);
 	}
+	else
+	{
+		return;
+	}
 
 	misInventoryOpen = false;
 }
@@ -77,7 +81,6 @@ void UW_MainGame::InventoryOpenResponse()
 	{
 		return;
 	}
-
 
 	misInventoryOpen = !misInventoryOpen;
 	clientHUD->ShowWidgetFromName(FString(TEXT("Inventory")));

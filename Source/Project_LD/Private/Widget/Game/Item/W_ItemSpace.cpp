@@ -33,6 +33,10 @@ void UW_ItemSpace::NativeConstruct()
 	{
 		mImageAsset = ImageWidgetAsset;
 	}
+	else
+	{
+		return;
+	}
 
 	ItemCanvas = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("ItemCanvas")));
 	categoryBorder = Cast<UBorder>(GetWidgetFromName(TEXT("categoryBorder")));
@@ -57,7 +61,7 @@ void UW_ItemSpace::NativeConstruct()
 	UTexture2D* Texture2DLeftWeapon = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_WeaponSlot.T_WeaponSlot'"));
 	UTexture2D* Texture2DRightWeapon = LoadObject<UTexture2D>(nullptr, TEXT("Texture2D'/Game/GameContent/GUI/InventoryItemImage/T_WeaponSlot.T_WeaponSlot'"));
 
-	if(Texture2DHelmet)
+	if (Texture2DHelmet)
 	{
 		mTextureArr.Add(Texture2DHelmet);
 	}
@@ -96,11 +100,16 @@ void UW_ItemSpace::NativeConstruct()
 
 	if (mCategoryId != 0)
 	{
-		ImgSlot->SetBrushFromTexture(mTextureArr[mCategoryId-1]);
+		ImgSlot->SetBrushFromTexture(mTextureArr[mCategoryId - 1]);
 	}
 
 	bRigthItemCategory = false;
 	bExist = false;
+}
+
+void UW_ItemSpace::NativeDestruct()
+{
+	Super::NativeDestruct();
 }
 
 bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation)
@@ -115,12 +124,14 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 		{
 			if (ItemDataPayload->IsValid())
 			{
+				//같은 카테고리 확인
 				if (ItemDataPayload->ItemData.category_id == mCategoryId)
 				{
 					if (IsValid(mImageAsset))
 					{
 						if (!bExist)
 						{
+							//아이템 창이 비어있음 -> 아이템 장착
 							bExist = true;
 
 							EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
@@ -143,8 +154,10 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 						}
 						else
 						{
+							//아이템 창에 아이템이 이미 존재
 							if (mInvenComponent->TryAddItem(EquipmentItemSlot->mItemObjectData))
 							{
+								//장착된 장비 아이템이 인벤토리로 들어갈 수 있는 경우 -> 장착 아이템 인벤토리로 전송
 								UItemObjectData* OldItemData = EquipmentItemSlot->mItemObjectData;
 								ItemCanvas->ClearChildren();
 
@@ -168,6 +181,7 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 							}
 							else
 							{
+								//장비창에 아이템이 인벤토리로 돌아갈 수 없는 경우 -> 장착 시도 아이템 인벤토리로 복귀
 								FTile tile;
 								tile.X = ItemDataPayload->position_x;
 								tile.Y = ItemDataPayload->position_y;
@@ -179,13 +193,18 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 				}
 				else
 				{
+					//카테고리가 다른 경우
 					if (ItemDataPayload->Type == EItemObjectType::Equipment)
 					{
-						mEquipmentComponent->mEquipmentData[ItemDataPayload->ItemData.category_id - 1] = ItemDataPayload;
-						mEquipmentComponent->mEquipmentWidget[ItemDataPayload->ItemData.category_id - 1]->ReMakeWidget(ItemDataPayload);
+						//장비 창에서 이동한 경우
+						int Index = ItemDataPayload->ItemData.category_id - 1;
+
+						mEquipmentComponent->mEquipmentData[Index] = ItemDataPayload;
+						mEquipmentComponent->mEquipmentWidget[Index]->ReMakeWidget(ItemDataPayload);
 					}
 					else if (ItemDataPayload->Type == EItemObjectType::Inventory)
 					{
+						//인벤토리에서 온 경우
 						FTile tile;
 						tile.X = ItemDataPayload->position_x;
 						tile.Y = ItemDataPayload->position_y;
@@ -257,39 +276,3 @@ void UW_ItemSpace::ReMakeWidget(UItemObjectData* ItemObjectDatat)
 		Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
 	}
 }
-
-/*
-void UW_ItemSpace::ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData)
-{
-	ANetworkController* controller = Cast<ANetworkController>(GetOwningPlayer());
-	if (controller)
-	{
-		Protocol::C2S_ReplaceEqipment replaceEqipment;
-
-		const int64 serverTimeStamp = controller->GetServerTimeStamp();
-		replaceEqipment.set_timestamp(serverTimeStamp);
-
-		Protocol::SItem* insertInvenItem = replaceEqipment.mutable_insert_inven_item();
-		insertInvenItem->set_object_id(InvenObjectData->ObjectID);
-		insertInvenItem->set_item_code(InvenObjectData->mItemCode);
-
-		Protocol::SVector2D* insertInvenItemPositon = insertInvenItem->mutable_inven_position();
-		insertInvenItemPositon->set_x(InvenObjectData->position_x);
-		insertInvenItemPositon->set_y(InvenObjectData->position_y);
-
-		insertInvenItem->set_rotation(InvenObjectData->rotation);
-
-		Protocol::SItem* insertEqipmentItem = replaceEqipment.mutable_insert_eqip_item();
-		insertEqipmentItem->set_object_id(EquipObejctData->ObjectID);
-		insertEqipmentItem->set_item_code(EquipObejctData->mItemCode);
-
-		Protocol::SVector2D* insertEqipmentItemPositon = insertEqipmentItem->mutable_inven_position();
-		insertEqipmentItemPositon->set_x(EquipObejctData->position_x);
-		insertEqipmentItemPositon->set_y(EquipObejctData->position_y);
-
-		replaceEqipment.set_part(static_cast<Protocol::ECharacterPart>(mCategoryId));
-
-		controller->Send(FGamePacketHandler::MakeSendBuffer(controller, replaceEqipment));
-	}
-}
-*/

@@ -57,7 +57,7 @@ void UACCharacterStatus::BeginPlay()
 
 void UACCharacterStatus::UpdateStatusData(int32 Level)
 {
-	mLevel = Level;
+	//mLevel = Level;
 	/*
 	character_class_id = StatusData->character_class_id;
 

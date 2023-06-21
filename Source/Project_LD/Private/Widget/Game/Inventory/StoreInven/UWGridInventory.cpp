@@ -31,6 +31,10 @@ void UUWGridInventory::NativeConstruct()
 	{
 		mImageAsset = ImageWidgetAsset;
 	}
+	else
+	{
+		return;
+	}
 
 	GridBorder = Cast<UBorder>(GetWidgetFromName(TEXT("GridBorder")));
 	GridCanvas_Panel = Cast<UCanvasPanel>(GetWidgetFromName(TEXT("GridCanvas_Panel")));
@@ -92,76 +96,100 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 {
 	Super::NativeOnDrop(InGeometry, InDragDropEvent, InOperation);
 
-	UItemObjectData* Data = Cast<UItemObjectData>(Cast<UDragDropOperation>(InOperation)->Payload);
-	if (Data->Type == EItemObjectType::Inventory)
+	UDragDropOperation* Operator = Cast<UDragDropOperation>(InOperation);
+	UItemObjectData* Data = Cast<UItemObjectData>(Operator->Payload);
+
+	if (IsValid(Operator))
 	{
-		//공간이 있는지 파악
-		if (IsRoomAvailableForPayload(Data))
+		if (IsValid(Data))
 		{
-			GetPayload(InOperation, Data);
-			if (Data->IsValid())
+			if (Data->Type == EItemObjectType::Inventory)
 			{
-				FTile tile;
-				tile.X = mDraggedItemTopLeftTile.X;
-				tile.Y = mDraggedItemTopLeftTile.Y;
-
-				mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
-
-				mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Update);
-			}
-		}
-		else
-		{
-			GetPayload(InOperation, Data);
-			if (Data->IsValid())
-			{
-				if (!mInventoryComponent->TryAddItem(Data))
+				//인벤토리 데이터
+				//공간이 있는지 파악
+				if (IsRoomAvailableForPayload(Data))
 				{
-					//Spawn Item
-					mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Remove);
+					//공간이 존재
+					GetPayload(InOperation, Data);
+					if (Data->IsValid())
+					{
+						//데이터가 존재
+						FTile tile;
+						tile.X = mDraggedItemTopLeftTile.X;
+						tile.Y = mDraggedItemTopLeftTile.Y;
+
+						mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
+
+						mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Update);
+					}
 				}
 				else
 				{
-					mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Update);
+					//공간이 존재하지않음
+					GetPayload(InOperation, Data);
+					if (Data->IsValid())
+					{
+						//데이터가 존재
+						if (!mInventoryComponent->TryAddItem(Data))
+						{
+							//아이템 먹기 실패 -> 아이템 월드에 스폰
+							mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Remove);
+						}
+						else
+						{
+							//아이템 먹기 성공
+							mInventoryComponent->SetInventoryPacket(Data, EInventoryType::Update);
+						}
+					}
 				}
 			}
-		}
-	}
-	if (Data->Type == EItemObjectType::Equipment)
-	{
-		if (IsRoomAvailableForPayload(Data))
-		{
-			GetPayload(InOperation, Data);
-			if (Data->IsValid())
+			if (Data->Type == EItemObjectType::Equipment)
 			{
-				FTile tile;
-				tile.X = mDraggedItemTopLeftTile.X;
-				tile.Y = mDraggedItemTopLeftTile.Y;
-
-				Data->Type = EItemObjectType::Inventory;
-				mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
-				mEquipmentComponent->mEquipmentData[Data->ItemData.category_id - 1]=NewObject<UItemObjectData>();
-
-				mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(),Data->ItemData.category_id);
-			}
-		}
-		else
-		{
-			GetPayload(InOperation, Data);
-			if (Data->IsValid())
-			{
-				Data->Type = EItemObjectType::Inventory;
-				if (!mInventoryComponent->TryAddItem(Data))
+				//장비 데이터
+				if (IsRoomAvailableForPayload(Data))
 				{
-					Data->Type = EItemObjectType::Equipment;
-					mEquipmentComponent->mEquipmentData[Data->ItemData.category_id - 1] = Data;
-					mEquipmentComponent->mEquipmentWidget[Data->ItemData.category_id - 1]->ReMakeWidget(Data);
+					//공간 존재, 장비 제거
+					GetPayload(InOperation, Data);
+					if (Data->IsValid())
+					{
+						FTile tile;
+						tile.X = mDraggedItemTopLeftTile.X;
+						tile.Y = mDraggedItemTopLeftTile.Y;
+
+						int Index = Data->ItemData.category_id - 1;
+
+						Data->Type = EItemObjectType::Inventory;
+						mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
+						mEquipmentComponent->mEquipmentData[Index] = NewObject<UItemObjectData>();
+
+						mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(), Data->ItemData.category_id);
+					}
 				}
 				else
 				{
-					mEquipmentComponent->mEquipmentData[Data->ItemData.category_id - 1] = NewObject<UItemObjectData>();
+					//공간X
+					GetPayload(InOperation, Data);
+					if (Data->IsValid())
+					{
+						int Index = Data->ItemData.category_id - 1;
 
-					mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(), Data->ItemData.category_id);
+						//Inventory로 TryAddItem 시도
+						Data->Type = EItemObjectType::Inventory;
+						if (!mInventoryComponent->TryAddItem(Data))
+						{
+							//실패 -> 다시 장비로 이동
+							Data->Type = EItemObjectType::Equipment;
+							mEquipmentComponent->mEquipmentData[Index] = Data;
+							mEquipmentComponent->mEquipmentWidget[Index]->ReMakeWidget(Data);
+						}
+						else
+						{
+							//성공 -> 인벤토리로 아이템 이동
+							mEquipmentComponent->mEquipmentData[Index] = NewObject<UItemObjectData>();
+
+							mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(), Data->ItemData.category_id);
+						}
+					}
 				}
 			}
 		}
@@ -185,17 +213,23 @@ bool UUWGridInventory::NativeOnDragOver(const FGeometry& InGeometry, const FDrag
 
 	FIntPoint makeIntPoint;
 
-	MousePositionbool.Right == true ? RightSelect = 1 : RightSelect = 0;
-	float ClampValue_X = ItemObjectData->GetSize().X - RightSelect;
-	makeIntPoint.X = FMath::Clamp(ClampValue_X, 0.0f, ClampValue_X);
+	if (IsValid(ItemObjectData))
+	{
+		if (ItemObjectData->IsValid())
+		{
+			MousePositionbool.Right == true ? RightSelect = 1 : RightSelect = 0;
+			float ClampValue_X = ItemObjectData->GetSize().X - RightSelect;
+			makeIntPoint.X = FMath::Clamp(ClampValue_X, 0.0f, ClampValue_X);
 
-	MousePositionbool.Down == true ? DownSelect = 1 : DownSelect = 0;
-	float ClampValue_Y = ItemObjectData->GetSize().Y - DownSelect;
-	makeIntPoint.Y = FMath::Clamp(ClampValue_Y, 0.0f, ClampValue_Y);
+			MousePositionbool.Down == true ? DownSelect = 1 : DownSelect = 0;
+			float ClampValue_Y = ItemObjectData->GetSize().Y - DownSelect;
+			makeIntPoint.Y = FMath::Clamp(ClampValue_Y, 0.0f, ClampValue_Y);
 
-	mDraggedItemTopLeftTile = FIntPoint(FMath::TruncToInt(MousePosition_Local.X / mTileSize), FMath::TruncToInt(MousePosition_Local.Y / mTileSize)) - (makeIntPoint / 2);
+			mDraggedItemTopLeftTile = FIntPoint(FMath::TruncToInt(MousePosition_Local.X / mTileSize), FMath::TruncToInt(MousePosition_Local.Y / mTileSize)) - (makeIntPoint / 2);
 
-	mEquipmentComponent->CanItemDropWidgetCheck(ItemObjectData);
+			mEquipmentComponent->CanItemDropWidgetCheck(ItemObjectData);
+		}
+	}
 
 	return true;
 }
@@ -233,6 +267,18 @@ void UUWGridInventory::Init(UACInventoryComponent* InvenComponent, float Size, U
 		Refresh();
 		mInventoryComponent->OnInventoryChanged.BindUFunction(this, FName("Refresh"));
 	}
+	else
+	{
+		return;
+	}
+	if (mEquipmentComponent == nullptr)
+	{
+		return;
+	}
+	if (mTileSize <= 0)
+	{
+		return;
+	}
 }
 
 //라인그리기
@@ -262,7 +308,13 @@ void UUWGridInventory::CreateLineSegments()
 
 void UUWGridInventory::CallRemoved_Single(UItemObjectData*& ItemData)
 {
-	mInventoryComponent->RemoveItem(ItemData);
+	if (IsValid(ItemData))
+	{
+		if (ItemData->IsValid())
+		{
+			mInventoryComponent->RemoveItem(ItemData);
+		}
+	}
 }
 
 //캔버스 초기화 후 Item 받아와서 이미지 생성
@@ -273,28 +325,34 @@ void UUWGridInventory::Refresh()
 	TArray<UItemObjectData*> AllItem = mInventoryComponent->GetAllItems();
 	for (UItemObjectData*& Data : AllItem)
 	{
-		if (IsValid(mImageAsset))
+		if (IsValid(Data))
 		{
-			UUWItem* ItemImageWidget = Cast<UUWItem>(CreateWidget(GetWorld(), mImageAsset));
-			if (ItemImageWidget)
+			if (Data->IsValid())
 			{
-				ItemImageWidget->mTileSize = mTileSize;
-				ItemImageWidget->mItemObjectData = Data;
-	
-				//Bind Remove
-				ItemImageWidget->OnRemoved.AddUFunction(this, FName("CallRemoved_Single"));
+				if (IsValid(mImageAsset))
+				{
+					UUWItem* ItemImageWidget = Cast<UUWItem>(CreateWidget(GetWorld(), mImageAsset));
+					if (ItemImageWidget)
+					{
+						ItemImageWidget->mTileSize = mTileSize;
+						ItemImageWidget->mItemObjectData = Data;
 
-				UPanelSlot* LocalPanelSlot = GridCanvas_Panel->AddChild(ItemImageWidget);
-				UCanvasPanelSlot* Local_Slot = Cast<UCanvasPanelSlot>(LocalPanelSlot);
-				
-				float sizeX = Data->GetSize().X * mTileSize;
-				float sizeY = Data->GetSize().Y * mTileSize;
+						//Bind Remove
+						ItemImageWidget->OnRemoved.AddUFunction(this, FName("CallRemoved_Single"));
 
-				Local_Slot->SetSize(FVector2D(sizeX, sizeY));
+						UPanelSlot* LocalPanelSlot = GridCanvas_Panel->AddChild(ItemImageWidget);
+						UCanvasPanelSlot* Local_Slot = Cast<UCanvasPanelSlot>(LocalPanelSlot);
 
-				float posX = Data->position_x * mTileSize;
-				float posY = Data->position_y * mTileSize;
-				Local_Slot->SetPosition(FVector2D(posX, posY));
+						float sizeX = Data->GetSize().X * mTileSize;
+						float sizeY = Data->GetSize().Y * mTileSize;
+
+						Local_Slot->SetSize(FVector2D(sizeX, sizeY));
+
+						float posX = Data->position_x * mTileSize;
+						float posY = Data->position_y * mTileSize;
+						Local_Slot->SetPosition(FVector2D(posX, posY));
+					}
+				}
 			}
 		}
 	}
@@ -306,6 +364,10 @@ void UUWGridInventory::GetPayload(UDragDropOperation* Operator,UItemObjectData*&
 	if (IsValid(Operator))
 	{
 		Payload = Cast<UItemObjectData>(Operator->Payload);
+		if (!Payload->IsValid())
+		{
+			return;
+		}
 	}
 	else
 	{

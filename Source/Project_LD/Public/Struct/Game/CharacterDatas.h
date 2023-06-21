@@ -19,7 +19,7 @@ UENUM(BlueprintType)
 enum class ECharacterRace : uint8
 {
 	None			UMETA(DisplayName = "None"),
-	Male			UMETA(DisplayName = "Male"),
+	Male				UMETA(DisplayName = "Male"),
 	Female			UMETA(DisplayName = "Female"),
 	Orc				UMETA(DisplayName = "Orc"),
 };
@@ -28,8 +28,8 @@ UENUM(BlueprintType)
 enum class ECharacterPose : uint8
 {
 	Default			UMETA(DisplayName = "Default"),
-	Idle			UMETA(DisplayName = "Idle"),
-	Seat			UMETA(DisplayName = "Seat"),
+	Idle					UMETA(DisplayName = "Idle"),
+	Seat					UMETA(DisplayName = "Seat"),
 	StandUp			UMETA(DisplayName = "StandUp"),
 	StandDown		UMETA(DisplayName = "StandDown"),
 };
@@ -37,14 +37,14 @@ enum class ECharacterPose : uint8
 UENUM()
 enum class ECharacterPart : uint8
 {
-	None			UMETA(DisplayName = "None"),
+	None				UMETA(DisplayName = "None"),
 	Helmet			UMETA(DisplayName = "Helmet"),
 	Shoulders		UMETA(DisplayName = "Shoulders"),
-	Chest			UMETA(DisplayName = "Chest"),
+	Chest				UMETA(DisplayName = "Chest"),
 	Bracers			UMETA(DisplayName = "Bracers"),
-	Hands			UMETA(DisplayName = "Hands"),
-	Pants			UMETA(DisplayName = "Pants"),
-	Boots			UMETA(DisplayName = "Boots"),
+	Hands				UMETA(DisplayName = "Hands"),
+	Pants				UMETA(DisplayName = "Pants"),
+	Boots				UMETA(DisplayName = "Boots"),
 	Weapon_L		UMETA(DisplayName = "Weapon_L"),
 	Weapon_R		UMETA(DisplayName = "Weapon_R"),
 };
@@ -52,12 +52,19 @@ enum class ECharacterPart : uint8
 UENUM()
 enum class EAppearance : uint8
 {
-	None			UMETA(DisplayName = "None"),
-	Body			UMETA(DisplayName = "Body"),
-	Eye				UMETA(DisplayName = "Eye"),
+	None				UMETA(DisplayName = "None"),
+	Body				UMETA(DisplayName = "Body"),
+	Eye					UMETA(DisplayName = "Eye"),
 	Eyebrow			UMETA(DisplayName = "Eyebrow"),
-	Hair			UMETA(DisplayName = "Hair"),
+	Hair					UMETA(DisplayName = "Hair"),
 };
+
+/*
+UENUM()
+enum class ECharacterStatus : uint8
+{
+
+};*/
 
 USTRUCT(Atomic, BlueprintType)
 struct FCharacterEquipment
@@ -145,6 +152,107 @@ public:
 	int32 mEyebrow_Color;
 };
 
+USTRUCT(BlueprintType)
+struct FStatusData
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FStatusData() :
+		character_class_id(0),
+		armor_penetration(0),
+		attack_damage(0),
+		attack_speed(0),
+		critical_strike_chance(0),
+		cirtical_strike_damage(0),
+		life_steal(0),
+		ability_power(0),
+		mage_penetration(0),
+		omnivamp(0),
+		physical_vamp(0),
+		armor(0),
+		heal_and_shield_power(0),
+		health(0),
+		health_regeneration(0),
+		magic_resistance(0),
+		tenacity(0),
+		slow_resist(0),
+		ability_haste(0),
+		mana(0),
+		mana_regeneration(0),
+		movement_speed(0),
+		range(0) {}
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 character_class_id;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 armor_penetration;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 attack_damage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 attack_speed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 critical_strike_chance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 cirtical_strike_damage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 life_steal;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 ability_power;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 mage_penetration;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 omnivamp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 physical_vamp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 armor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 heal_and_shield_power;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 health_regeneration;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 magic_resistance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 tenacity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 slow_resist;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 ability_haste;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 mana;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 mana_regeneration;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 movement_speed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
+		int32 range;
+};
+
 USTRUCT(Atomic, BlueprintType)
 struct FCharacterStatus
 {
@@ -156,6 +264,10 @@ public:
 	FCharacterStatus& operator=(const FCharacterStatus& inCharacterStatus) { UpdateCharacterStatus(inCharacterStatus); return *this; }
 
 	void UpdateCharacterStatus(const FCharacterStatus& inCharacterStatus);
+	
+public:
+	FStatusData		mMaxStatus;
+	FStatusData		mCurrentStatus;
 };
 
 
@@ -176,10 +288,9 @@ public:
 	void UpdateCharacterData(const Protocol::SCharacterData& inCharacterData);
 
 public:
-	FString					mName;
-	int32					mLevel;
-	ECharacterClass			mClass;
+	FString							mName;
+	int32								mLevel;
+	ECharacterClass				mClass;
 	FCharacterAppearance	mAppearance;
 	FCharacterEquipment		mEquipment;
 };
-

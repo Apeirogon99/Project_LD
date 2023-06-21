@@ -121,7 +121,17 @@ void AItemParent::Destroyed()
 {
 	Super::Destroyed();
 
-	ItemDestroy();
+	//particle 社発
+	if (mItemSpawnParticleComponent)
+	{
+		mItemSpawnParticleComponent->DeactivateSystem();
+		mItemSpawnParticleComponent->DestroyComponent();
+		mItemSpawnParticleComponent = nullptr;
+	}
+
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mItemGainParticle, GetActorLocation(), FRotator::ZeroRotator, true);
+
+	mItemNameWidgetComponent->DestroyComponent();
 }
 
 void AItemParent::PickUpItem(AC_Game* inPlayer)
@@ -161,21 +171,6 @@ void AItemParent::PickUpItem(AC_Game* inPlayer)
 	}
 
 	playerstate->mInventoryComponent->SetInventoryPacket(mItemObjectData, EInventoryType::Insert);
-}
-
-void AItemParent::ItemDestroy()
-{
-	//particle 社発
-	if (mItemSpawnParticleComponent)
-	{
-		mItemSpawnParticleComponent->DeactivateSystem();
-		mItemSpawnParticleComponent->DestroyComponent();
-		mItemSpawnParticleComponent = nullptr;
-	}
-
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mItemGainParticle, GetActorLocation(), FRotator::ZeroRotator, true);
-
-	mItemNameWidgetComponent->DestroyComponent();
 }
 
 void AItemParent::Init(int32 Code, int32 GameObjectId)

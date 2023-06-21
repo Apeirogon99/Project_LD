@@ -25,6 +25,7 @@ class PROJECT_LD_API UW_ItemSpace : public UUserWidget
 protected:
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 
 	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
@@ -81,6 +82,7 @@ public:
 	UFUNCTION()
 	void Refresh(UItemObjectData* ItemData);
 
+	UFUNCTION()
 	void ReMakeWidget(UItemObjectData* ItemObjectDatat);
 
 	//void ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData);

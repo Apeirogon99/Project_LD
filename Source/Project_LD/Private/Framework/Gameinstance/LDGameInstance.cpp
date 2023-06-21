@@ -48,6 +48,21 @@ FItemData* ULDGameInstance::GetItemData(int32 inCode)
 	return mGameItemDataTable->FindRow<FItemData>(*FString::FromInt(inCode), TEXT(""));
 }
 
+FEquipmentItemData* ULDGameInstance::GetEquipmentItemData(int32 inCode)
+{
+	return mEquipmentDataTable->FindRow<FEquipmentItemData>(*FString::FromInt(inCode), TEXT(""));
+}
+
+FStatusBaseData* ULDGameInstance::GetBaseData(int32 inCode)
+{
+	return mCharacterStatusDataTable->FindRow<FStatusBaseData>(*FString::FromInt(inCode), TEXT(""));
+}
+
+FStatusGrowthData* ULDGameInstance::GetGrowthData(int32 inCode)
+{
+	return mCharacterStatusGrowthDataTable->FindRow<FStatusGrowthData>(*FString::FromInt(inCode), TEXT(""));
+}
+
 FString ULDGameInstance::GetToken()
 {
 	return mToken;

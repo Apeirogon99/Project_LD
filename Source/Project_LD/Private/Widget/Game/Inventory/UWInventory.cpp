@@ -73,13 +73,21 @@ void UUWInventory::NativeConstruct()
 	TB_DTMana = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTMana")));
 	TB_DTManaRegeneration = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_DTManaRegeneration")));
 
-	if (Btn_CloseInventory)
+	if (Btn_CloseInventory != nullptr)
 	{
 		Btn_CloseInventory->OnClicked.AddDynamic(this, &UUWInventory::CloseInventory);
 	}
-	if (Btn_DetailStatus)
+	else
+	{
+		return;
+	}
+	if (Btn_DetailStatus != nullptr)
 	{
 		Btn_DetailStatus->OnClicked.AddDynamic(this, &UUWInventory::ToggleDetailPanel);
+	}
+	else
+	{
+		return;
 	}
 
 	DetailCanvas->SetVisibility(ESlateVisibility::Hidden);
@@ -110,18 +118,24 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
 	UItemObjectData* ItemObejctData = Cast<UItemObjectData>(Operation->Payload);
 
-	if (ItemObejctData->IsValid())
+	if (IsValid(ItemObejctData))
 	{
-		if (ItemObejctData->Type == EItemObjectType::Inventory)
+		if (ItemObejctData->IsValid())
 		{
-			mInvenComponent->SetInventoryPacket(ItemObejctData, EInventoryType::Remove);
-		}
-		else if (ItemObejctData->Type == EItemObjectType::Equipment)
-		{
-			mEquipmentComponent->mEquipmentData[ItemObejctData->ItemData.category_id - 1] = ItemObejctData;
-			mEquipmentComponent->mEquipmentWidget[ItemObejctData->ItemData.category_id - 1]->ReMakeWidget(ItemObejctData);
+			if (ItemObejctData->Type == EItemObjectType::Inventory)
+			{
+				mInvenComponent->SetInventoryPacket(ItemObejctData, EInventoryType::Remove);
+			}
+			else if (ItemObejctData->Type == EItemObjectType::Equipment)
+			{
+				int Index = ItemObejctData->ItemData.category_id - 1;
+
+				mEquipmentComponent->mEquipmentData[Index] = ItemObejctData;
+				mEquipmentComponent->mEquipmentWidget[Index]->ReMakeWidget(ItemObejctData);
+			}
 		}
 	}
+
 	mEquipmentComponent->DropItemWidget();
 
 	return true;
@@ -134,7 +148,13 @@ bool UUWInventory::NativeOnDragOver(const FGeometry& InGeometry, const FDragDrop
 	UDragDropOperation* Operation = Cast<UDragDropOperation>(InOperation);
 	UItemObjectData* ItemObjectData = Cast<UItemObjectData>(Operation->Payload);
 
-	mEquipmentComponent->CanItemDropWidgetCheck(ItemObjectData);
+	if (IsValid(ItemObjectData))
+	{
+		if(ItemObjectData->IsValid())
+		{
+			mEquipmentComponent->CanItemDropWidgetCheck(ItemObjectData);
+		}
+	}
 
 	return true;
 }
@@ -144,6 +164,18 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 	mInvenComponent = InventoryComponent;
 	mTileSize = TileSize;
 	mEquipmentComponent = EquipmentComponent;
+	if (mInvenComponent == nullptr)
+	{
+		return;
+	}
+	if (mEquipmentComponent == nullptr)
+	{
+		return;
+	}
+	if (mTileSize <= 0)
+	{
+		return;
+	}
 
 	mGridInventory = this->WidgetTree->FindWidget(FName(TEXT("BW_GridInventory")));
 	if (mGridInventory != nullptr)
@@ -277,30 +309,70 @@ void UUWInventory::CloseInventory()
 	}
 
 	UW_MainGame* wMainGame = Cast<UW_MainGame>(clientHUD->GetWidgetFromName("MainGame"));
-
-	wMainGame->InventoryOpenRequest();
+	if (wMainGame)
+	{
+		wMainGame->InventoryOpenRequest();
+	}
 }
 
 void UUWInventory::ToggleDetailPanel()
 {
-	if (DetailCanvas->IsVisible())
+	if (DetailCanvas)
 	{
-		DetailCanvas->SetVisibility(ESlateVisibility::Hidden);
-		UCanvasPanelSlot* FrameCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(mInvenFrame);
-		if (FrameCanvasSlot)
+		if (DetailCanvas->IsVisible())
 		{
-			FrameCanvasSlot->SetSize(FVector2D(680.f, 0.f));
+			DetailCanvas->SetVisibility(ESlateVisibility::Hidden);
+			UCanvasPanelSlot* FrameCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(mInvenFrame);
+			if (FrameCanvasSlot)
+			{
+				FrameCanvasSlot->SetSize(FVector2D(680.f, 0.f));
+			}
+		}
+		else
+		{
+			DetailCanvas->SetVisibility(ESlateVisibility::Visible);
+			UCanvasPanelSlot* FrameCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(mInvenFrame);
+			if (FrameCanvasSlot)
+			{
+				FrameCanvasSlot->SetSize(FVector2D(1000.f, 0.f));
+			}
 		}
 	}
-	else
-	{
-		DetailCanvas->SetVisibility(ESlateVisibility::Visible);
-		UCanvasPanelSlot* FrameCanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(mInvenFrame);
-		if (FrameCanvasSlot)
-		{
-			FrameCanvasSlot->SetSize(FVector2D(1000.f, 0.f));
-		}
-	}
+}
+
+void UUWInventory::UpdateStatus()
+{
+	//TB_Level->SetText(FText::FromString(FString::FromInt(Level)));
+
+	//TB_CharacterName->SetText(FText::FromString(name));
+
+	//TB_Power->SetText(FText::FromString(FString::FromInt(status.ability_power)));
+	//TB_Armor->SetText(FText::FromString(FString::FromInt(status.armor)));
+	//TB_Health->SetText(FText::FromString(FString::FromInt(status.health)));
+	//TB_Mana->SetText(FText::FromString(FString::FromInt(status.mana)));
+
+	//TB_DTAttackDamage->SetText(FText::FromString(FString::FromInt(status.attack_damage)));
+	//TB_DTAbilityPower->SetText(FText::FromString(FString::FromInt(status.ability_power)));
+	//TB_DTAttackSpeed->SetText(FText::FromString(FString::FromInt(status.attack_speed)));
+	//TB_DTCriticalStrikeChance->SetText(FText::FromString(FString::FromInt(status.critical_strike_chance)));
+	//TB_DTCriticalStrikeDamage->SetText(FText::FromString(FString::FromInt(status.cirtical_strike_damage)));
+	//TB_DTArmorPenetration->SetText(FText::FromString(FString::FromInt(status.armor_penetration)));
+	//TB_DTMagePenetration->SetText(FText::FromString(FString::FromInt(status.mage_penetration)));
+	//TB_DTAbilityHaste->SetText(FText::FromString(FString::FromInt(status.ability_haste)));
+	//TB_DTMovementSpeed->SetText(FText::FromString(FString::FromInt(status.movement_speed)));
+	//TB_DTRange->SetText(FText::FromString(FString::FromInt(status.range)));
+	//TB_DTArmor->SetText(FText::FromString(FString::FromInt(status.armor)));
+	//TB_DTTenacity->SetText(FText::FromString(FString::FromInt(status.tenacity)));
+	//TB_DTMagicResistance->SetText(FText::FromString(FString::FromInt(status.magic_resistance)));
+	//TB_DTSlowResist->SetText(FText::FromString(FString::FromInt(status.slow_resist)));
+	//TB_DTHealth->SetText(FText::FromString(FString::FromInt(status.health)));
+	//TB_DTHealthReneration->SetText(FText::FromString(FString::FromInt(status.health_regeneration)));
+	//TB_DTLifeSteal->SetText(FText::FromString(FString::FromInt(status.life_steal)));
+	//TB_DTPhysicalVamp->SetText(FText::FromString(FString::FromInt(status.physical_vamp)));
+	//TB_DTOmnivamp->SetText(FText::FromString(FString::FromInt(status.omnivamp)));
+	//TB_DTHealAndShieldPower->SetText(FText::FromString(FString::FromInt(status.heal_and_shield_power)));
+	//TB_DTMana->SetText(FText::FromString(FString::FromInt(status.mana)));
+	//TB_DTManaRegeneration->SetText(FText::FromString(FString::FromInt(status.mana_regeneration)));
 }
 
 void UUWInventory::RefreshMoney(int32 money)
