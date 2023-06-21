@@ -319,11 +319,6 @@ bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2
     return true;
 }
 
-bool Handle_S2C_DestroyItem(ANetworkController* controller, Protocol::S2C_DestroyItem& pkt)
-{
-    return false;
-}
-
 bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_LoadInventory& pkt)
 {
     UWorld* world = controller->GetWorld();
@@ -399,10 +394,6 @@ bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_In
     {
         return false;
     }
-
-    AItemParent* item = Cast<AItemParent>(gameObject);
-    item->ItemDestroy();
-
     gameState->RemoveGameObject(objectID);
 
     return true;
@@ -448,14 +439,21 @@ bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_De
 
     }
 
-    //const int64 remoteID = pkt.remote_id();
-    //APC_Game* gameController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
-    //if (nullptr == gameController)
-    //{
-    //    return false;
-    //}
-
     const Protocol::SItem& itemInfo = pkt.item();
+    AActor* actor = gameState->FindGameObject(itemInfo.object_id());
+    if (nullptr != actor)
+    {
+        return false;
+    }
+
+    const int64 remoteID = pkt.remote_id();
+    APC_Game* gameController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
+    if (gameController)
+    {
+        //버리는 애니메이션
+    }
+
+
     const Protocol::SVector& worldPosition = itemInfo.world_position();
 
     const int32 itemCode        = itemInfo.item_code();
@@ -463,7 +461,8 @@ bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_De
     FVector itemLocation        = FVector(worldPosition.x(), worldPosition.y(), worldPosition.z());
     FRotator itemRotator        = FRotator::ZeroRotator;
 
-    AItemParent* newItem = Cast<AItemParent>(gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, gameObjectID));
+    AActor* newActor = gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, gameObjectID);
+    AItemParent* newItem = Cast<AItemParent>(newActor);
     if (nullptr == newItem)
     {
         return false;

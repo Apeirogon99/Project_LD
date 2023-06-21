@@ -68,6 +68,8 @@ public:
 	UFUNCTION()
 	ANetworkController* GetNetworkController();
 
+	bool CompareNetworkController(AController* inController);
+
 	UFUNCTION()
 	AClientHUD* GetClientHUD();
 

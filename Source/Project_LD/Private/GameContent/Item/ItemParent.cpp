@@ -144,6 +144,11 @@ void AItemParent::PickUpItem(AC_Game* inPlayer)
 		return;
 	}
 
+	if (false == gameMode->CompareNetworkController(inPlayer->GetController()))
+	{
+		return;
+	}
+
 	APS_Game* playerstate = controller->GetPlayerState<APS_Game>();
 	if (nullptr == playerstate)
 	{

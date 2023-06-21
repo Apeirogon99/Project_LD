@@ -37,8 +37,11 @@ void APS_Game::InitializeLocalPlayerState()
 	{
 		return;
 	}
-	//local °Ë»ç
-	//component ºÎÂø
+	
+	if (gameMode->GetNetworkController() != GetPawn()->GetController())
+	{
+		return;
+	}
 
 	APC_Game* playercontroller = Cast<APC_Game>(gameMode->GetNetworkController());
 	if (nullptr == playercontroller)

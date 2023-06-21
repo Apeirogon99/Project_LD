@@ -6,9 +6,19 @@
 #include <Struct/Identity/ServerData.h>
 #include <Engine/StreamableManager.h>
 
+#define NETWORK_LOCAL 1
+
 ULDGameInstance::ULDGameInstance()
 {
 	mServerData = nullptr;
+
+
+#if NETWORK_LOCAL
+	mToken = TEXT("LOCAL_TEST");
+#else
+	mToken = TEXT("LOCAL_TEST");
+#endif
+
 }
 
 ULDGameInstance::~ULDGameInstance()

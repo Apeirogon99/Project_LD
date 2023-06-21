@@ -277,6 +277,27 @@ ANetworkController* ANetworkGameMode::GetNetworkController()
 	return controller;
 }
 
+bool ANetworkGameMode::CompareNetworkController(AController* inController)
+{
+	AController* localController = Cast<AController>(GetNetworkController());
+	if (nullptr == localController)
+	{
+		return false;
+	}
+
+	if (nullptr == inController)
+	{
+		return false;
+	}
+
+	if (localController != inController)
+	{
+		return false;
+	}
+
+	return true;
+}
+
 AClientHUD* ANetworkGameMode::GetClientHUD()
 {
 	return mClientHUD;
