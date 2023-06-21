@@ -12,18 +12,6 @@
 
 APS_Game::APS_Game()
 {
-	mInventoryComponent = CreateDefaultSubobject<UACInventoryComponent>(TEXT("Inventory"));
-	if (mInventoryComponent == nullptr)
-	{
-		return;
-	}
-
-	mEquipmentComponent = CreateDefaultSubobject<UACEquipment>(TEXT("Equipment"));
-	if (mEquipmentComponent == nullptr)
-	{
-		return;
-	}
-
 	mRemoteID = 0;
 }
 
@@ -40,11 +28,26 @@ void APS_Game::InitializeLocalPlayerState()
 		return;
 	}
 	
-	if (gameMode->GetNetworkController() != GetPawn()->GetController())
+	if (gameMode->GetNetworkController() == GetPawn()->GetController())
 	{
-		return;
-	}
+		mInventoryComponent = NewObject<UACInventoryComponent>(this,TEXT("Inventory"));
+		this->AddOwnedComponent(mInventoryComponent);
+		mInventoryComponent->RegisterComponent();
 
+		if (mInventoryComponent == nullptr)
+		{
+			return;
+		}
+
+		mEquipmentComponent = NewObject<UACEquipment>(this, TEXT("Equipment"));
+		this->AddOwnedComponent(mEquipmentComponent);
+		mEquipmentComponent->RegisterComponent();
+
+		if (mEquipmentComponent == nullptr)
+		{
+			return;
+		}
+	}
 	APC_Game* playercontroller = Cast<APC_Game>(gameMode->GetNetworkController());
 	if (nullptr == playercontroller)
 	{

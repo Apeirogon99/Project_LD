@@ -286,6 +286,8 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 			EquipRightWeapon->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
+
+	UpdateStatus();
 }
 
 void UUWInventory::CloseInventory()
@@ -342,37 +344,8 @@ void UUWInventory::ToggleDetailPanel()
 
 void UUWInventory::UpdateStatus()
 {
-	//TB_Level->SetText(FText::FromString(FString::FromInt(Level)));
-
-	//TB_CharacterName->SetText(FText::FromString(name));
-
-	//TB_Power->SetText(FText::FromString(FString::FromInt(status.ability_power)));
-	//TB_Armor->SetText(FText::FromString(FString::FromInt(status.armor)));
-	//TB_Health->SetText(FText::FromString(FString::FromInt(status.health)));
-	//TB_Mana->SetText(FText::FromString(FString::FromInt(status.mana)));
-
-	//TB_DTAttackDamage->SetText(FText::FromString(FString::FromInt(status.attack_damage)));
-	//TB_DTAbilityPower->SetText(FText::FromString(FString::FromInt(status.ability_power)));
-	//TB_DTAttackSpeed->SetText(FText::FromString(FString::FromInt(status.attack_speed)));
-	//TB_DTCriticalStrikeChance->SetText(FText::FromString(FString::FromInt(status.critical_strike_chance)));
-	//TB_DTCriticalStrikeDamage->SetText(FText::FromString(FString::FromInt(status.cirtical_strike_damage)));
-	//TB_DTArmorPenetration->SetText(FText::FromString(FString::FromInt(status.armor_penetration)));
-	//TB_DTMagePenetration->SetText(FText::FromString(FString::FromInt(status.mage_penetration)));
-	//TB_DTAbilityHaste->SetText(FText::FromString(FString::FromInt(status.ability_haste)));
-	//TB_DTMovementSpeed->SetText(FText::FromString(FString::FromInt(status.movement_speed)));
-	//TB_DTRange->SetText(FText::FromString(FString::FromInt(status.range)));
-	//TB_DTArmor->SetText(FText::FromString(FString::FromInt(status.armor)));
-	//TB_DTTenacity->SetText(FText::FromString(FString::FromInt(status.tenacity)));
-	//TB_DTMagicResistance->SetText(FText::FromString(FString::FromInt(status.magic_resistance)));
-	//TB_DTSlowResist->SetText(FText::FromString(FString::FromInt(status.slow_resist)));
-	//TB_DTHealth->SetText(FText::FromString(FString::FromInt(status.health)));
-	//TB_DTHealthReneration->SetText(FText::FromString(FString::FromInt(status.health_regeneration)));
-	//TB_DTLifeSteal->SetText(FText::FromString(FString::FromInt(status.life_steal)));
-	//TB_DTPhysicalVamp->SetText(FText::FromString(FString::FromInt(status.physical_vamp)));
-	//TB_DTOmnivamp->SetText(FText::FromString(FString::FromInt(status.omnivamp)));
-	//TB_DTHealAndShieldPower->SetText(FText::FromString(FString::FromInt(status.heal_and_shield_power)));
-	//TB_DTMana->SetText(FText::FromString(FString::FromInt(status.mana)));
-	//TB_DTManaRegeneration->SetText(FText::FromString(FString::FromInt(status.mana_regeneration)));
+	TB_Level->SetText(FText::FromString(FString::FromInt(100)));
+	TB_CharacterName->SetText(FText::FromString("Jinsoo"));
 }
 
 void UUWInventory::RefreshMoney(int32 money)
