@@ -11,6 +11,8 @@
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
 
+#include <GameErrorTypes.h>
+
 #include <Widget/Handler/ClientHUD.h>
 #include <GameContent/Item/ItemParent.h>
 #include <Widget/Game/Main/W_MainGame.h>
@@ -126,7 +128,8 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
         return false;
     }
 
-    if (pkt.remote_id() == localPlayerState->GetRemoteID())
+    const int64 LocalRemoteID = localPlayerState->GetRemoteID();
+    if (pkt.remote_id() == LocalRemoteID || LocalRemoteID == 0)
     {
         return true;
     }
@@ -314,7 +317,10 @@ bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2
 
     const int64 gameOjbectID = pkt.object_id();
 
-    gameState->RemoveGameObject(gameOjbectID);
+    if (false == gameState->RemoveGameObject(gameOjbectID))
+    {
+        return false;
+    }
 
     return true;
 }
@@ -386,9 +392,21 @@ bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_In
         return false;
     }
 
-    const int64 remoteID = pkt.remote_id();
-    const int64 objectID = pkt.object_id();
+    int32 error = pkt.error();
+    if (error != ErrorToInt(EGameErrorType::SUCCESS))
+    {
 
+    }
+
+    const int64 remoteID = pkt.remote_id();
+    APC_Game* findController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
+    if (nullptr == findController)
+    {
+        return false;
+    }
+    //TODO : 줍는 애니메이션
+    
+    const int64 objectID = pkt.object_id();
     AActor* gameObject = gameState->FindGameObject(objectID);
     if (nullptr == gameObject)
     {
@@ -414,7 +432,13 @@ bool Handle_S2C_UpdateInventory(ANetworkController* controller, Protocol::S2C_Up
     }
 
     int32 error = pkt.error();
-    //TODO: if()
+    if (error != ErrorToInt(EGameErrorType::SUCCESS))
+    {
+        Protocol::C2S_LoadInventory loadInventoryPacket;
+        const int64 serverTimeStamp = controller->GetServerTimeStamp();
+        loadInventoryPacket.set_timestamp(serverTimeStamp);
+        controller->Send(FGamePacketHandler::MakeSendBuffer(controller, loadInventoryPacket));
+    }
 
     return true;
 }
@@ -433,41 +457,42 @@ bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_De
         return false;
     }
 
-    const int32 error = pkt.error();
-    if (0 != error)
+    int32 error = pkt.error();
+    if (error != ErrorToInt(EGameErrorType::SUCCESS))
     {
 
-    }
-
-    const Protocol::SItem& itemInfo = pkt.item();
-    AActor* actor = gameState->FindGameObject(itemInfo.object_id());
-    if (nullptr != actor)
-    {
-        return false;
     }
 
     const int64 remoteID = pkt.remote_id();
     APC_Game* gameController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
-    if (gameController)
-    {
-        //버리는 애니메이션
-    }
-
-
-    const Protocol::SVector& worldPosition = itemInfo.world_position();
-
-    const int32 itemCode        = itemInfo.item_code();
-    const int64 gameObjectID    = itemInfo.object_id();
-    FVector itemLocation        = FVector(worldPosition.x(), worldPosition.y(), worldPosition.z());
-    FRotator itemRotator        = FRotator::ZeroRotator;
-
-    AActor* newActor = gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, gameObjectID);
-    AItemParent* newItem = Cast<AItemParent>(newActor);
-    if (nullptr == newItem)
+    if (nullptr == gameController)
     {
         return false;
     }
-    newItem->Init(itemCode, gameObjectID);
+    //TODO : 버리는 애니메이션
+
+    //const Protocol::SItem& itemInfo = pkt.item();
+    //AActor* actor = gameState->FindGameObject(itemInfo.object_id());
+    //if (actor)
+    //{
+    //    return false;
+    //}
+
+
+    //const Protocol::SVector& worldPosition = itemInfo.world_position();
+
+    //const int32 itemCode        = itemInfo.item_code();
+    //const int64 gameObjectID    = itemInfo.object_id();
+    //FVector itemLocation        = FVector(worldPosition.x(), worldPosition.y(), worldPosition.z());
+    //FRotator itemRotator        = FRotator::ZeroRotator;
+
+    //AActor* newActor = gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, gameObjectID);
+    //AItemParent* newItem = Cast<AItemParent>(newActor);
+    //if (nullptr == newItem)
+    //{
+    //    return false;
+    //}
+    //newItem->Init(itemCode, gameObjectID);
 
     return true;
 }

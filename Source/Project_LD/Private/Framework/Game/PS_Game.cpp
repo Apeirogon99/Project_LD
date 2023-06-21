@@ -23,6 +23,8 @@ APS_Game::APS_Game()
 	{
 		return;
 	}
+
+	mRemoteID = 0;
 }
 
 APS_Game::~APS_Game()
