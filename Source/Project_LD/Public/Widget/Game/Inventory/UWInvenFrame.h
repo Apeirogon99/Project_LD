@@ -26,10 +26,10 @@ protected:
 	virtual bool NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	UACInventoryComponent* mInvenComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	UACEquipment* mEquipmentComponent;
 
 public:

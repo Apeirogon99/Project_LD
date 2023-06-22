@@ -179,13 +179,13 @@ public:
 	UTextBlock* TB_DTManaRegeneration;
 	
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	UACInventoryComponent* mInvenComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	UACEquipment* mEquipmentComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "default")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "default")
 	float mTileSize;
 
 public:

@@ -44,10 +44,10 @@ protected:
 	virtual void NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 	
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	UACInventoryComponent* mInventoryComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	UACEquipment* mEquipmentComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetTileSize, BlueprintSetter = SetTileSize, Category = "Default", meta = (AllowPrivateAccess = "true"))
@@ -62,13 +62,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
 	UCanvasPanel* GridCanvas_Panel;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Panel")
 	TSubclassOf<UUserWidget> mImageAsset;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drag Drop")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drag Drop")
 	bool mDrawDropLocation;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drag Drop")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drag Drop")
 	FIntPoint mDraggedItemTopLeftTile;
 
 public:

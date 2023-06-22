@@ -7,7 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "CharacterStatusData.generated.h"
 
-USTRUCT(BlueprintType)
+USTRUCT(Atomic, BlueprintType)
 struct FStatusBaseData : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
@@ -38,77 +38,94 @@ public:
 		base_movement_speed(0),
 		base_range(0) {}
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
 	int32 character_class_id;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_armor_penetration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_armor_penetration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_attack_damage;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_attack_damage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_attack_speed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_attack_speed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_critical_strike_chance;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_critical_strike_chance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_cirtical_strike_damage;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_cirtical_strike_damage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_life_steal;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_life_steal;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_ability_power;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_ability_power;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_mage_penetration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_mage_penetration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_omnivamp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_omnivamp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_physical_vamp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_physical_vamp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_armor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_armor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_heal_and_shield_power;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_heal_and_shield_power;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_health;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_health;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_health_regeneration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_health_regeneration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_magic_resistance;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_magic_resistance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_tenacity;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_tenacity;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_slow_resist;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_slow_resist;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_ability_haste;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_ability_haste;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_mana;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_mana;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_mana_regeneration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_mana_regeneration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_movement_speed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_movement_speed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int32 base_range;	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+	float base_range;	
 };
 
-USTRUCT(BlueprintType)
+USTRUCT(Atomic, BlueprintType)
+struct FCharacterBaseStatus
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FCharacterBaseStatus();
+	FCharacterBaseStatus(const FCharacterBaseStatus& inCharacterStatus) { UpdateCharacterBaseStatus(inCharacterStatus); }
+	FCharacterBaseStatus& operator=(const FCharacterBaseStatus& inCharacterStatus) { UpdateCharacterBaseStatus(inCharacterStatus); return *this; }
+
+	void UpdateCharacterBaseStatus(const FCharacterBaseStatus& inCharacterStatus);
+	TArray<float> FDataToFloat();
+
+public:
+	FStatusBaseData mBaseStatus;
+};
+
+USTRUCT(Atomic, BlueprintType)
 struct FStatusGrowthData : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
@@ -139,77 +156,94 @@ public:
 		grow_movement_speed(0),
 		grow_range(0) {}
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
 	int32 character_class_id;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_armor_penetration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_armor_penetration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_attack_damage;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_attack_damage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_attack_speed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_attack_speed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_critical_strike_chance;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_critical_strike_chance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_cirtical_strike_damage;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_cirtical_strike_damage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_life_steal;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_life_steal;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_ability_power;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_ability_power;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_mage_penetration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_mage_penetration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_omnivamp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_omnivamp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_physical_vamp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_physical_vamp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_armor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_armor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_heal_and_shield_power;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_heal_and_shield_power;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_health;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_health;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_health_regeneration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_health_regeneration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_magic_resistance;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_magic_resistance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_tenacity;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_tenacity;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_slow_resist;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_slow_resist;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_ability_haste;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_ability_haste;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_mana;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_mana;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_mana_regeneration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_mana_regeneration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_movement_speed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_movement_speed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StatusGrowth")
-	int32 grow_range;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "StatusGrowth")
+	float grow_range;
 };
 
-USTRUCT(BlueprintType)
+USTRUCT(Atomic, BlueprintType)
+struct FCharacterGrowStatus
+{
+	GENERATED_USTRUCT_BODY()
+		
+public:
+	FCharacterGrowStatus();
+	FCharacterGrowStatus(const FCharacterGrowStatus& inCharacterStatus) { UpdateCharacterGrowStatus(inCharacterStatus); }
+	FCharacterGrowStatus& operator=(const FCharacterGrowStatus& inCharacterStatus) { UpdateCharacterGrowStatus(inCharacterStatus); return *this; }
+
+	void UpdateCharacterGrowStatus(const FCharacterGrowStatus& inCharacterStatus);
+	TArray<float> FDataToFloat();
+
+public:
+	FStatusGrowthData mGrowStatus;
+};
+
+USTRUCT(Atomic, BlueprintType)
 struct FEquipmentItemData : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
@@ -239,75 +273,92 @@ public:
 		mana_regeneration(0),
 		movement_speed(0),
 		range(0) {}
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 item_id;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 armor_penteration;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 attack_damage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 attack_speed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 critical_strike_chance;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 cirtical_strike_damage;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float item_id;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 life_steal;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float armor_penteration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 ability_power;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float attack_damage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 mage_penetration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float attack_speed;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 omnivamp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float critical_strike_chance;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float cirtical_strike_damage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 physical_vamp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float life_steal;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 armor;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float ability_power;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 heal_and_shield_power;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float mage_penetration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 health;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float omnivamp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 health_regeneration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float physical_vamp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 magic_resistance;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float armor;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 tenacity;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float heal_and_shield_power;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 slow_resist;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float health;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 ability_haste;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float health_regeneration;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 mana;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float magic_resistance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 mana_regeneration;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float tenacity;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 movement_speed;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float slow_resist;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int32 range;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float ability_haste;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float mana;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float mana_regeneration;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float movement_speed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Status")
+		float range;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct FCharacterEquipmentStatus
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FCharacterEquipmentStatus();
+	FCharacterEquipmentStatus(const FCharacterEquipmentStatus& inCharacterStatus) { UpdateEquipmentStatus(inCharacterStatus); }
+	FCharacterEquipmentStatus& operator=(const FCharacterEquipmentStatus& inCharacterStatus) { UpdateEquipmentStatus(inCharacterStatus); return *this; }
+
+	void UpdateEquipmentStatus(const FCharacterEquipmentStatus& inCharacterStatus);
+	TArray<float> FDataToFloat();
+
+public:
+	FEquipmentItemData mEquipmentStatus;
 };
 
 UCLASS()

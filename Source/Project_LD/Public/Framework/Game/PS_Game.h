@@ -27,10 +27,10 @@ public:
 	~APS_Game();
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerState | Component", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component", meta = (AllowPrivateAccess = "true"))
 	UACInventoryComponent* mInventoryComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerState | Component")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component")
 	UACEquipment* mEquipmentComponent;
 
 public:
@@ -41,17 +41,17 @@ public:
 	void calculationStatus();
 
 public:
-	const int64				GetRemoteID() const { return mRemoteID; }
-	const FCharacterData&	GetCharacterData() const { return mCharacterData; }
+	const int64								GetRemoteID() const				{ return mRemoteID; }
+	const FCharacterData&			GetCharacterData()	 const		{ return mCharacterData; }
+	const FCharacterStats&		GetCharacterStatus() const	{ return mCharacterStatus; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState")
 	int64			mRemoteID;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Data")
-	FCharacterData	mCharacterData;
+	FCharacterData		mCharacterData;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Status")
-	FCharacterStatus mCharacterStatus;
-
+	FCharacterStats	mCharacterStatus;
 };

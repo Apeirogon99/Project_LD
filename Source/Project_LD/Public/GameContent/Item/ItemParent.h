@@ -25,41 +25,42 @@ public:
 	// Sets default values for this actor's properties
 	AItemParent();
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
+private:
+	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
 	USceneComponent* mSceneComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
+	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
 	USkeletalMeshComponent* mSkeletalMeshComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component")
+	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
 	USphereComponent* mSphere;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
 	UItemObjectData* mItemObjectData;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Image")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Image")
 	UTexture2D* mIcon;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UParticleSystem* mItemSpawnParticle;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<UParticleSystem*> mPickUpParticle;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UParticleSystem* mItemGainParticle;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TSubclassOf<UUserWidget> mItemNameClass;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UParticleSystemComponent* mItemSpawnParticleComponent;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UWidgetComponent* mItemNameWidgetComponent;
 
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	AC_Game* mPlayer;
 
 private:

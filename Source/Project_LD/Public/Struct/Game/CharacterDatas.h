@@ -59,12 +59,33 @@ enum class EAppearance : uint8
 	Hair					UMETA(DisplayName = "Hair"),
 };
 
-/*
 UENUM()
 enum class ECharacterStatus : uint8
 {
-
-};*/
+	None								UMETA(DisplayName = "None"),
+	ArmorPenetration			UMETA(DisplayName = "ArmorPenetration"),
+	AttackDamage					UMETA(DisplayName = "AttackDamage"),
+	AttackSpeed					UMETA(DisplayName = "AttackSpeed"),
+	CriticalStrikeChance		UMETA(DisplayName = "CriticalStrikeChance"),
+	CriticalStrikeDamage		UMETA(DisplayName = "CriticalStrikeDamage"),
+	LifeSteal							UMETA(DisplayName = "LifeSteal"),
+	AbilityPower					UMETA(DisplayName = "AbilityPower"),
+	MagePenetration				UMETA(DisplayName = "MagePenetration"),
+	Omnivamp						UMETA(DisplayName = "Omnivamp"),
+	PhysicalVamp					UMETA(DisplayName = "PhysicalVamp"),
+	Armor								UMETA(DisplayName = "Armor"),
+	HealAndShieldPower		UMETA(DisplayName = "HealAndShieldPower"),
+	Health								UMETA(DisplayName = "Health"),
+	HealthRegeneration		UMETA(DisplayName = "HealthRegeneration"),
+	MagicResistance				UMETA(DisplayName = "MagicResistance"),
+	Tenacity							UMETA(DisplayName = "Tenacity"),
+	SlowResist						UMETA(DisplayName = "SlowResist"),
+	AbilityHaste					UMETA(DisplayName = "AbilityHaste"),
+	Mana								UMETA(DisplayName = "Mana"),
+	ManaRegeneration			UMETA(DisplayName = "ManaRegeneration"),
+	MovementSpeed				UMETA(DisplayName = "MovementSpeed"),
+	Range								UMETA(DisplayName = "Range"),
+};
 
 USTRUCT(Atomic, BlueprintType)
 struct FCharacterEquipment
@@ -82,6 +103,8 @@ public:
 	void UpdateEquipments(const FCharacterEquipment& inCharacterEquipments);
 	void UpdateEquipments(const Protocol::SCharacterEqipment& inCharacterEquipments);
 	void CompareEquipments(const FCharacterEquipment& inOtherEquipments);
+	
+	TArray<float> GetAllItemIndex();
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
@@ -152,7 +175,7 @@ public:
 	int32 mEyebrow_Color;
 };
 
-USTRUCT(BlueprintType)
+USTRUCT(Atomic, BlueprintType)
 struct FStatusData
 {
 	GENERATED_USTRUCT_BODY()
@@ -184,89 +207,96 @@ public:
 		range(0) {}
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 character_class_id;
+		float character_class_id;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 armor_penetration;
+		float armor_penetration;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 attack_damage;
+		float attack_damage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 attack_speed;
+		float attack_speed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 critical_strike_chance;
+		float critical_strike_chance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 cirtical_strike_damage;
+		float cirtical_strike_damage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 life_steal;
+		float life_steal;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 ability_power;
+		float ability_power;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 mage_penetration;
+		float mage_penetration;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 omnivamp;
+		float omnivamp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 physical_vamp;
+		float physical_vamp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 armor;
+		float armor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 heal_and_shield_power;
+		float heal_and_shield_power;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 health;
+		float health;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 health_regeneration;
+		float health_regeneration;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 magic_resistance;
+		float magic_resistance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 tenacity;
+		float tenacity;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 slow_resist;
+		float slow_resist;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 ability_haste;
+		float ability_haste;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 mana;
+		float mana;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 mana_regeneration;
+		float mana_regeneration;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 movement_speed;
+		float movement_speed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus")
-		int32 range;
+		float range;
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FCharacterStatus
+struct FCharacterStats
 {
 	GENERATED_BODY()
 
 public:
-	FCharacterStatus();
-	FCharacterStatus(const FCharacterStatus& inCharacterStatus) { UpdateCharacterStatus(inCharacterStatus); }
-	FCharacterStatus& operator=(const FCharacterStatus& inCharacterStatus) { UpdateCharacterStatus(inCharacterStatus); return *this; }
+	FCharacterStats();
+	FCharacterStats(const FCharacterStats& inCharacterStatus) { UpdateCharacterStatus(inCharacterStatus); }
+	FCharacterStats& operator=(const FCharacterStats& inCharacterStatus) { UpdateCharacterStatus(inCharacterStatus); return *this; }
 
-	void UpdateCharacterStatus(const FCharacterStatus& inCharacterStatus);
-	
+	void UpdateCharacterStatus(const FCharacterStats& inCharacterStatus);
+
+	TArray<float> FDataToFloat();
+	void	FloatToFData(TArray<float> Data);
+
+	//int operator[](ECharacterStatus Index) const { return static_cast<int>(Index) - 1; };
+
 public:
-	FStatusData		mMaxStatus;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	FStatusData 	mMaxStatus;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
 	FStatusData		mCurrentStatus;
 };
 

@@ -37,16 +37,16 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int mColums;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Constants") int mRows;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Constants") int mColums;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Constants") int mRows;
 	
 	FOnInventoryChanged OnInventoryChanged;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<UItemObjectData*> mInventoryData;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TArray<UItemObjectData*> mInventoryObjectArr;
 
 public:
