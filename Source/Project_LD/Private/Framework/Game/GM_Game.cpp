@@ -140,3 +140,14 @@ ACharacter* AGM_Game::SpawnCharacter(FVector inLocation, FRotator inRotator)
 
 	return nullptr;
 }
+
+AController* AGM_Game::CreateController()
+{
+	UWorld* world = GetWorld();
+	if (world)
+	{
+		APC_Game* controller = world->SpawnActor<APC_Game>();
+		return controller;
+	}
+	return nullptr;
+}

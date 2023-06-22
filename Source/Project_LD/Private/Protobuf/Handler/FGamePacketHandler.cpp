@@ -145,18 +145,18 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     {
         return false;
     }
-    character->SpawnDefaultController();
     character->UpdateCharacterVisual(characterData.mAppearance, characterData.mEquipment);
     character->InitCharacterAnimation();
     character->UpdateDefaultAnimation();
 
-    AController* aiController = character->GetController();
-    if (nullptr == aiController)
+    AController* newController = gameMode->CreateController();
+    if (nullptr == newController)
     {
         return false;
     }
+    newController->Possess(character);
 
-    AMovementController* movementController = StaticCast<AMovementController*>(aiController);
+    AMovementController* movementController = Cast<AMovementController>(newController);
     if (nullptr == movementController)
     {
         return false;
@@ -165,23 +165,24 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
     movementController->MoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
 
-    aiController->InitPlayerState();
-    APS_Game* playerState = aiController->GetPlayerState<APS_Game>();
+    newController->InitPlayerState();
+    APS_Game* playerState = newController->GetPlayerState<APS_Game>();
     if (nullptr == playerState)
     {
         return false;
     }
+    playerState->SetRemotePlayerID(newRemoteID);
+    playerState->SetCharacterData(characterData);
 
     character->SetPlayerState(playerState);
-    playerState->SetRemotePlayerID(newRemoteID);
 
     AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
     if (nullptr == gameState)
     {
         return false;
     }
-
     gameState->AddPlayerState(playerState);
+
     return true;
 }
 
@@ -198,10 +199,9 @@ bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C
     {
         return false;
     }
-    
     const int64 remoteID = pkt.remote_id();
-    AController* remoteController = gameState->FindPlayerController(remoteID);
 
+    AController* remoteController = gameState->FindPlayerController(remoteID);
     APlayerState* playerState = remoteController->GetPlayerState<APlayerState>();
     if (nullptr == playerState)
     {
@@ -243,7 +243,7 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
         return true;
     }
 
-    AMovementController* movementController = StaticCast<AMovementController*>(remoteController);
+    AMovementController* movementController = Cast<AMovementController>(remoteController);
     if (nullptr == movementController)
     {
         return false;
@@ -274,30 +274,28 @@ bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearI
         return false;
     }
 
-    const int32 maxItemSize = pkt.item_size();
-    for (int32 index = 0; index < maxItemSize; ++index)
+    const Protocol::SItem& curItem = pkt.item();
+    int64 objectID          = curItem.object_id();
+    int32 itemCode          = curItem.item_code();
+
+    if (nullptr != gameState->FindGameObject(objectID))
     {
-        const Protocol::SItem& curItem = pkt.item(index);
-        int64 objectID          = curItem.object_id();
-        int32 itemCode          = curItem.item_code();
-
-        const Protocol::SVector& itemPosition = curItem.world_position();
-        float worldPositionX    = itemPosition.x();
-        float worldPositionY    = itemPosition.y();
-        float worldPositionZ    = itemPosition.z();
-
-        FVector itemLocation = FVector(worldPositionX, worldPositionY, worldPositionZ);
-        FRotator itemRotator = FRotator::ZeroRotator;
-
-        AActor* newActor = gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, objectID);
-        AItemParent* newItem = Cast<AItemParent>(newActor);
-        if (nullptr == newItem)
-        {
-            return false;
-        }
-        newItem->Init(itemCode, objectID);
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearItem] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
     }
 
+    const Protocol::SVector& itemPosition = curItem.world_position();
+    FVector itemLocation = FVector(itemPosition.x(), itemPosition.y(), itemPosition.z());
+    FRotator itemRotator = FRotator::ZeroRotator;
+
+    AActor* newActor = gameState->CreateGameObject(AItemParent::StaticClass(), itemLocation, itemRotator, objectID);
+    AItemParent* newItem = Cast<AItemParent>(newActor);
+    if (nullptr == newItem)
+    {
+        return false;
+    }
+    newItem->Init(itemCode, objectID);
+    
     return true;
 }
 
@@ -315,11 +313,16 @@ bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2
         return false;
     }
 
-    const int64 gameOjbectID = pkt.object_id();
-
-    if (false == gameState->RemoveGameObject(gameOjbectID))
+    const int64 objectID = pkt.object_id();
+    AActor* gameObject = gameState->FindGameObject(objectID);
+    if (nullptr == gameObject)
     {
-        return false;
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_DisAppearGameObject] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return true;
+    }
+    else
+    {
+        gameState->RemoveGameObject(objectID);
     }
 
     return true;
@@ -395,25 +398,19 @@ bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_In
     int32 error = pkt.error();
     if (error != ErrorToInt(EGameErrorType::SUCCESS))
     {
-
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_InsertInventory] InsertInventory Error : %d"), error), ELogLevel::Error);
+        return true;
     }
 
     const int64 remoteID = pkt.remote_id();
     APC_Game* findController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
     if (nullptr == findController)
     {
-        return false;
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_InsertInventory] INVALID RemotePlayer : %d"), remoteID), ELogLevel::Error);
+        return true;
     }
     //TODO : 줍는 애니메이션
     
-    const int64 objectID = pkt.object_id();
-    AActor* gameObject = gameState->FindGameObject(objectID);
-    if (nullptr == gameObject)
-    {
-        return false;
-    }
-    gameState->RemoveGameObject(objectID);
-
     return true;
 }
 
@@ -434,6 +431,9 @@ bool Handle_S2C_UpdateInventory(ANetworkController* controller, Protocol::S2C_Up
     int32 error = pkt.error();
     if (error != ErrorToInt(EGameErrorType::SUCCESS))
     {
+
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("UpdateInventory Error : %d"), error), ELogLevel::Error);
+
         Protocol::C2S_LoadInventory loadInventoryPacket;
         const int64 serverTimeStamp = controller->GetServerTimeStamp();
         loadInventoryPacket.set_timestamp(serverTimeStamp);
@@ -460,14 +460,16 @@ bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_De
     int32 error = pkt.error();
     if (error != ErrorToInt(EGameErrorType::SUCCESS))
     {
-
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("DeleteInventory Error : %d"), error), ELogLevel::Error);
+        return true;
     }
 
     const int64 remoteID = pkt.remote_id();
     APC_Game* gameController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
     if (nullptr == gameController)
     {
-        return false;
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_DeleteInventory] INVALID RemotePlayer : %d"), remoteID), ELogLevel::Error);
+        return true;
     }
     //TODO : 버리는 애니메이션
 

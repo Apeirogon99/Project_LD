@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Network/NetworkGameState.h"
+#include "PS_Game.h"
 #include "GS_Game.generated.h"
 
 class AAppearanceCharacter;
@@ -28,5 +29,6 @@ public:
 	AAppearanceCharacter*	GetPreviewCharacter();
 	
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GameState", meta = (AllowPrivateAccess = "true"))
 	TMap<int64, AActor*> mGameObjects;
 };

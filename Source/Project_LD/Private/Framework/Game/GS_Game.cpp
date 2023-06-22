@@ -72,7 +72,7 @@ bool AGS_Game::RemoveGameObject(const int64 inGameObjectID)
 
 AController* AGS_Game::FindPlayerController(const int64 inRemoteID)
 {
-
+    bool result = false;
     for (APlayerState* curPlayerState : PlayerArray)
     {
         APS_Game* playerState = Cast<APS_Game>(curPlayerState);
@@ -80,12 +80,14 @@ AController* AGS_Game::FindPlayerController(const int64 inRemoteID)
         {
             if (playerState->GetRemoteID() == inRemoteID)
             {
-                return playerState->GetPawn()->GetController();
+                AController* findController = playerState->GetPawn()->GetController();
+                return findController;
             }
         }
     }
 
     return nullptr;
+
 }
 
 AAppearanceCharacter* AGS_Game::GetPreviewCharacter()

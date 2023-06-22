@@ -33,6 +33,7 @@ void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp, const int
 
 		mSumTimeStampDelta += timeStampDelta;
 		mSumRtt += inRtt;
+
 		mNumTimeStampDelta += 1;
 
 		if (mNumTimeStampDelta > 250)
@@ -45,7 +46,7 @@ void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp, const int
 		double TargetWorldTimeSecondsDelta = mSumTimeStampDelta / mNumTimeStampDelta;
 		double TargetWorldRtt = mSumRtt / mNumTimeStampDelta;
 
-		if (mTimeStampDelta == 0.0)
+		if (mTimeStampDelta == 0)
 		{
 			mTimeStampDelta = TargetWorldTimeSecondsDelta;
 			mRtt = mSumRtt;

@@ -137,11 +137,9 @@ void AMovementController::MoveDestination(const FVector inOldMovementLocation, c
 
 	if (distance1 >= distance2)
 	{
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[%ws] -> [%ws]"), *pawn->GetActorLocation().ToString(), *inNewMovementLocation.ToString()), ELogLevel::Warning);
 		pawn->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
 		pawn->SetActorRotation(rotation);
-
-		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("%ws"), *inNewMovementLocation.ToString()), ELogLevel::Warning);
-		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("%ws"), *pawn->GetActorLocation().ToString()), ELogLevel::Warning);
 	}
 	else
 	{

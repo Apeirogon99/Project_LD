@@ -84,39 +84,39 @@ public:
 	void CompareEquipments(const FCharacterEquipment& inOtherEquipments);
 
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	int32 mHair;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	int32 mHelmet;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	int32 mShoulders;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	int32 mChest;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	int32 mBracers;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	int32 mHands;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	int32 mPants;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	int32 mBoots;
 
 public:
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	int32 mWeapon_L;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
 	int32 mWeapon_R;
 };
 
-USTRUCT(Atomic)
+USTRUCT(Atomic, BlueprintType)
 struct FCharacterAppearance
 {
 	GENERATED_BODY()
@@ -133,22 +133,22 @@ public:
 	void UpdateAppearance(const Protocol::SCharacterAppearance& inCharacterAppearance);
 
 public:
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Appearance")
 	ECharacterRace mRace;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Appearance")
 	int32 mSeat;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Appearance")
 	int32 mSkin_Color;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Appearance")
 	int32 mHair_Color;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Appearance")
 	int32 mEye_Color;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Appearance")
 	int32 mEyebrow_Color;
 };
 
@@ -271,7 +271,7 @@ public:
 };
 
 
-USTRUCT(Atomic)
+USTRUCT(Atomic, BlueprintType)
 struct FCharacterData
 {
 	GENERATED_BODY()
@@ -288,9 +288,18 @@ public:
 	void UpdateCharacterData(const Protocol::SCharacterData& inCharacterData);
 
 public:
-	FString							mName;
-	int32								mLevel;
-	ECharacterClass				mClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	FString					mName;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	int32					mLevel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
+	ECharacterClass			mClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
 	FCharacterAppearance	mAppearance;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
 	FCharacterEquipment		mEquipment;
 };

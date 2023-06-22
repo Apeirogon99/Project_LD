@@ -27,4 +27,5 @@ protected:
 
 public:
 	ACharacter*				SpawnCharacter(FVector inLocation, FRotator inRotator);
+	AController*			CreateController();
 };
