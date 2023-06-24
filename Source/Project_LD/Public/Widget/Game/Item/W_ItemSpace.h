@@ -80,10 +80,11 @@ public:
 	void FalseExist();
 
 	UFUNCTION()
-	void Refresh(UItemObjectData* ItemData);
+	void Refresh(UItemObjectData* ItemObjectData);
 
 	UFUNCTION()
-	void ReMakeWidget(UItemObjectData* ItemObjectDatat);
+	void ReMakeWidget(UItemObjectData* ItemObjectData);
 
+	void CreateItemWidget(UItemObjectData* ItemObjectData);
 	//void ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData);
 };

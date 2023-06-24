@@ -14,6 +14,7 @@
 #include <GameErrorTypes.h>
 
 #include <Widget/Handler/ClientHUD.h>
+#include <Widget/Game/Inventory/UWInventory.h>
 #include <GameContent/Item/ItemParent.h>
 #include <Widget/Game/Main/W_MainGame.h>
 
@@ -539,7 +540,20 @@ bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_Re
         return false;
     }
     playerState->SetCharacterEqipment(updateEquipment);
-   //
+    playerState->calculationStatus();
+
+    AClientHUD* clientHUD = controller->GetHUD<AClientHUD>();
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    UUserWidget* inventory = clientHUD->GetWidgetFromName(TEXT("Inventory"));
+    if (inventory == nullptr)
+    {
+        return false;
+    }
+    Cast<UUWInventory>(inventory)->UpdateStatus();
 
     AC_Game* character = Cast<AC_Game>(remoteController->GetPawn());
     if (nullptr == character)
