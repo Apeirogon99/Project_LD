@@ -134,20 +134,11 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 							//아이템 창이 비어있음 -> 아이템 장착
 							bExist = true;
 
-							EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
 							if (EquipmentItemSlot)
 							{
-								EquipmentItemSlot->Init();
-								EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
-								EquipmentItemSlot->mItemObjectData = ItemDataPayload;
-								EquipmentItemSlot->mItemObjectData->Type = EItemObjectType::Equipment;
-								EquipmentItemSlot->SetImage();
+								CreateItemWidget(ItemDataPayload);
 
 								mEquipmentComponent->mEquipmentData[mCategoryId - 1] = EquipmentItemSlot->mItemObjectData;
-
-								UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
-								Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
-								Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
 
 								mInvenComponent->ReplacePacket(NewObject<UItemObjectData>(), ItemDataPayload, mCategoryId);
 							}
@@ -155,38 +146,32 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 						else
 						{
 							//아이템 창에 아이템이 이미 존재
-							if (mInvenComponent->TryAddItem(EquipmentItemSlot->mItemObjectData))
+							if (EquipmentItemSlot != nullptr)
 							{
-								//장착된 장비 아이템이 인벤토리로 들어갈 수 있는 경우 -> 장착 아이템 인벤토리로 전송
-								UItemObjectData* OldItemData = EquipmentItemSlot->mItemObjectData;
-								ItemCanvas->ClearChildren();
-
-								EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
-								if (EquipmentItemSlot)
+								if (mInvenComponent->TryAddItem(EquipmentItemSlot->mItemObjectData))
 								{
-									EquipmentItemSlot->Init();
-									EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
-									EquipmentItemSlot->mItemObjectData = ItemDataPayload;
-									EquipmentItemSlot->mItemObjectData->Type = EItemObjectType::Equipment;
-									EquipmentItemSlot->SetImage();
+									//장착된 장비 아이템이 인벤토리로 들어갈 수 있는 경우 -> 장착 아이템 인벤토리로 전송
+									UItemObjectData* OldItemData = EquipmentItemSlot->mItemObjectData;
+									ItemCanvas->ClearChildren();
 
-									mEquipmentComponent->mEquipmentData[mCategoryId - 1] = EquipmentItemSlot->mItemObjectData;
-								
-									UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
-									Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
-									Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
+									if (EquipmentItemSlot)
+									{
+										CreateItemWidget(ItemDataPayload);
 
-									mInvenComponent->ReplacePacket(OldItemData, ItemDataPayload, mCategoryId);
+										mEquipmentComponent->mEquipmentData[mCategoryId - 1] = EquipmentItemSlot->mItemObjectData;
+
+										mInvenComponent->ReplacePacket(OldItemData, ItemDataPayload, mCategoryId);
+									}
 								}
-							}
-							else
-							{
-								//장비창에 아이템이 인벤토리로 돌아갈 수 없는 경우 -> 장착 시도 아이템 인벤토리로 복귀
-								FTile tile;
-								tile.X = ItemDataPayload->position_x;
-								tile.Y = ItemDataPayload->position_y;
+								else
+								{
+									//장비창에 아이템이 인벤토리로 돌아갈 수 없는 경우 -> 장착 시도 아이템 인벤토리로 복귀
+									FTile tile;
+									tile.X = ItemDataPayload->position_x;
+									tile.Y = ItemDataPayload->position_y;
 
-								mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
+									mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
+								}
 							}
 						}
 					}
@@ -239,37 +224,36 @@ void UW_ItemSpace::FalseExist()
 	bExist = false;
 }
 
-void UW_ItemSpace::Refresh(UItemObjectData* ItemData)
+void UW_ItemSpace::Refresh(UItemObjectData* ItemObjectData)
 {
 	ItemCanvas->ClearChildren();
 
 	bExist = true;
-	EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
+
+	CreateItemWidget(ItemObjectData);
+}
+
+void UW_ItemSpace::ReMakeWidget(UItemObjectData* ItemObjectData)
+{
 	if (EquipmentItemSlot)
 	{
-		EquipmentItemSlot->Init();
-		EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
-		EquipmentItemSlot->mItemObjectData = ItemData;
-		EquipmentItemSlot->SetImage();
+		CreateItemWidget(ItemObjectData);
 
-		UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
-		Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
-		Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
+		mEquipmentComponent->mEquipmentData[mCategoryId - 1] = EquipmentItemSlot->mItemObjectData;
 	}
 }
 
-void UW_ItemSpace::ReMakeWidget(UItemObjectData* ItemObjectDatat)
+void UW_ItemSpace::CreateItemWidget(UItemObjectData* ItemObjectData)
 {
 	EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
 	if (EquipmentItemSlot)
 	{
 		EquipmentItemSlot->Init();
+		EquipmentItemSlot->SetFrameSize(mSizeX, mSizeY);
 		EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
-		EquipmentItemSlot->mItemObjectData = ItemObjectDatat;
+		EquipmentItemSlot->mItemObjectData = ItemObjectData;
 		EquipmentItemSlot->mItemObjectData->Type = EItemObjectType::Equipment;
 		EquipmentItemSlot->SetImage();
-
-		mEquipmentComponent->mEquipmentData[mCategoryId -1] = EquipmentItemSlot->mItemObjectData;
 
 		UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
 		Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));

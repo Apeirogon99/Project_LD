@@ -7,6 +7,8 @@
 #include "Struct/Game/GameDatas.h"
 #include "Struct/Game/CharacterDatas.h"
 #include "Struct/Game/CharacterStatusData.h"
+#include <Struct/Game/CharacterDatas.h>
+#include <Game/PS_Game.h>
 #include "UWInventory.generated.h"
 
 /**
@@ -199,9 +201,97 @@ public:
 	void ToggleDetailPanel();
 
 	void UpdateStatus();
+	void InitStatus();
 
 	void RefreshMoney(int32 money);
 	
 	void InventoryLoadRequest();
 	void InventoryLoadRespawn();
+	
+	/*
+public:
+	UFUNCTION()
+	FText GetTBLevel() { return FText::FromString(FString::FromInt(playerstate->GetCharacterData().mLevel)); }
+
+	UFUNCTION()
+	FText GetTBName() { return FText::FromString(playerstate->GetCharacterData().mName); }
+
+	UFUNCTION()
+	FText GetTBPower() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.ability_power)); }
+
+	UFUNCTION()
+	FText GetTBArmor() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.armor)); }
+
+	UFUNCTION()
+	FText GetTBHealth() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.health)); }
+
+	UFUNCTION()
+	FText GetTBMana() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.mana)); }
+
+	UFUNCTION()
+	FText GetTBDTAttackDamage() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.attack_damage)); }
+
+	UFUNCTION()
+	FText GetTBDTAbilityPower() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.ability_power)); }
+
+	UFUNCTION()
+	FText GetTBDTAttackSpeed() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.attack_speed)); }
+
+	UFUNCTION()
+	FText GetTBDTCriticalStrikeChance() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.critical_strike_chance)); }
+
+	UFUNCTION()
+	FText GetTBDTCriticalStrikeDamage() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.cirtical_strike_damage)); }
+
+	UFUNCTION()
+	FText GetTBDTArmorPenetration() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.armor_penetration)); }
+
+	UFUNCTION()
+	FText GetTBDTMagePenetration() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.mage_penetration)); }
+
+	UFUNCTION()
+	FText GetTBDTAbilityHaste() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.ability_haste)); }
+
+	UFUNCTION()
+	FText GetTBDTMovementSpeed() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.movement_speed)); }
+
+	UFUNCTION()
+	FText GetTBDTRange() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.range)); }
+
+	UFUNCTION()
+	FText GetTBDTArmor() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.armor)); }
+
+	UFUNCTION()
+	FText GetTBDTTenacity() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.tenacity)); }
+
+	UFUNCTION()
+	FText GetTBDTMagicResistance() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.magic_resistance)); }
+
+	UFUNCTION()
+	FText GetTBDTSlowResist() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.slow_resist)); }
+
+	UFUNCTION()
+	FText GetTBDTHealth() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.health)); }
+
+	UFUNCTION()
+	FText GetTBDTHealthReneration() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.health_regeneration)); }
+
+	UFUNCTION()
+	FText GetTBDTLifeSteal() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.life_steal)); }
+
+	UFUNCTION()
+	FText GetTBDTPhysicalVamp() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.physical_vamp)); }
+
+	UFUNCTION()
+	FText GetTBDTOmnivamp() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.omnivamp)); }
+
+	UFUNCTION()
+	FText GetTBDTHealAndShieldPower() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.heal_and_shield_power)); }
+
+	UFUNCTION()
+	FText GetTBDTMana() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.mana)); }
+
+	UFUNCTION()
+	FText GetTBDTManaRegeneration() { return FText::FromString(FString::SanitizeFloat(playerstate->GetCharacterStatus().mMaxStatus.mana_regeneration)); }
+	*/
 };

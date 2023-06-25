@@ -73,7 +73,65 @@ void APS_Game::InitializeLocalPlayerState()
 
 	mEquipmentComponent->Init(inventory);
 	calculationStatus();
-	inventory->UpdateStatus();
 
 	mCharacterStatus.mCurrentStatus = mCharacterStatus.mMaxStatus;
 }
+
+//void APS_Game::UpdateInventory()
+//{
+//	AGM_Game* gameMode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+//	if (nullptr == gameMode)
+//	{
+//		return;
+//	}
+//
+//	APC_Game* playercontroller = Cast<APC_Game>(gameMode->GetNetworkController());
+//	if (nullptr == playercontroller)
+//	{
+//		return;
+//	}
+//
+//	AClientHUD* clientHUD = Cast<AClientHUD>(playercontroller->GetHUD());
+//	if (nullptr == clientHUD)
+//	{
+//		return;
+//	}
+//
+//	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("Inventory")));
+//	if (nullptr == widget)
+//	{
+//		return;
+//	}
+//
+//	UUWInventory* inventory = Cast<UUWInventory>(widget);
+//
+//	inventory->UpdateStatus();
+//	//GetTBLevel();
+//	//GetTBName();
+//	//GetTBPower();
+//	//GetTBArmor();
+//	//GetTBHealth();
+//	//GetTBMana();
+//	//GetTBDTAttackDamage();
+//	//GetTBDTAbilityPower();
+//	//GetTBDTAttackSpeed();
+//	//GetTBDTCriticalStrikeChance();
+//	//GetTBDTCriticalStrikeDamage();
+//	//GetTBDTArmorPenetration();
+//	//GetTBDTMagePenetration();
+//	//GetTBDTAbilityHaste();
+//	//GetTBDTMovementSpeed();
+//	//GetTBDTRange();
+//	//GetTBDTArmor();
+//	//GetTBDTTenacity();
+//	//GetTBDTMagicResistance();
+//	//GetTBDTSlowResist();
+//	//GetTBDTHealth();
+//	//GetTBDTHealthReneration();
+//	//GetTBDTLifeSteal();
+//	//GetTBDTPhysicalVamp();
+//	//GetTBDTOmnivamp();
+//	//GetTBDTHealAndShieldPower();
+//	//GetTBDTMana();
+//	//GetTBDTManaRegeneration();
+//}

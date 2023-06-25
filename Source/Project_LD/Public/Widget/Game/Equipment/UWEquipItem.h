@@ -12,6 +12,7 @@
  */
 class UBorder;
 class UImage;
+class USizeBox;
 
 DECLARE_DELEGATE(FOnEquipItemRemoved);
 
@@ -36,6 +37,9 @@ public:
 	UBorder* BackgroundBorder;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
+	USizeBox* BackgroundSizeBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UImage* ItemBackgroundImage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
@@ -57,6 +61,7 @@ public:
 
 public:
 	void SetImage();
+	void SetFrameSize(float X, float Y);
 
 	void Init();
 };

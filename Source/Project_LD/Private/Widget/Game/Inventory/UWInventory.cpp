@@ -12,7 +12,6 @@
 #include <Widget/Game/Main/W_MainGame.h>
 #include <Widget/Game/Inventory/UWInvenFrame.h>
 
-#include <Game/PS_Game.h>
 #include <Game/GM_Game.h>
 #include <Game/PC_Game.h>
 
@@ -99,9 +98,129 @@ void UUWInventory::NativeOnInitialized()
 	Super::NativeOnInitialized();
 }
 
+
 void UUWInventory::NativeDestruct()
 {
 	Super::NativeDestruct();
+	/*
+	if (TB_Level->TextDelegate.IsBound())
+	{
+		TB_Level->TextDelegate.Clear();
+	}	
+	if (TB_CharacterName->TextDelegate.IsBound())
+	{
+		TB_CharacterName->TextDelegate.Clear();
+	}
+	
+	if (TB_Power->TextDelegate.IsBound()) 
+	{
+		TB_Power->TextDelegate.Clear();
+	}
+	if(TB_Armor->TextDelegate.IsBound())
+	{
+		TB_Armor->TextDelegate.Clear();
+	}
+	if(TB_Health->TextDelegate.IsBound())
+	{
+		TB_Health->TextDelegate.Clear();
+	}
+	if(TB_Mana->TextDelegate.IsBound())
+	{
+		TB_Mana->TextDelegate.Clear();
+	}
+
+	if(TB_DTAttackDamage->TextDelegate.IsBound())
+	{
+		TB_DTAttackDamage->TextDelegate.Clear();
+	}
+	if(TB_DTAttackDamage->TextDelegate.IsBound())
+	{
+		TB_DTAbilityPower->TextDelegate.Clear();
+	}
+	if(TB_DTAttackSpeed->TextDelegate.IsBound())
+	{
+		TB_DTAttackSpeed->TextDelegate.Clear();
+	}
+	if(TB_DTCriticalStrikeChance->TextDelegate.IsBound())
+	{
+		TB_DTCriticalStrikeChance->TextDelegate.Clear();
+	}
+	if(TB_DTCriticalStrikeDamage->TextDelegate.IsBound())
+	{
+		TB_DTCriticalStrikeDamage->TextDelegate.Clear();
+	}
+	if(TB_DTArmorPenetration->TextDelegate.IsBound())
+	{
+		TB_DTArmorPenetration->TextDelegate.Clear();
+	}
+	if(TB_DTMagePenetration->TextDelegate.IsBound())
+	{
+		TB_DTMagePenetration->TextDelegate.Clear();
+	}
+	if(TB_DTAbilityHaste->TextDelegate.IsBound())
+	{
+		TB_DTAbilityHaste->TextDelegate.Clear();
+	}
+	if(TB_DTMovementSpeed->TextDelegate.IsBound())
+	{
+		TB_DTMovementSpeed->TextDelegate.Clear();
+	}
+	if(TB_DTRange->TextDelegate.IsBound())
+	{
+		TB_DTRange->TextDelegate.Clear();
+	}
+
+	if(TB_DTArmor->TextDelegate.IsBound())
+	{
+		TB_DTArmor->TextDelegate.Clear();
+	}
+	if(TB_DTTenacity->TextDelegate.IsBound())
+	{
+		TB_DTTenacity->TextDelegate.Clear();
+	}
+	if(TB_DTMagicResistance->TextDelegate.IsBound())
+	{
+		TB_DTMagicResistance->TextDelegate.Clear();
+	}
+	if(TB_DTSlowResist->TextDelegate.IsBound())
+	{
+		TB_DTSlowResist->TextDelegate.Clear();
+	}
+
+	if(TB_DTHealth->TextDelegate.IsBound())
+	{
+		TB_DTHealth->TextDelegate.Clear();
+	}
+	if(TB_DTHealthReneration->TextDelegate.IsBound())
+	{
+		TB_DTHealthReneration->TextDelegate.Clear();
+	}
+	if(TB_DTLifeSteal->TextDelegate.IsBound())
+	{
+		TB_DTLifeSteal->TextDelegate.Clear();
+	}
+	if(TB_DTPhysicalVamp->TextDelegate.IsBound())
+	{
+		TB_DTPhysicalVamp->TextDelegate.Clear();
+	}
+	if(TB_DTOmnivamp->TextDelegate.IsBound())
+	{
+		TB_DTOmnivamp->TextDelegate.Clear();
+	}
+	if(TB_DTHealAndShieldPower->TextDelegate.IsBound())
+	{
+		TB_DTHealAndShieldPower->TextDelegate.Clear();
+	}
+
+	if(TB_DTMana->TextDelegate.IsBound())
+	{
+		TB_DTMana->TextDelegate.Clear();
+	}
+	if(TB_DTManaRegeneration->TextDelegate.IsBound())
+	{
+		TB_DTManaRegeneration->TextDelegate.Clear();
+	}
+	*/
 }
 
 FReply UUWInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
@@ -164,6 +283,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 	mInvenComponent = InventoryComponent;
 	mTileSize = TileSize;
 	mEquipmentComponent = EquipmentComponent;
+
 	if (mInvenComponent == nullptr)
 	{
 		return;
@@ -286,8 +406,6 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 			EquipRightWeapon->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
-
-	UpdateStatus();
 }
 
 void UUWInventory::CloseInventory()
@@ -342,6 +460,7 @@ void UUWInventory::ToggleDetailPanel()
 	}
 }
 
+/*
 void UUWInventory::UpdateStatus()
 {
 	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
@@ -368,11 +487,6 @@ void UUWInventory::UpdateStatus()
 
 	TB_Level->SetText(FText::FromString(FString::FromInt(characterData.mLevel)));
 	TB_CharacterName->SetText(FText::FromString(characterData.mName));
-
-	TB_Power->SetText(FText::FromString(FString::SanitizeFloat(Stats.ability_power)));
-	TB_Armor->SetText(FText::FromString(FString::SanitizeFloat(Stats.armor)));
-	TB_Health->SetText(FText::FromString(FString::SanitizeFloat(Stats.health)));
-	TB_Mana->SetText(FText::FromString(FString::SanitizeFloat(Stats.mana)));
 
 	TB_Power->SetText(FText::FromString(FString::SanitizeFloat(Stats.ability_power)));
 	TB_Armor->SetText(FText::FromString(FString::SanitizeFloat(Stats.armor)));
@@ -406,6 +520,164 @@ void UUWInventory::UpdateStatus()
 	TB_DTManaRegeneration->SetText(FText::FromString(FString::SanitizeFloat(Stats.mana_regeneration)));
 }
 
+void UUWInventory::UpdateStatus()
+{
+	if (TB_Level->TextDelegate.IsBound())
+	{
+		TB_Level->TextDelegate.Execute();
+	}
+	if (TB_CharacterName->TextDelegate.IsBound())
+	{
+		TB_CharacterName->TextDelegate.Execute();
+	}
+
+	if (TB_Power->TextDelegate.IsBound())
+	{
+		TB_Power->TextDelegate.Execute();
+	}
+	if (TB_Armor->TextDelegate.IsBound())
+	{
+		TB_Armor->TextDelegate.Execute();
+	}
+	if (TB_Health->TextDelegate.IsBound())
+	{
+		TB_Health->TextDelegate.Execute();
+	}
+	if (TB_Mana->TextDelegate.IsBound())
+	{
+		TB_Mana->TextDelegate.Execute();
+	}
+
+	if (TB_DTAttackDamage->TextDelegate.IsBound())
+	{
+		TB_DTAttackDamage->TextDelegate.Execute();
+	}
+	if (TB_DTAttackDamage->TextDelegate.IsBound())
+	{
+		TB_DTAbilityPower->TextDelegate.Execute();
+	}
+	if (TB_DTAttackSpeed->TextDelegate.IsBound())
+	{
+		TB_DTAttackSpeed->TextDelegate.Execute();
+	}
+	if (TB_DTCriticalStrikeChance->TextDelegate.IsBound())
+	{
+		TB_DTCriticalStrikeChance->TextDelegate.Execute();
+	}
+	if (TB_DTCriticalStrikeDamage->TextDelegate.IsBound())
+	{
+		TB_DTCriticalStrikeDamage->TextDelegate.Execute();
+	}
+	if (TB_DTArmorPenetration->TextDelegate.IsBound())
+	{
+		TB_DTArmorPenetration->TextDelegate.Execute();
+	}
+	if (TB_DTMagePenetration->TextDelegate.IsBound())
+	{
+		TB_DTMagePenetration->TextDelegate.Execute();
+	}
+	if (TB_DTAbilityHaste->TextDelegate.IsBound())
+	{
+		TB_DTAbilityHaste->TextDelegate.Execute();
+	}
+	if (TB_DTMovementSpeed->TextDelegate.IsBound())
+	{
+		TB_DTMovementSpeed->TextDelegate.Execute();
+	}
+	if (TB_DTRange->TextDelegate.IsBound())
+	{
+		TB_DTRange->TextDelegate.Execute();
+	}
+
+	if (TB_DTArmor->TextDelegate.IsBound())
+	{
+		TB_DTArmor->TextDelegate.Execute();
+	}
+	if (TB_DTTenacity->TextDelegate.IsBound())
+	{
+		TB_DTTenacity->TextDelegate.Execute();
+	}
+	if (TB_DTMagicResistance->TextDelegate.IsBound())
+	{
+		TB_DTMagicResistance->TextDelegate.Execute();
+	}
+	if (TB_DTSlowResist->TextDelegate.IsBound())
+	{
+		TB_DTSlowResist->TextDelegate.Execute();
+	}
+
+	if (TB_DTHealth->TextDelegate.IsBound())
+	{
+		TB_DTHealth->TextDelegate.Execute();
+	}
+	if (TB_DTHealthReneration->TextDelegate.IsBound())
+	{
+		TB_DTHealthReneration->TextDelegate.Execute();
+	}
+	if (TB_DTLifeSteal->TextDelegate.IsBound())
+	{
+		TB_DTLifeSteal->TextDelegate.Execute();
+	}
+	if (TB_DTPhysicalVamp->TextDelegate.IsBound())
+	{
+		TB_DTPhysicalVamp->TextDelegate.Execute();
+	}
+	if (TB_DTOmnivamp->TextDelegate.IsBound())
+	{
+		TB_DTOmnivamp->TextDelegate.Execute();
+	}
+	if (TB_DTHealAndShieldPower->TextDelegate.IsBound())
+	{
+		TB_DTHealAndShieldPower->TextDelegate.Execute();
+	}
+
+	if (TB_DTMana->TextDelegate.IsBound())
+	{
+		TB_DTMana->TextDelegate.Execute();
+	}
+	if (TB_DTManaRegeneration->TextDelegate.IsBound())
+	{
+		TB_DTManaRegeneration->TextDelegate.Execute();
+	}
+}
+
+void UUWInventory::InitStatus()
+{
+	TB_Level->TextDelegate.BindUFunction(this, "GetTBLevel");
+	TB_CharacterName->TextDelegate.BindUFunction(this, "GetTBName");
+
+	TB_Power->TextDelegate.BindUFunction(this,"GetTBPower");
+	TB_Armor->TextDelegate.BindUFunction(this,"GetTBArmor");
+	TB_Health->TextDelegate.BindUFunction(this,"GetTBHealth");
+	TB_Mana->TextDelegate.BindUFunction(this,"GetTBMana");
+
+	TB_DTAttackDamage->TextDelegate.BindUFunction(this,"GetTBDTAttackDamage");
+	TB_DTAbilityPower->TextDelegate.BindUFunction(this,"GetTBDTAbilityPower");
+	TB_DTAttackSpeed->TextDelegate.BindUFunction(this,"GetTBDTAttackSpeed");
+	TB_DTCriticalStrikeChance->TextDelegate.BindUFunction(this,"GetTBDTCriticalStrikeChance");
+	TB_DTCriticalStrikeDamage->TextDelegate.BindUFunction(this,"GetTBDTCriticalStrikeDamage");
+	TB_DTArmorPenetration->TextDelegate.BindUFunction(this,"GetTBDTArmorPenetration");
+	TB_DTMagePenetration->TextDelegate.BindUFunction(this, "GetTBDTMagePenetration");
+	TB_DTAbilityHaste->TextDelegate.BindUFunction(this,"GetTBDTAbilityHaste");
+	TB_DTMovementSpeed->TextDelegate.BindUFunction(this,"GetTBDTMovementSpeed");
+	TB_DTRange->TextDelegate.BindUFunction(this,"GetTBDTRange");
+
+	TB_DTArmor->TextDelegate.BindUFunction(this,"GetTBDTArmor");
+	TB_DTTenacity->TextDelegate.BindUFunction(this,"GetTBDTTenacity");
+	TB_DTMagicResistance->TextDelegate.BindUFunction(this,"GetTBDTMagicResistance");
+	TB_DTSlowResist->TextDelegate.BindUFunction(this,"GetTBDTSlowResist");
+
+	TB_DTHealth->TextDelegate.BindUFunction(this,"GetTBDTHealth");
+	TB_DTHealthReneration->TextDelegate.BindUFunction(this,"GetTBDTHealthReneration");
+	TB_DTLifeSteal->TextDelegate.BindUFunction(this,"GetTBDTLifeSteal");
+	TB_DTPhysicalVamp->TextDelegate.BindUFunction(this,"GetTBDTPhysicalVamp");
+	TB_DTOmnivamp->TextDelegate.BindUFunction(this,"GetTBDTOmnivamp");
+	TB_DTHealAndShieldPower->TextDelegate.BindUFunction(this,"GetTBDTHealAndShieldPower");
+
+	TB_DTMana->TextDelegate.BindUFunction(this,"GetTBDTMana");
+	TB_DTManaRegeneration->TextDelegate.BindUFunction(this,"GetTBDTManaRegeneration");
+}
+*/
 
 void UUWInventory::RefreshMoney(int32 money)
 {
