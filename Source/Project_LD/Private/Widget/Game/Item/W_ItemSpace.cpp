@@ -134,10 +134,20 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 							//아이템 창이 비어있음 -> 아이템 장착
 							bExist = true;
 
-							CreateItemWidget(ItemDataPayload);
+							EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
 							if (EquipmentItemSlot)
 							{
+								EquipmentItemSlot->Init();
+								EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
+								EquipmentItemSlot->mItemObjectData = ItemDataPayload;
+								EquipmentItemSlot->mItemObjectData->Type = EItemObjectType::Equipment;
+								EquipmentItemSlot->SetImage();
+
 								mEquipmentComponent->mEquipmentData[mCategoryId - 1] = EquipmentItemSlot->mItemObjectData;
+
+								UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
+								Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
+								Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
 
 								mInvenComponent->ReplacePacket(NewObject<UItemObjectData>(), ItemDataPayload, mCategoryId);
 							}
@@ -151,10 +161,20 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 								UItemObjectData* OldItemData = EquipmentItemSlot->mItemObjectData;
 								ItemCanvas->ClearChildren();
 
-								CreateItemWidget(ItemDataPayload);
+								EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
 								if (EquipmentItemSlot)
 								{
+									EquipmentItemSlot->Init();
+									EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
+									EquipmentItemSlot->mItemObjectData = ItemDataPayload;
+									EquipmentItemSlot->mItemObjectData->Type = EItemObjectType::Equipment;
+									EquipmentItemSlot->SetImage();
+
 									mEquipmentComponent->mEquipmentData[mCategoryId - 1] = EquipmentItemSlot->mItemObjectData;
+								
+									UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
+									Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
+									Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
 
 									mInvenComponent->ReplacePacket(OldItemData, ItemDataPayload, mCategoryId);
 								}
@@ -219,36 +239,37 @@ void UW_ItemSpace::FalseExist()
 	bExist = false;
 }
 
-void UW_ItemSpace::Refresh(UItemObjectData* ItemObjectData)
+void UW_ItemSpace::Refresh(UItemObjectData* ItemData)
 {
 	ItemCanvas->ClearChildren();
 
 	bExist = true;
-
-	CreateItemWidget(ItemObjectData);
-}
-
-void UW_ItemSpace::ReMakeWidget(UItemObjectData* ItemObjectData)
-{
-	CreateItemWidget(ItemObjectData);
-
+	EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
 	if (EquipmentItemSlot)
 	{
-		mEquipmentComponent->mEquipmentData[mCategoryId - 1] = EquipmentItemSlot->mItemObjectData;
+		EquipmentItemSlot->Init();
+		EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
+		EquipmentItemSlot->mItemObjectData = ItemData;
+		EquipmentItemSlot->SetImage();
+
+		UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
+		Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
+		Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
 	}
 }
 
-void UW_ItemSpace::CreateItemWidget(UItemObjectData* ItemObjectData)
+void UW_ItemSpace::ReMakeWidget(UItemObjectData* ItemObjectDatat)
 {
 	EquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
 	if (EquipmentItemSlot)
 	{
 		EquipmentItemSlot->Init();
-		EquipmentItemSlot->SetFrameSize(mSizeX, mSizeY);
 		EquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
-		EquipmentItemSlot->mItemObjectData = ItemObjectData;
+		EquipmentItemSlot->mItemObjectData = ItemObjectDatat;
 		EquipmentItemSlot->mItemObjectData->Type = EItemObjectType::Equipment;
 		EquipmentItemSlot->SetImage();
+
+		mEquipmentComponent->mEquipmentData[mCategoryId -1] = EquipmentItemSlot->mItemObjectData;
 
 		UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(EquipmentItemSlot));
 		Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));

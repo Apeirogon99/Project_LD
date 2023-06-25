@@ -3,7 +3,6 @@
 #include "Widget/Game/Equipment/UWEquipItem.h"
 #include "Components/Image.h"
 #include "Components/Border.h"
-#include "Components/SizeBox.h"
 #include <Blueprint/WidgetBlueprintLibrary.h>
 
 void UUWEquipItem::NativePreConstruct()
@@ -105,12 +104,7 @@ void UUWEquipItem::SetImage()
 			}
 		}
 	}
-}
-void UUWEquipItem::SetFrameSize(float X, float Y)
-{
-	BackgroundSizeBox->SetWidthOverride(X);
-	BackgroundSizeBox->SetHeightOverride(Y);
-}
+} 
 
 void UUWEquipItem::Init()
 {
@@ -118,7 +112,6 @@ void UUWEquipItem::Init()
 	{
 		bIsFirst = false;
 		BackgroundBorder = Cast<UBorder>(GetWidgetFromName(TEXT("BackgroundBorder")));
-		BackgroundSizeBox = Cast<USizeBox>(GetWidgetFromName(TEXT("BackgroundSizeBox")));
 		ItemBackgroundImage = Cast<UImage>(GetWidgetFromName(TEXT("ItemBackgroundImage")));
 		ItemImage = Cast<UImage>(GetWidgetFromName(TEXT("ItemImage")));
 
