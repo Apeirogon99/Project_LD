@@ -134,14 +134,11 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 							//아이템 창이 비어있음 -> 아이템 장착
 							bExist = true;
 
-							if (EquipmentItemSlot)
-							{
-								CreateItemWidget(ItemDataPayload);
+							CreateItemWidget(ItemDataPayload);
 
-								mEquipmentComponent->mEquipmentData[mCategoryId - 1] = EquipmentItemSlot->mItemObjectData;
+							mEquipmentComponent->mEquipmentData[mCategoryId - 1] = EquipmentItemSlot->mItemObjectData;
 
-								mInvenComponent->ReplacePacket(NewObject<UItemObjectData>(), ItemDataPayload, mCategoryId);
-							}
+							mInvenComponent->ReplacePacket(NewObject<UItemObjectData>(), ItemDataPayload, mCategoryId);
 						}
 						else
 						{
