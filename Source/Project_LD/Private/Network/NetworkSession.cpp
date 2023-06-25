@@ -26,7 +26,7 @@ FNetworkSession::FNetworkSession() : mRecvBuffer(nullptr), mSendBufferQueue(null
 	mIsPossess = static_cast<bool>(Default::SESSION_IS_FREE);
 
 	mSocketSubsystem = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
-	
+
 	InitSocket();
 
 }
@@ -48,11 +48,11 @@ FNetworkSession::~FNetworkSession()
 		delete mSendBufferQueue;
 	}
 
-	if (nullptr != mSocket)
+	/*if (nullptr != mSocket)
 	{
 		mSocketSubsystem->DestroySocket(mSocket);
 		mSocket = nullptr;
-	}
+	}*/
 }
 
 void FNetworkSession::NetworkLoop()
@@ -241,8 +241,6 @@ bool FNetworkSession::RegisterDisconnect(const FString& inCause)
 
 	mSocketSubsystem->DestroySocket(mSocket);
 
-	InitSocket();
-
 	return true;
 }
 
@@ -293,12 +291,15 @@ void FNetworkSession::RegisterRecv()
 		return;
 	}
 
+	mTempBuffer.Empty();
 	uint32 PendingDataSize = 0;
 	mSocket->HasPendingData(PendingDataSize);
 
+	mTempBuffer.Init(0, PendingDataSize);
+
 	int32 byteRead = 0;
-	const int32 maxReadBytes = mRecvBuffer->GetMaxReadBytes(PendingDataSize);
-	ret = mSocket->Recv(mRecvBuffer->GetWriteBuffer(), maxReadBytes, byteRead, ESocketReceiveFlags::Type::None);
+	//const int32 maxReadBytes = mRecvBuffer->GetMaxReadBytes(PendingDataSize);
+	ret = mSocket->Recv(&mTempBuffer[0], PendingDataSize, byteRead, ESocketReceiveFlags::Type::None);
 	if (false == ret)
 	{
 		RegisterDisconnect("failed to recv");
@@ -310,8 +311,6 @@ void FNetworkSession::RegisterRecv()
 		RegisterDisconnect("read 0");
 		return;
 	}
-
-	mRecvBuffer->MoveRear(static_cast<uint32>(byteRead));
 
 	ProcessRecv(byteRead);
 }
@@ -350,6 +349,12 @@ void FNetworkSession::ProcessRecv(int32 numOfBytes)
 
 	if (mController)
 	{
+
+		mRecvBuffer->Enqueue(&mTempBuffer[0], numOfBytes);
+		//mRecvBuffer->MoveRear(static_cast<uint32>(numOfBytes));
+
+		mRecvBuffer->TestPrintLog();
+
 		int32 usedSize = mRecvBuffer->GetUsedSize();
 		bool recvResult = mController->OnRecv(mRecvBuffer, usedSize);
 		if (false == recvResult)
@@ -558,6 +563,11 @@ bool FNetworkSession::IsConnected() const
 
 bool FNetworkSession::GetHasData()
 {
+	if (nullptr == mSocket)
+	{
+		return false;
+	}
+
 	uint32 pendingDataSize = 0;
 	bool hasData = mSocket->HasPendingData(pendingDataSize);
 	return hasData;

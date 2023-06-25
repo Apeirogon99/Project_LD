@@ -6,6 +6,8 @@
 #include <Network/NetworkController.h>
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Main/W_MainGame.h>
+#include <Widget/WidgetUtils.h>
+
 #include <Framework/Game/C_Game.h>
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FCommonPacketHandler.h>
@@ -41,6 +43,27 @@ bool APC_Game::OnRecvPacket(BYTE* buffer, const uint32 len)
 	if (false == result)
 	{
 		UNetworkUtils::NetworkConsoleLog("Failed to handle packet", ELogLevel::Error);
+
+		AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+		if (nullptr == clientHUD)
+		{
+			UNetworkUtils::NetworkConsoleLog("Invalid client hud", ELogLevel::Error);
+			return false;
+		}
+
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
+			{
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				FGenericPlatformMisc::RequestExit(false);
+			});
+
+		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("Error"), TEXT("Failed to handle packet"), TEXT("Confirm"), notificationDelegate);
+		if (ret == false)
+		{
+			return false;
+		}
+
 		return false;
 	}
 
@@ -49,16 +72,19 @@ bool APC_Game::OnRecvPacket(BYTE* buffer, const uint32 len)
 
 bool APC_Game::OnSend(int32 len)
 {
+	UNetworkUtils::NetworkConsoleLog("OnSend", ELogLevel::Error);
 	return true;
 }
 
 bool APC_Game::OnConnect()
 {
+	UNetworkUtils::NetworkConsoleLog("OnConnect", ELogLevel::Error);
 	return true;
 }
 
 bool APC_Game::OnDisconnect()
 {
+	UNetworkUtils::NetworkConsoleLog("OnDisconnect", ELogLevel::Error);
 	return true;
 }
 

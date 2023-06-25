@@ -78,6 +78,20 @@ void AAppearanceCharacter::InitCharacterVisual(const FCharacterAppearance& InCha
 	mCharacterEquipment = inCharacterEquipment;
 }
 
+void AAppearanceCharacter::InitCharacterAnimation()
+{
+	if (mCharacterAppearance.mRace == ECharacterRace::Male)
+	{
+		mAnimationInstance = LoadClass<UAnimInstance>(nullptr, TEXT("AnimBlueprint'/Game/StylizedCharacter/Animations/Character/Human/Male/ABP_Hu_M.ABP_Hu_M_C'"));
+	}
+	else if (mCharacterAppearance.mRace == ECharacterRace::Female)
+	{
+		//mAnimationInstance = LoadClass;
+	}
+
+	UpdateDefaultAnimation();
+}
+
 void AAppearanceCharacter::UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment)
 {
 	mCharacterAppearance = InCharacterAppearance;
@@ -180,10 +194,16 @@ void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterP
 		return;
 	}
 
+	bool isLoop = false;
+	if (ECharacterPose::Default == InCharacterPose || ECharacterPose::Idle == InCharacterPose)
+	{
+		isLoop = true;
+	}
+
 	USkeletalMeshComponent* meshRoot = GetMesh();
 	meshRoot->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 	meshRoot->SetAnimation(animationAsset);
-	meshRoot->PlayAnimation(animationAsset, true);
+	meshRoot->PlayAnimation(animationAsset, isLoop);
 
 	int32 maxChild = meshRoot->GetNumChildrenComponents();
 	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
@@ -193,7 +213,7 @@ void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterP
 		{
 			partMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 			partMesh->SetAnimation(animationAsset);
-			partMesh->PlayAnimation(animationAsset, true);
+			partMesh->PlayAnimation(animationAsset, isLoop);
 		}
 	}
 }

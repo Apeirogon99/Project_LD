@@ -3,11 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Network/NetworkPlayerState.h"
-
-#include <Struct/Game/CharacterDatas.h>
-#include <Struct/Game/GameDatas.h>
-
+#include "NPS_Game.h"
 #include <Struct/Inventory/InventoryFrame.h>
 #include <Component/ACInventoryComponent.h>
 #include <Component/ACEquipment.h>
@@ -18,7 +14,7 @@
  */
 
 UCLASS()
-class PROJECT_LD_API APS_Game : public ANetworkPlayerState
+class PROJECT_LD_API APS_Game : public ANPS_Game
 {
 	GENERATED_BODY()
 
@@ -35,23 +31,5 @@ public:
 
 public:
 	void InitializeLocalPlayerState();
-	void SetRemotePlayerID(const int64 inRemoteID);
-	void SetCharacterData(const FCharacterData& InCharacterDatas);
-	void SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment);
-	void calculationStatus();
 
-public:
-	const int64								GetRemoteID() const				{ return mRemoteID; }
-	const FCharacterData&			GetCharacterData()	 const		{ return mCharacterData; }
-	const FCharacterStats&		GetCharacterStatus() const	{ return mCharacterStatus; }
-
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState")
-	int64			mRemoteID;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Data")
-	FCharacterData		mCharacterData;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Status")
-	FCharacterStats	mCharacterStatus;
 };

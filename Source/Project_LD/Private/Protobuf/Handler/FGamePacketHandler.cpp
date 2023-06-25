@@ -7,9 +7,13 @@
 
 #include <Game/GM_Game.h>
 #include <Game/C_Game.h>
+#include <Game/NC_Game.h>
 #include <Game/PC_Game.h>
+#include <Game/NPC_Game.h>
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
+
+#include <GameContent/Enemy/EnemyBase.h>
 
 #include <GameErrorTypes.h>
 
@@ -54,7 +58,6 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     }
     newCharacter->UpdateCharacterVisual(newCharacterData.mAppearance, newCharacterData.mEquipment);
     newCharacter->InitCharacterAnimation();
-    newCharacter->UpdateDefaultAnimation();
 
     AAppearanceCharacter* preivewCharacter = Cast<AAppearanceCharacter>(gameState->GetPreviewCharacter());
     if (nullptr == preivewCharacter)
@@ -108,6 +111,11 @@ bool Handle_S2C_LeaveGameServer(ANetworkController* controller, Protocol::S2C_Le
     return true;
 }
 
+bool Handle_S2C_Tick(ANetworkController* controller, Protocol::S2C_Tick& pkt)
+{
+    return true;
+}
+
 bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_AppearCharacter& pkt)
 {
     UWorld* world = controller->GetWorld();
@@ -122,66 +130,32 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
         return false;
     }
 
-    APS_Game* localPlayerState = Cast<APS_Game>(controller->PlayerState);
-    if (nullptr == localPlayerState)
-    {
-        return false;
-    }
-
-    const int64 LocalRemoteID = localPlayerState->GetRemoteID();
-    if (pkt.remote_id() == LocalRemoteID || LocalRemoteID == 0)
-    {
-        return true;
-    }
-
-    const int64                     newRemoteID             = pkt.remote_id();
-    const int64                     lastMovementTimeStamp   = pkt.timestamp();
-    FVector                         oldMovementLocation     = FVector(pkt.old_location().x(), pkt.old_location().y(), pkt.old_location().z());
-    FVector                         newMovementLocation     = FVector(pkt.new_location().x(), pkt.new_location().y(), pkt.new_location().z());
-    FCharacterData                  characterData           = pkt.character_data();
-
-    AC_Game* character = Cast<AC_Game>(gameMode->SpawnCharacter(FVector::ZeroVector, FRotator::ZeroRotator));
-    if (nullptr == character)
-    {
-        return false;
-    }
-    character->UpdateCharacterVisual(characterData.mAppearance, characterData.mEquipment);
-    character->InitCharacterAnimation();
-    character->UpdateDefaultAnimation();
-
-    AController* newController = gameMode->CreateController();
-    if (nullptr == newController)
-    {
-        return false;
-    }
-    newController->Possess(character);
-
-    AMovementController* movementController = Cast<AMovementController>(newController);
-    if (nullptr == movementController)
-    {
-        return false;
-    }
-    const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
-    const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
-    movementController->MoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
-
-    newController->InitPlayerState();
-    APS_Game* playerState = newController->GetPlayerState<APS_Game>();
-    if (nullptr == playerState)
-    {
-        return false;
-    }
-    playerState->SetRemotePlayerID(newRemoteID);
-    playerState->SetCharacterData(characterData);
-
-    character->SetPlayerState(playerState);
-
     AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
     if (nullptr == gameState)
     {
         return false;
     }
-    gameState->AddPlayerState(playerState);
+
+    const int64                     newRemoteID             = pkt.remote_id();
+    const int64                     lastMovementTimeStamp   = pkt.timestamp();
+    FVector                         oldMovementLocation     = FVector(pkt.cur_location().x(), pkt.cur_location().y(), pkt.cur_location().z());
+    FVector                         newMovementLocation     = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
+    FCharacterData                  characterData           = pkt.character_data();
+
+    ANC_Game* character = Cast<ANC_Game>(gameState->CreateNPCCharacter(FVector::ZeroVector, FRotator::ZeroRotator, characterData, newRemoteID));
+    if (nullptr == character)
+    {
+        return false;
+    }
+ 
+    ANPC_Game* npcController = Cast<ANPC_Game>(character->GetController());
+    if (nullptr == npcController)
+    {
+        return false;
+    }
+    const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
+    const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
+    npcController->NPCMoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
 
     return true;
 }
@@ -202,22 +176,16 @@ bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C
     const int64 remoteID = pkt.remote_id();
 
     AController* remoteController = gameState->FindPlayerController(remoteID);
-    APlayerState* playerState = remoteController->GetPlayerState<APlayerState>();
-    if (nullptr == playerState)
+    if (nullptr == remoteController)
     {
-        return false;
+        return true;
     }
-    gameState->RemovePlayerState(playerState);
-    playerState->Destroy();
 
     APawn* character = remoteController->GetPawn();
     if (character)
     {
-        remoteController->UnPossess();
         character->Destroy();
     }
-
-    remoteController->Destroy();
 
     return true;
 }
@@ -226,6 +194,12 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
 {
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
     {
         return false;
     }
@@ -243,20 +217,32 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
         return true;
     }
 
-    AMovementController* movementController = Cast<AMovementController>(remoteController);
-    if (nullptr == movementController)
-    {
-        return false;
-    }
-
     const int64 lastMovementTimeStamp = pkt.timestamp();
     const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
     const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
 
-    FVector     oldMovementLocation = FVector(pkt.old_location().x(), pkt.old_location().y(), pkt.old_location().z());
-    FVector     newMovementLocation = FVector(pkt.new_location().x(), pkt.new_location().y(), pkt.new_location().z());
+    FVector     oldMovementLocation = FVector(pkt.cur_location().x(), pkt.cur_location().y(), pkt.cur_location().z());
+    FVector     newMovementLocation = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
 
-    movementController->MoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
+    if (gameMode->CompareNetworkController(remoteController))
+    {
+        AMovementController* movementController = Cast<AMovementController>(remoteController);
+        if (nullptr == movementController)
+        {
+            return false;
+        }
+        movementController->MoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
+    }
+    else
+    {
+        ANPC_Game* npcController = Cast<ANPC_Game>(remoteController);
+        if (nullptr == npcController)
+        {
+            return false;
+        }
+        npcController->NPCMoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
+    }
+
     return true;
 }
 
@@ -296,6 +282,49 @@ bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearI
     }
     newItem->Init(itemCode, objectID);
     
+    return true;
+}
+
+bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_AppearEnemy& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const Protocol::SEnemy& enemyInfo = pkt.enemy();
+    int64 objectID = enemyInfo.object_id();
+    int32 enemyID = enemyInfo.enemy_id();
+
+    if (nullptr != gameState->FindGameObject(objectID))
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    const Protocol::SVector& spawnLocation = enemyInfo.location();
+    FVector itemLocation = FVector(spawnLocation.x(), spawnLocation.y(), spawnLocation.z());
+    FRotator itemRotator = FRotator::ZeroRotator;
+
+    AActor* newActor = gameState->CreateEnemyCharacter(enemyID, itemLocation, itemRotator, objectID);
+    if (nullptr == newActor)
+    {
+        return false;
+    }
+
+    //AEnemyBase* newEnemy = Cast<AEnemyBase>(newActor);
+    //if (nullptr == newEnemy)
+    //{
+    //    return false;
+    //}
+
     return true;
 }
 

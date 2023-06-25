@@ -63,6 +63,16 @@ FStatusGrowthData* ULDGameInstance::GetGrowthData(int32 inCode)
 	return mCharacterStatusGrowthDataTable->FindRow<FStatusGrowthData>(*FString::FromInt(inCode), TEXT(""));
 }
 
+FEnemyData* ULDGameInstance::GetEnemyData(int32 inCode)
+{
+	return mEnemyDataTable->FindRow<FEnemyData>(*FString::FromInt(inCode), TEXT(""));
+}
+
+FEnemyStatData* ULDGameInstance::GetEnemyStatData(int32 inCode)
+{
+	return mEnemyStatDataTable->FindRow<FEnemyStatData>(*FString::FromInt(inCode), TEXT(""));
+}
+
 FString ULDGameInstance::GetToken()
 {
 	return mToken;

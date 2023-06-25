@@ -3,10 +3,14 @@
 
 #include "Framework/Game/GS_Game.h"
 #include <Game/C_Game.h>
+#include <Game/NC_Game.h>
 #include <Game/PC_Game.h>
+#include <Game/NPC_Game.h>
 #include <Game/PS_Game.h>
+#include <Game/NPS_Game.h>
 #include <Game/GM_Game.h>
-
+#include <GameContent/Enemy/EnemyBase.h>
+#include <Framework/Gameinstance/LDGameInstance.h>
 #include <Kismet/GameplayStatics.h>
 
 AGS_Game::AGS_Game()
@@ -17,6 +21,108 @@ AGS_Game::~AGS_Game()
 {
 }
 
+AActor* AGS_Game::CreateNPCCharacter(FVector inLocation, FRotator inRotator, const FCharacterData& inCharacterData, const int64 inRemoteID)
+{
+    UWorld* world = GetWorld();
+    if (nullptr == world)
+    {
+        return nullptr;
+    }
+
+    FActorSpawnParameters spawnParams;
+    spawnParams.Owner = this;
+    spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    TSubclassOf<ANC_Game> npcClass = LoadClass<ANC_Game>(nullptr, TEXT("Blueprint'/Game/Blueprint/Framework/Game/BNC_Game.BNC_Game_C'"));
+    if (nullptr == npcClass)
+    {
+        return nullptr;
+    }
+
+    ANC_Game* newNPC = world->SpawnActor<ANC_Game>(npcClass, inLocation, inRotator, spawnParams);
+    if (nullptr == newNPC)
+    {
+        return nullptr;
+    }
+    newNPC->UpdateCharacterVisual(inCharacterData.mAppearance, inCharacterData.mEquipment);
+    newNPC->InitCharacterAnimation();
+
+    ANPC_Game* npcController = Cast<ANPC_Game>(newNPC->GetController());
+    if (nullptr == npcController)
+    {
+        return false;
+    }
+
+    ANPS_Game* npcState = world->SpawnActor<ANPS_Game>();
+    if (nullptr == npcState)
+    {
+        return nullptr;
+    }
+    npcState->SetRemotePlayerID(inRemoteID);
+    npcState->SetCharacterData(inCharacterData);
+
+    newNPC->SetPlayerState(npcState);
+    npcController->PlayerState = npcState;
+
+    AddPlayerState(npcState);
+    return newNPC;
+}
+
+AActor* AGS_Game::CreateEnemyCharacter(const int32 inEnemyID, FVector inLocation, FRotator inRotator, const int64 inGameObjectID)
+{
+    UWorld* world = GetWorld();
+    if (nullptr == world)
+    {
+        return nullptr;
+    }
+
+    ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetGameInstance());
+    if (nullptr == gameinstance)
+    {
+        return nullptr;
+    }
+
+    FEnemyData*     enemyDatas = gameinstance->GetEnemyData(inEnemyID);
+    FEnemyStatData* enemyStats = gameinstance->GetEnemyStatData(inEnemyID);
+
+    FActorSpawnParameters spawnParams;
+    spawnParams.Owner = this;
+    spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    TSubclassOf<AEnemyBase> enemyClass = LoadClass<AEnemyBase>(nullptr, *enemyDatas->enemy_class_path);
+    if (nullptr == enemyClass)
+    {
+        return nullptr;
+    }
+
+    AEnemyBase* newEnemy = world->SpawnActor<AEnemyBase>(enemyClass, inLocation, inRotator, spawnParams);
+    if (nullptr == newEnemy)
+    {
+        return nullptr;
+    }
+
+    AEnemyController* newEnemyController = Cast<AEnemyController>(newEnemy->GetController());
+    if (nullptr == newEnemyController)
+    {
+        return nullptr;
+    }
+
+    AEnemyState* newEnemyState = world->SpawnActor<AEnemyState>();
+    if (nullptr == newEnemyState)
+    {
+        return nullptr;
+    }
+    newEnemyState->SetEnemyDatas(*enemyDatas);
+    newEnemyState->SetEnemyStats(*enemyStats);
+
+    newEnemy->SetPlayerState(newEnemyState);
+    newEnemyController->PlayerState = newEnemyState;
+
+    mGameObjects.Add(inGameObjectID, newEnemy);
+    AddPlayerState(newEnemyState);
+    return newEnemy;
+}
+
 AActor* AGS_Game::CreateGameObject(UClass* inUClass, FVector inLocation, FRotator inRotator, const int64 inGameObjectID)
 {
     if (nullptr == inUClass)
@@ -24,7 +130,6 @@ AActor* AGS_Game::CreateGameObject(UClass* inUClass, FVector inLocation, FRotato
         return nullptr;
     }
 
-    //TODO: GameState에서 이 자원을 가지고 있어야하고 빼는것도 가능해야함
     UWorld* world = GetWorld();
     if (world)
     {
@@ -75,7 +180,7 @@ AController* AGS_Game::FindPlayerController(const int64 inRemoteID)
     bool result = false;
     for (APlayerState* curPlayerState : PlayerArray)
     {
-        APS_Game* playerState = Cast<APS_Game>(curPlayerState);
+        ANPS_Game* playerState = Cast<ANPS_Game>(curPlayerState);
         if (playerState)
         {
             if (playerState->GetRemoteID() == inRemoteID)

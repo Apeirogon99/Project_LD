@@ -22,15 +22,17 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 	UNetworkTimeStamp* timeStamp = controller->GetTimeStamp();
 	if (timeStamp == nullptr)
 	{
-		return false;
+		return true;
 	}
+
+	const int64 predict = timeStamp->GetServerTimeStamp();
 
 	const int64 serverTimeStamp = pkt.time_stamp();
 	const int64 serverUtcTime = pkt.utc_time();
 	const int64 rtt = pkt.rtt();
 	timeStamp->UpdateTimeStamp(serverTimeStamp, serverUtcTime, rtt);
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("%lld"), timeStamp->GetServerTimeStamp()), ELogLevel::Error);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Server : %lld] - [Client : %lld] = [Diff : %lld]"), pkt.time_stamp(), predict, predict - pkt.time_stamp()), ELogLevel::Warning);
 
 	return true;
 }

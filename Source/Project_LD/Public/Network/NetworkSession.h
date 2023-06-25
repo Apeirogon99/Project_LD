@@ -44,6 +44,8 @@ public:
 	virtual ~FNetworkSession();
 
 public:
+	void InitSocket();
+
 	void NetworkLoop();
 	void Prepare(UNetworkService* service);
 	void Shutdown();
@@ -78,7 +80,6 @@ public:
 	bool GetHasData();
 
 protected:
-	void InitSocket();
 	bool ClearBuffer();
 
 private:
@@ -87,6 +88,7 @@ private:
 	ISocketSubsystem*		mSocketSubsystem;
 	FRWLock					mLock;
 
+	TArray<BYTE>			mTempBuffer;
 	FRecvBuffer*			mRecvBuffer;
 	FSendBufferQueue*		mSendBufferQueue;
 

@@ -56,7 +56,7 @@ void UNetworkService::Tick(float DeltaTime)
 		static float tickTimer = 0.0f;
 		tickTimer += DeltaTime;
 
-		if (tickTimer >= 1.0f)
+		if (tickTimer >= 0.33f)
 		{
 			if (mNetworkSession)
 			{

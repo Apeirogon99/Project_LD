@@ -60,22 +60,19 @@ BYTE* FRecvBuffer::GetWriteBuffer()
 	return &mBuffer[mWritePos];
 }
 
+int32 FRecvBuffer::GetWritePos() const
+{
+	return mWritePos;
+}
+
+int32 FRecvBuffer::GetReadPos() const
+{
+	return mReadPos;
+}
+
 int32 FRecvBuffer::GetMaxReadBytes(const int32 inPendingDataSize)
 {
-	const int32 PrevWritePos = mWritePos;
-	const bool IsOverBuffer = (mWritePos + inPendingDataSize) > GetTotalSize() ? true : false;
-	if (IsOverBuffer)
-	{
-		const int32 OverLen = (PrevWritePos + inPendingDataSize) - GetTotalSize();
-		const int32 LessLen = inPendingDataSize - OverLen;
-		return LessLen;
-	}
-	else
-	{
-		return inPendingDataSize;
-	}
-
-	return inPendingDataSize;
+	return ((GetWritePos() + inPendingDataSize) > GetTotalSize()) ? GetTotalSize() - GetWritePos() : inPendingDataSize;
 }
 
 void FRecvBuffer::Clear()
@@ -87,70 +84,79 @@ void FRecvBuffer::Clear()
 
 void FRecvBuffer::MoveRear(const int32 size)
 {
-	mWritePos = (mWritePos + size) % GetTotalSize();
+	mWritePos = (mWritePos + size) & mIndexMask;
 }
 
 void FRecvBuffer::MoveFront(const int32 len)
 {
-	mReadPos = (mReadPos + len) % GetTotalSize();
+	mReadPos = (mReadPos + len) & mIndexMask;
 }
 
 int32 FRecvBuffer::Enqueue(const BYTE* data, const int32 size)
 {
+	int32 processSize = 0;
 	if (GetFreeSize() < size)
 	{
-		return 0;
+		return processSize;
 	}
 	
-	const int32 PrevWritePos = mWritePos;
+	const int32 PrevWritePos = GetWritePos();
 	const int32 IsOverBuffer = (PrevWritePos + size) > GetTotalSize() ? 1 : 0;
 	if (IsOverBuffer)
 	{
 		const int32 OverLen = (PrevWritePos + size) - GetTotalSize();
 		const int32 LessLen = size - OverLen;
+		const int32 UsedLen = OverLen + LessLen;
 
-		::memcpy(&mBuffer[PrevWritePos], &data[0], LessLen);
-		::memcpy(&mBuffer[0], &data[LessLen], OverLen);
-		MoveRear(OverLen + LessLen);
+		::memcpy(&GetBuffer()[PrevWritePos], &data[0], LessLen);
+		::memcpy(&GetBuffer()[0], &data[LessLen], OverLen);
+		MoveRear(UsedLen);
+		processSize += UsedLen;
 	}
 	else
 	{
-		::memcpy(&mBuffer[PrevWritePos], data, size);
+		::memcpy(&GetBuffer()[PrevWritePos], data, size);
 		MoveRear(size);
+		processSize += size;
 	}
 
-	return size;
+	return processSize;
 }
 
 int32 FRecvBuffer::Dequeue(BYTE* dest, const int32 len)
 {
+	int32 processSize = 0;
 	if (GetUsedSize() < len)
 	{
-		return 0;
+		return processSize;
 	}
 
-	const int32 PrevReadPos = mReadPos;
+	const int32 PrevReadPos = GetReadPos();
 	const int32 IsOverBuffer = (PrevReadPos + len) > GetTotalSize() ? 1 : 0;
 	if (IsOverBuffer)
 	{
 		const int32 OverLen = (PrevReadPos + len) - GetTotalSize();
 		const int32 LessLen = len - OverLen;
+		const int32 UsedLen = OverLen + LessLen;
 
-		::memcpy(dest, & mBuffer[PrevReadPos], LessLen);
-		::memcpy(&dest[LessLen], &mBuffer[0], OverLen);
+		::memcpy(dest, &GetBuffer()[PrevReadPos], LessLen);
+		::memcpy(&dest[LessLen], &GetBuffer()[0], OverLen);
 		MoveFront(OverLen + LessLen);
+		processSize += UsedLen;
 	}
 	else
 	{
-		::memcpy(dest, &mBuffer[PrevReadPos], len);
+		::memcpy(dest, &GetBuffer()[PrevReadPos], len);
 		MoveFront(len);
+		processSize += len;
 	}
 
-	return len;
+	return processSize;
 }
 
 int32 FRecvBuffer::Peek(BYTE* dest, const int32 len)
 {
+	int32 processSize = 0;
 	if (GetUsedSize() < len)
 	{
 		return 0;
@@ -162,36 +168,39 @@ int32 FRecvBuffer::Peek(BYTE* dest, const int32 len)
 	{
 		const int32 OverLen = (PrevReadPos + len) - GetTotalSize();
 		const int32 LessLen = len - OverLen;
+		const int32 UsedLen = OverLen + LessLen;
 
-		::memcpy(dest, &mBuffer[PrevReadPos], LessLen);
-		::memcpy(&dest[LessLen], &mBuffer[0], OverLen);
+		::memcpy(dest, &GetBuffer()[PrevReadPos], LessLen);
+		::memcpy(&dest[LessLen], &GetBuffer()[0], OverLen);
+		processSize += UsedLen;
 	}
 	else
 	{
 		::memcpy(dest, &mBuffer[PrevReadPos], len);
+		processSize += len;
 	}
 
-	return len;
+	return processSize;
 }
 
 
 inline int32 FRecvBuffer::GetUsedSize() const
 {
-	if (mWritePos == mReadPos)
+	int32 usedSize = 0;
+	if (GetWritePos() == GetReadPos())
 	{
-		return 0;
+		usedSize = 0;
 	}
-	else if (mWritePos > mReadPos)
+	else if (GetWritePos() > GetReadPos())
 	{
-		return mWritePos - mReadPos;
+		usedSize = GetWritePos() - GetReadPos();
 	}
-	else if (mWritePos < mReadPos)
+	else if (GetWritePos() < GetReadPos())
 	{
-		return GetTotalSize() - (mReadPos - mWritePos);
+		usedSize = GetTotalSize() - (GetReadPos() - GetWritePos());
 	}
 
-	wprintf(L"RingBuffer::GetAllocated()");
-	return mCapcity;
+	return usedSize;
 }
 
 inline int32 FRecvBuffer::GetTotalSize() const
@@ -206,5 +215,5 @@ inline int32 FRecvBuffer::GetFreeSize() const
 
 void FRecvBuffer::TestPrintLog()
 {
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[MAX : %5d] [USE : %5d], [FREE : %5d], [WRITE : %5d], [READ : %5d]"), GetTotalSize() - mWritePos, GetUsedSize(), GetFreeSize(), mWritePos, mReadPos), ELogLevel::Log);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[TOTAL : %5d] [USE : %5d], [FREE : %5d], [WRITE : %5d], [READ : %5d], [MAX_READ : %5d]"), GetTotalSize(), GetUsedSize(), GetFreeSize(), mWritePos, mReadPos, GetTotalSize() - GetWritePos()), ELogLevel::Log);
 }

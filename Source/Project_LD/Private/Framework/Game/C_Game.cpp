@@ -63,18 +63,6 @@ void AC_Game::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("InteractItem", IE_Pressed, this, &AC_Game::InteractItem);
 }
 
-void AC_Game::InitCharacterAnimation()
-{
-	if (GetCharacterAppearance().mRace == ECharacterRace::Male)
-	{
-		mAnimationInstance = LoadClass<UAnimInstance>(nullptr, TEXT("AnimBlueprint'/Game/StylizedCharacter/Animations/Character/Human/Male/ABP_Hu_M.ABP_Hu_M_C'"));
-	}
-	else if (GetCharacterAppearance().mRace == ECharacterRace::Female)
-	{
-		//mAnimationInstance = LoadClass;
-	}
-}
-
 void AC_Game::InteractItem()
 {
 	TArray<AActor*> Result;

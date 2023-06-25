@@ -7,6 +7,7 @@
 #include <Game/PC_Game.h>
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
+#include <GameContent/Enemy/EnemyBase.h>
 #include "GameFramework/SpectatorPawn.h"
 #include <Widget/Handler/ClientHUD.h>
 

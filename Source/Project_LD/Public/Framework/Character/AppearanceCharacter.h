@@ -21,6 +21,7 @@ public:
 
 public:
 	void InitCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment);
+	void InitCharacterAnimation();
 	void UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment);
 
 	UFUNCTION(BlueprintCallable)

@@ -132,6 +132,8 @@ bool ANetworkGameMode::RequestDisconnectServer()
 
 	networkSession->Disconnect("ANetworkGameMode : DisconnectServer");
 
+	networkSession->InitSocket();
+
 	return true;
 }
 

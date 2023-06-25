@@ -21,6 +21,7 @@ public class Project_LD : ModuleRules
                         Path.Combine(ModuleDirectory, "Public/Framework/Identity"),
                         Path.Combine(ModuleDirectory, "Public/Framework/Game"),
                         Path.Combine(ModuleDirectory, "Public/Framework/Gameinstance"),
+                        Path.Combine(ModuleDirectory, "Public/GameContent"),
                         Path.Combine(ModuleDirectory, "Public/Widget"),
                         Path.Combine(ModuleDirectory, "Public/Network"),
                         Path.Combine(ModuleDirectory, "Public/Protobuf/Handler"),

@@ -23,6 +23,8 @@ public:
 	BYTE*			GetBuffer();
 	BYTE*			GetReadBuffer();
 	BYTE*			GetWriteBuffer();
+	int32			GetWritePos() const;
+	int32			GetReadPos() const;
 	int32			GetMaxReadBytes(const int32 inPendingDataSize);
 
 public:

@@ -126,12 +126,11 @@ void ANetworkController::Send(SendBufferPtr FSendBuffer)
 
 bool ANetworkController::OnRecv(FRecvBuffer* buffer, int32 len)
 {
-	BYTE packetBuffer[1024];
 	uint32 processLen = 0;
-
 	while (true)
 	{
 		int32 dataSize = len - processLen;
+		mTempPacketBuffer.Empty();
 
 		if (dataSize < sizeof(PacketHeader))
 		{
@@ -146,10 +145,10 @@ bool ANetworkController::OnRecv(FRecvBuffer* buffer, int32 len)
 			break;
 		}
 
-		memset(packetBuffer, NULL, 1024);
-		buffer->Dequeue(packetBuffer, packetSize);
+		mTempPacketBuffer.Init(0, packetSize);
+		buffer->Dequeue(&mTempPacketBuffer[0], packetSize);
 
-		bool packetResult = OnRecvPacket(packetBuffer, packetSize);
+		bool packetResult = OnRecvPacket(&mTempPacketBuffer[0], packetSize);
 		if (false == packetResult)
 		{
 			return false;

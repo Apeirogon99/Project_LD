@@ -101,12 +101,12 @@ void AMovementController::SetNewMoveDestination(const FVector DestLocation)
 	}
 
 	FVector pawnLocation = pawn->GetActorLocation();
-	Protocol::SVector* oldMovementLocation = movementPacket.mutable_old_location();
+	Protocol::SVector* oldMovementLocation = movementPacket.mutable_cur_location();
 	oldMovementLocation->set_x(pawnLocation.X);
 	oldMovementLocation->set_y(pawnLocation.Y);
 	oldMovementLocation->set_z(pawnLocation.Z);
 
-	Protocol::SVector* newMovementLocation = movementPacket.mutable_new_location();
+	Protocol::SVector* newMovementLocation = movementPacket.mutable_move_location();
 	newMovementLocation->set_x(DestLocation.X);
 	newMovementLocation->set_y(DestLocation.Y);
 	newMovementLocation->set_z(pawnLocation.Z);
@@ -137,7 +137,6 @@ void AMovementController::MoveDestination(const FVector inOldMovementLocation, c
 
 	if (distance1 >= distance2)
 	{
-		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[%ws] -> [%ws]"), *pawn->GetActorLocation().ToString(), *inNewMovementLocation.ToString()), ELogLevel::Warning);
 		pawn->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
 		pawn->SetActorRotation(rotation);
 	}

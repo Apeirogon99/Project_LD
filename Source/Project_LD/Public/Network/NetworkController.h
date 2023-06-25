@@ -73,6 +73,6 @@ private:
 	FUnPossessCallBack	mUnPossessCallBack;
 
 private:
-
+	TArray<BYTE>		mTempPacketBuffer;
 	//BYTE				mPacketBuffer[1024];
 };

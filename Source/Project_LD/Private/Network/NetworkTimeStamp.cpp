@@ -34,17 +34,19 @@ void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp, const int
 		mSumTimeStampDelta += timeStampDelta;
 		mSumRtt += inRtt;
 
+		double TargetWorldTimeSecondsDelta = 0;
+		double TargetWorldRtt = 0;
+
 		mNumTimeStampDelta += 1;
 
 		if (mNumTimeStampDelta > 250)
 		{
-			mSumTimeStampDelta /= mNumTimeStampDelta;
-			mSumRtt /= mNumTimeStampDelta;
-			mNumTimeStampDelta = 1;
+			mSumTimeStampDelta			/= mNumTimeStampDelta;
+			mSumRtt						/= mNumTimeStampDelta;
+			TargetWorldTimeSecondsDelta = mSumTimeStampDelta / mNumTimeStampDelta;
+			TargetWorldRtt				= mSumRtt / mNumTimeStampDelta;
+			mNumTimeStampDelta			= 1;
 		}
-
-		double TargetWorldTimeSecondsDelta = mSumTimeStampDelta / mNumTimeStampDelta;
-		double TargetWorldRtt = mSumRtt / mNumTimeStampDelta;
 
 		if (mTimeStampDelta == 0)
 		{
