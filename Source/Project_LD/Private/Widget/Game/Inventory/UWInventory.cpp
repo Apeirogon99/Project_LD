@@ -98,7 +98,6 @@ void UUWInventory::NativeOnInitialized()
 	Super::NativeOnInitialized();
 }
 
-
 void UUWInventory::NativeDestruct()
 {
 	Super::NativeDestruct();
@@ -249,8 +248,8 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 			{
 				int Index = ItemObejctData->ItemData.category_id - 1;
 
-				mEquipmentComponent->mEquipmentData[Index] = ItemObejctData;
-				mEquipmentComponent->mEquipmentWidget[Index]->ReMakeWidget(ItemObejctData);
+				mEquipmentComponent->GetEquipmentObjectData()[Index] = ItemObejctData;
+				mEquipmentComponent->GetEquipmentWidget()[Index]->ReMakeWidget(ItemObejctData);
 			}
 		}
 	}

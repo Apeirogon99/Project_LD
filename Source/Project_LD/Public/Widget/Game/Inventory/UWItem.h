@@ -20,17 +20,9 @@ UCLASS(BlueprintType)
 class PROJECT_LD_API UUWItem : public UUserWidget
 {
 	GENERATED_BODY()
-	
-protected:
-	virtual void NativeConstruct() override;
-	virtual void NativeOnInitialized() override;
-	virtual void NativeDestruct() override;
 
-	virtual void NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
-	virtual void NativeOnMouseLeave(const FPointerEvent& MouseEvent) override;
-	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+public: 
+	FOnRemoved OnRemoved;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
@@ -46,27 +38,47 @@ public:
 	UImage* ItemImage;
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	float mTileSize;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	UItemObjectData* mItemObjectData;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	FVector2D mSize;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	bool mIsEnter;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	TArray<UTexture2D*> mFrameTextureArr;
-
-	FOnRemoved OnRemoved;
+	void Refresh();
+	void Rotate();
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void Refresh();
+	FORCEINLINE bool										GetIsEnter() const								{ return mIsEnter; }
+	FORCEINLINE float										GetTileSize() const							{ return mTileSize; }
+	FORCEINLINE UItemObjectData*					GetItemObjectData() const					{ return mItemObjectData; }
+	FORCEINLINE FVector2D								GetSize() const									{ return mSize; }
+	FORCEINLINE TArray<UTexture2D*>			GetFrameTextureArr() const				{ return mFrameTextureArr; }
 
-	UFUNCTION(BlueprintCallable)
-	void Rotate();
+public:
+	void SetIsEnter(bool IsEnter)																				{ mIsEnter = IsEnter; }
+	void SetTileSize(float TileSize)																		{ mTileSize = TileSize; }
+	void SetItemObjectData(UItemObjectData* ItemObjectData)							{ mItemObjectData = ItemObjectData; }
+	void SetSize(FVector2D Size)																			{ mSize = Size; }
+	void SetFrameTextureArr(TArray<UTexture2D*> FrameTextureArr)			{ mFrameTextureArr = FrameTextureArr; }
+
+protected:
+	virtual void NativeConstruct() override;
+	virtual void NativeOnInitialized() override;
+	virtual void NativeDestruct() override;
+
+	virtual void NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
+	virtual void NativeOnMouseLeave(const FPointerEvent& MouseEvent) override;
+	virtual void NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation) override;
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply NativeOnMouseButtonUp(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Default", meta = (AllowPrivateAccess = "true"))
+	bool mIsEnter;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Default", meta = (AllowPrivateAccess = "true"))
+	float mTileSize;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Default", meta = (AllowPrivateAccess = "true"))
+	UItemObjectData* mItemObjectData;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Default", meta = (AllowPrivateAccess = "true"))
+	FVector2D mSize;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Default", meta = (AllowPrivateAccess = "true"))
+	TArray<UTexture2D*> mFrameTextureArr;
 };

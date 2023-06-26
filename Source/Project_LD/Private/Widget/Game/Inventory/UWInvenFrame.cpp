@@ -48,8 +48,8 @@ bool UUWInvenFrame::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEve
 				//장비창에서 왔다면 해당 장비창으로 재 전송
 				int Index = ItemObjectData->ItemData.category_id - 1;
 
-				mEquipmentComponent->mEquipmentData[Index] = ItemObjectData;
-				mEquipmentComponent->mEquipmentWidget[Index]->ReMakeWidget(ItemObjectData);
+				mEquipmentComponent->GetEquipmentObjectData()[Index] = ItemObjectData;
+				mEquipmentComponent->GetEquipmentWidget()[Index]->ReMakeWidget(ItemObjectData);
 			}
 		}
 	}

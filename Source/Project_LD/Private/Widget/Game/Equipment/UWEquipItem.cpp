@@ -75,7 +75,7 @@ FReply UUWEquipItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const 
 	{
 		Reply = UWidgetBlueprintLibrary::DetectDragIfPressed(InMouseEvent, this, EKeys::LeftMouseButton);
 	}
-	mIsEnter = true;
+	bIsEnter = true;
 
 	return Reply.NativeReply;
 }
@@ -84,7 +84,7 @@ FReply UUWEquipItem::NativeOnMouseButtonUp(const FGeometry& InGeometry, const FP
 {
 	Super::NativeOnMouseButtonUp(InGeometry, InMouseEvent);
 
-	mIsEnter = false;
+	bIsEnter = false;
 
 	return FReply::Handled();
 }
@@ -144,7 +144,7 @@ void UUWEquipItem::Init()
 			mFrameTextureArr.Add(Texture2DLegendary);
 		}
 
-		mIsEnter = false;
+		bIsEnter = false;
 	}
 }
 

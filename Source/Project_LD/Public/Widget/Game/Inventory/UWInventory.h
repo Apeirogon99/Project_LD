@@ -26,18 +26,7 @@ UCLASS()
 class PROJECT_LD_API UUWInventory : public UUserWidget
 {
 	GENERATED_BODY()
-	
-protected:
-	virtual void NativeConstruct() override;
-	virtual void NativeOnInitialized() override;
-	virtual void NativeDestruct() override;
-
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
-
-	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
-	virtual bool NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
-
-	
+		
 public:
 	UPROPERTY()
 	UWidget* mGridInventory;
@@ -181,32 +170,49 @@ public:
 	UTextBlock* TB_DTManaRegeneration;
 	
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
-	UACInventoryComponent* mInvenComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
-	UACEquipment* mEquipmentComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "default")
-	float mTileSize;
+	FORCEINLINE float												GetTileSize() const							{ return mTileSize; }
+	FORCEINLINE UACInventoryComponent*			GetInventoryComponent() const		{ return mInvenComponent; }
+	FORCEINLINE UACEquipment*							GetEquipmentComponent() const		{ return mEquipmentComponent; }
 
 public:
-	UFUNCTION()
-	void InitInventory(UACInventoryComponent* InventoryComponent, float size, UACEquipment* EquipmentComponent);
-	
+	void		SetTileSize(float TileSize)																					{ mTileSize = TileSize; }
+	void		SetInventoryComponent(UACInventoryComponent* InventoryComponent)		{ mInvenComponent = InventoryComponent; }
+	void		SetEquipmentComponent(UACEquipment* EquipmentComponent)						{ mEquipmentComponent = EquipmentComponent; }
+
+public:
 	UFUNCTION()
 	void CloseInventory();
 
 	UFUNCTION()
 	void ToggleDetailPanel();
 
+public:
+	void InitInventory(UACInventoryComponent* InventoryComponent, float size, UACEquipment* EquipmentComponent);
 	void UpdateStatus();
-	void InitStatus();
-
 	void RefreshMoney(int32 money);
-	
+
 	void InventoryLoadRequest();
 	void InventoryLoadRespawn();
+
+protected:
+	virtual void NativeConstruct() override;
+	virtual void NativeOnInitialized() override;
+	virtual void NativeDestruct() override;
+
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
+
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+	virtual bool NativeOnDragOver(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+		
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "default", meta = (AllowPrivateAccess = "true"))
+	float mTileSize;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
+	UACInventoryComponent* mInvenComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment", meta = (AllowPrivateAccess = "true"))
+	UACEquipment* mEquipmentComponent;
 	
 	/*
 public:

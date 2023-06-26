@@ -31,23 +31,20 @@ public:
 	// Sets default values for this component's properties
 	UACInventoryComponent();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Constants") int mColums;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Constants") int mRows;
-	
 	FOnInventoryChanged OnInventoryChanged;
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<UItemObjectData*> mInventoryData;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<UItemObjectData*> mInventoryObjectArr;
+	FORCEINLINE int												GetColums() const							{ return mColums; }
+	FORCEINLINE int												GetRows() const								{ return mRows; }
+	FORCEINLINE TArray<UItemObjectData*>		GetInventoryData() const				{ return mInventoryData; }
+	FORCEINLINE TArray<UItemObjectData*>		GetInventoryObjectArr() const		{ return mInventoryObjectArr; }
+
+public:
+	void SetColums(int Colums)																						{ mColums = Colums; }
+	void SetRows(int Rows)																								{ mRows = Rows; }
+	void SetInventoryData(TArray<UItemObjectData*> InventoryData)						{ mInventoryData = InventoryData; }
+	void SetInventoryObejctArr(TArray<UItemObjectData*> InventoryObjectArr)		{ mInventoryObjectArr = InventoryObjectArr; }
 
 public:
 	void											ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData, int32 PartID);
@@ -65,6 +62,11 @@ public:
 	TArray<UItemObjectData*>	GetAllItems();
 
 	void SetInventoryPacket(const UItemObjectData* inItemData, const EInventoryType& inType);
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 protected:
 	template<typename T>
@@ -109,4 +111,15 @@ protected:
 		SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(controller, inPacket);
 		controller->Send(sendBuffer);
 	}
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Constants", meta = (AllowPrivateAccess = "true")) int mColums;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Constants", meta = (AllowPrivateAccess = "true")) int mRows;
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<UItemObjectData*> mInventoryData;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<UItemObjectData*> mInventoryObjectArr;
 };

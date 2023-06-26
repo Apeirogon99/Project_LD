@@ -29,6 +29,49 @@ class PROJECT_LD_API UUWGridInventory : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
+	UBorder* GridBorder;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
+	UCanvasPanel* GridCanvas_Panel;
+
+public:
+	void Init(UACInventoryComponent* InvenComponent, float Size, UACEquipment* EquipmentComponent);
+	void CreateLineSegments();
+	FMousePositionReturn MousePositionInTile(FVector2D MousePosition);
+
+public:
+	UFUNCTION()
+	void Refresh();
+
+	UFUNCTION()
+	void CallRemoved_Single(UItemObjectData*& ItemData);
+
+	UFUNCTION(BlueprintCallable)
+	void GetPayload(UDragDropOperation* Operator, UItemObjectData*& Payload) const;
+
+	UFUNCTION(BlueprintCallable)
+	bool IsRoomAvailableForPayload(UItemObjectData* Payload) const;
+
+public:
+	FORCEINLINE bool												GetDrawDropLocation() const				{ return mDrawDropLocation; }
+	FORCEINLINE float												GetTileSize() const								{ return mTileSize; }
+	FORCEINLINE UACInventoryComponent*			GetInventoryComponent() const			{ return mInventoryComponent; }
+	FORCEINLINE UACEquipment*							GetEquipmentComponent() const			{ return mEquipmentComponent; }
+	FORCEINLINE TArray<FLine>								GetLineArr() const									{ return mLineArr; }
+	FORCEINLINE TSubclassOf<UUserWidget>			GetImageAsset() const							{ return mImageAsset; }
+	FORCEINLINE FIntPoint										GetDraggedItemTopLeftTile() const		{ return mDraggedItemTopLeftTile; }
+
+public:
+	void		SetDrawDropLocation(bool DrawDropLocation)														{ mDrawDropLocation = DrawDropLocation; }
+	void		SetTileSize(float TileSize)																						{ mTileSize = TileSize; }
+	void		SetInventoryComponent(UACInventoryComponent* InventoryComponent)			{ mInventoryComponent = InventoryComponent; }
+	void		SetEquipmentComponent(UACEquipment* EquipmentComponent)							{ mEquipmentComponent = EquipmentComponent; }
+	void		SetLineArr(TArray<FLine> LineArr)																			{ mLineArr = LineArr; }
+	void		SetImageAsset(TSubclassOf<UUserWidget> ImageAsset)										{ mImageAsset = ImageAsset; }
+	void		SetDraggedItemTopLeftTile(FIntPoint DraggedItemTopLeftTile)							{ mDraggedItemTopLeftTile = DraggedItemTopLeftTile; }
+
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeOnInitialized() override;
@@ -43,65 +86,25 @@ protected:
 	virtual void NativeOnDragEnter(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 	virtual void NativeOnDragLeave(const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
 	
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
-	UACInventoryComponent* mInventoryComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
-	UACEquipment* mEquipmentComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, BlueprintGetter = GetTileSize, BlueprintSetter = SetTileSize, Category = "Default", meta = (AllowPrivateAccess = "true"))
-	float mTileSize;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", meta = (AllowPrivateAccess = "true"))
-	TArray<FLine> LineArr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
-	UBorder* GridBorder;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel", meta = (BindWidget))
-	UCanvasPanel* GridCanvas_Panel;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Panel")
-	TSubclassOf<UUserWidget> mImageAsset;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drag Drop")
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drag Drop", meta = (AllowPrivateAccess = "true"))
 	bool mDrawDropLocation;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drag Drop")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Default", meta = (AllowPrivateAccess = "true"))
+	float mTileSize;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
+	UACInventoryComponent* mInventoryComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment", meta = (AllowPrivateAccess = "true"))
+	UACEquipment* mEquipmentComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Default", meta = (AllowPrivateAccess = "true"))
+	TArray<FLine> mLineArr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Panel", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UUserWidget> mImageAsset;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Drag Drop", meta = (AllowPrivateAccess = "true"))
 	FIntPoint mDraggedItemTopLeftTile;
-
-public:
-	UFUNCTION(BlueprintCallable)
-	void Init(UACInventoryComponent* InvenComponent, float Size, UACEquipment* EquipmentComponent);
-
-	UFUNCTION(BlueprintCallable)
-	void CreateLineSegments();
-
-	UFUNCTION(BlueprintCallable)
-	void CallRemoved_Single(UItemObjectData*& ItemData);
-
-	UFUNCTION(BlueprintCallable)
-	void Refresh();
-
-	UFUNCTION(BlueprintCallable)
-	void GetPayload(UDragDropOperation* Operator, UItemObjectData*& Payload) const;
-
-	UFUNCTION(BlueprintCallable)
-	bool IsRoomAvailableForPayload(UItemObjectData* Payload) const;
-
-	UFUNCTION(BlueprintCallable)
-	FMousePositionReturn MousePositionInTile(FVector2D MousePosition);
-
-	//void Update(const int64 inObjectID, const int32 inItemID, const int32 inPositionX, const int32 inPositionY, const int32 inRotation);
-
-public:
-	UFUNCTION(BlueprintSetter)
-	void SetTileSize(float size) { this->mTileSize = size; }
-
-	UFUNCTION(BlueprintGetter)
-	float GetTileSize() const { return mTileSize; }
-
-	UFUNCTION(BlueprintGetter)
-	TArray<FLine> GetLineArr() { return LineArr; }
 };

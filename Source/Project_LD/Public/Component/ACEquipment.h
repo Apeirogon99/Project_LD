@@ -20,24 +20,31 @@ public:
 	// Sets default values for this component's properties
 	UACEquipment();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-		
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
-	TArray<UW_ItemSpace*> mEquipmentWidget;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment")
-	TArray<UItemObjectData*> mEquipmentData;
-
 public:
 	void Init(UUWInventory* inventory);
-
 	void	ClearEquipment();
 	void LoadEquipment(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inEqipments);
 	void ChangedItemSpace(int32 PartID, UItemObjectData* ItemData);
 	void CanItemDropWidgetCheck(UItemObjectData* ItemObjectData);
 	void DropItemWidget();
+
+public:
+	FORCEINLINE TArray<UW_ItemSpace*>			GetEquipmentWidget() const					{ return mEquipmentWidget; }
+	FORCEINLINE TArray<UItemObjectData*>		GetEquipmentObjectData() const			{ return mEquipmentData; }
+
+public:
+	void SetEquipmentWidget(TArray<UW_ItemSpace*> EquipmentWidget)		{ mEquipmentWidget = EquipmentWidget; }
+	void SetEquipmentData(TArray<UItemObjectData*> EquipmentData)			{ mEquipmentData = EquipmentData; }
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment", meta = (AllowPrivateAccess = "true"))
+	TArray<UW_ItemSpace*> mEquipmentWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment", meta = (AllowPrivateAccess = "true"))
+	TArray<UItemObjectData*> mEquipmentData;
 };

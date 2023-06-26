@@ -16,38 +16,14 @@ class UImage;
 class UACInventoryComponent;
 class UACEquipment;
 class UUWEquipItem;
+class UItemObjectData;
 
 UCLASS()
 class PROJECT_LD_API UW_ItemSpace : public UUserWidget
 {
 	GENERATED_BODY()
 	
-protected:
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
-
-	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
-
 public:
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Size")
-	float mSizeX;
-
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Size")
-	float mSizeY;
-
-	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = "Id")
-	int32 mCategoryId;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
-	TSubclassOf<UUserWidget> mImageAsset;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Panel")
-	UUWEquipItem* EquipmentItemSlot;
-
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
-	TArray<UTexture2D*> mTextureArr;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (BindWidget))
 	UCanvasPanel* ItemCanvas;
 
@@ -63,28 +39,77 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Component", meta = (BindWidget))
 	UImage* ImgSlot;
 
-	bool bRigthItemCategory;
-	bool bExist;
-
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
-	UACInventoryComponent* mInvenComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment")
-	UACEquipment* mEquipmentComponent;
-
-public:
-	void Init(UACInventoryComponent* InvenComponent, UACEquipment* EquipmentComponent);
-
 	UFUNCTION()
 	void FalseExist();
 
-	UFUNCTION()
+public:
+	void Init(UACInventoryComponent* InvenComponent, UACEquipment* EquipmentComponent);
 	void Refresh(UItemObjectData* ItemObjectData);
-
-	UFUNCTION()
 	void ReMakeWidget(UItemObjectData* ItemObjectData);
-
 	void CreateItemWidget(UItemObjectData* ItemObjectData);
 	//void ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData);
+
+public:
+	FORCEINLINE bool												GetIsRightItemCategory() const		{ return bRigthItemCategory; }
+	FORCEINLINE bool												GetIsExist() const								{ return bExist; }
+	FORCEINLINE float												GetSizeX() const									{ return mSizeX; }
+	FORCEINLINE float												GetSizeY() const									{ return mSizeY; }
+	FORCEINLINE int32												GetCategoryId() const							{ return mCategoryId; }
+	FORCEINLINE TSubclassOf<UUserWidget>			GetImageAsset() const						{ return mImageAsset; }
+	FORCEINLINE UUWEquipItem*							GetEquipmentItemSlot() const			{ return mEquipmentItemSlot; }
+	FORCEINLINE TArray<UTexture2D*>					GetmTextureArr() const						{ return mTextureArr; }
+	FORCEINLINE UACInventoryComponent*			GetInventoryComponent() const		{ return mInvenComponent; }
+	FORCEINLINE UACEquipment*							GetEquipmentComponent() const		{ return mEquipmentComponent; }
+
+
+public:
+	void		SetIsRightItemCategory(bool RigthItemCategory)												{ bRigthItemCategory = RigthItemCategory; }
+	void		SetIsExist(bool Exist)																							{ bExist = Exist; }
+	void		SetSizeX(float SizeX)																								{ mSizeX = SizeX; }
+	void		SetSizeY(float SizeY)																								{ mSizeY = SizeY; }
+	void		SetCategoryId(int32 CategoryId)																			{ mCategoryId = CategoryId; }	
+	void		SetImageAsset(TSubclassOf<UUserWidget> ImageAsset)									{ mImageAsset = ImageAsset; }
+	void		SetEquipmentItemSlot(UUWEquipItem* EquipmentItemSlot)								{ mEquipmentItemSlot = EquipmentItemSlot; }
+	void		SetmTextureArr(TArray<UTexture2D*> TextureArr)											{ mTextureArr = TextureArr; }
+	void		SetInventoryComponent(UACInventoryComponent* InvenComponent)				{ mInvenComponent = InvenComponent; }
+	void		SetEquipmentComponent(UACEquipment* EquipmentComponent)						{ mEquipmentComponent = EquipmentComponent; }
+
+protected:
+	virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+
+	virtual bool NativeOnDrop(const FGeometry& InGeometry, const FDragDropEvent& InDragDropEvent, UDragDropOperation* InOperation) override;
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bRigthItemCategory;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bExist;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Size", meta = (AllowPrivateAccess = "true"))
+	float mSizeX;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Size", meta = (AllowPrivateAccess = "true"))
+	float mSizeY;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Id", meta = (AllowPrivateAccess = "true"))
+	int32 mCategoryId;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Panel", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UUserWidget> mImageAsset;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Panel", meta = (AllowPrivateAccess = "true"))
+	UUWEquipItem* mEquipmentItemSlot;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<UTexture2D*> mTextureArr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory", meta = (AllowPrivateAccess = "true"))
+	UACInventoryComponent* mInvenComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment", meta = (AllowPrivateAccess = "true"))
+	UACEquipment* mEquipmentComponent;
 };

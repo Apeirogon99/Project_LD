@@ -13,9 +13,6 @@ UCLASS()
 class PROJECT_LD_API UW_ItemName : public UUserWidget
 {
 	GENERATED_BODY()
-	
-protected:
-	virtual void NativeConstruct() override;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
@@ -23,4 +20,7 @@ public:
 
 public:
 	void SetNameText(const FString& inName);
+
+protected:
+	virtual void NativeConstruct() override;
 };

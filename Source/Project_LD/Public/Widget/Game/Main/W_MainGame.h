@@ -17,17 +17,18 @@ class PROJECT_LD_API UW_MainGame : public UUserWidget
 {
 	GENERATED_BODY()
 
-	virtual void NativeConstruct() override;
-
-private:
-	UPROPERTY(meta = (BindWidget))
-	UButton* Btn_Inventory;
-
-private:
-	bool misInventoryOpen;
-
 public:
 	UFUNCTION()
 	void InventoryOpenRequest();
 	void InventoryOpenResponse();
+
+protected:
+	virtual void NativeConstruct() override;
+
+private:
+	bool misInventoryOpen;
+
+private:
+	UPROPERTY(meta = (BindWidget))
+		UButton* Btn_Inventory;
 };

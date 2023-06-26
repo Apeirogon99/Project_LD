@@ -160,7 +160,7 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 
 						Data->Type = EItemObjectType::Inventory;
 						mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
-						mEquipmentComponent->mEquipmentData[Index] = NewObject<UItemObjectData>();
+						mEquipmentComponent->GetEquipmentObjectData()[Index] = NewObject<UItemObjectData>();
 
 						mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(), Data->ItemData.category_id);
 					}
@@ -179,13 +179,13 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 						{
 							//실패 -> 다시 장비로 이동
 							Data->Type = EItemObjectType::Equipment;
-							mEquipmentComponent->mEquipmentData[Index] = Data;
-							mEquipmentComponent->mEquipmentWidget[Index]->ReMakeWidget(Data);
+							mEquipmentComponent->GetEquipmentObjectData()[Index] = Data;
+							mEquipmentComponent->GetEquipmentWidget()[Index]->ReMakeWidget(Data);
 						}
 						else
 						{
 							//성공 -> 인벤토리로 아이템 이동
-							mEquipmentComponent->mEquipmentData[Index] = NewObject<UItemObjectData>();
+							mEquipmentComponent->GetEquipmentObjectData()[Index] = NewObject<UItemObjectData>();
 
 							mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(), Data->ItemData.category_id);
 						}
@@ -257,8 +257,8 @@ void UUWGridInventory::Init(UACInventoryComponent* InvenComponent, float Size, U
 
 	if (mInventoryComponent != nullptr)
 	{
-		float SizeX = mInventoryComponent->mColums * GetTileSize();
-		float SizeY = mInventoryComponent->mRows * GetTileSize();
+		float SizeX = mInventoryComponent->GetColums() * GetTileSize();
+		float SizeY = mInventoryComponent->GetRows() * GetTileSize();
 
 		UCanvasPanelSlot* CanvasSlot = Cast<UCanvasPanelSlot>(GridBorder->Slot);
 		CanvasSlot->SetSize(FVector2D(SizeX, SizeY));
@@ -285,24 +285,24 @@ void UUWGridInventory::Init(UACInventoryComponent* InvenComponent, float Size, U
 void UUWGridInventory::CreateLineSegments()
 {
 	//Vertical
-	for (int Index = 0; Index < mInventoryComponent->mColums + 1; Index++)
+	for (int Index = 0; Index < mInventoryComponent->GetColums() + 1; Index++)
 	{
 		float X_Local = Index * mTileSize;
 		FLine makeLine;
 		makeLine.Start = FVector2D(X_Local, 0.0f);
-		makeLine.End = FVector2D(X_Local, mInventoryComponent->mRows * mTileSize);
+		makeLine.End = FVector2D(X_Local, mInventoryComponent->GetRows() * mTileSize);
 		
-		LineArr.Add(makeLine);
+		mLineArr.Add(makeLine);
 	}
 	//Horizantal
-	for (int Index = 0; Index < mInventoryComponent->mRows + 1; Index++)
+	for (int Index = 0; Index < mInventoryComponent->GetRows() + 1; Index++)
 	{
 		float Y_Local = Index * mTileSize;
 		FLine makeLine;
 		makeLine.Start = FVector2D(0.0f, Y_Local);
-		makeLine.End = FVector2D(mInventoryComponent->mColums * mTileSize, Y_Local);
+		makeLine.End = FVector2D(mInventoryComponent->GetColums() * mTileSize, Y_Local);
 
-		LineArr.Add(makeLine);
+		mLineArr.Add(makeLine);
 	}	
 }
 
@@ -334,8 +334,8 @@ void UUWGridInventory::Refresh()
 					UUWItem* ItemImageWidget = Cast<UUWItem>(CreateWidget(GetWorld(), mImageAsset));
 					if (ItemImageWidget)
 					{
-						ItemImageWidget->mTileSize = mTileSize;
-						ItemImageWidget->mItemObjectData = Data;
+						ItemImageWidget->SetTileSize(mTileSize);
+						ItemImageWidget->SetItemObjectData(Data);
 
 						//Bind Remove
 						ItemImageWidget->OnRemoved.AddUFunction(this, FName("CallRemoved_Single"));
