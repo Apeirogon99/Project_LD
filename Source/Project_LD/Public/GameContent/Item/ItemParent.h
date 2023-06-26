@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Framework/Gameinstance/LDGameInstance.h"
 #include "Struct/Game/GameDatas.h"
-#include "Framework/Interface/InventoryInterface.h"
+#include "Framework/Interface/InteractiveInterface.h"
 #include "ItemParent.generated.h"
 
 class USceneComponent;
@@ -17,7 +17,7 @@ class UWidgetComponent;
 class AC_Game;
 
 UCLASS()
-class PROJECT_LD_API AItemParent : public AActor, public IInventoryInterface
+class PROJECT_LD_API AItemParent : public AActor, public IInteractiveInterface
 {
 	GENERATED_BODY()
 	
@@ -72,7 +72,7 @@ protected:
 	virtual void Destroyed() override;
 
 public:
-	virtual void PickUpItem(AC_Game* inPlayer) override;
+	virtual void Interactive(AC_Game* inPlayer) override;
 	void Init(int32 Code, int32 GameObjectId);
 	void FindPlayer();
 

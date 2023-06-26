@@ -59,8 +59,6 @@ void AC_Game::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AC_Game::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAction("InteractItem", IE_Pressed, this, &AC_Game::InteractItem);
 }
 
 void AC_Game::InteractItem()
@@ -70,12 +68,21 @@ void AC_Game::InteractItem()
 
 	for (auto& Actor : Result)
 	{
-		if (UKismetSystemLibrary::DoesImplementInterface(Actor, UInventoryInterface::StaticClass()))
+		if (UKismetSystemLibrary::DoesImplementInterface(Actor, UInteractiveInterface::StaticClass()))
 		{
-			AItemParent* Item = Cast<AItemParent>(Actor);
-			if (Item != nullptr)
+			FString ClassName = Actor->GetClass()->GetName();
+			
+			if (ClassName == "ItemParent")
 			{
-				Item->PickUpItem(this);
+				AItemParent* Item = Cast<AItemParent>(Actor);
+				if (Item != nullptr)
+				{
+					Item->Interactive(this);
+				}
+			}
+			else if (ClassName == "")
+			{
+
 			}
 		}
 	}

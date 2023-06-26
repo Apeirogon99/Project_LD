@@ -134,7 +134,7 @@ void AItemParent::Destroyed()
 	mItemNameWidgetComponent->DestroyComponent();
 }
 
-void AItemParent::PickUpItem(AC_Game* inPlayer)
+void AItemParent::Interactive(AC_Game* inPlayer)
 {
 	UWorld* world = GetWorld();
 	if (nullptr == world)

@@ -7,10 +7,11 @@
 #include <GameContent/Enemy/EnemyState.h>
 #include <GameContent/Enemy/EnemyController.h>
 #include <Framework/Interface/PacketInterface.h>
+#include "Framework/Interface/InteractiveInterface.h"
 #include "EnemyBase.generated.h"
 
 UCLASS()
-class PROJECT_LD_API AEnemyBase : public ACharacter
+class PROJECT_LD_API AEnemyBase : public ACharacter, public IInteractiveInterface
 {
 	GENERATED_BODY()
 
@@ -25,4 +26,6 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void Interactive(AC_Game* inPlayer) override;
 };

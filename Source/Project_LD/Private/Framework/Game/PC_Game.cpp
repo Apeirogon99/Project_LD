@@ -110,6 +110,7 @@ void APC_Game::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	InputComponent->BindAction("ToggleInventory",IE_Pressed,this,&APC_Game::SwitchInventory);
+	InputComponent->BindAction("InteractItem", IE_Pressed, this, &APC_Game::Interactive);
 }
 
 void APC_Game::SwitchUIMode()
@@ -138,4 +139,10 @@ void APC_Game::SwitchInventory()
 	UW_MainGame* maingame = Cast<UW_MainGame>(widget);
 
 	maingame->InventoryOpenRequest();
+}
+
+void APC_Game::Interactive()
+{
+	AC_Game* player = Cast<AC_Game>(GetCharacter());
+	player->InteractItem();
 }

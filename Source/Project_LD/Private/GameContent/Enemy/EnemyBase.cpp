@@ -37,3 +37,7 @@ void AEnemyBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+void AEnemyBase::Interactive(AC_Game* inPlayer)
+{
+}

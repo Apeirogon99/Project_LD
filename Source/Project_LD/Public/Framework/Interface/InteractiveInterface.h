@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
 #include <Game/C_Game.h>
-#include "InventoryInterface.generated.h"
+#include "InteractiveInterface.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UInventoryInterface : public UInterface
+class UInteractiveInterface : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -17,12 +17,14 @@ class UInventoryInterface : public UInterface
 /**
  * 
  */
-class PROJECT_LD_API IInventoryInterface
+class PROJECT_LD_API IInteractiveInterface
 {
 	GENERATED_BODY()
 
 		// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interface")
-	virtual void PickUpItem(AC_Game* Player) = 0;
+	virtual void Interactive(AC_Game* Player) = 0;
+
+
 };
