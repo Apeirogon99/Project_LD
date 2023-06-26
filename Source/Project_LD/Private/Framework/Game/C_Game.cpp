@@ -8,6 +8,11 @@
 
 #include "GameContent/Item/ItemParent.h"
 
+#include "GameContent/Enemy/E_Slime.h"
+#include "GameContent/Enemy/E_NomalSkeleton.h"
+#include "GameContent/Enemy/E_ArcherSkeleton.h"
+#include "GameContent/Enemy/E_WarriorSkeleton.h"
+
 #include "Kismet/KismetSystemLibrary.h"
 #include <UObject/ConstructorHelpers.h>
 
@@ -64,14 +69,15 @@ void AC_Game::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 void AC_Game::InteractItem()
 {
 	TArray<AActor*> Result;
-	GetOverlappingActors(Result, AItemParent::StaticClass());
+	GetOverlappingActors(Result, AActor::StaticClass());
 
 	for (auto& Actor : Result)
 	{
 		if (UKismetSystemLibrary::DoesImplementInterface(Actor, UInteractiveInterface::StaticClass()))
 		{
 			FString ClassName = Actor->GetClass()->GetName();
-			
+			//UE_LOG(LogTemp, Warning, TEXT("Interactive Class Name : %s"), *ClassName);
+
 			if (ClassName == "ItemParent")
 			{
 				AItemParent* Item = Cast<AItemParent>(Actor);
@@ -80,9 +86,41 @@ void AC_Game::InteractItem()
 					Item->Interactive(this);
 				}
 			}
-			else if (ClassName == "")
+			else if (ClassName == "BE_Slime_C")
 			{
-
+				//UE_LOG(LogTemp, Warning, TEXT("Interactive Class Slime_C"));
+				AE_Slime* Slime = Cast<AE_Slime>(Actor);
+				if (Slime != nullptr)
+				{
+					Slime->Interactive(this);
+				}
+			}
+			else if (ClassName == "BE_NomalSkeleton_C")
+			{
+				//UE_LOG(LogTemp, Warning, TEXT("Interactive Class Slime_C"));
+				AE_NomalSkeleton* NomalSkeleton = Cast<AE_NomalSkeleton>(Actor);
+				if (NomalSkeleton != nullptr)
+				{
+					NomalSkeleton->Interactive(this);
+				}
+			}
+			else if (ClassName == "BE_ArcherSkeleton_C")
+			{
+				//UE_LOG(LogTemp, Warning, TEXT("Interactive Class Slime_C"));
+				AE_ArcherSkeleton* ArcherSkeleton = Cast<AE_ArcherSkeleton>(Actor);
+				if (ArcherSkeleton != nullptr)
+				{
+					ArcherSkeleton->Interactive(this);
+				}
+			}
+			else if (ClassName == "BE_WarriorSkeleton_C")
+			{
+				//UE_LOG(LogTemp, Warning, TEXT("Interactive Class Slime_C"));
+				AE_WarriorSkeleton* WarriorSkeleton = Cast<AE_WarriorSkeleton>(Actor);
+				if (WarriorSkeleton != nullptr)
+				{
+					WarriorSkeleton->Interactive(this);
+				}
 			}
 		}
 	}

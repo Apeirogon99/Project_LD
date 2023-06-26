@@ -26,15 +26,20 @@ protected:
 
 public:
 	void SetEnemyDatas(const FEnemyData& inEnemeyDatas);
+	void SetEnemyCurrentStats(const FEnemyStatData& inEnemeyDatas);
 	void SetEnemyStats(const FEnemyStatData& inEnemyStats);
 
 public:
 	const FEnemyData& GetEnemyDatas() { return mDatas; }
+	const FEnemyStatData& GetEnemyCurrentStats() { return mCurrentStats; }
 	const FEnemyStatData& GetEnemeyStats() { return mStats; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Datas")
 		FEnemyData	mDatas;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Stats")
+		FEnemyStatData	mCurrentStats;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Stats")
 		FEnemyStatData	mStats;

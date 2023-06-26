@@ -30,3 +30,7 @@ void AE_NomalSkeleton::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+void AE_NomalSkeleton::Interactive(AC_Game* inPlayer)
+{
+}

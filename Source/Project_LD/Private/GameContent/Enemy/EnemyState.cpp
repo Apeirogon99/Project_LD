@@ -31,6 +31,11 @@ void AEnemyState::SetEnemyDatas(const FEnemyData& inEnemeyDatas)
 	mDatas = inEnemeyDatas;
 }
 
+void AEnemyState::SetEnemyCurrentStats(const FEnemyStatData& inEnemeyDatas)
+{
+	mCurrentStats = inEnemeyDatas;
+}
+
 void AEnemyState::SetEnemyStats(const FEnemyStatData& inEnemyStats)
 {
 	mStats = inEnemyStats;

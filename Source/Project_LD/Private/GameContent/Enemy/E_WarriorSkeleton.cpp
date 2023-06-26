@@ -30,3 +30,7 @@ void AE_WarriorSkeleton::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+void AE_WarriorSkeleton::Interactive(AC_Game* inPlayer)
+{
+}

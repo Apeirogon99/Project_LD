@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "GameContent/Enemy/EnemyBase.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -10,6 +10,8 @@ AEnemyBase::AEnemyBase()
 
 	AIControllerClass = AEnemyController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("EnemyCollision"));
 }
 
 AEnemyBase::~AEnemyBase()

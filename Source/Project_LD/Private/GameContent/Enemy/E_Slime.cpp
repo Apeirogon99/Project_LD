@@ -63,3 +63,12 @@ void AE_Slime::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+void AE_Slime::Interactive(AC_Game* inPlayer)
+{
+	static int32 health = 100;
+
+	health -= 10;
+
+	UE_LOG(LogTemp, Warning, TEXT("Interactive Slime HP : %d"), health);
+}

@@ -30,3 +30,7 @@ void AE_ArcherSkeleton::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+void AE_ArcherSkeleton::Interactive(AC_Game* inPlayer)
+{
+}
