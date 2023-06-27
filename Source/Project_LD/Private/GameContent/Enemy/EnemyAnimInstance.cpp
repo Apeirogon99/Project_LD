@@ -15,10 +15,6 @@ void UEnemyAnimInstance::NativeInitializeAnimation()
 	{
 		mCharacter = Cast<AEnemyBase>(TryGetPawnOwner());
 	}
-	if (mEnemyState == nullptr)
-	{
-		mEnemyState = mCharacter->GetPlayerState<AEnemyState>();
-	}
 }
 
 void UEnemyAnimInstance::UpdateProperties()

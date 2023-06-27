@@ -28,10 +28,10 @@ public:
 	void SetState(UEnemyBaseState* StateBase);
 
 public:
-	const FEnemyData& GetEnemyDatas()																	{ return mDatas; }
-	const FEnemyStatData& GetEnemyCurrentStats()												{ return mCurrentStats; }
-	const FEnemyStatData& GetEnemyStats()															{ return mStats; }
-	const UEnemyBaseState* GetEnemyStateBase()													{ return mState; }
+	const FEnemyData&				GetEnemyDatas()							{ return mDatas; }
+	const FEnemyStatData&			GetEnemyCurrentStats()				{ return mCurrentStats; }
+	const FEnemyStatData&			GetEnemyStats()								{ return mStats; }
+	const UEnemyBaseState*		GetEnemyStateBase()						{ return mState; }
 
 public:
 	void Hit();
