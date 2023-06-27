@@ -405,6 +405,24 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 			EquipRightWeapon->Init(mInvenComponent, mEquipmentComponent);
 		}
 	}
+
+	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return;
+	}
+
+	APC_Game* playerController = Cast<APC_Game>(gamemode->GetNetworkController());
+	if (GetOwningPlayer() != playerController)
+	{
+		return;
+	}
+
+	mPlayerState = playerController->GetPlayerState<APS_Game>();
+	if (mPlayerState == nullptr)
+	{
+		return;
+	}
 }
 
 void UUWInventory::CloseInventory()

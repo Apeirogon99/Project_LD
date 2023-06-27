@@ -7,7 +7,6 @@
 #include "Struct/Game/GameDatas.h"
 #include "Struct/Game/CharacterDatas.h"
 #include "Struct/Game/CharacterStatusData.h"
-#include <Struct/Game/CharacterDatas.h>
 #include <Game/PS_Game.h>
 #include "UWInventory.generated.h"
 
@@ -173,11 +172,13 @@ public:
 	FORCEINLINE float												GetTileSize() const							{ return mTileSize; }
 	FORCEINLINE UACInventoryComponent*			GetInventoryComponent() const		{ return mInvenComponent; }
 	FORCEINLINE UACEquipment*							GetEquipmentComponent() const		{ return mEquipmentComponent; }
+	FORCEINLINE APS_Game*									GetPlayerState()	const						{ return mPlayerState; }
 
 public:
 	void		SetTileSize(float TileSize)																					{ mTileSize = TileSize; }
 	void		SetInventoryComponent(UACInventoryComponent* InventoryComponent)		{ mInvenComponent = InventoryComponent; }
 	void		SetEquipmentComponent(UACEquipment* EquipmentComponent)						{ mEquipmentComponent = EquipmentComponent; }
+	void		SetPlayerState(APS_Game* playerstate)																{ mPlayerState = playerstate; }
 
 public:
 	UFUNCTION()
@@ -214,6 +215,8 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Equipment", meta = (AllowPrivateAccess = "true"))
 	UACEquipment* mEquipmentComponent;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State", meta = (AllowPrivateAccess = "true"))
+	APS_Game* mPlayerState;
 	/*
 public:
 	UFUNCTION()
