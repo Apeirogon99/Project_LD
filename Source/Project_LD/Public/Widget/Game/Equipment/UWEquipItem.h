@@ -36,10 +36,10 @@ public:
 	FORCEINLINE TArray<UTexture2D*>		GetFrameTextureArr() const				{ return mFrameTextureArr; }
 
 public:
-	void SetIsEnter(bool Enter)																			{ bIsEnter = Enter; }
-	void SetIsFirst(bool First)																				{ bIsFirst = First; }
-	void SetItemObjectData(UItemObjectData* ItemObjectData)						{ mItemObjectData = ItemObjectData; }
-	void SetFrameTextureArr(TArray<UTexture2D*> FrameTextureArr)		{ mFrameTextureArr = FrameTextureArr; }
+	void SetIsEnter(const bool Enter)																			{ bIsEnter = Enter; }
+	void SetIsFirst(const bool First)																			{ bIsFirst = First; }
+	void SetItemObjectData(UItemObjectData* ItemObjectData)								{ mItemObjectData = ItemObjectData; }
+	void SetFrameTextureArr(TArray<UTexture2D*> FrameTextureArr)				{ mFrameTextureArr = FrameTextureArr; }
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))

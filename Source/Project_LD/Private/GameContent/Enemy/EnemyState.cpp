@@ -2,13 +2,17 @@
 
 
 #include "GameContent/Enemy/EnemyState.h"
+#include "GameContent/Enemy/EnemyStateBase.h"
+
 
 AEnemyState::AEnemyState()
 {
+	mState = UEnemyIdleState::GetInstance();
 }
 
 AEnemyState::~AEnemyState()
 {
+
 }
 
 void AEnemyState::BeginPlay()
@@ -39,4 +43,29 @@ void AEnemyState::SetEnemyCurrentStats(const FEnemyStatData& inEnemeyDatas)
 void AEnemyState::SetEnemyStats(const FEnemyStatData& inEnemyStats)
 {
 	mStats = inEnemyStats;
+}
+
+void AEnemyState::SetState(UEnemyBaseState* StateBase)
+{
+	mState = StateBase;
+}
+
+void AEnemyState::Hit()
+{
+	mState->Hit(this);
+}
+
+void AEnemyState::Attack()
+{
+	mState->Attack(this);
+}
+
+void AEnemyState::Chase()
+{
+	mState->Chase(this);
+}
+
+void AEnemyState::Kill()
+{
+	mState->Kill(this);
 }

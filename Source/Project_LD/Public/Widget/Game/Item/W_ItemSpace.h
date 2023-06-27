@@ -64,16 +64,16 @@ public:
 
 
 public:
-	void		SetIsRightItemCategory(bool RigthItemCategory)												{ bRigthItemCategory = RigthItemCategory; }
-	void		SetIsExist(bool Exist)																							{ bExist = Exist; }
-	void		SetSizeX(float SizeX)																								{ mSizeX = SizeX; }
-	void		SetSizeY(float SizeY)																								{ mSizeY = SizeY; }
-	void		SetCategoryId(int32 CategoryId)																			{ mCategoryId = CategoryId; }	
-	void		SetImageAsset(TSubclassOf<UUserWidget> ImageAsset)									{ mImageAsset = ImageAsset; }
-	void		SetEquipmentItemSlot(UUWEquipItem* EquipmentItemSlot)								{ mEquipmentItemSlot = EquipmentItemSlot; }
-	void		SetmTextureArr(TArray<UTexture2D*> TextureArr)											{ mTextureArr = TextureArr; }
-	void		SetInventoryComponent(UACInventoryComponent* InvenComponent)				{ mInvenComponent = InvenComponent; }
-	void		SetEquipmentComponent(UACEquipment* EquipmentComponent)						{ mEquipmentComponent = EquipmentComponent; }
+	void		SetIsRightItemCategory(const bool RigthItemCategory)												{ bRigthItemCategory = RigthItemCategory; }
+	void		SetIsExist(const bool Exist)																							{ bExist = Exist; }
+	void		SetSizeX(const float SizeX)																							{ mSizeX = SizeX; }
+	void		SetSizeY(const float SizeY)																							{ mSizeY = SizeY; }
+	void		SetCategoryId(const int32 CategoryId)																			{ mCategoryId = CategoryId; }
+	void		SetImageAsset(const TSubclassOf<UUserWidget> ImageAsset)									{ mImageAsset = ImageAsset; }
+	void		SetEquipmentItemSlot(UUWEquipItem* EquipmentItemSlot)										{ mEquipmentItemSlot = EquipmentItemSlot; }
+	void		SetmTextureArr(const TArray<UTexture2D*> TextureArr)										{ mTextureArr = TextureArr; }
+	void		SetInventoryComponent(UACInventoryComponent* InvenComponent)						{ mInvenComponent = InvenComponent; }
+	void		SetEquipmentComponent(UACEquipment* EquipmentComponent)								{ mEquipmentComponent = EquipmentComponent; }
 
 protected:
 	virtual void NativePreConstruct() override;

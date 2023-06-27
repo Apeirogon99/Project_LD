@@ -175,7 +175,7 @@ public:
 	FORCEINLINE APS_Game*									GetPlayerState()	const						{ return mPlayerState; }
 
 public:
-	void		SetTileSize(float TileSize)																					{ mTileSize = TileSize; }
+	void		SetTileSize(const float TileSize)																			{ mTileSize = TileSize; }
 	void		SetInventoryComponent(UACInventoryComponent* InventoryComponent)		{ mInvenComponent = InventoryComponent; }
 	void		SetEquipmentComponent(UACEquipment* EquipmentComponent)						{ mEquipmentComponent = EquipmentComponent; }
 	void		SetPlayerState(APS_Game* playerstate)																{ mPlayerState = playerstate; }

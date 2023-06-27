@@ -64,13 +64,13 @@ public:
 	FORCEINLINE FIntPoint										GetDraggedItemTopLeftTile() const		{ return mDraggedItemTopLeftTile; }
 
 public:
-	void		SetDrawDropLocation(bool DrawDropLocation)														{ mDrawDropLocation = DrawDropLocation; }
-	void		SetTileSize(float TileSize)																						{ mTileSize = TileSize; }
-	void		SetInventoryComponent(UACInventoryComponent* InventoryComponent)			{ mInventoryComponent = InventoryComponent; }
-	void		SetEquipmentComponent(UACEquipment* EquipmentComponent)							{ mEquipmentComponent = EquipmentComponent; }
-	void		SetLineArr(TArray<FLine> LineArr)																			{ mLineArr = LineArr; }
-	void		SetImageAsset(TSubclassOf<UUserWidget> ImageAsset)										{ mImageAsset = ImageAsset; }
-	void		SetDraggedItemTopLeftTile(FIntPoint DraggedItemTopLeftTile)							{ mDraggedItemTopLeftTile = DraggedItemTopLeftTile; }
+	void		SetDrawDropLocation(const bool DrawDropLocation)															{ mDrawDropLocation = DrawDropLocation; }
+	void		SetTileSize(const float TileSize)																							{ mTileSize = TileSize; }
+	void		SetInventoryComponent( UACInventoryComponent* InventoryComponent)						{ mInventoryComponent = InventoryComponent; }
+	void		SetEquipmentComponent( UACEquipment* EquipmentComponent)									{ mEquipmentComponent = EquipmentComponent; }
+	void		SetLineArr(const TArray<FLine> LineArr)																			{ mLineArr = LineArr; }
+	void		SetImageAsset(const TSubclassOf<UUserWidget> ImageAsset)											{ mImageAsset = ImageAsset; }
+	void		SetDraggedItemTopLeftTile(const FIntPoint DraggedItemTopLeftTile)							{ mDraggedItemTopLeftTile = DraggedItemTopLeftTile; }
 
 protected:
 	virtual void NativeConstruct() override;

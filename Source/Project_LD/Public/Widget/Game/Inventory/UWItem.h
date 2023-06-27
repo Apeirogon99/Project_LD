@@ -49,10 +49,10 @@ public:
 	FORCEINLINE TArray<UTexture2D*>			GetFrameTextureArr() const				{ return mFrameTextureArr; }
 
 public:
-	void SetIsEnter(bool IsEnter)																				{ mIsEnter = IsEnter; }
-	void SetTileSize(float TileSize)																		{ mTileSize = TileSize; }
+	void SetIsEnter(const bool IsEnter)																	{ mIsEnter = IsEnter; }
+	void SetTileSize(const float TileSize)																{ mTileSize = TileSize; }
 	void SetItemObjectData(UItemObjectData* ItemObjectData)							{ mItemObjectData = ItemObjectData; }
-	void SetSize(FVector2D Size)																			{ mSize = Size; }
+	void SetSize(const FVector2D Size)																	{ mSize = Size; }
 	void SetFrameTextureArr(TArray<UTexture2D*> FrameTextureArr)			{ mFrameTextureArr = FrameTextureArr; }
 
 protected:

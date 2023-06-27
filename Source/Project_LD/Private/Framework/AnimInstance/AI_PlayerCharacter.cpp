@@ -8,6 +8,8 @@
 
 void UAI_PlayerCharacter::NativeInitializeAnimation()
 {
+	Super::NativeInitializeAnimation();
+
 	if (mPawn == nullptr)
 	{
 		mPawn = TryGetPawnOwner();

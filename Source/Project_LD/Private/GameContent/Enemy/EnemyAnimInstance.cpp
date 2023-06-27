@@ -2,4 +2,45 @@
 
 
 #include "GameContent/Enemy/EnemyAnimInstance.h"
+#include "GameContent/Enemy/EnemyBase.h"
+#include "GameContent/Enemy/EnemyState.h"
 
+#include "Kismet/KismetMathLibrary.h"
+
+void UEnemyAnimInstance::NativeInitializeAnimation()
+{
+	Super::NativeInitializeAnimation();
+
+	if (mCharacter == nullptr)
+	{
+		mCharacter = Cast<AEnemyBase>(TryGetPawnOwner());
+	}
+	if (mEnemyState == nullptr)
+	{
+		mEnemyState = mCharacter->GetPlayerState<AEnemyState>();
+	}
+}
+
+void UEnemyAnimInstance::UpdateProperties()
+{
+	if (mCharacter == nullptr)
+	{
+		mCharacter = Cast<AEnemyBase>(TryGetPawnOwner());
+	}
+	if (mEnemyState == nullptr)
+	{
+		mEnemyState = mCharacter->GetPlayerState<AEnemyState>();
+	}
+	if (mCharacter && mEnemyState)
+	{
+		FVector Velocity = mCharacter->GetVelocity();
+		mMovementSpeed = UKismetMathLibrary::VSize(Velocity);
+
+		float health = mEnemyState->GetEnemyCurrentStats().base_health;
+		if (health <= 0)
+		{
+			//death
+		}
+		mEnemyState->GetEnemyStateBase();
+	}
+}
