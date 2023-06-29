@@ -18,6 +18,14 @@ ANPC_Game::~ANPC_Game()
 {
 }
 
+void ANPC_Game::Tick(float DeltaTime)
+{
+	if (IsCorrection)
+	{
+		MoveCorrection(DeltaTime);
+	}
+}
+
 void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
 {
 	APawn* pawn = this->GetPawn();
@@ -39,8 +47,8 @@ void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FV
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
 	if (locationDistance > 5.0f)
 	{
-		pawn->SetActorLocation(inOldMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
-		pawn->SetActorRotation(direction.Rotation());
+		IsCorrection = true;
+		mTargetLoction = inOldMovementLocation;
 	}
 	else
 	{
@@ -70,7 +78,7 @@ void ANPC_Game::MoveCorrection(const float inDeltaTime)
 	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
 
 	float distance = FVector::Dist2D(curLocation, correctionLocation);
-	if (distance <= 1.0f)
+	if (distance <= 5.0f)
 	{
 		IsCorrection = false;
 	}
@@ -80,5 +88,5 @@ void ANPC_Game::MoveCorrection(const float inDeltaTime)
 		//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, correctionLocation);
 	}
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("CRR Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("NPC Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
 }

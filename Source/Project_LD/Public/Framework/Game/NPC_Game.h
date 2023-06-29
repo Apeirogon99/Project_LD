@@ -19,6 +19,9 @@ public:
 	~ANPC_Game();
 
 public:
+	virtual void Tick(float DeltaTime) override;
+
+public:
 	void NPCMoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
 	void MoveCorrection(const float inDeltaTime);
 
