@@ -146,6 +146,22 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 			return false;
 		}
 	}
+	else if (error == GetDatabaseErrorToInt(EDBErrorType::TEMP_VERIFY))
+	{
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
+			{
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				clientHUD->CleanWidgetFromName(TEXT("Singup"));
+				clientHUD->ShowWidgetFromName(TEXT("Singin"));
+			});
+
+		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("이메일 인증"), TEXT("임시 이메일 인증성공"), TEXT("확인"), notificationDelegate);
+		if (ret == false)
+		{
+			return false;
+		}
+	}
 	else
 	{
 		FButtonDelegate editBoxDelegate;

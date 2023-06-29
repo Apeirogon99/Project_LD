@@ -5,7 +5,7 @@
 #include <NetworkUtils.h>
 #include <chrono>
 
-UNetworkTimeStamp::UNetworkTimeStamp() : mServerTimeStamp(0), mTimeStamp(0), mTimeStampDelta(0), mSumTimeStampDelta(0), mNumTimeStampDelta(1), mUtcTimeStamp(0), mUtcTimeStampDelta(0), mRtt(0), mSumRtt(0)
+UNetworkTimeStamp::UNetworkTimeStamp() : mServerTimeStamp(0), mOldUtcTimeStamp(0), mRtt(0), mSumRtt(0), mNumRtt(1)
 {
 }
 
@@ -13,74 +13,69 @@ UNetworkTimeStamp::~UNetworkTimeStamp()
 {
 }
 
-void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp, const int64 inServerUtcTime, const int64 inRtt)
+void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp, const int64 inUtcTimeStmap, const int64 inRtt)
 {
-	FDateTime	currentUtcTimeStamp = FDateTime::UtcNow();
-	const int64 nowClientUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
-	mUtcTimeStampDelta = inServerUtcTime - nowClientUtcTimeStamp;
 
-	if (mTimeStamp == 0)
+	mOldUtcTimeStamp = inUtcTimeStmap;
+
+	if (mServerTimeStamp == 0)
 	{
 		mServerTimeStamp = inServerTimeStamp;
-		mTimeStamp = inServerUtcTime;
 		mRtt = inRtt;
 	}
 	else
 	{
-		const int64 timeStampDelta = inServerTimeStamp - GetClientTimeStamp();
-		mTimeStamp = inServerUtcTime;
 		mServerTimeStamp = inServerTimeStamp;
 
-		mSumTimeStampDelta += timeStampDelta;
-		mSumRtt += inRtt;
-
-		double TargetWorldTimeSecondsDelta = 0;
-		double TargetWorldRtt = 0;
-
-		mNumTimeStampDelta += 1;
-
-		if (mNumTimeStampDelta > 250)
+		if (inRtt - mRtt > 10)
 		{
-			mSumTimeStampDelta			/= mNumTimeStampDelta;
-			mSumRtt						/= mNumTimeStampDelta;
-			TargetWorldTimeSecondsDelta = mSumTimeStampDelta / mNumTimeStampDelta;
-			TargetWorldRtt				= mSumRtt / mNumTimeStampDelta;
-			mNumTimeStampDelta			= 1;
+			return;
 		}
 
-		if (mTimeStampDelta == 0)
+		mSumRtt += inRtt;
+
+		double TargetWorldRtt = 0;
+
+		mNumRtt += 1;
+		
+		if (mNumRtt > 250)
 		{
-			mTimeStampDelta = TargetWorldTimeSecondsDelta;
-			mRtt = mSumRtt;
+			mSumRtt	/= mNumRtt;
+			mNumRtt = 1;
+		}
+
+		TargetWorldRtt = mSumRtt / mNumRtt;
+
+		if (mRtt == 0)
+		{
+			mRtt = TargetWorldRtt;
 		}
 		else
 		{
-			mTimeStampDelta += (TargetWorldTimeSecondsDelta - mTimeStampDelta) * 0.5;
 			mRtt += (TargetWorldRtt - mRtt) * 0.5;
 		}
 	}
 
 }
 
-const int64 UNetworkTimeStamp::GetServerTimeStamp()
+const int64 UNetworkTimeStamp::GetUtcTimeStmap()
 {
-	return GetDurationUtcTimeStamp();
-	//return GetClientTimeStamp() + mTimeStampDelta - mRtt;
+	FDateTime currentUtcTimeStamp = FDateTime::UtcNow();
+	const int64 nowClientUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
+	return nowClientUtcTimeStamp;
 }
 
-const int64 UNetworkTimeStamp::GetClientTimeStamp()
+const int64 UNetworkTimeStamp::GetServerTimeStamp()
 {
-	return GetDurationUtcTimeStamp() - mRtt - mUtcTimeStampDelta;
+	return mServerTimeStamp + GetDurationUtcTimeStamp() + (mRtt / 2);
+}
+
+const int64 UNetworkTimeStamp::GetRTT()
+{
+	return mRtt;
 }
 
 const int64 UNetworkTimeStamp::GetDurationUtcTimeStamp()
 {
-	FDateTime	currentUtcTimeStamp			= FDateTime::UtcNow();
-	const int64 nowClientUtcTimeStamp		= (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
-	const int64 oldClientUtcTimeStmap		= mTimeStamp;
-
-	const int64 tempUtcDurationTimeStmap	= (nowClientUtcTimeStamp - oldClientUtcTimeStmap);
-	const int64 predictionTimeStamp			= mServerTimeStamp + tempUtcDurationTimeStmap;
-
-	return		predictionTimeStamp;
+	return GetUtcTimeStmap() - mOldUtcTimeStamp;
 }

@@ -74,6 +74,7 @@ public:
 	void Send(SendBufferPtr FSendBuffer);
 
 	UNetworkTimeStamp* GetTimeStamp();
+	int64 GetPacketTimeStmap() { return mPacketTimeStmap; }
 
 public:
 	bool IsConnected() const;
@@ -101,6 +102,7 @@ private:
 	ANetworkController*		mController;
 
 	UNetworkTimeStamp*		mTimeStamp;
+	int64					mPacketTimeStmap;
 
 	float					mTickDelayTime;
 

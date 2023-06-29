@@ -284,6 +284,7 @@ void FNetworkSession::RegisterSend()
 
 void FNetworkSession::RegisterRecv()
 {
+	mPacketTimeStmap = mTimeStamp->GetUtcTimeStmap();
 	bool ret;
 	if (nullptr == mSocket)
 	{
@@ -353,7 +354,7 @@ void FNetworkSession::ProcessRecv(int32 numOfBytes)
 		mRecvBuffer->Enqueue(&mTempBuffer[0], numOfBytes);
 		//mRecvBuffer->MoveRear(static_cast<uint32>(numOfBytes));
 
-		mRecvBuffer->TestPrintLog();
+		//mRecvBuffer->TestPrintLog();
 
 		int32 usedSize = mRecvBuffer->GetUsedSize();
 		bool recvResult = mController->OnRecv(mRecvBuffer, usedSize);
@@ -376,6 +377,10 @@ void FNetworkSession::ProcessRecv(int32 numOfBytes)
 
 bool FNetworkSession::CanRecv()
 {
+	if (false == IsConnected())
+	{
+		return false;
+	}
 
 	bool IsData		= GetHasData();
 	bool IsRecv		= mIsRecving.Load() == static_cast<bool>(Default::SESSION_IS_FREE) ? true : false;
@@ -564,6 +569,11 @@ bool FNetworkSession::IsConnected() const
 bool FNetworkSession::GetHasData()
 {
 	if (nullptr == mSocket)
+	{
+		return false;
+	}
+
+	if (SCS_NotConnected == mSocket->GetConnectionState())
 	{
 		return false;
 	}

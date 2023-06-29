@@ -3,6 +3,7 @@
 
 #include "Framework/Game/PC_Game.h"
 #include <Network/NetworkGameMode.h>
+#include <Network/NetworkSession.h>
 #include <Network/NetworkController.h>
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Main/W_MainGame.h>
@@ -12,6 +13,8 @@
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FCommonPacketHandler.h>
 #include <Network/NetworkUtils.h>
+
+#include <Network/NetworkTimeStamp.h>
 
 #include <Game/C_Game.h>
 #include <Game/GM_Game.h>
@@ -90,11 +93,18 @@ bool APC_Game::OnDisconnect()
 
 bool APC_Game::OnTick()
 {
-	FDateTime nowUtcTimeStamp = FDateTime::UtcNow();
-	const int64 millUtcTimeStamp = (nowUtcTimeStamp.ToUnixTimestamp() * 1000) + nowUtcTimeStamp.GetMillisecond();
+	UNetworkTimeStamp* networkTimeStmap = this->GetTimeStamp();
+	if (nullptr == networkTimeStmap)
+	{
+		return false;
+	}
+
+	const int64 nowUtcTimeStamp = networkTimeStmap->GetUtcTimeStmap();
+	const int64 nowRTT			= networkTimeStmap->GetRTT();
 
 	Protocol::C2S_ReplicatedServerTimeStamp timeStampPacket;
-	timeStampPacket.set_utc_time(millUtcTimeStamp);
+	timeStampPacket.set_utc_time(nowUtcTimeStamp);
+	timeStampPacket.set_rtt(nowRTT);
 	SendBufferPtr pakcetBuffer = FCommonPacketHandler::MakeSendBuffer(this, timeStampPacket);
 	this->Send(pakcetBuffer);
 	return true;

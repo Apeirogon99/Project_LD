@@ -246,6 +246,11 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     return true;
 }
 
+bool Handle_S2C_PlayAnimation(ANetworkController* controller, Protocol::S2C_PlayAnimation& pkt)
+{
+    return true;
+}
+
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt)
 {
     UWorld* world = controller->GetWorld();

@@ -23,25 +23,25 @@ void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FV
 		return;
 	}
 
-	FVector		direction = inNewMovementLocation - inOldMovementLocation;
+	FVector	direction = inNewMovementLocation - inOldMovementLocation;
 	direction.Normalize();
 
-	FRotator	rotation = direction.Rotation();
-	FVector		velocity = rotation.Vector() * pawn->GetMovementComponent()->GetMaxSpeed();
-	float		duration = inTime / 1000.0f;
-	FVector		deadReckoningLocation = inOldMovementLocation + pawn->GetVelocity() * duration + 0.5f * velocity * duration * duration;
+	FVector velocity = direction * 330.0f;
+	float	duration = inTime / 1000.0f;
 
-	float distance1 = FVector::Distance(deadReckoningLocation, inOldMovementLocation);
-	float distance2 = FVector::Distance(inNewMovementLocation, inOldMovementLocation);
+	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
 
-	if (distance1 >= distance2)
+	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
+	FVector curLocation = pawn->GetActorLocation();
+	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
+	if (locationDistance > 50.0f)
 	{
 		pawn->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
-		pawn->SetActorRotation(rotation);
+		pawn->SetActorRotation(direction.Rotation());
 	}
 	else
 	{
-		pawn->SetActorLocation(deadReckoningLocation, false, nullptr, ETeleportType::ResetPhysics);
+		//pawn->SetActorLocation(deadReckoningLocation, false, nullptr, ETeleportType::ResetPhysics);
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 	}
 }
