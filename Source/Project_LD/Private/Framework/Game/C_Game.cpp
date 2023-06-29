@@ -66,7 +66,7 @@ void AC_Game::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-void AC_Game::InteractItem()
+void AC_Game::Interactive()
 {
 	TArray<AActor*> Result;
 	GetOverlappingActors(Result, AActor::StaticClass());

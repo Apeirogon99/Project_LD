@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "Struct/Game/EnemyStateTypeData.h"
 #include "EnemyAnimInstance.generated.h"
 
 /**
@@ -28,8 +29,11 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", meta = (AllowPrivateAccess = "true"))
 	AEnemyBase* mCharacter;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State", meta = (AllowPrivateAccess = "true"))
 	AEnemyState* mEnemyState;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State", meta = (AllowPrivateAccess = "true"))
+	EEnemyStateType mCurrentState;
 
 private:
 	UFUNCTION(BlueprintCallable, Category = "Update Properties")

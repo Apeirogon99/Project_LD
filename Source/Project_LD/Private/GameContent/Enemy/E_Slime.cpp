@@ -3,6 +3,7 @@
 
 #include "GameContent/Enemy/E_Slime.h"
 #include <Framework/Game/GS_Game.h>
+#include "GameContent/Enemy/EnemyStateBase.h"
 
 AE_Slime::AE_Slime()
 {
@@ -66,9 +67,21 @@ void AE_Slime::Tick(float DeltaTime)
 
 void AE_Slime::Interactive(AC_Game* inPlayer)
 {
-	static int32 health = 100;
+	AEnemyState* state = GetPlayerState<AEnemyState>();
+	if (state == nullptr)
+	{
+		return;
+	}
+	if(!IsValid(state->GetEnemyStateBase()))
+	{ 
+		return;
+	}
 
-	health -= 10;
+	float damage = 10.f;
 
-	UE_LOG(LogTemp, Warning, TEXT("Interactive Slime HP : %d"), health);
+	FEnemyStatData stateData = state->GetEnemyCurrentStats();
+	stateData.base_health -= damage;
+	state->SetEnemyCurrentStats(stateData);
+
+	state->Hit();
 }

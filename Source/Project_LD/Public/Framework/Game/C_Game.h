@@ -37,7 +37,7 @@ protected:
 
 public:
 	UFUNCTION()
-	void InteractItem();
+	void Interactive();
 
 	UCameraComponent* GetCameraComponent() { return mGameCameraComponent; }
 };

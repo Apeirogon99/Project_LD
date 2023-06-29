@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
+#include "Struct/Game/EnemyStateTypeData.h"
 #include "GameFramework/Actor.h"
 #include "EnemyStateBase.generated.h"
 
+/*
 class AEnemyState;
 
 UCLASS()
@@ -20,9 +22,9 @@ public:
 	virtual void Attack(AEnemyState* EnemyState) {}
 	virtual void Chase(AEnemyState* EnemyState) {}
 	virtual void Kill(AEnemyState* EnemyState) {}
-
+	
 protected:
-	void SetChangeState(AEnemyState* EnemyState, UEnemyBaseState* EnemyStateBase);
+	void SetChangeState(AEnemyState* EnemyState, UEnemyBaseState* EnemyStateBase, EEnemyStateType Type);
 };
 
 UCLASS()
@@ -113,6 +115,131 @@ public:
 
 private:
 	static UEnemyHitState* instance;
+};
+
+UCLASS()
+class PROJECT_LD_API AEnemyStateBase : public AActor
+{
+	GENERATED_BODY()
+
+public:
+	AEnemyStateBase();
+};
+*/
+
+UCLASS()
+class PROJECT_LD_API UEnemyBaseState : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	virtual EEnemyStateType Idle() { return EEnemyStateType::None; }
+	virtual EEnemyStateType Hit() { return EEnemyStateType::None; }
+	virtual EEnemyStateType Attack() { return EEnemyStateType::None; }
+	virtual EEnemyStateType Chase() { return EEnemyStateType::None; }
+	virtual EEnemyStateType Kill() { return EEnemyStateType::None; }
+};
+
+UCLASS()
+class PROJECT_LD_API UEnemyIdleState : public UEnemyBaseState
+{
+	GENERATED_BODY()
+
+public:
+	virtual EEnemyStateType Idle();
+	virtual EEnemyStateType Hit();
+	virtual EEnemyStateType Attack();
+	virtual EEnemyStateType Chase();
+	virtual EEnemyStateType Kill();
+};
+
+UCLASS()
+class PROJECT_LD_API UEnemyChaseState : public UEnemyBaseState
+{
+	GENERATED_BODY()
+
+public:
+	virtual EEnemyStateType Idle();
+	virtual EEnemyStateType Hit();
+	virtual EEnemyStateType Attack();
+	virtual EEnemyStateType Chase();
+	virtual EEnemyStateType Kill();
+};
+
+UCLASS()
+class PROJECT_LD_API UEnemyDeathState : public UEnemyBaseState
+{
+	GENERATED_BODY()
+
+public:
+	virtual EEnemyStateType Idle();
+	virtual EEnemyStateType Hit();
+	virtual EEnemyStateType Attack();
+	virtual EEnemyStateType Chase();
+	virtual EEnemyStateType Kill();
+};
+
+UCLASS()
+class PROJECT_LD_API UEnemyAttackState : public UEnemyBaseState
+{
+	GENERATED_BODY()
+
+public:
+	virtual EEnemyStateType Idle();
+	virtual EEnemyStateType Hit();
+	virtual EEnemyStateType Attack();
+	virtual EEnemyStateType Chase();
+	virtual EEnemyStateType Kill();
+};
+
+UCLASS()
+class PROJECT_LD_API UEnemyHitState : public UEnemyBaseState
+{ 
+	GENERATED_BODY()
+
+public:
+	virtual EEnemyStateType Idle();
+	virtual EEnemyStateType Hit();
+	virtual EEnemyStateType Attack();
+	virtual EEnemyStateType Chase();
+	virtual EEnemyStateType Kill();
+};
+
+UCLASS()
+class PROJECT_LD_API AEnemyStateMachine : public AActor
+{
+	GENERATED_BODY()
+
+public:
+	AEnemyStateMachine();
+	~AEnemyStateMachine();
+
+public:
+	void Idle();
+	void Hit();
+	void Attack();
+	void Chase();
+	void Kill();
+
+public:
+	void SetType(EEnemyStateType type) { mType = type; }
+
+public:
+	EEnemyStateType		GetType() const			{ return mType; }
+	UEnemyBaseState*		GetState() const			{ return mState; }
+
+private:
+	EEnemyStateType		mType;
+	UEnemyBaseState*		mState;
+
+	UEnemyIdleState*			mIdleState;
+	UEnemyChaseState*		mChaseState;
+	UEnemyDeathState*		mDeathState;
+	UEnemyAttackState*		mAttackState;
+	UEnemyHitState*			mHitState;
+
+private:
+	void TypeSwitch();
 };
 
 UCLASS()

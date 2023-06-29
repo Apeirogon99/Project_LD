@@ -7,7 +7,6 @@
 
 AEnemyState::AEnemyState()
 {
-	mState = UEnemyIdleState::GetInstance();
 }
 
 AEnemyState::~AEnemyState()
@@ -18,6 +17,9 @@ AEnemyState::~AEnemyState()
 void AEnemyState::BeginPlay()
 {
 	Super::BeginPlay();
+
+	mState = NewObject<AEnemyStateMachine>();
+	mStateType = EEnemyStateType::Idle;
 }
 
 void AEnemyState::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -45,27 +47,43 @@ void AEnemyState::SetEnemyStats(const FEnemyStatData& inEnemyStats)
 	mStats = inEnemyStats;
 }
 
-void AEnemyState::SetState(UEnemyBaseState* StateBase)
+void AEnemyState::SetState(EEnemyStateType Type)
 {
-	mState = StateBase;
+	mStateType = Type;
+}
+
+AEnemyStateMachine* AEnemyState::GetEnemyStateBase()
+{
+	return mState;
+}
+
+void AEnemyState::Idle()
+{
+	mState->Idle();
+	SetState(mState->GetType());
 }
 
 void AEnemyState::Hit()
 {
-	mState->Hit(this);
+	mState->Hit();
+	auto a = mState->GetType();
+	SetState(a);
 }
 
 void AEnemyState::Attack()
 {
-	mState->Attack(this);
+	mState->Attack();
+	SetState(mState->GetType());
 }
 
 void AEnemyState::Chase()
 {
-	mState->Chase(this);
+	mState->Chase();
+	SetState(mState->GetType());
 }
 
 void AEnemyState::Kill()
 {
-	mState->Kill(this);
+	mState->Kill();
+	SetState(mState->GetType());
 }
