@@ -19,6 +19,7 @@
 AMovementController::AMovementController()
 {
 	IsMoveToMouseCursor = false;
+	IsCorrection = false;
 }
 
 AMovementController::~AMovementController()
@@ -35,6 +36,10 @@ void AMovementController::PlayerTick(float DeltaTime)
 		IsMoveToMouseCursor = false;
 	}
 
+	if (IsCorrection)
+	{
+		MoveCorrection(DeltaTime);
+	}
 }
 
 void AMovementController::SetupInputComponent()
@@ -115,6 +120,8 @@ void AMovementController::SetNewMoveDestination(const FVector DestLocation)
 	controller->Send(pakcetBuffer);
 
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
+
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Des Pos %ws"), *DestLocation.ToString()), ELogLevel::Warning);
 }
 
 void AMovementController::MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
@@ -139,14 +146,45 @@ void AMovementController::MoveDestination(const FVector inOldMovementLocation, c
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
 	if (locationDistance > 50.0f)
 	{
-		pawn->SetActorLocation(inOldMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
-		pawn->SetActorRotation(direction.Rotation());
-		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("New Pos %ws"), *inOldMovementLocation.ToString()), ELogLevel::Warning);
+		IsCorrection = true;
+		mTargetLoction = inOldMovementLocation;
 	}
 	else
 	{
-		//pawn->SetActorLocation(deadReckoningLocation, false, nullptr, ETeleportType::ResetPhysics);
-		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Dec Pos %ws"), *deadReckoningLocation.ToString()), ELogLevel::Warning);
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
+		IsCorrection = true;
+		mTargetLoction = deadReckoningLocation;
 	}
+
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
+}
+
+void AMovementController::MoveCorrection(const float inDeltaTime)
+{
+	APawn* pawn = this->GetPawn();
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
+	if (false == IsCorrection)
+	{
+		return;
+	}
+
+	FVector curLocation = pawn->GetActorLocation();
+	float	velocity = 10.0f;
+
+	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
+
+	float distance = FVector::Dist2D(curLocation, correctionLocation);
+	if (distance <= 10.0f)
+	{
+		IsCorrection = false;
+	}
+	else
+	{
+		pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
+	}
+
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("CRR Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
 }

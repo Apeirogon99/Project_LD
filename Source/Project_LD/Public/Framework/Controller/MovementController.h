@@ -33,6 +33,7 @@ public:
 public:
 	void SetNewMoveDestination(const FVector DestLocation);
 	void MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
+	void MoveCorrection(const float inDeltaTime);
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
@@ -40,4 +41,8 @@ public:
 
 private:
 	bool IsMoveToMouseCursor;
+	bool IsCorrection;
+
+	FVector mTargetLoction;
+
 };

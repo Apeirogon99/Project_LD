@@ -221,6 +221,8 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
     const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
 
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MOVEMENT [SERVER::%lld] [CLIENT::%lld] [DURATION::%lld]"), lastMovementTimeStamp, nowServerTimeStamp, durationTimeStamp), ELogLevel::Warning);
+
     FVector     oldMovementLocation = FVector(pkt.cur_location().x(), pkt.cur_location().y(), pkt.cur_location().z());
     FVector     newMovementLocation = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
 

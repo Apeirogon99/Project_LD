@@ -4,11 +4,14 @@
 #include "Framework/Game/NPC_Game.h"
 #include "Framework/Game/NC_Game.h"
 
+#include <Network/NetworkUtils.h>
+
 #include <GameFramework/PawnMovementComponent.h>
 #include <Blueprint/AIBlueprintHelperLibrary.h>
 
 ANPC_Game::ANPC_Game()
 {
+	IsCorrection = false;
 }
 
 ANPC_Game::~ANPC_Game()
@@ -34,14 +37,48 @@ void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FV
 	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
 	FVector curLocation = pawn->GetActorLocation();
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
-	if (locationDistance > 50.0f)
+	if (locationDistance > 5.0f)
 	{
-		pawn->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
+		pawn->SetActorLocation(inOldMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
 		pawn->SetActorRotation(direction.Rotation());
 	}
 	else
 	{
-		//pawn->SetActorLocation(deadReckoningLocation, false, nullptr, ETeleportType::ResetPhysics);
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
+		IsCorrection = true;
+		mTargetLoction = deadReckoningLocation;
 	}
+
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
+}
+
+void ANPC_Game::MoveCorrection(const float inDeltaTime)
+{
+	APawn* pawn = this->GetPawn();
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
+	if (false == IsCorrection)
+	{
+		return;
+	}
+
+	FVector curLocation = pawn->GetActorLocation();
+	float	velocity = 10.0f;
+
+	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
+
+	float distance = FVector::Dist2D(curLocation, correctionLocation);
+	if (distance <= 1.0f)
+	{
+		IsCorrection = false;
+	}
+	else
+	{
+		pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
+		//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, correctionLocation);
+	}
+
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("CRR Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
 }
