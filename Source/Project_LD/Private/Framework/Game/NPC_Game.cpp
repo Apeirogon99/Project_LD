@@ -45,7 +45,7 @@ void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FV
 	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
 	FVector curLocation = pawn->GetActorLocation();
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
-	if (locationDistance > 5.0f)
+	if (locationDistance > 10.0f)
 	{
 		IsCorrection = true;
 		mTargetLoction = inOldMovementLocation;
@@ -78,15 +78,14 @@ void ANPC_Game::MoveCorrection(const float inDeltaTime)
 	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
 
 	float distance = FVector::Dist2D(curLocation, correctionLocation);
-	if (distance <= 5.0f)
+	if (distance <= 10.0f)
 	{
 		IsCorrection = false;
 	}
 	else
 	{
 		pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
-		//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, correctionLocation);
 	}
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("NPC Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("NPC Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
 }

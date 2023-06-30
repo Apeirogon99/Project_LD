@@ -25,14 +25,12 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 		return true;
 	}
 
-	const int64 predict = timeStamp->GetServerTimeStamp();
-
 	const int64 serverTimeStamp = pkt.time_stamp();
-	const int64 serverUtcTime = pkt.utc_time();
 
-	const int64 clinetUtcTime = timeStamp->GetUtcTimeStmap();
+	const int64 serverUtcTime	= pkt.utc_time();
+	const int64 clinetUtcTime	= timeStamp->GetUtcTimeStmap();
 
-	const int64 rtt = clinetUtcTime - serverUtcTime;
+	const int64 rtt				= clinetUtcTime - serverUtcTime;
 
 	timeStamp->UpdateTimeStamp(serverTimeStamp, clinetUtcTime, rtt);
 

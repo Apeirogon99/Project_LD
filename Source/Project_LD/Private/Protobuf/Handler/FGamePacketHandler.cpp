@@ -192,6 +192,9 @@ bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C
 
 bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_MovementCharacter& pkt)
 {
+    FDateTime currentUtcTimeStamp = FDateTime::UtcNow();
+    const int64 nowClientUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
+
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -221,8 +224,6 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
     const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
 
-    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MOVEMENT [SERVER::%lld] [CLIENT::%lld] [DURATION::%lld]"), lastMovementTimeStamp, nowServerTimeStamp, durationTimeStamp), ELogLevel::Warning);
-
     FVector     oldMovementLocation = FVector(pkt.cur_location().x(), pkt.cur_location().y(), pkt.cur_location().z());
     FVector     newMovementLocation = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
 
@@ -244,6 +245,11 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
         }
         npcController->NPCMoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
     }
+
+    FDateTime oldUtcTimeStamp = FDateTime::UtcNow();
+    const int64 oldClientUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
+
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MOVEMENT [SERVER::%lld] [CLIENT::%lld] [DURATION::%lld] [EXEC::%lld]"), lastMovementTimeStamp, nowServerTimeStamp, durationTimeStamp, nowClientUtcTimeStamp - oldClientUtcTimeStamp), ELogLevel::Warning);
 
     return true;
 }
@@ -306,9 +312,8 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
         return false;
     }
 
-    const Protocol::SEnemy& enemyInfo = pkt.enemy();
-    int64 objectID = enemyInfo.object_id();
-    int32 enemyID = enemyInfo.enemy_id();
+    int64 objectID  = pkt.object_id();
+    int32 enemyID   = pkt.enemy_id();
 
     if (nullptr != gameState->FindGameObject(objectID))
     {
@@ -316,9 +321,12 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
         return false;
     }
 
+    const Protocol::SEnemy& enemyInfo = pkt.enemy();
     const Protocol::SVector& spawnLocation = enemyInfo.location();
     FVector itemLocation = FVector(spawnLocation.x(), spawnLocation.y(), spawnLocation.z());
-    FRotator itemRotator = FRotator::ZeroRotator;
+
+    const Protocol::SRotator& spawnRotation = enemyInfo.rotation();
+    FRotator itemRotator = FRotator(spawnRotation.pitch(), spawnRotation.yaw(), spawnRotation.roll());
 
     AActor* newActor = gameState->CreateEnemyCharacter(enemyID, itemLocation, itemRotator, objectID);
     if (nullptr == newActor)
@@ -331,6 +339,58 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
     //{
     //    return false;
     //}
+
+    return true;
+}
+
+bool Handle_S2C_TickEnemy(ANetworkController* controller, Protocol::S2C_TickEnemy& pkt)
+{
+    return true;
+}
+
+bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_MovementEnemy& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    int64 objectID = pkt.object_id();
+
+    AActor* actor = gameState->FindGameObject(objectID);
+    if (nullptr == actor)
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AEnemyBase* enemy = Cast<AEnemyBase>(actor);
+    if (nullptr == enemy)
+    {
+        return false;
+    }
+
+    AEnemyController* enemyController = Cast<AEnemyController>(enemy->GetController());
+    if (nullptr == enemyController)
+    {
+        return false;
+    }
+
+    const int64 lastMovementTimeStamp = pkt.timestamp();
+    const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
+    const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
+
+    FVector     oldMovementLocation = FVector(pkt.cur_location().x(), pkt.cur_location().y(), pkt.cur_location().z());
+    FVector     newMovementLocation = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
+
+    enemyController->MoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
 
     return true;
 }

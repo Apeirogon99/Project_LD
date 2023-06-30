@@ -77,10 +77,19 @@ void AMovementController::MoveToMouseCursor()
 	FHitResult Hit;
 	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
 
-	if (Hit.bBlockingHit)
+	if (false == Hit.bBlockingHit)
 	{
-		SetNewMoveDestination(Hit.ImpactPoint);
+		return;
 	}
+
+	int32 isGround = Hit.Actor.Get()->Tags.Find("Ground");
+	if (isGround == INDEX_NONE)
+	{
+		return;
+	}
+
+	SetNewMoveDestination(Hit.ImpactPoint);
+
 }
 
 void AMovementController::SetNewMoveDestination(const FVector DestLocation)
@@ -121,7 +130,7 @@ void AMovementController::SetNewMoveDestination(const FVector DestLocation)
 
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Des Pos %ws"), *DestLocation.ToString()), ELogLevel::Warning);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Des Pos %ws"), *DestLocation.ToString()), ELogLevel::Warning);
 }
 
 void AMovementController::MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
@@ -144,7 +153,7 @@ void AMovementController::MoveDestination(const FVector inOldMovementLocation, c
 	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
 	FVector curLocation = pawn->GetActorLocation();
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
-	if (locationDistance > 5.0f)
+	if (locationDistance > 10.0f)
 	{
 		IsCorrection = true;
 		mTargetLoction = inOldMovementLocation;
@@ -177,7 +186,7 @@ void AMovementController::MoveCorrection(const float inDeltaTime)
 	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
 
 	float distance = FVector::Dist2D(curLocation, correctionLocation);
-	if (distance <= 5.0f)
+	if (distance <= 10.0f)
 	{
 		IsCorrection = false;
 	}
@@ -186,5 +195,5 @@ void AMovementController::MoveCorrection(const float inDeltaTime)
 		pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
 	}
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("PLAYER Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("PLAYER Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
 }
