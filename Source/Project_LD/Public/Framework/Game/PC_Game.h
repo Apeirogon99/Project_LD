@@ -37,6 +37,5 @@ protected:
 public:
 	void SwitchUIMode();
 	void SwitchInventory();
-	void Interactive();
 };
 	

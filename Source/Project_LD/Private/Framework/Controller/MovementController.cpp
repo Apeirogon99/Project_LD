@@ -15,6 +15,7 @@
 #include <Framework/Character/AppearanceCharacter.h>
 #include <Blueprint/AIBlueprintHelperLibrary.h>
 #include <Kismet/GameplayStatics.h>
+#include <Interface/InteractiveInterface.h>
 
 AMovementController::AMovementController()
 {
@@ -82,14 +83,26 @@ void AMovementController::MoveToMouseCursor()
 		return;
 	}
 
-	int32 isGround = Hit.Actor.Get()->Tags.Find("Ground");
-	if (isGround == INDEX_NONE)
+	if (Hit.Actor.Get()->Tags.Num() > 0)
 	{
-		return;
+		FName actortag = Hit.Actor.Get()->Tags[0];
+		if (actortag == FName("Ground"))
+		{
+			SetNewMoveDestination(Hit.ImpactPoint);
+		}
+		else
+		{
+			if (Hit.Actor->GetClass()->ImplementsInterface(UInteractiveInterface::StaticClass()))
+			{
+				AC_Game* character = Cast<AC_Game>(GetCharacter());
+				if (character == nullptr)
+				{
+					return;
+				}
+				Cast<IInteractiveInterface>(Hit.Actor)->Interactive(character);
+			}
+		}
 	}
-
-	SetNewMoveDestination(Hit.ImpactPoint);
-
 }
 
 void AMovementController::SetNewMoveDestination(const FVector DestLocation)
@@ -196,4 +209,10 @@ void AMovementController::MoveCorrection(const float inDeltaTime)
 	}
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("PLAYER Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
+}
+
+void AMovementController::Interactive()
+{
+	AC_Game* player = Cast<AC_Game>(GetCharacter());
+	player->Interactive();
 }

@@ -11,7 +11,7 @@
 // Sets default values
 AEnemyBase::AEnemyBase()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -25,6 +25,8 @@ AEnemyBase::AEnemyBase()
 	AIControllerClass = AEnemyController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
+	Tags.Add(FName("Enemy"));
+	
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("EnemyCollision"));
 }
 
@@ -88,11 +90,6 @@ void AEnemyBase::ChangeState(const EEnemyStateType inStateType, float inStartTim
 	default:
 		break;
 	}
-}
-
-void AEnemyBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
 }
 
 void AEnemyBase::Interactive(AC_Game* inPlayer)

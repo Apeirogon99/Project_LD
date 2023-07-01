@@ -35,9 +35,9 @@ AItemParent::AItemParent()
 
 	//Sphere Collision
 	mSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
-	mSphere->InitSphereRadius(50.0f);
+	mSphere->InitSphereRadius(20.0f);
 	mSphere->SetupAttachment(RootComponent);
-	mSphere->SetCollisionProfileName(TEXT("OverlapAll"));
+	mSphere->SetCollisionProfileName(TEXT("ItemCollision"));
 
 	mIcon = nullptr;
 
@@ -94,6 +94,8 @@ AItemParent::AItemParent()
 	}
 
 	mPlayer = nullptr;
+
+	Tags.Add(FName("Item"));
 }
 
 // Called when the game starts or when spawned

@@ -9,15 +9,12 @@
 #include <Widget/Game/Main/W_MainGame.h>
 #include <Widget/WidgetUtils.h>
 
-#include <Framework/Game/C_Game.h>
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FCommonPacketHandler.h>
 #include <Network/NetworkUtils.h>
 
 #include <Network/NetworkTimeStamp.h>
 
-#include <Game/C_Game.h>
-#include <Game/GM_Game.h>
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
 
@@ -120,7 +117,6 @@ void APC_Game::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	InputComponent->BindAction("ToggleInventory",IE_Pressed,this,&APC_Game::SwitchInventory);
-	InputComponent->BindAction("InteractiveF", IE_Pressed, this, &APC_Game::Interactive);
 }
 
 void APC_Game::SwitchUIMode()
@@ -149,10 +145,4 @@ void APC_Game::SwitchInventory()
 	UW_MainGame* maingame = Cast<UW_MainGame>(widget);
 
 	maingame->InventoryOpenRequest();
-}
-
-void APC_Game::Interactive()
-{
-	AC_Game* player = Cast<AC_Game>(GetCharacter());
-	player->Interactive();
 }

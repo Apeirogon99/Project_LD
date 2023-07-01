@@ -25,15 +25,10 @@ public:
 	// Sets default values for this actor's properties
 	AItemParent();
 
-private:
-	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
-	USceneComponent* mSceneComponent;
-
-	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
-	USkeletalMeshComponent* mSkeletalMeshComponent;
-
-	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
-	USphereComponent* mSphere;
+public:
+	virtual void Interactive(AC_Game* inPlayer) override;
+	void Init(int32 Code, int32 GameObjectId);
+	void FindPlayer();
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
@@ -63,18 +58,23 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	AC_Game* mPlayer;
 
-private:
-	UDataTable* mDataTable;
-
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void Destroyed() override;
 
-public:
-	virtual void Interactive(AC_Game* inPlayer) override;
-	void Init(int32 Code, int32 GameObjectId);
-	void FindPlayer();
+private:
+	UDataTable* mDataTable;
+
+private:
+	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
+	USceneComponent* mSceneComponent;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
+	USkeletalMeshComponent* mSkeletalMeshComponent;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
+	USphereComponent* mSphere;
 
 private:
 	void ItemObjectDataInit(int32 Categoryid);
