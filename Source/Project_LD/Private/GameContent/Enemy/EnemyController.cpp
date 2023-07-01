@@ -44,7 +44,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	FVector	direction = inNewMovementLocation - inOldMovementLocation;
 	direction.Normalize();
 
-	FVector velocity = direction * 330.0f;
+	FVector velocity = direction * 100.0f;
 	float	duration = inTime / 1000.0f;
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
@@ -80,7 +80,7 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 	}
 
 	FVector curLocation = pawn->GetActorLocation();
-	float	velocity = 10.0f;
+	float	velocity = 2.0f;
 
 	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
 
