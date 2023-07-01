@@ -53,7 +53,7 @@ void UW_SelectCharacter::CreateCharacter(const FCharacterData& inCharacterData)
 		LoadChild();
 	}
 
-	int32 seat = inCharacterData.mAppearance.mSeat;
+	int32 seat = inCharacterData.GetAppearance().GetSeat();
 	if (!(0 <= seat && seat < mCharacterButtonWidgets.Num()))
 	{
 		return;

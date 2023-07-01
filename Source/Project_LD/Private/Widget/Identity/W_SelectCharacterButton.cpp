@@ -112,11 +112,11 @@ void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterData& inCharacte
 
 	mCharacterData = inCharacterData;
 
-	FText characterTitle = FText::FromString(FString::Printf(TEXT("%dLv %s"), mCharacterData.mLevel, *mCharacterData.mName));
+	FText characterTitle = FText::FromString(FString::Printf(TEXT("%dLv %s"), mCharacterData.GetLevel(), *mCharacterData.GetName()));
 	mCharacterInfoText->SetText(characterTitle);
 
 	AAppearanceCharacter* NewDummyCharacter = nullptr;
-	TSubclassOf<AAppearanceCharacter> raceClass = mDummyCharacterClass[StaticCast<int32>(mCharacterData.mAppearance.mRace)];
+	TSubclassOf<AAppearanceCharacter> raceClass = mDummyCharacterClass[StaticCast<int32>(mCharacterData.GetAppearance().GetRace())];
 	if (raceClass)
 	{
 		FActorSpawnParameters spawnParams;
@@ -124,7 +124,7 @@ void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterData& inCharacte
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 		mCharacter = GetWorld()->SpawnActor<AAppearanceCharacter>(raceClass, mCharacterLocation, mCharacterRotation, spawnParams);
-		mCharacter->UpdateCharacterVisual(mCharacterData.mAppearance, mCharacterData.mEquipment);
+		mCharacter->UpdateCharacterVisual(mCharacterData.GetAppearance(), mCharacterData.GetEquipment());
 	}
 
 	if (mCharacter)
@@ -241,7 +241,7 @@ void UW_SelectCharacterButton::CreateCharacter()
 	ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	if (gameinstance)
 	{
-		gameinstance->mCharacterData.mAppearance.mSeat = mCharacterButtonNumber;
+		gameinstance->mCharacterData.GetAppearance().SetSeat(mCharacterButtonNumber);
 	}
 
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
@@ -265,7 +265,7 @@ void UW_SelectCharacterButton::DeleteCharacter()
 		ANetworkController* controller = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode())->GetNetworkController();
 		Protocol::C2S_DeleteCharacter packet;
 
-		packet.set_name(UNetworkUtils::ConvertString(mCharacterData.mName));
+		packet.set_name(UNetworkUtils::ConvertString(mCharacterData.GetName()));
 
 		clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
 

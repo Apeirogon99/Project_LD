@@ -56,8 +56,8 @@ void UUWItem::NativeConstruct()
 
 	if (mItemObjectData != nullptr)
 	{
-		ItemBackgroundImage->SetBrushFromTexture(mFrameTextureArr[mItemObjectData->ItemData.tier_id - 1]);
-		ItemImage->SetBrushFromTexture(mItemObjectData->ItemData.icon);
+		ItemBackgroundImage->SetBrushFromTexture(mFrameTextureArr[mItemObjectData->GetItemData().GetTierID() - 1]);
+		ItemImage->SetBrushFromTexture(mItemObjectData->GetItemData().GetIcon());
 	}
 }
 
@@ -162,7 +162,7 @@ void UUWItem::Refresh()
 			return;
 		}
 
-		if (mItemObjectData->rotation)
+		if (mItemObjectData->GetRotation())
 		{
 			ItemImage->SetRenderTransformAngle(90.0f);
 		}

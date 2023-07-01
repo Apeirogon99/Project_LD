@@ -48,7 +48,7 @@ AActor* AGS_Game::CreateNPCCharacter(FVector inLocation, FRotator inRotator, con
     {
         return nullptr;
     }
-    newNPC->UpdateCharacterVisual(inCharacterData.mAppearance, inCharacterData.mEquipment);
+    newNPC->UpdateCharacterVisual(inCharacterData.GetAppearance(), inCharacterData.GetEquipment());
     newNPC->InitCharacterAnimation();
 
     ANPC_Game* npcController = Cast<ANPC_Game>(newNPC->GetController());
@@ -93,7 +93,7 @@ AActor* AGS_Game::CreateEnemyCharacter(const int32 inEnemyID, FVector inLocation
     spawnParams.Owner = this;
     spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-    TSubclassOf<AEnemyBase> enemyClass = LoadClass<AEnemyBase>(nullptr, *enemyDatas->enemy_class_path);
+    TSubclassOf<AEnemyBase> enemyClass = LoadClass<AEnemyBase>(nullptr, *enemyDatas->GetEnemyClassPath());
     if (nullptr == enemyClass)
     {
         return nullptr;

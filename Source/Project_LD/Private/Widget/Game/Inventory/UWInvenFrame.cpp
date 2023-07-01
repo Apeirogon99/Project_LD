@@ -32,21 +32,21 @@ bool UUWInvenFrame::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEve
 	{
 		if (ItemObjectData->IsValid())
 		{
-			if (ItemObjectData->Type == EItemObjectType::Inventory)
+			if (ItemObjectData->GetType() == EItemObjectType::Inventory)
 			{
 				//인벤토리에서 온 경우 인벤토리로 재 전송
 				FTile tile;
-				tile.X = ItemObjectData->position_x;
-				tile.Y = ItemObjectData->position_y;
+				tile.X = ItemObjectData->GetPositionX();
+				tile.Y = ItemObjectData->GetPositionY();
 
 				mInvenComponent->AddItemAt(ItemObjectData, mInvenComponent->TileToIndex(tile));
 
 				mInvenComponent->SetInventoryPacket(ItemObjectData, EInventoryType::Update);
 			}
-			else if (ItemObjectData->Type == EItemObjectType::Equipment)
+			else if (ItemObjectData->GetType() == EItemObjectType::Equipment)
 			{
 				//장비창에서 왔다면 해당 장비창으로 재 전송
-				int Index = ItemObjectData->ItemData.category_id - 1;
+				int Index = ItemObjectData->GetItemData().GetCategoryID() - 1;
 
 				mEquipmentComponent->GetEquipmentObjectData()[Index] = ItemObjectData;
 				mEquipmentComponent->GetEquipmentWidget()[Index]->ReMakeWidget(ItemObjectData);

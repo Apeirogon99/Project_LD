@@ -58,7 +58,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     {
         return false;
     }
-    newCharacter->UpdateCharacterVisual(newCharacterData.mAppearance, newCharacterData.mEquipment);
+    newCharacter->UpdateCharacterVisual(newCharacterData.GetAppearance(), newCharacterData.GetEquipment());
     newCharacter->InitCharacterAnimation();
 
     AAppearanceCharacter* preivewCharacter = Cast<AAppearanceCharacter>(gameState->GetPreviewCharacter());
@@ -66,7 +66,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     {
         return false;
     }
-    preivewCharacter->UpdateCharacterVisual(newCharacterData.mAppearance, newCharacterData.mEquipment);
+    preivewCharacter->UpdateCharacterVisual(newCharacterData.GetAppearance(), newCharacterData.GetEquipment());
     preivewCharacter->UpdateCharacterPose(ECharacterPose::Idle);
 
     APawn* oldCharacter = controller->GetPawn();

@@ -28,7 +28,7 @@ void UACInventoryComponent::BeginPlay()
 	for (int i = 0; i < mColums * mRows; i++)
 	{
 		mInventoryData[i] = NewObject<UItemObjectData>();
-		mInventoryData[i]->Type = EItemObjectType::Inventory;
+		mInventoryData[i]->SetType(EItemObjectType::Inventory);
 	}
 }
 
@@ -60,7 +60,7 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 	for (int i = 0; i < mColums * mRows; i++)
 	{
 		mInventoryData[i]->Clear();
-		mInventoryData[i]->Type = EItemObjectType::Inventory;
+		mInventoryData[i]->SetType(EItemObjectType::Inventory);
 	}
 
 	for (UItemObjectData* Data : mInventoryObjectArr)
@@ -68,20 +68,20 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 		int X = Data->GetSize().X;
 		int Y = Data->GetSize().Y;
 
-		for (int XIndex = Data->position_x; XIndex < Data->position_x + X; XIndex++)
+		for (int XIndex = Data->GetPositionX(); XIndex < Data->GetPositionX() + X; XIndex++)
 		{
-			for (int YIndex = Data->position_y; YIndex < Data->position_y + Y; YIndex++)
+			for (int YIndex = Data->GetPositionY(); YIndex < Data->GetPositionY() + Y; YIndex++)
 			{
 				FTile LocalTile = FTile();
 				LocalTile.X = XIndex;
 				LocalTile.Y = YIndex;
 
-				mInventoryData[TileToIndex(LocalTile)]->ObjectID = Data->ObjectID;
-				mInventoryData[TileToIndex(LocalTile)]->mItemCode = Data->mItemCode;
-				mInventoryData[TileToIndex(LocalTile)]->ItemData = Data->ItemData;
-				mInventoryData[TileToIndex(LocalTile)]->position_x = LocalTile.X;
-				mInventoryData[TileToIndex(LocalTile)]->position_y = LocalTile.Y;
-				mInventoryData[TileToIndex(LocalTile)]->rotation = Data->rotation;
+				mInventoryData[TileToIndex(LocalTile)]->SetObjectID(Data->GetObjectID());
+				mInventoryData[TileToIndex(LocalTile)]->SetItemCode(Data->GetItemCode());
+				mInventoryData[TileToIndex(LocalTile)]->SetItemData(Data->GetItemData());
+				mInventoryData[TileToIndex(LocalTile)]->SetPositionX(LocalTile.X);
+				mInventoryData[TileToIndex(LocalTile)]->SetPositionY(LocalTile.Y);
+				mInventoryData[TileToIndex(LocalTile)]->SetRotation(Data->GetRotation());
 			}
 		}
 	}
@@ -99,17 +99,18 @@ void UACInventoryComponent::LoadItem(const google::protobuf::RepeatedPtrField<Pr
 		UItemObjectData* ItemObjectData = NewObject<UItemObjectData>();
 
 		const Protocol::SItem& curItem = inItems.Get(index);
-		ItemObjectData->ObjectID	= curItem.object_id();
-		ItemObjectData->mItemCode	= curItem.item_code();
+		ItemObjectData->SetObjectID(curItem.object_id());
+		ItemObjectData->SetItemCode(curItem.item_code());
 
-		FItemData* ItemTable = Instance->GetItemData(ItemObjectData->mItemCode);
-		ItemObjectData->ItemData	= *ItemTable;
-
+		int32 Code = ItemObjectData->GetItemCode();
+		FItemData* ItemTable = Instance->GetItemData(Code);
+		ItemObjectData->SetItemData(*ItemTable);
+	
 		const Protocol::SVector2D& invenPosition = curItem.inven_position();
-		ItemObjectData->position_x	= invenPosition.x();
-		ItemObjectData->position_y	= invenPosition.y();
-		ItemObjectData->rotation	= curItem.rotation();
-		ItemObjectData->Type = EItemObjectType::Inventory;
+		ItemObjectData->SetPositionX(invenPosition.x());
+		ItemObjectData->SetPositionX(invenPosition.y());
+		ItemObjectData->SetRotation(curItem.rotation());
+		ItemObjectData->SetType(EItemObjectType::Inventory);
 
 		mInventoryObjectArr.Add(ItemObjectData);
 	}
@@ -124,7 +125,7 @@ void UACInventoryComponent::ClearInventory()
 	for (int i = 0; i < mColums * mRows; i++)
 	{
 		mInventoryData[i]->Clear();
-		mInventoryData[i]->Type = EItemObjectType::Inventory;
+		mInventoryData[i]->SetType(EItemObjectType::Inventory);
 	}
 
 	mInventoryObjectArr.Empty();
@@ -139,7 +140,7 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 		int Index = 0;
 		for (UItemObjectData*& Data : mInventoryObjectArr)
 		{
-			if (Data->ObjectID == ItemObjectData->ObjectID)
+			if (Data->GetObjectID() == ItemObjectData->GetObjectID())
 			{
 				mInventoryObjectArr.RemoveAt(Index);
 				break;
@@ -155,8 +156,8 @@ void UACInventoryComponent::RemoveItem(UItemObjectData* ItemObjectData)
 void UACInventoryComponent::AddItemAt(UItemObjectData* ItemObjectData, const int TopLeftIndex)
 {
 	FTile TileData = IndexToTile(TopLeftIndex);
-	ItemObjectData->position_x = TileData.X;
-	ItemObjectData->position_y = TileData.Y;
+	ItemObjectData->SetPositionX(TileData.X);
+	ItemObjectData->SetPositionY(TileData.Y);
 	mInventoryObjectArr.Add(ItemObjectData);
 	Refresh();
 }
@@ -291,7 +292,7 @@ bool UACInventoryComponent::GetItemAtIndex(const int index, UItemObjectData*& It
 	else
 	{
 		ItemObject = NewObject<UItemObjectData>();
-		ItemObject->Type = EItemObjectType::Inventory;
+		ItemObject->SetType(EItemObjectType::Inventory);
 		return false;
 	}
 	return false;
@@ -318,22 +319,22 @@ void UACInventoryComponent::ReplacePacket(UItemObjectData* InvenObjectData, UIte
 		replaceEqipment.set_timestamp(serverTimeStamp);
 
 		Protocol::SItem* insertInvenItem = replaceEqipment.mutable_insert_inven_item();
-		insertInvenItem->set_object_id(InvenObjectData->ObjectID);
-		insertInvenItem->set_item_code(InvenObjectData->mItemCode);
+		insertInvenItem->set_object_id(InvenObjectData->GetObjectID());
+		insertInvenItem->set_item_code(InvenObjectData->GetItemCode());
 
 		Protocol::SVector2D* insertInvenItemPositon = insertInvenItem->mutable_inven_position();
-		insertInvenItemPositon->set_x(InvenObjectData->position_x);
-		insertInvenItemPositon->set_y(InvenObjectData->position_y);
+		insertInvenItemPositon->set_x(InvenObjectData->GetPositionX());
+		insertInvenItemPositon->set_y(InvenObjectData->GetPositionY());
 
-		insertInvenItem->set_rotation(InvenObjectData->rotation);
+		insertInvenItem->set_rotation(InvenObjectData->GetRotation());
 
 		Protocol::SItem* insertEqipmentItem = replaceEqipment.mutable_insert_eqip_item();
-		insertEqipmentItem->set_object_id(EquipObejctData->ObjectID);
-		insertEqipmentItem->set_item_code(EquipObejctData->mItemCode);
+		insertEqipmentItem->set_object_id(EquipObejctData->GetObjectID());
+		insertEqipmentItem->set_item_code(EquipObejctData->GetItemCode());
 
 		Protocol::SVector2D* insertEqipmentItemPositon = insertEqipmentItem->mutable_inven_position();
-		insertEqipmentItemPositon->set_x(EquipObejctData->position_x);
-		insertEqipmentItemPositon->set_y(EquipObejctData->position_y);
+		insertEqipmentItemPositon->set_x(EquipObejctData->GetPositionX());
+		insertEqipmentItemPositon->set_y(EquipObejctData->GetPositionY());
 
 		replaceEqipment.set_part(static_cast<Protocol::ECharacterPart>(PartID));
 

@@ -80,11 +80,11 @@ void AAppearanceCharacter::InitCharacterVisual(const FCharacterAppearance& InCha
 
 void AAppearanceCharacter::InitCharacterAnimation()
 {
-	if (mCharacterAppearance.mRace == ECharacterRace::Male)
+	if (mCharacterAppearance.GetRace() == ECharacterRace::Male)
 	{
 		mAnimationInstance = LoadClass<UAnimInstance>(nullptr, TEXT("AnimBlueprint'/Game/StylizedCharacter/Animations/Character/Human/Male/ABP_Hu_M.ABP_Hu_M_C'"));
 	}
-	else if (mCharacterAppearance.mRace == ECharacterRace::Female)
+	else if (mCharacterAppearance.GetRace() == ECharacterRace::Female)
 	{
 		//mAnimationInstance = LoadClass;
 	}
@@ -103,25 +103,25 @@ void AAppearanceCharacter::UpdateCharacterVisual(const FCharacterAppearance& InC
 
 void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment)
 {
-	ECharacterRace currentRace = mCharacterAppearance.mRace;
+	ECharacterRace currentRace = mCharacterAppearance.GetRace();
 	if (currentRace == ECharacterRace::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::UpdateCharacterEquipment] Tribe is None"), ELogLevel::Error);
 		return;
 	}
 
-	if (InCharacterEquipment.mHelmet == 0)
+	if (InCharacterEquipment.GetHelmet() == 0)
 	{
-		SetSkeletalPartMesh(mHair, InCharacterEquipment.mHair);
+		SetSkeletalPartMesh(mHair, InCharacterEquipment.GetHair());
 	}
 
-	SetSkeletalPartMesh(mHelmet,	InCharacterEquipment.mHelmet);
-	SetSkeletalPartMesh(mShoulders, InCharacterEquipment.mShoulders);
-	SetSkeletalPartMesh(mChest,		InCharacterEquipment.mChest);
-	SetSkeletalPartMesh(mBracers,	InCharacterEquipment.mBracers);
-	SetSkeletalPartMesh(mHands,		InCharacterEquipment.mHands);
+	SetSkeletalPartMesh(mHelmet,	InCharacterEquipment.GetHelmet());
+	SetSkeletalPartMesh(mShoulders, InCharacterEquipment.GetShoulders());
+	SetSkeletalPartMesh(mChest,		InCharacterEquipment.GetChest());
+	SetSkeletalPartMesh(mBracers,	InCharacterEquipment.GetBracers());
+	SetSkeletalPartMesh(mHands,		InCharacterEquipment.GetHands());
 
-	if (InCharacterEquipment.mPants == 0)
+	if (InCharacterEquipment.GetPants() == 0)
 	{
 		switch (currentRace)
 		{
@@ -137,29 +137,29 @@ void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& I
 	}
 	else
 	{
-		SetSkeletalPartMesh(mPants, InCharacterEquipment.mPants);
+		SetSkeletalPartMesh(mPants, InCharacterEquipment.GetPants());
 	}
 
-	SetSkeletalPartMesh(mBoots,		InCharacterEquipment.mBoots);
-	SetSkeletalPartMesh(mWeapon_L,	InCharacterEquipment.mWeapon_L);
-	SetSkeletalPartMesh(mWeapon_R,	InCharacterEquipment.mWeapon_R);
+	SetSkeletalPartMesh(mBoots,		InCharacterEquipment.GetBoots());
+	SetSkeletalPartMesh(mWeapon_L,	InCharacterEquipment.GetWeaponL());
+	SetSkeletalPartMesh(mWeapon_R,	InCharacterEquipment.GetWeaponR());
 
 	mCharacterEquipment = InCharacterEquipment;
 }
 
 void AAppearanceCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance)
 {
-	ECharacterRace currentRace = mCharacterAppearance.mRace;
+	ECharacterRace currentRace = mCharacterAppearance.GetRace();
 	if (currentRace == ECharacterRace::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::UpdateCharacterAppearnce] Tribe is None"), ELogLevel::Error);
 		return;
 	}
 
-	uint32 skinColor	= StaticCast<uint32>(InCharacterAppearance.mSkin_Color);
-	uint32 hairColor	= StaticCast<uint32>(InCharacterAppearance.mHair_Color);
-	uint32 eyeColor		= StaticCast<uint32>(InCharacterAppearance.mEye_Color);
-	uint32 eyebrowColor = StaticCast<uint32>(InCharacterAppearance.mEyebrow_Color);
+	uint32 skinColor	= StaticCast<uint32>(InCharacterAppearance.GetSkinColor());
+	uint32 hairColor	= StaticCast<uint32>(InCharacterAppearance.GetHairColor());
+	uint32 eyeColor		= StaticCast<uint32>(InCharacterAppearance.GetEyeColor());
+	uint32 eyebrowColor = StaticCast<uint32>(InCharacterAppearance.GetEyebrowColor());
 
 	if (currentRace == ECharacterRace::Female)
 	{
@@ -301,7 +301,7 @@ void AAppearanceCharacter::SetSkeletalPartMesh(USkeletalMeshComponent* InMeshPar
 		return;
 	}
 
-	USkeletalMesh* NewMesh = itemData->mesh;
+	USkeletalMesh* NewMesh = itemData->GetMesh();
 	if (nullptr == NewMesh)
 	{
 		return;
@@ -355,7 +355,7 @@ FLinearColor AAppearanceCharacter::GetMeshColor(const EAppearance InAppearance)
 	FLinearColor			meshColor;
 	FString					paramterName = TEXT("BaseColor");
 
-	ECharacterRace currentRace = mCharacterAppearance.mRace;
+	ECharacterRace currentRace = mCharacterAppearance.GetRace();
 	if (currentRace == ECharacterRace::None)
 	{
 		UNetworkUtils::NetworkConsoleLog(TEXT("[ANetworkCharacter::GetMeshColor] Race is None"), ELogLevel::Error);

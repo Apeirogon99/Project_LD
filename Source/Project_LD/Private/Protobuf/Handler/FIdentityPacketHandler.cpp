@@ -390,11 +390,11 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 		characterEquipment.UpdateEquipments(eqipment);
 
 		FCharacterData characterData;
-		characterData.mName = name;
-		characterData.mLevel = level;
-		characterData.mClass = characterClass;
-		characterData.mAppearance = characterAppearance;
-		characterData.mEquipment = characterEquipment;
+		characterData.SetName(name);
+		characterData.SetLevel(level);
+		characterData.SetClass(characterClass);
+		characterData.SetAppearance(characterAppearance);
+		characterData.SetEquipment(characterEquipment);
 
 		selectCharacterWidget->CreateCharacter(characterData);
 	}

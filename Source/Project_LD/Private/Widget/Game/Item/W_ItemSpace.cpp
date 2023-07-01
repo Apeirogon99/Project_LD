@@ -125,7 +125,7 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 			if (ItemDataPayload->IsValid())
 			{
 				//같은 카테고리 확인
-				if (ItemDataPayload->ItemData.category_id == mCategoryId)
+				if (ItemDataPayload->GetItemData().GetCategoryID() == mCategoryId)
 				{
 					if (IsValid(mImageAsset))
 					{
@@ -164,8 +164,8 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 								{
 									//장비창에 아이템이 인벤토리로 돌아갈 수 없는 경우 -> 장착 시도 아이템 인벤토리로 복귀
 									FTile tile;
-									tile.X = ItemDataPayload->position_x;
-									tile.Y = ItemDataPayload->position_y;
+									tile.X = ItemDataPayload->GetPositionX();
+									tile.Y = ItemDataPayload->GetPositionY();
 
 									mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
 								}
@@ -176,20 +176,20 @@ bool UW_ItemSpace::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 				else
 				{
 					//카테고리가 다른 경우
-					if (ItemDataPayload->Type == EItemObjectType::Equipment)
+					if (ItemDataPayload->GetType() == EItemObjectType::Equipment)
 					{
 						//장비 창에서 이동한 경우
-						int Index = ItemDataPayload->ItemData.category_id - 1;
+						int Index = ItemDataPayload->GetItemData().GetCategoryID() - 1;
 
 						mEquipmentComponent->GetEquipmentObjectData()[Index] = ItemDataPayload;
 						mEquipmentComponent->GetEquipmentWidget()[Index]->ReMakeWidget(ItemDataPayload);
 					}
-					else if (ItemDataPayload->Type == EItemObjectType::Inventory)
+					else if (ItemDataPayload->GetType() == EItemObjectType::Inventory)
 					{
 						//인벤토리에서 온 경우
 						FTile tile;
-						tile.X = ItemDataPayload->position_x;
-						tile.Y = ItemDataPayload->position_y;
+						tile.X = ItemDataPayload->GetPositionX();
+						tile.Y = ItemDataPayload->GetPositionY();
 
 						mInvenComponent->AddItemAt(ItemDataPayload, mInvenComponent->TileToIndex(tile));
 					}
@@ -249,7 +249,7 @@ void UW_ItemSpace::CreateItemWidget(UItemObjectData* ItemObjectData)
 		mEquipmentItemSlot->SetFrameSize(mSizeX, mSizeY);
 		mEquipmentItemSlot->OnEquipItemRemoved.BindUFunction(this, FName("FalseExist"));
 		mEquipmentItemSlot->SetItemObjectData(ItemObjectData);
-		mEquipmentItemSlot->GetItemObjectData()->Type = EItemObjectType::Equipment;
+		mEquipmentItemSlot->GetItemObjectData()->SetType(EItemObjectType::Equipment);
 		mEquipmentItemSlot->SetImage();
 
 		UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(mEquipmentItemSlot));

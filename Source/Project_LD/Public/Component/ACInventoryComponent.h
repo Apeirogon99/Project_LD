@@ -94,8 +94,8 @@ protected:
 		inPacket.set_timestamp(controller->GetServerTimeStamp());
 
 		Protocol::SItem* item = inPacket.mutable_item();
-		item->set_object_id(inItemData->ObjectID);
-		item->set_item_code(inItemData->mItemCode);
+		item->set_object_id(inItemData->GetObjectID());
+		item->set_item_code(inItemData->GetItemCode());
 
 		Protocol::SVector* worldPositon = item->mutable_world_position();
 		FVector itemLocation = controller->GetPawn()->GetActorLocation();
@@ -104,9 +104,9 @@ protected:
 		worldPositon->set_z(itemLocation.Z);
 
 		Protocol::SVector2D* invenPositon = item->mutable_inven_position();
-		invenPositon->set_x(inItemData->position_x);
-		invenPositon->set_y(inItemData->position_y);
-		item->set_rotation(inItemData->rotation);
+		invenPositon->set_x(inItemData->GetPositionX());
+		invenPositon->set_y(inItemData->GetPositionY());
+		item->set_rotation(inItemData->GetRotation());
 
 		SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(controller, inPacket);
 		controller->Send(sendBuffer);

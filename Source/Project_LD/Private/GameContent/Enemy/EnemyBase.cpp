@@ -103,7 +103,7 @@ void AEnemyBase::Interactive(AC_Game* inPlayer)
 	float damage = 10.f;
 
 	FEnemyStatData stateData = state->GetEnemyCurrentStats();
-	stateData.base_health -= damage;
+	stateData.SetBaseHealth(stateData.GetBaseHealth() - damage);
 	state->SetEnemyCurrentStats(stateData);
 
 }

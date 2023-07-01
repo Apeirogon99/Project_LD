@@ -25,7 +25,7 @@ void ANPS_Game::SetCharacterData(const FCharacterData& InCharacterDatas)
 
 void ANPS_Game::SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment)
 {
-	mCharacterData.mEquipment = inCharacterEquipment;
+	mCharacterData.SetEquipment(inCharacterEquipment);
 }
 
 void ANPS_Game::calculationStatus()
@@ -39,14 +39,14 @@ void ANPS_Game::calculationStatus()
 
 	//DataTable에서 데이터를 가져와 배열에 저장
 	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	BaseStatus.mBaseStatus = *Instance->GetBaseData(1);
-	GrowStatus.mGrowStatus = *Instance->GetGrowthData(1);
+	BaseStatus.SetStatusBaseData(*Instance->GetBaseData(1));
+	GrowStatus.SetStatusGrowData(*Instance->GetGrowthData(1));
 
 	TArray<float> IBase = BaseStatus.FDataToFloat();
 	TArray<float> IGrow = GrowStatus.FDataToFloat();
 
 	TArray<float> EquipmentIndex;
-	EquipmentIndex = mCharacterData.mEquipment.GetAllItemIndex();
+	EquipmentIndex = mCharacterData.GetEquipment().GetAllItemIndex();
 
 	/*
 	TArray<TArray<float>> IEquipment;
@@ -66,7 +66,7 @@ void ANPS_Game::calculationStatus()
 			PartData += IEquipment[j][i];
 		}*/
 
-		IGrow[i] *= mCharacterData.mLevel;
+		IGrow[i] *= mCharacterData.GetLevel();
 		Total[i] = IBase[i] + IGrow[i] + PartData;
 	}
 

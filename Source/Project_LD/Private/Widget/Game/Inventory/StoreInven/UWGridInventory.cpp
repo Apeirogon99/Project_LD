@@ -103,7 +103,7 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 	{
 		if (IsValid(Data))
 		{
-			if (Data->Type == EItemObjectType::Inventory)
+			if (Data->GetType() == EItemObjectType::Inventory)
 			{
 				//인벤토리 데이터
 				//공간이 있는지 파악
@@ -143,7 +143,7 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 					}
 				}
 			}
-			if (Data->Type == EItemObjectType::Equipment)
+			if (Data->GetType() == EItemObjectType::Equipment)
 			{
 				//장비 데이터
 				if (IsRoomAvailableForPayload(Data))
@@ -156,13 +156,13 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 						tile.X = mDraggedItemTopLeftTile.X;
 						tile.Y = mDraggedItemTopLeftTile.Y;
 
-						int Index = Data->ItemData.category_id - 1;
+						int Index = Data->GetItemData().GetCategoryID() - 1;
 
-						Data->Type = EItemObjectType::Inventory;
+						Data->SetType(EItemObjectType::Inventory);
 						mInventoryComponent->AddItemAt(Data, mInventoryComponent->TileToIndex(tile));
 						mEquipmentComponent->GetEquipmentObjectData()[Index] = NewObject<UItemObjectData>();
 
-						mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(), Data->ItemData.category_id);
+						mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(), Data->GetItemData().GetCategoryID());
 					}
 				}
 				else
@@ -171,14 +171,14 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 					GetPayload(InOperation, Data);
 					if (Data->IsValid())
 					{
-						int Index = Data->ItemData.category_id - 1;
+						int Index = Data->GetItemData().GetCategoryID() - 1;
 
 						//Inventory로 TryAddItem 시도
-						Data->Type = EItemObjectType::Inventory;
+						Data->SetType(EItemObjectType::Inventory);
 						if (!mInventoryComponent->TryAddItem(Data))
 						{
 							//실패 -> 다시 장비로 이동
-							Data->Type = EItemObjectType::Equipment;
+							Data->SetType(EItemObjectType::Equipment);
 							mEquipmentComponent->GetEquipmentObjectData()[Index] = Data;
 							mEquipmentComponent->GetEquipmentWidget()[Index]->ReMakeWidget(Data);
 						}
@@ -187,7 +187,7 @@ bool UUWGridInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDrop
 							//성공 -> 인벤토리로 아이템 이동
 							mEquipmentComponent->GetEquipmentObjectData()[Index] = NewObject<UItemObjectData>();
 
-							mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(), Data->ItemData.category_id);
+							mInventoryComponent->ReplacePacket(Data, NewObject<UItemObjectData>(), Data->GetItemData().GetCategoryID());
 						}
 					}
 				}
@@ -348,8 +348,8 @@ void UUWGridInventory::Refresh()
 
 						Local_Slot->SetSize(FVector2D(sizeX, sizeY));
 
-						float posX = Data->position_x * mTileSize;
-						float posY = Data->position_y * mTileSize;
+						float posX = Data->GetPositionX() * mTileSize;
+						float posY = Data->GetPositionY() * mTileSize;
 						Local_Slot->SetPosition(FVector2D(posX, posY));
 					}
 				}

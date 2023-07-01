@@ -61,7 +61,7 @@ void AGM_CustomCharacter::BeginNetwork()
 		return;
 	}
 
-	widget->SetClassText(gameinstance->mCharacterData.mClass);
+	widget->SetClassText(gameinstance->mCharacterData.GetClass());
 	mClientHUD->ShowWidgetFromName(TEXT("CustomCharacter"));
 }
 
@@ -90,7 +90,7 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(const ECharacterRace InRace)
 	{
 		return;
 	}
-	gameinstance->mCharacterData.mAppearance.mRace = InRace;
+	gameinstance->mCharacterData.GetAppearance().SetRace(InRace);
 
 	AAppearanceCharacter* NewDummyCharacter = nullptr;
 	TSubclassOf<AAppearanceCharacter> raceClass = mDummyCharacterClass[StaticCast<int32>(InRace)];
@@ -104,7 +104,7 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(const ECharacterRace InRace)
 		FRotator CharacterRotation(0.0f, -180.0f, 0.0f);
 
 		NewDummyCharacter = GetWorld()->SpawnActor<AAppearanceCharacter>(raceClass, CharacterLocation, CharacterRotation, spawnParams);
-		NewDummyCharacter->InitCharacterVisual(gameinstance->mCharacterData.mAppearance, gameinstance->mCharacterData.mEquipment);
+		NewDummyCharacter->InitCharacterVisual(gameinstance->mCharacterData.GetAppearance(), gameinstance->mCharacterData.GetEquipment());
 		//NewDummyCharacter->InitializeAppearance();
 	}
 

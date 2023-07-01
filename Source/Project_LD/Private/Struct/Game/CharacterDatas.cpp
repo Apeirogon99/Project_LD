@@ -109,56 +109,56 @@ TArray<float> FCharacterStats::FDataToFloat()
 	TArray<float> returnData;
 	returnData.SetNum(22);
 
-	returnData[0]		= mMaxStatus.armor_penetration;
-	returnData[1]		= mMaxStatus.attack_damage;
-	returnData[2]		= mMaxStatus.attack_speed;
-	returnData[3]		= mMaxStatus.critical_strike_chance;
-	returnData[4]		= mMaxStatus.cirtical_strike_damage;
-	returnData[5]		= mMaxStatus.life_steal;
-	returnData[6]		= mMaxStatus.ability_power;
-	returnData[7]		= mMaxStatus.mage_penetration;
-	returnData[8]		= mMaxStatus.omnivamp;
-	returnData[9]		= mMaxStatus.physical_vamp;
-	returnData[10]	= mMaxStatus.armor;
-	returnData[11]	= mMaxStatus.heal_and_shield_power;
-	returnData[12]	= mMaxStatus.health;
-	returnData[13]	= mMaxStatus.health_regeneration;
-	returnData[14]	= mMaxStatus.magic_resistance;
-	returnData[15]	= mMaxStatus.tenacity;
-	returnData[16]	= mMaxStatus.slow_resist;
-	returnData[17]	= mMaxStatus.ability_haste;
-	returnData[18]	= mMaxStatus.mana;
-	returnData[19]	= mMaxStatus.mana_regeneration;
-	returnData[20]	= mMaxStatus.movement_speed;
-	returnData[21]	= mMaxStatus.range;
+	returnData[0]		= mMaxStatus.GetArmorPenetration();
+	returnData[1]		= mMaxStatus.GetAttackDamage();
+	returnData[2]		= mMaxStatus.GetAttackSpeed();
+	returnData[3]		= mMaxStatus.GetCriticalStrikeChance();
+	returnData[4]		= mMaxStatus.GetCriticalStrikeDamage();
+	returnData[5]		= mMaxStatus.GetLifeSteal();
+	returnData[6]		= mMaxStatus.GetAbilityPower();
+	returnData[7]		= mMaxStatus.GetMagePenetration();
+	returnData[8]		= mMaxStatus.GetOmniVamp();
+	returnData[9]		= mMaxStatus.GetPhysicalVamp();
+	returnData[10]	= mMaxStatus.GetArmor();
+	returnData[11]	= mMaxStatus.GetHealAndShieldPower();
+	returnData[12]	= mMaxStatus.GetHealth();
+	returnData[13]	= mMaxStatus.GetHealthRegeneration();
+	returnData[14]	= mMaxStatus.GetMagicResistance();
+	returnData[15]	= mMaxStatus.GetTenacity();
+	returnData[16]	= mMaxStatus.GetSlowResist();
+	returnData[17]	= mMaxStatus.GetAbilityHaste();
+	returnData[18]	= mMaxStatus.GetMana();
+	returnData[19]	= mMaxStatus.GetManaRegeneration();
+	returnData[20]	= mMaxStatus.GetMovementSpeed();
+	returnData[21]	= mMaxStatus.GetRange();
 
 	return returnData;
 }
 
 void FCharacterStats::FloatToFData(TArray<float> Data)
 {
-	mMaxStatus.armor_penetration				= Data[0];
-	mMaxStatus.attack_damage					= Data[1];
-	mMaxStatus.attack_speed						= Data[2];
-	mMaxStatus.critical_strike_chance		= Data[3];
-	mMaxStatus.cirtical_strike_damage		= Data[4];
-	mMaxStatus.life_steal								= Data[5];
-	mMaxStatus.ability_power						= Data[6];
-	mMaxStatus.mage_penetration				= Data[7];
-	mMaxStatus.omnivamp							= Data[8];
-	mMaxStatus.physical_vamp					= Data[9];
-	mMaxStatus.armor									= Data[10];
-	mMaxStatus.heal_and_shield_power		= Data[11];
-	mMaxStatus.health									= Data[12];
-	mMaxStatus.health_regeneration			= Data[13];
-	mMaxStatus.magic_resistance				= Data[14];
-	mMaxStatus.tenacity								= Data[15];
-	mMaxStatus.slow_resist							= Data[16];
-	mMaxStatus.ability_haste						= Data[17];
-	mMaxStatus.mana									= Data[18];
-	mMaxStatus.mana_regeneration				= Data[19];
-	mMaxStatus.movement_speed				= Data[20];
-	mMaxStatus.range									= Data[21];
+	mMaxStatus.SetArmorPenetration(Data[0]);
+	mMaxStatus.SetAttackDamage(Data[1]);
+	mMaxStatus.SetAttackSpeed(Data[2]);
+	mMaxStatus.SetCriticalStrikeChance(Data[3]);
+	mMaxStatus.SetCriticalStrikeDamage(Data[4]);
+	mMaxStatus.SetLifeSteal(Data[5]);
+	mMaxStatus.SetAbilityPower(Data[6]);
+	mMaxStatus.SetMagePenetration(Data[7]);
+	mMaxStatus.SetOmniVamp(Data[8]);
+	mMaxStatus.SetPhysicalVamp(Data[9]);
+	mMaxStatus.SetArmor(Data[10]);
+	mMaxStatus.SetHealAndShieldPower(Data[11]);
+	mMaxStatus.SetHealth(Data[12]);
+	mMaxStatus.SetHealthRegeneration(Data[13]);
+	mMaxStatus.SetMagicResistance(Data[14]);
+	mMaxStatus.SetTenacity(Data[15]);
+	mMaxStatus.SetSlowResist(Data[16]);
+	mMaxStatus.SetAbilityHaste(Data[17]);
+	mMaxStatus.SetMana(Data[18]);
+	mMaxStatus.SetManaRegeneration(Data[19]);
+	mMaxStatus.SetMovementSpeed(Data[20]);
+	mMaxStatus.SetRange(Data[21]);
 }
 
 

@@ -27,43 +27,43 @@ const ECharacterRace UPacketUtils::ConvertToURace(const Protocol::ERace& inRace)
 const Protocol::SCharacterAppearance UPacketUtils::ConvertToPAppearance(const FCharacterAppearance& inAppearance)
 {
 	Protocol::SCharacterAppearance appearance;
-	appearance.set_race(ConvertToPRace(inAppearance.mRace));
-	appearance.set_seat(inAppearance.mSeat);
-	appearance.set_skin_color(inAppearance.mSkin_Color);
-	appearance.set_hair_color(inAppearance.mHair_Color);
-	appearance.set_eye_color(inAppearance.mEye_Color);
-	appearance.set_eyebrow_color(inAppearance.mEyebrow_Color);
+	appearance.set_race(ConvertToPRace(inAppearance.GetRace()));
+	appearance.set_seat(inAppearance.GetSeat());
+	appearance.set_skin_color(inAppearance.GetSkinColor());
+	appearance.set_hair_color(inAppearance.GetHairColor());
+	appearance.set_eye_color(inAppearance.GetEyeColor());
+	appearance.set_eyebrow_color(inAppearance.GetEyebrowColor());
 	return appearance;
 }
 
 const Protocol::SCharacterEqipment UPacketUtils::ConvertToPEqipment(const FCharacterEquipment& inEquipment)
 {
 	Protocol::SCharacterEqipment eqipment;
-	eqipment.set_hair(inEquipment.mHair);
-	eqipment.set_helmet(inEquipment.mHelmet);
-	eqipment.set_shoulders(inEquipment.mShoulders);
-	eqipment.set_chest(inEquipment.mChest);
-	eqipment.set_bracers(inEquipment.mBracers);
-	eqipment.set_hands(inEquipment.mHands);
-	eqipment.set_pants(inEquipment.mPants);
-	eqipment.set_boots(inEquipment.mBoots);
-	eqipment.set_weapon_l(inEquipment.mWeapon_L);
-	eqipment.set_weapon_r(inEquipment.mWeapon_R);
+	eqipment.set_hair(inEquipment.GetHair());
+	eqipment.set_helmet(inEquipment.GetHelmet());
+	eqipment.set_shoulders(inEquipment.GetShoulders());
+	eqipment.set_chest(inEquipment.GetChest());
+	eqipment.set_bracers(inEquipment.GetBracers());
+	eqipment.set_hands(inEquipment.GetHands());
+	eqipment.set_pants(inEquipment.GetPants());
+	eqipment.set_boots(inEquipment.GetBoots());
+	eqipment.set_weapon_l(inEquipment.GetWeaponL());
+	eqipment.set_weapon_r(inEquipment.GetWeaponR());
 	return eqipment;
 }
 
 const Protocol::SCharacterData UPacketUtils::ConvertToPData(const FCharacterData& inData)
 {
 	Protocol::SCharacterData data;
-	data.set_name(UNetworkUtils::ConvertString(inData.mName));
-	data.set_level(inData.mLevel);
-	data.set_character_class(ConvertToPClass(inData.mClass));
+	data.set_name(UNetworkUtils::ConvertString(inData.GetName()));
+	data.set_level(inData.GetLevel());
+	data.set_character_class(ConvertToPClass(inData.GetClass()));
 
 	Protocol::SCharacterAppearance* appearance = data.mutable_appearance();
-	*appearance = ConvertToPAppearance(inData.mAppearance);
+	*appearance = ConvertToPAppearance(inData.GetAppearance());
 
 	Protocol::SCharacterEqipment* eqipment = data.mutable_eqipment();
-	*eqipment = ConvertToPEqipment(inData.mEquipment);
+	*eqipment = ConvertToPEqipment(inData.GetEquipment());
 
 	return data;
 }

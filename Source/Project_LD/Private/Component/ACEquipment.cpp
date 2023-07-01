@@ -85,19 +85,19 @@ void UACEquipment::LoadEquipment(const google::protobuf::RepeatedPtrField<Protoc
 
 		if (0 == curEqipment.item_code())
 		{
-			mEquipmentData[part]->ItemData = FItemData();
-			mEquipmentData[part]->ObjectID = 0;
-			mEquipmentData[part]->mItemCode = 0;
-			mEquipmentData[part]->Type = EItemObjectType::Equipment;
+			mEquipmentData[part]->SetItemData(FItemData());
+			mEquipmentData[part]->SetObjectID(0);
+			mEquipmentData[part]->SetItemCode(0);
+			mEquipmentData[part]->SetType(EItemObjectType::Equipment);
 		}
 		else
 		{
 			FItemData* ItemTable = Instance->GetItemData(curEqipment.item_code());
 
-			mEquipmentData[part]->ItemData = *ItemTable;
-			mEquipmentData[part]->ObjectID = curEqipment.object_id();
-			mEquipmentData[part]->mItemCode = curEqipment.item_code();
-			mEquipmentData[part]->Type = EItemObjectType::Equipment;
+			mEquipmentData[part]->SetItemData(*ItemTable);
+			mEquipmentData[part]->SetObjectID (curEqipment.object_id());
+			mEquipmentData[part]->SetItemCode(curEqipment.item_code());
+			mEquipmentData[part]->SetType(EItemObjectType::Equipment);
 
 			ChangedItemSpace(part, mEquipmentData[part]);
 		}
@@ -113,7 +113,7 @@ void UACEquipment::CanItemDropWidgetCheck(UItemObjectData* ItemObjectData)
 {
 	for (int i = 0; i < mEquipmentData.Num(); i++)
 	{
-		if (mEquipmentWidget[i]->GetCategoryId() == ItemObjectData->ItemData.category_id)
+		if (mEquipmentWidget[i]->GetCategoryId() == ItemObjectData->GetItemData().GetCategoryID())
 		{
 			mEquipmentWidget[i]->categoryBorder->SetBrushColor(FLinearColor(0.f, 1.0f, 0.f, 0.4f));
 		}

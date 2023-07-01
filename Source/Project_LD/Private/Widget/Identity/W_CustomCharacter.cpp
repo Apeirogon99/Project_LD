@@ -260,16 +260,16 @@ void UW_CustomCharacter::UpdateColorPicker()
 		case EAppearance::None:
 			break;
 		case EAppearance::Body:
-			mTempCharacterAppearance.mSkin_Color = color;
+			mTempCharacterAppearance.SetSkinColor(color);
 			break;
 		case EAppearance::Eye:
-			mTempCharacterAppearance.mEye_Color = color;
+			mTempCharacterAppearance.SetEyeColor(color);
 			break;
 		case EAppearance::Eyebrow:
-			mTempCharacterAppearance.mEyebrow_Color = color;
+			mTempCharacterAppearance.SetEyebrowColor(color);
 			break;
 		case EAppearance::Hair:
-			mTempCharacterAppearance.mHair_Color = color;
+			mTempCharacterAppearance.SetHairColor(color);
 			break;
 		default:
 			break;
@@ -281,7 +281,7 @@ void UW_CustomCharacter::UpdateColorPicker()
 
 void UW_CustomCharacter::UpdateEquipment()
 {
-	mTempCharacterEquipment.mHair = mHairNumber;
+	mTempCharacterEquipment.SetHair(mHairNumber);
 	if (mOldHairNumber != mHairNumber)
 	{
 		mCurrentDummyCharacter->UpdateCharacterEquipment(mTempCharacterEquipment);
@@ -297,18 +297,18 @@ void UW_CustomCharacter::SetDummyCharacter(AAppearanceCharacter* inDummyCharacte
 	mCurrentDummyCharacter = inDummyCharacter;
 	mTempCharacterAppearance = mCurrentDummyCharacter->GetCharacterAppearance();
 
-	FLinearColor skin		= mCurrentDummyCharacter->GetMeshColor(EAppearance::Body);
-	FLinearColor hair		= mCurrentDummyCharacter->GetMeshColor(EAppearance::Hair);
-	FLinearColor eye		= mCurrentDummyCharacter->GetMeshColor(EAppearance::Eye);
+	FLinearColor skin			= mCurrentDummyCharacter->GetMeshColor(EAppearance::Body);
+	FLinearColor hair			= mCurrentDummyCharacter->GetMeshColor(EAppearance::Hair);
+	FLinearColor eye			= mCurrentDummyCharacter->GetMeshColor(EAppearance::Eye);
 	FLinearColor eyebrow	= mCurrentDummyCharacter->GetMeshColor(EAppearance::Eyebrow);
 
-	mTempCharacterAppearance.mSkin_Color = UNetworkUtils::ConverLinerColorToInt(skin);
-	mTempCharacterAppearance.mHair_Color = UNetworkUtils::ConverLinerColorToInt(hair);
-	mTempCharacterAppearance.mEye_Color = UNetworkUtils::ConverLinerColorToInt(eye);
-	mTempCharacterAppearance.mEyebrow_Color = UNetworkUtils::ConverLinerColorToInt(eyebrow);
+	mTempCharacterAppearance.SetSkinColor(UNetworkUtils::ConverLinerColorToInt(skin));
+	mTempCharacterAppearance.SetHairColor(UNetworkUtils::ConverLinerColorToInt(hair));
+	mTempCharacterAppearance.SetEyeColor(UNetworkUtils::ConverLinerColorToInt(eye));
+	mTempCharacterAppearance.SetEyebrowColor(UNetworkUtils::ConverLinerColorToInt(eyebrow));
 
 	mOldHairNumber = mHairNumber;
-	mTempCharacterEquipment.mHair = mHairNumber;
+	mTempCharacterEquipment.SetHair(mHairNumber);
 
 	mColorPicker->SetVisibility(ESlateVisibility::Collapsed);
 	mCurrentDummyAppearance = EAppearance::None;
@@ -324,7 +324,7 @@ void UW_CustomCharacter::SetDummyCharacter(AAppearanceCharacter* inDummyCharacte
 	if (box != nullptr)
 	{
 		const FCharacterAppearance& appearance = mCurrentDummyCharacter->GetCharacterAppearance();
-		mCurrentDummyRace = appearance.mRace;
+		mCurrentDummyRace = appearance.GetRace();
 		if (mCurrentDummyRace == ECharacterRace::Female)
 		{
 			box->SetVisibility(ESlateVisibility::SelfHitTestInvisible);

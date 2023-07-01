@@ -240,13 +240,13 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	{
 		if (ItemObejctData->IsValid())
 		{
-			if (ItemObejctData->Type == EItemObjectType::Inventory)
+			if (ItemObejctData->GetType() == EItemObjectType::Inventory)
 			{
 				mInvenComponent->SetInventoryPacket(ItemObejctData, EInventoryType::Remove);
 			}
-			else if (ItemObejctData->Type == EItemObjectType::Equipment)
+			else if (ItemObejctData->GetType() == EItemObjectType::Equipment)
 			{
-				int Index = ItemObejctData->ItemData.category_id - 1;
+				int Index = ItemObejctData->GetItemData().GetCategoryID() - 1;
 
 				mEquipmentComponent->GetEquipmentObjectData()[Index] = ItemObejctData;
 				mEquipmentComponent->GetEquipmentWidget()[Index]->ReMakeWidget(ItemObejctData);

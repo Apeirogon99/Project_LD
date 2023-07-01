@@ -19,11 +19,11 @@ bool UItemObjectData::IsValid()
 {
     if (ObjectID == 0)
         return false;
-    if (ItemData.category_id == 0)
+    if (ItemData.GetCategoryID() == 0)
         return false;
-    if (ItemData.size_x == 0)
+    if (ItemData.GetSizeX() == 0)
         return false;
-    if (ItemData.size_y == 0)
+    if (ItemData.GetSizeY() == 0)
         return false;
     return true;
 }
@@ -33,14 +33,14 @@ FVector2D UItemObjectData::GetSize() const
     FVector2D Return;
     if (rotation)
     {
-        Return.X = ItemData.size_y;
-        Return.Y = ItemData.size_x;
+        Return.X = ItemData.GetSizeY();
+        Return.Y = ItemData.GetSizeX();
         return Return;
     }
     else
     {
-        Return.X = ItemData.size_x;
-        Return.Y = ItemData.size_y;
+        Return.X = ItemData.GetSizeX();
+        Return.Y = ItemData.GetSizeY();
         return Return;
     }
     return Return;

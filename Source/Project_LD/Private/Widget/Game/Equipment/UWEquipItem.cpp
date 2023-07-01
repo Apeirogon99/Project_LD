@@ -97,11 +97,11 @@ void UUWEquipItem::SetImage()
 		{
 			if (ItemBackgroundImage)
 			{
-				ItemBackgroundImage->SetBrushFromTexture(mFrameTextureArr[mItemObjectData->ItemData.tier_id - 1]);
+				ItemBackgroundImage->SetBrushFromTexture(mFrameTextureArr[mItemObjectData->GetItemData().GetTierID() - 1]);
 			}
 			if (ItemImage)
 			{
-				ItemImage->SetBrushFromTexture(mItemObjectData->ItemData.icon);
+				ItemImage->SetBrushFromTexture(mItemObjectData->GetItemData().GetIcon());
 			}
 		}
 	}

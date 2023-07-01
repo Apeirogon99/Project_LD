@@ -27,59 +27,86 @@ public:
 	FItemData() : category_id(0), character_class_id(0), race_id(0), tier_id (0), name(TEXT("")), description(TEXT(""))
 		, cost(0), level(0), size_x(0), size_y(0), icon(nullptr), mesh(nullptr) {}
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	//int32	id;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32	category_id;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32	character_class_id;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32	race_id;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32	tier_id;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FString	name;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FString	description;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32	cost;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32	level;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32	size_x;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32	size_y;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	UTexture2D* icon;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	USkeletalMesh* mesh;
-
+public:
 	void Clear() {
-		category_id=0;
+		category_id = 0;
 		character_class_id = 0;
 		race_id = 0;
 		tier_id = 0;
-		name=TEXT("");
-		description=TEXT("");
+		name = TEXT("");
+		description = TEXT("");
 		cost = 0;
 		level = 0;
 		size_x = 0;
-		size_y = 0; 
-		icon=nullptr; 
-		mesh=nullptr;
+		size_y = 0;
+		icon = nullptr;
+		mesh = nullptr;
 	}
+
+public:
+	void SetCategoryID(const int32 inCategoryID) { category_id = inCategoryID; }
+	void SetCharacterClassID(const int32 inCharacterClassID) { character_class_id = inCharacterClassID; }
+	void SetRaceID(const int32 inRaceID) { race_id = inRaceID; }
+	void SetTierID(const int32 inTierID) { tier_id = inTierID; }
+	void SetName(const FString inName) { name = inName; }
+	void SetDescription(const FString inDescription) { description = inDescription; }
+	void SetCost(const int32 inCost) { cost = inCost; }
+	void SetLevel(const int32 inLevel) { level = inLevel; }
+	void SetSizeX(const int32 inSizeX) { size_x = inSizeX; }
+	void SetSizeY(const int32 inSizeY) { size_y = inSizeY; }
+	void SetIcon(UTexture2D* inIcon) { icon = inIcon; }
+	void SetMesh(USkeletalMesh* inMesh) { mesh = inMesh; }
+
+public:
+	int32 GetCategoryID() const								{ return category_id; }
+	int32 GetCharacterClassID() const					{ return character_class_id; }
+	int32 GetRaceID() const										{ return race_id; }
+	int32 GetTierID() const										{ return tier_id; }
+	FString GetName() const									{ return name; }
+	FString GetDescription() const							{ return description; }
+	int32 GetCost() const											{ return cost; }
+	int32 GetLevel() const										{ return level; }
+	int32 GetSizeX() const										{ return size_x; }
+	int32 GetSizeY() const										{ return size_y; }
+	UTexture2D* GetIcon() const							{ return icon; }
+	USkeletalMesh* GetMesh() const						{ return mesh; }
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32	category_id;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32	character_class_id;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32	race_id;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32	tier_id;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	FString	name;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	FString	description;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32	cost;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32	level;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32	size_x;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32	size_y;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	UTexture2D* icon;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	USkeletalMesh* mesh;
 };
 
 UCLASS(Blueprintable)
@@ -88,43 +115,62 @@ class PROJECT_LD_API UItemObjectData : public UObject
 	GENERATED_BODY()
 
 public:
-	UItemObjectData() : ObjectID(0), mItemCode(0), position_x(0), position_y(0), rotation(0), Type(EItemObjectType::None) {}
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int64 ObjectID;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32 mItemCode;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	FItemData ItemData;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32 position_x;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32 position_y;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	int32 rotation;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	EItemObjectType Type;
+	UItemObjectData() : ObjectID(0), mItemCode(0), position_x(0), position_y(0), rotation(0), mType(EItemObjectType::None) {}
 
 public:
 	UFUNCTION(BlueprintCallable)
-	void Rotate();
+		void Rotate();
 
 	UFUNCTION(BlueprintCallable)
-	bool IsValid();
+		bool IsValid();
 
 	UFUNCTION(BlueprintCallable)
-	FVector2D GetSize() const;
+		FVector2D GetSize() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SettingObjectData(FItemData OtheritemData);
+		void SettingObjectData(const FItemData OtheritemData);
 
 	void Clear();
+
+public:
+	void SetObjectID(const int64& inObjectID)									{ ObjectID = inObjectID; }
+	void SetItemCode(const int32& inItemCode)								{ mItemCode = inItemCode; }
+	void SetItemData(const FItemData& inItemData)							{ ItemData = inItemData; }
+	void SetPositionX(const int32& inPositionX)								{ position_x = inPositionX; }
+	void SetPositionY(const int32& inPositionY)								{ position_y = inPositionY; }
+	void SetRotation(const int32& inRotation)									{ rotation = inRotation; }
+	void SetType(const EItemObjectType& inObjectType)				{ mType = inObjectType; }
+
+public:
+	int64							GetObjectID() const		{ return ObjectID; }
+	int32							GetItemCode() const		{ return mItemCode; }
+	FItemData					GetItemData() const		{ return ItemData; }
+	int32							GetPositionX() const		{ return position_x; }
+	int32							GetPositionY() const		{ return position_y; }
+	int32							GetRotation() const		{ return rotation; }
+	EItemObjectType		GetType() const				{ return mType; }
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int64 ObjectID;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32 mItemCode;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	FItemData ItemData;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32 position_x;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32 position_y;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32 rotation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	EItemObjectType mType;
 };
 
 UCLASS()

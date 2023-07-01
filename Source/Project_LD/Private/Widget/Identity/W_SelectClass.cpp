@@ -83,7 +83,7 @@ void UW_SelectClass::SelectClass(const FString& inClass, ECharacterClass inChara
 	FConfirmButtonDelegate confirmDelegate;
 	confirmDelegate.BindLambda([=]()
 		{
-			gameInstance->mCharacterData.mClass = inCharacterClass;
+			gameInstance->mCharacterData.SetClass(inCharacterClass);
 
 			networkGameMode->RequestTravelLevel(TEXT("L_CustomCharacter"));
 		});

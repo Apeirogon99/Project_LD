@@ -180,14 +180,14 @@ void AItemParent::Init(int32 Code, int32 GameObjectId)
 
 	mItemObjectData = NewObject<UItemObjectData>();
 
-	mItemObjectData->mItemCode = Code;
-	mItemObjectData->ObjectID = GameObjectId;
+	mItemObjectData->SetItemCode(Code);
+	mItemObjectData->SetObjectID(GameObjectId);
 
 	//Data Table
 	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	FItemData* ItemTable = Instance->GetItemData(mItemObjectData->mItemCode);
-	mItemObjectData->ItemData = *ItemTable;
-	ItemObjectDataInit(ItemTable->category_id);
+	FItemData* ItemTable = Instance->GetItemData(mItemObjectData->GetItemCode());
+	mItemObjectData->SetItemData(*ItemTable);
+	ItemObjectDataInit(ItemTable->GetCategoryID());
 
 	//Widget
 	if (mItemNameWidgetComponent)
@@ -198,14 +198,14 @@ void AItemParent::Init(int32 Code, int32 GameObjectId)
 			UW_ItemName* itemnamewidget = Cast<UW_ItemName>(namewidget);
 			if (itemnamewidget)
 			{
-				itemnamewidget->SetNameText(ItemTable->name);
+				itemnamewidget->SetNameText(ItemTable->GetName());
 				itemnamewidget->SetDesiredSizeInViewport(FVector2D(1000.f, 1000.f));
 			}
 		}
 	}
 		
 	//Particle
-	mItemSpawnParticle = mPickUpParticle[ItemTable->tier_id - 1];
+	mItemSpawnParticle = mPickUpParticle[ItemTable->GetTierID() - 1];
 	if (mItemSpawnParticle)
 	{
 		mItemSpawnParticleComponent = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mItemSpawnParticle, GetActorLocation(), FRotator::ZeroRotator, true);
@@ -248,7 +248,7 @@ void AItemParent::ItemObjectDataInit(int32 Categoryid)
 	//Mesh
 	if (Categoryid > 7)
 	{
-		mSkeletalMeshComponent->SetSkeletalMesh(mItemObjectData->ItemData.mesh);
+		mSkeletalMeshComponent->SetSkeletalMesh(mItemObjectData->GetItemData().GetMesh());
 	}
-	mIcon = mItemObjectData->ItemData.icon;
+	mIcon = mItemObjectData->GetItemData().GetIcon();
 }
