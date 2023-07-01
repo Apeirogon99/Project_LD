@@ -9,6 +9,21 @@
 /**
  * 
  */
+
+UENUM(BlueprintType)
+enum class EEnemyStateType : uint8
+{
+	State_Unspecified	UMETA(DisPlayNone = "None"),
+	State_Idle			UMETA(DisplayName = "Idle"),
+	State_Round			UMETA(DisplayName = "Round"),
+	State_Recovery		UMETA(DisplayName = "Recovery"),
+	State_Chase			UMETA(DisplayName = "Chase"),
+	State_Attack		UMETA(DisplayName = "Attack"),
+	State_Hit			UMETA(DisplayName = "Hit"),
+	State_Stun			UMETA(DisplayName = "Stun"),
+	State_Death			UMETA(DisplayName = "Death")
+};
+
 USTRUCT(BlueprintType)
 struct PROJECT_LD_API FEnemyData : public FTableRowBase
 {

@@ -1,6 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameContent/Enemy/EnemyBase.h"
+#include "GameContent/Enemy/EnemyController.h"
+#include "GameContent/Enemy/EnemyState.h"
+
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
@@ -42,4 +45,16 @@ void AEnemyBase::Tick(float DeltaTime)
 
 void AEnemyBase::Interactive(AC_Game* inPlayer)
 {
+	AEnemyState* state = GetPlayerState<AEnemyState>();
+	if (state == nullptr)
+	{
+		return;
+	}
+
+	float damage = 10.f;
+
+	FEnemyStatData stateData = state->GetEnemyCurrentStats();
+	stateData.base_health -= damage;
+	state->SetEnemyCurrentStats(stateData);
+
 }

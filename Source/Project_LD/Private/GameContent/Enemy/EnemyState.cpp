@@ -2,7 +2,6 @@
 
 
 #include "GameContent/Enemy/EnemyState.h"
-#include "GameContent/Enemy/EnemyStateBase.h"
 
 
 AEnemyState::AEnemyState()
@@ -18,8 +17,6 @@ void AEnemyState::BeginPlay()
 {
 	Super::BeginPlay();
 
-	mState = NewObject<AEnemyStateMachine>();
-	mStateType = EEnemyStateType::Idle;
 }
 
 void AEnemyState::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -45,45 +42,4 @@ void AEnemyState::SetEnemyCurrentStats(const FEnemyStatData& inEnemeyDatas)
 void AEnemyState::SetEnemyStats(const FEnemyStatData& inEnemyStats)
 {
 	mStats = inEnemyStats;
-}
-
-void AEnemyState::SetState(EEnemyStateType Type)
-{
-	mStateType = Type;
-}
-
-AEnemyStateMachine* AEnemyState::GetEnemyStateBase()
-{
-	return mState;
-}
-
-void AEnemyState::Idle()
-{
-	mState->Idle();
-	SetState(mState->GetType());
-}
-
-void AEnemyState::Hit()
-{
-	mState->Hit();
-	auto a = mState->GetType();
-	SetState(a);
-}
-
-void AEnemyState::Attack()
-{
-	mState->Attack();
-	SetState(mState->GetType());
-}
-
-void AEnemyState::Chase()
-{
-	mState->Chase();
-	SetState(mState->GetType());
-}
-
-void AEnemyState::Kill()
-{
-	mState->Kill();
-	SetState(mState->GetType());
 }

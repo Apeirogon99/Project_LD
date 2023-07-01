@@ -13,6 +13,8 @@
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
 
+#include <GameContent/Enemy/EnemyController.h>
+#include <GameContent/Enemy/EnemyState.h>
 #include <GameContent/Enemy/EnemyBase.h>
 
 #include <GameErrorTypes.h>

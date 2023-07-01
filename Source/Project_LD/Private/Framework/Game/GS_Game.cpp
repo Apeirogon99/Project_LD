@@ -9,7 +9,11 @@
 #include <Game/PS_Game.h>
 #include <Game/NPS_Game.h>
 #include <Game/GM_Game.h>
+
+#include <GameContent/Enemy/EnemyController.h>
+#include <GameContent/Enemy/EnemyState.h>
 #include <GameContent/Enemy/EnemyBase.h>
+
 #include <Framework/Gameinstance/LDGameInstance.h>
 #include <Kismet/GameplayStatics.h>
 

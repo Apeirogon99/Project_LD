@@ -4,9 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include <GameContent/Enemy/EnemyState.h>
-#include <GameContent/Enemy/EnemyController.h>
-#include <Framework/Interface/PacketInterface.h>
 #include "Framework/Interface/InteractiveInterface.h"
 #include "EnemyBase.generated.h"
 
@@ -26,6 +23,6 @@ protected:
 
 public:	
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void Interactive(AC_Game* inPlayer) override;
+
 };

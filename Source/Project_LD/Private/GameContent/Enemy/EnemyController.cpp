@@ -2,10 +2,10 @@
 
 
 #include "GameContent/Enemy/EnemyController.h"
-#include <Framework/Game/GS_Game.h>
-#include <Network/NetworkUtils.h>
+#include "GameContent/Enemy/EnemyState.h"
+#include "GameContent/Enemy/EnemyBase.h"
 
-#include <GameContent/Enemy/EnemyState.h>
+#include <Network/NetworkUtils.h>
 
 #include <GameFramework/PawnMovementComponent.h>
 #include <Blueprint/AIBlueprintHelperLibrary.h>
@@ -41,10 +41,16 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 		return;
 	}
 
+	AEnemyState* enemyState = GetPlayerState<AEnemyState>();
+	if (nullptr == enemyState)
+	{
+		return;
+	}
+
 	FVector	direction = inNewMovementLocation - inOldMovementLocation;
 	direction.Normalize();
 
-	FVector velocity = direction * 100.0f;
+	FVector velocity = direction * enemyState->GetEnemyStats().base_movement_speed;
 	float	duration = inTime / 1000.0f;
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);

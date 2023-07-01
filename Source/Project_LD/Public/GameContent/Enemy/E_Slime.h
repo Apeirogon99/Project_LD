@@ -26,5 +26,4 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 	
-	virtual void Interactive(AC_Game* inPlayer) override;
 };
