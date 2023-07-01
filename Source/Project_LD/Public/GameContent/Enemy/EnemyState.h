@@ -10,7 +10,6 @@
 /**
  * 
  */
-
 UCLASS()
 class PROJECT_LD_API AEnemyState : public APlayerState
 {
@@ -29,11 +28,13 @@ public:
 	void SetEnemyDatas(const FEnemyData& inEnemeyDatas);
 	void SetEnemyCurrentStats(const FEnemyStatData& inEnemeyDatas);
 	void SetEnemyStats(const FEnemyStatData& inEnemyStats);
+	void SetEnemyState(const EEnemyStateType& inStateType);
 
 public:
 	const FEnemyData&				GetEnemyDatas()			{ return mDatas; }
 	const FEnemyStatData&			GetEnemyCurrentStats()	{ return mCurrentStats; }
 	const FEnemyStatData&			GetEnemyStats()			{ return mStats; }
+	const EEnemyStateType&			GetCurrentStateType()	{ return mCurrentState; }
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Datas")
@@ -44,4 +45,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Stats")
 	FEnemyStatData				mStats;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | State")
+	EEnemyStateType				mCurrentState;
 };

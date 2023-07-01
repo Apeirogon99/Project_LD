@@ -21,17 +21,37 @@ class PROJECT_LD_API UEnemyAnimInstance : public UAnimInstance
 protected:
 	virtual void NativeInitializeAnimation() override;
 
-private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement Properties", meta = (AllowPrivateAccess = "true"))
-	float mMovementSpeed;
+public:
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnIdle(float inStartTime);
+	virtual void OnIdle_Implementation(float inStartTime);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", meta = (AllowPrivateAccess = "true"))
-	AEnemyBase* mCharacter;
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnRound(float inStartTime);
+	virtual void OnRound_Implementation(float inStartTime);
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State", meta = (AllowPrivateAccess = "true"))
-	AEnemyState* mEnemyState;
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnRecovery(float inStartTime);
+	virtual void OnRecovery_Implementation(float inStartTime);
 
-private:
-	UFUNCTION(BlueprintCallable, Category = "Update Properties")
-	void UpdateProperties();
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnChase(float inStartTime);
+	virtual void OnChase_Implementation(float inStartTime);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnAttack(float inStartTime);
+	virtual void OnAttack_Implementation(float inStartTime);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnHit(float inStartTime);
+	virtual void OnHit_Implementation(float inStartTime);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnStun(float inStartTime);
+	virtual void OnStun_Implementation(float inStartTime);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnDeath(float inStartTime);
+	virtual void OnDeath_Implementation(float inStartTime);
+
 };

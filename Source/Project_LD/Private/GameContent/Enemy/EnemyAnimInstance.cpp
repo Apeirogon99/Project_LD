@@ -6,43 +6,50 @@
 #include "GameContent/Enemy/EnemyState.h"
 
 #include "Kismet/KismetMathLibrary.h"
+#include <Network/NetworkUtils.h>
 
 void UEnemyAnimInstance::NativeInitializeAnimation()
 {
 	Super::NativeInitializeAnimation();
 
-	if (mCharacter == nullptr)
-	{
-		mCharacter = Cast<AEnemyBase>(TryGetPawnOwner());
-	}
 }
 
-void UEnemyAnimInstance::UpdateProperties()
+void UEnemyAnimInstance::OnIdle_Implementation(float inStartTime)
 {
-	if (mCharacter == nullptr)
-	{
-		mCharacter = Cast<AEnemyBase>(TryGetPawnOwner());
-	}
-	else
-	{
-		if (mEnemyState == nullptr)
-		{
-			if (IsValid(mCharacter->GetPlayerState()))
-			{
-				mEnemyState = mCharacter->GetPlayerState<AEnemyState>();
-			}
-		}
-	}
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnIdle")), ELogLevel::Warning);
+}
 
-	if (mCharacter && mEnemyState)
-	{
-		FVector Velocity = mCharacter->GetVelocity();
-		mMovementSpeed = UKismetMathLibrary::VSize(Velocity);
+void UEnemyAnimInstance::OnRound_Implementation(float inStartTime)
+{
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnRound")), ELogLevel::Warning);
+}
 
-		float health = mEnemyState->GetEnemyCurrentStats().base_health;
-		if (health <= 0)
-		{
-			//death
-		}
-	}
+void UEnemyAnimInstance::OnRecovery_Implementation(float inStartTime)
+{
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnRecovery")), ELogLevel::Warning);
+}
+
+void UEnemyAnimInstance::OnChase_Implementation(float inStartTime)
+{
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnChase")), ELogLevel::Warning);
+}
+
+void UEnemyAnimInstance::OnAttack_Implementation(float inStartTime)
+{
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnAttack")), ELogLevel::Warning);
+}
+
+void UEnemyAnimInstance::OnHit_Implementation(float inStartTime)
+{
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnHit")), ELogLevel::Warning);
+}
+
+void UEnemyAnimInstance::OnStun_Implementation(float inStartTime)
+{
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnStun")), ELogLevel::Warning);
+}
+
+void UEnemyAnimInstance::OnDeath_Implementation(float inStartTime)
+{
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnDeath")), ELogLevel::Warning);
 }

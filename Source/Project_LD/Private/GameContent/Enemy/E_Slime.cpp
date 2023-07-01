@@ -6,6 +6,8 @@
 #include "GameContent/Enemy/EnemyState.h"
 #include <Framework/Game/GS_Game.h>
 
+#include <Network/NetworkUtils.h>
+
 AE_Slime::AE_Slime()
 {
 }
