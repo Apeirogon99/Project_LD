@@ -59,6 +59,7 @@ public:
 	bool RegisterDisconnect(const FString& inCause);
 	void RegisterSend();
 	void RegisterRecv();
+	void RegisterTick();
 
 	void ProcessConnect();
 	void ProcessDisconnect();
@@ -66,6 +67,9 @@ public:
 	void ProcessRecv(int32 numOfBytes);
 
 	bool CanRecv();
+	bool CanSend();
+	bool CanTick(float inDeltaTime);
+
 	bool CheackDisconnect();
 	bool IsServerOpen(const TSharedRef<FInternetAddr>& inIpAddr);
 	void Connect(const FString& inAddr, const uint16 inPort, FConnectCallBack inConnectCallBack, FDisconnectCallBack inDisconnectCallBack);

@@ -69,12 +69,6 @@ void FNetworkSession::NetworkLoop()
 		return;
 	}
 
-	//if (false == CheackDisconnect())
-	//{
-	//	RegisterDisconnect(TEXT("Server is down"));
-	//	return;
-	//}
-
 	bool oldRecving = static_cast<bool>(Default::SESSION_IS_RECVING);
 	mIsRecving.CompareExchange(oldRecving, static_cast<bool>(Default::SESSION_IS_FREE));
 
@@ -235,9 +229,9 @@ bool FNetworkSession::RegisterDisconnect(const FString& inCause)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[FNetworkSession::Disconnect] : %s"), *inCause), ELogLevel::Error);
 
-	//mSocket->Shutdown(ESocketShutdownMode::ReadWrite);
+	mSocket->Shutdown(ESocketShutdownMode::ReadWrite);
 
-	mSocket->Close();
+	//mSocket->Close();
 
 	mSocketSubsystem->DestroySocket(mSocket);
 
@@ -316,6 +310,14 @@ void FNetworkSession::RegisterRecv()
 	ProcessRecv(byteRead);
 }
 
+void FNetworkSession::RegisterTick()
+{
+	if (this->GetNetworkController())
+	{
+		this->GetNetworkController()->OnTick();
+	}
+}
+
 void FNetworkSession::ProcessConnect()
 {
 	if (mController)
@@ -388,6 +390,37 @@ bool FNetworkSession::CanRecv()
 
 	return IsData && IsRecv && IsPossess;
 
+}
+
+bool FNetworkSession::CanSend()
+{
+	if (false == IsConnected())
+	{
+		return false;
+	}
+
+	bool IsData		= !mSendBufferQueue->IsEmpty();
+	bool IsSend		= mIsSending.Load() == static_cast<bool>(Default::SESSION_IS_FREE) ? true : false;
+	bool IsPossess	= IsPossessController();
+	return IsData && IsSend && IsPossess;
+}
+
+bool FNetworkSession::CanTick(float inDeltaTime)
+{
+	if (false == IsConnected())
+	{
+		return false;
+	}
+
+	static float tickTimer = 0.0f;
+	tickTimer += inDeltaTime;
+
+	if (tickTimer >= 1.0f)
+	{
+		tickTimer = 0.0f;
+		return true;
+	}
+	return false;
 }
 
 bool FNetworkSession::CheackDisconnect()
@@ -548,10 +581,10 @@ void FNetworkSession::Send(SendBufferPtr FSendBuffer)
 
 	mSendBufferQueue->Push(FSendBuffer);
 
-	if (oldSending == static_cast<LONG>(Default::SESSION_IS_FREE))
-	{
-		RegisterSend();
-	}
+	//if (oldSending == static_cast<LONG>(Default::SESSION_IS_FREE))
+	//{
+	//	RegisterSend();
+	//}
 
 }
 
@@ -569,11 +602,6 @@ bool FNetworkSession::IsConnected() const
 bool FNetworkSession::GetHasData()
 {
 	if (nullptr == mSocket)
-	{
-		return false;
-	}
-
-	if (SCS_NotConnected == mSocket->GetConnectionState())
 	{
 		return false;
 	}

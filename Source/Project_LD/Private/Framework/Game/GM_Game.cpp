@@ -131,11 +131,8 @@ ACharacter* AGM_Game::SpawnCharacter(FVector inLocation, FRotator inRotator)
 		FActorSpawnParameters spawnParams;
 		spawnParams.Owner = this;
 		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-		FRotator newRotator = inRotator;
-		FVector newLocation = inLocation;
 		
-		AC_Game* Character = world->SpawnActor<AC_Game>(DefaultPawnClass, newLocation, newRotator, spawnParams);
+		AC_Game* Character = world->SpawnActor<AC_Game>(DefaultPawnClass, inLocation, inRotator, spawnParams);
 		return Character;
 	}
 

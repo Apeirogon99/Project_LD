@@ -25,6 +25,8 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 		return true;
 	}
 
+	int64 predict = timeStamp->GetServerTimeStamp();
+
 	const int64 serverTimeStamp = pkt.time_stamp();
 
 	const int64 serverUtcTime	= pkt.utc_time();
@@ -34,8 +36,8 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 
 	timeStamp->UpdateTimeStamp(serverTimeStamp, clinetUtcTime, rtt);
 
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[RTT::%lld] [HRTT::%lld] [CRTT::%lld]"), timeStamp->GetRTT(), timeStamp->GetRTT() / 2, rtt), ELogLevel::Warning);
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Server : %lld] - [Client : %lld] = [Diff : %lld]"), pkt.time_stamp(), predict, predict - pkt.time_stamp()), ELogLevel::Warning);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[RTT::%lld] [HRTT::%lld] [CRTT::%lld]"), timeStamp->GetRTT(), timeStamp->GetRTT() / 2, rtt), ELogLevel::Warning);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Server : %lld] - [Client : %lld] = [Diff : %lld]"), serverTimeStamp, predict, predict - serverTimeStamp), ELogLevel::Warning);
 
 	return true;
 }

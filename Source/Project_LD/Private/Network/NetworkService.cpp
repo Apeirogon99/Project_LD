@@ -53,20 +53,16 @@ void UNetworkService::Tick(float DeltaTime)
 			mNetworkSession->NetworkLoop();
 		}
 
-		static float tickTimer = 0.0f;
-		tickTimer += DeltaTime;
-
-		if (tickTimer >= 1.0f)
+		if (mNetworkSession->CanSend())
 		{
-			if (mNetworkSession)
-			{
-				if (mNetworkSession->GetNetworkController())
-				{
-					mNetworkSession->GetNetworkController()->OnTick();
-				}
-			}
-			tickTimer = 0.0f;
+			mNetworkSession->RegisterSend();
 		}
+
+		if (mNetworkSession->CanTick(DeltaTime))
+		{
+			mNetworkSession->RegisterTick();
+		}
+
 	}
 	
 	mLastTickFrame = GFrameCounter;

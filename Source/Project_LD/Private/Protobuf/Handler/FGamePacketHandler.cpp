@@ -251,7 +251,7 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     FDateTime oldUtcTimeStamp = FDateTime::UtcNow();
     const int64 oldClientUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
 
-    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MOVEMENT [SERVER::%lld] [CLIENT::%lld] [DURATION::%lld] [EXEC::%lld]"), lastMovementTimeStamp, nowServerTimeStamp, durationTimeStamp, nowClientUtcTimeStamp - oldClientUtcTimeStamp), ELogLevel::Warning);
+    //UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MOVEMENT [SERVER::%lld] [CLIENT::%lld] [DURATION::%lld] [EXEC::%lld]"), lastMovementTimeStamp, nowServerTimeStamp, durationTimeStamp, nowClientUtcTimeStamp - oldClientUtcTimeStamp), ELogLevel::Warning);
 
     return true;
 }
@@ -259,6 +259,11 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
 bool Handle_S2C_PlayAnimation(ANetworkController* controller, Protocol::S2C_PlayAnimation& pkt)
 {
     return true;
+}
+
+bool Handle_S2C_AttackToEnemy(ANetworkController* controller, Protocol::S2C_AttackToEnemy& pkt)
+{
+    return false;
 }
 
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt)
@@ -438,6 +443,11 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
     enemyController->MoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
 
     return true;
+}
+
+bool Handle_S2C_AttackToPlayer(ANetworkController* controller, Protocol::S2C_AttackToPlayer& pkt)
+{
+    return false;
 }
 
 bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2C_DisAppearGameObject& pkt)

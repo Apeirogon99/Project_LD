@@ -16,7 +16,7 @@ class PROJECT_LD_API FSendBufferQueue
 {
 	enum class Default
 	{
-		MAX_QUEUE_SIZE = 0x400,
+		MAX_QUEUE_SIZE = 0x1000,
 	};
 
 public:
