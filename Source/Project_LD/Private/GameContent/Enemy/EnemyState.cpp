@@ -32,6 +32,11 @@ void AEnemyState::Destroyed()
 	Super::Destroyed();
 }
 
+void AEnemyState::SetObjectID(const int64 inObjectID)
+{
+	mObjectID = inObjectID;
+}
+
 void AEnemyState::SetEnemyDatas(const FEnemyData& inEnemeyDatas)
 {
 	mDatas = inEnemeyDatas;
@@ -47,14 +52,13 @@ void AEnemyState::SetEnemyStats(const FEnemyStatData& inEnemyStats)
 	mStats = inEnemyStats;
 }
 
-void AEnemyState::SetEnemyState(const EEnemyStateType& inStateType)
+void AEnemyState::SetEnemyState(const EEnemyStateType& inStateType, const float inStartTime)
 {
 	if (EEnemyStateType::State_Unspecified == mCurrentState)
 	{
 		mCurrentState = inStateType;
 	}
-
-	if (inStateType == mCurrentState)
+	else if (inStateType == mCurrentState)
 	{
 		return;
 	}
@@ -69,7 +73,5 @@ void AEnemyState::SetEnemyState(const EEnemyStateType& inStateType)
 
 	mCurrentState = inStateType;
 
-	float time = 0.0f;
-	enemy->ChangeState(mCurrentState, time);
-
+	enemy->ChangeState(mCurrentState, inStartTime);
 }

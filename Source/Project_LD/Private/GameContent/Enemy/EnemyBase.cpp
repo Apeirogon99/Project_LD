@@ -5,6 +5,10 @@
 #include "GameContent/Enemy/EnemyController.h"
 #include "GameContent/Enemy/EnemyState.h"
 
+#include <Game/GM_Game.h>
+#include <Protobuf/Handler/FClientPacketHandler.h>
+#include <Protobuf/Handler/FGamePacketHandler.h>
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -94,16 +98,40 @@ void AEnemyBase::ChangeState(const EEnemyStateType inStateType, float inStartTim
 
 void AEnemyBase::Interactive(AC_Game* inPlayer)
 {
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+	if (nullptr == gameMode)
+	{
+		return;
+	}
+
+	ANetworkController* controller = gameMode->GetNetworkController();
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	if (false == gameMode->CompareNetworkController(inPlayer->GetController()))
+	{
+		return;
+	}
+
 	AEnemyState* state = GetPlayerState<AEnemyState>();
 	if (state == nullptr)
 	{
 		return;
 	}
 
-	float damage = 10.f;
+	Protocol::C2S_AttackToEnemy attackPacket;
+	attackPacket.set_object_id(state->GetObjectID());
+	attackPacket.set_timestamp(controller->GetServerTimeStamp());
 
-	FEnemyStatData stateData = state->GetEnemyCurrentStats();
-	stateData.SetBaseHealth(stateData.GetBaseHealth() - damage);
-	state->SetEnemyCurrentStats(stateData);
+	SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(controller, attackPacket);
+	controller->Send(sendBuffer);
 
 }

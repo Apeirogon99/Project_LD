@@ -26,18 +26,20 @@ enum class EPakcetID: uint16
 	S2C_TickEnemy = 2016,
 	S2C_MovementEnemy = 2017,
 	S2C_AttackToPlayer = 2018,
-	S2C_DisAppearGameObject = 2019,
-	C2S_LoadInventory = 2020,
-	S2C_LoadInventory = 2021,
-	C2S_InsertInventory = 2022,
-	S2C_InsertInventory = 2023,
-	C2S_UpdateInventory = 2024,
-	S2C_UpdateInventory = 2025,
-	C2S_DeleteInventory = 2026,
-	S2C_DeleteInventory = 2027,
-	S2C_RollbackInventory = 2028,
-	C2S_ReplaceEqipment = 2029,
-	S2C_ReplaceEqipment = 2030,
+	S2C_TargetingToPlayer = 2019,
+	S2C_DeathEnemy = 2020,
+	S2C_DisAppearGameObject = 2021,
+	C2S_LoadInventory = 2022,
+	S2C_LoadInventory = 2023,
+	C2S_InsertInventory = 2024,
+	S2C_InsertInventory = 2025,
+	C2S_UpdateInventory = 2026,
+	S2C_UpdateInventory = 2027,
+	C2S_DeleteInventory = 2028,
+	S2C_DeleteInventory = 2029,
+	S2C_RollbackInventory = 2030,
+	C2S_ReplaceEqipment = 2031,
+	S2C_ReplaceEqipment = 2032,
 };
 */
 
@@ -55,6 +57,8 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
 bool Handle_S2C_TickEnemy(ANetworkController* controller, Protocol::S2C_TickEnemy& pkt);
 bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_MovementEnemy& pkt);
 bool Handle_S2C_AttackToPlayer(ANetworkController* controller, Protocol::S2C_AttackToPlayer& pkt);
+bool Handle_S2C_TargetingToPlayer(ANetworkController* controller, Protocol::S2C_TargetingToPlayer& pkt);
+bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEnemy& pkt);
 bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2C_DisAppearGameObject& pkt);
 bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_LoadInventory& pkt);
 bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_InsertInventory& pkt);
@@ -81,6 +85,8 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_TickEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_TickEnemy>(Handle_S2C_TickEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_MovementEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_MovementEnemy>(Handle_S2C_MovementEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AttackToPlayer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AttackToPlayer>(Handle_S2C_AttackToPlayer, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_TargetingToPlayer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_TargetingToPlayer>(Handle_S2C_TargetingToPlayer, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DeathEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DeathEnemy>(Handle_S2C_DeathEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DisAppearGameObject)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DisAppearGameObject>(Handle_S2C_DisAppearGameObject, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_LoadInventory)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_LoadInventory>(Handle_S2C_LoadInventory, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_InsertInventory)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_InsertInventory>(Handle_S2C_InsertInventory, controller, buffer, len); };

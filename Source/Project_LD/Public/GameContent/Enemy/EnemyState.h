@@ -25,18 +25,23 @@ public:
 	virtual void Destroyed() override;
 
 public:
+	void SetObjectID(const int64 inObjectID);
 	void SetEnemyDatas(const FEnemyData& inEnemeyDatas);
 	void SetEnemyCurrentStats(const FEnemyStatData& inEnemeyDatas);
 	void SetEnemyStats(const FEnemyStatData& inEnemyStats);
-	void SetEnemyState(const EEnemyStateType& inStateType);
+	void SetEnemyState(const EEnemyStateType& inStateType, const float inStartTime);
 
 public:
+	const int64						GetObjectID()			{ return mObjectID; }
 	const FEnemyData&				GetEnemyDatas()			{ return mDatas; }
 	const FEnemyStatData&			GetEnemyCurrentStats()	{ return mCurrentStats; }
 	const FEnemyStatData&			GetEnemyStats()			{ return mStats; }
 	const EEnemyStateType&			GetCurrentStateType()	{ return mCurrentState; }
 	
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Datas")
+	int64						mObjectID;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Datas")
 	FEnemyData					mDatas;
 

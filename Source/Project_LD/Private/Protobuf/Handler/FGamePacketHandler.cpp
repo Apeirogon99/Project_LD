@@ -251,7 +251,7 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     FDateTime oldUtcTimeStamp = FDateTime::UtcNow();
     const int64 oldClientUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
 
-    //UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MOVEMENT [SERVER::%lld] [CLIENT::%lld] [DURATION::%lld] [EXEC::%lld]"), lastMovementTimeStamp, nowServerTimeStamp, durationTimeStamp, nowClientUtcTimeStamp - oldClientUtcTimeStamp), ELogLevel::Warning);
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MOVEMENT [SERVER::%lld] [CLIENT::%lld] [DURATION::%lld] [EXEC::%lld]"), lastMovementTimeStamp, nowServerTimeStamp, durationTimeStamp, nowClientUtcTimeStamp - oldClientUtcTimeStamp), ELogLevel::Warning);
 
     return true;
 }
@@ -392,8 +392,12 @@ bool Handle_S2C_TickEnemy(ANetworkController* controller, Protocol::S2C_TickEnem
     }
 
     Protocol::SEnemy enemyPacket = pkt.enemy();
+   
+    const int64 worldTime = pkt.timestamp();
+    const int64 serverTime = controller->GetServerTimeStamp();
+    const float startTime = (serverTime - worldTime) / 1000.0f;
 
-    enemyState->SetEnemyState(StaticCast<EEnemyStateType>(enemyPacket.state()));
+    enemyState->SetEnemyState(StaticCast<EEnemyStateType>(enemyPacket.state()), startTime);
 
     return true;
 }
@@ -447,7 +451,91 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
 
 bool Handle_S2C_AttackToPlayer(ANetworkController* controller, Protocol::S2C_AttackToPlayer& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 objectID = pkt.object_id();
+    AActor* actor = gameState->FindGameObject(objectID);
+    if (nullptr == actor)
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AEnemyBase* enemy = Cast<AEnemyBase>(actor);
+    if (nullptr == enemy)
+    {
+        return false;
+    }
+
+    AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
+    if (nullptr == enemyState)
+    {
+        return false;
+    }
+
+    const int64 worldTime   = pkt.timestamp();
+    const int64 serverTime  = controller->GetServerTimeStamp();
+    const float startTime = (serverTime - worldTime) / 1000.0f;
+
+    enemyState->SetEnemyState(EEnemyStateType::State_Attack, startTime);
+    return true;
+}
+
+bool Handle_S2C_TargetingToPlayer(ANetworkController* controller, Protocol::S2C_TargetingToPlayer& pkt)
+{
     return false;
+}
+
+bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEnemy& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 objectID = pkt.object_id();
+    AActor* actor = gameState->FindGameObject(objectID);
+    if (nullptr == actor)
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AEnemyBase* enemy = Cast<AEnemyBase>(actor);
+    if (nullptr == enemy)
+    {
+        return false;
+    }
+
+    AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
+    if (nullptr == enemyState)
+    {
+        return false;
+    }
+
+    const int64 worldTime = pkt.timestamp();
+    const int64 serverTime = controller->GetServerTimeStamp();
+    const float startTime = (serverTime - worldTime) / 1000.0f;
+
+    enemyState->SetEnemyState(EEnemyStateType::State_Death, startTime);
+    return true;
 }
 
 bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2C_DisAppearGameObject& pkt)

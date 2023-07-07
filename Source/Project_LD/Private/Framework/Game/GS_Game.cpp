@@ -116,6 +116,7 @@ AActor* AGS_Game::CreateEnemyCharacter(const int32 inEnemyID, FVector inLocation
     {
         return nullptr;
     }
+    newEnemyState->SetObjectID(inGameObjectID);
     newEnemyState->SetEnemyDatas(*enemyDatas);
     newEnemyState->SetEnemyStats(*enemyStats);
 
