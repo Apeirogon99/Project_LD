@@ -496,6 +496,48 @@ bool Handle_S2C_TargetingToPlayer(ANetworkController* controller, Protocol::S2C_
     return false;
 }
 
+bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 objectID = pkt.object_id();
+    AActor* actor = gameState->FindGameObject(objectID);
+    if (nullptr == actor)
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AEnemyBase* enemy = Cast<AEnemyBase>(actor);
+    if (nullptr == enemy)
+    {
+        return false;
+    }
+
+    AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
+    if (nullptr == enemyState)
+    {
+        return false;
+    }
+
+    const int64 worldTime = pkt.timestamp();
+    const int64 serverTime = controller->GetServerTimeStamp();
+    const float startTime = (serverTime - worldTime) / 1000.0f;
+
+    enemyState->SetEnemyState(EEnemyStateType::State_Hit, startTime);
+    return true;
+}
+
 bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEnemy& pkt)
 {
     UWorld* world = controller->GetWorld();
