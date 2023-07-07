@@ -24,42 +24,42 @@ protected:
 public:
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnSpawn(float inStartTime);
-	virtual void OnSpawn_Implementation(float inStartTime);
+	virtual float OnSpawn_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnIdle(float inStartTime);
-	virtual void OnIdle_Implementation(float inStartTime);
+	virtual float OnIdle_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnRound(float inStartTime);
-	virtual void OnRound_Implementation(float inStartTime);
+	virtual float OnRound_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnRecovery(float inStartTime);
-	virtual void OnRecovery_Implementation(float inStartTime);
+	virtual float OnRecovery_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnChase(float inStartTime);
-	virtual void OnChase_Implementation(float inStartTime);
+	virtual float OnChase_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnAttack(float inStartTime);
-	virtual void OnAttack_Implementation(float inStartTime);
+	virtual float OnAttack_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnAttackCritical(float inStartTime);
-	virtual void OnAttackCritical_Implementation(float inStartTime);
+	virtual float OnAttackCritical_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnHit(float inStartTime);
-	virtual void OnHit_Implementation(float inStartTime);
+	virtual float OnHit_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnStun(float inStartTime);
-	virtual void OnStun_Implementation(float inStartTime);
+	virtual float OnStun_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnDeath(float inStartTime);
-	virtual void OnDeath_Implementation(float inStartTime);
+	virtual float OnDeath_Implementation(float inStartTime);
 
 };

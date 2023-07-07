@@ -14,52 +14,62 @@ void UEnemyAnimInstance::NativeInitializeAnimation()
 
 }
 
-void UEnemyAnimInstance::OnSpawn_Implementation(float inStartTime)
+float UEnemyAnimInstance::OnSpawn_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnSpawn")), ELogLevel::Warning);
+	return inStartTime;
 }
 
-void UEnemyAnimInstance::OnIdle_Implementation(float inStartTime)
+float UEnemyAnimInstance::OnIdle_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnIdle")), ELogLevel::Warning);
+	return inStartTime;
 }
 
-void UEnemyAnimInstance::OnRound_Implementation(float inStartTime)
+float UEnemyAnimInstance::OnRound_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnRound")), ELogLevel::Warning);
+	return inStartTime;
 }
 
-void UEnemyAnimInstance::OnRecovery_Implementation(float inStartTime)
+float UEnemyAnimInstance::OnRecovery_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnRecovery")), ELogLevel::Warning);
-}	
+	return inStartTime;
+}
 
-void UEnemyAnimInstance::OnChase_Implementation(float inStartTime)
+float UEnemyAnimInstance::OnChase_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnChase")), ELogLevel::Warning);
+	return inStartTime;
 }
 
-void UEnemyAnimInstance::OnAttack_Implementation(float inStartTime)
+float UEnemyAnimInstance::OnAttack_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnAttack")), ELogLevel::Warning);
+	return inStartTime;
 }
 
-void UEnemyAnimInstance::OnAttackCritical_Implementation(float inStartTime)
+float UEnemyAnimInstance::OnAttackCritical_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnAttackCritical")), ELogLevel::Warning);
+	return inStartTime;
 }
 
-void UEnemyAnimInstance::OnHit_Implementation(float inStartTime)
+float UEnemyAnimInstance::OnHit_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnHit")), ELogLevel::Warning);
+	return inStartTime;
 }
 
-void UEnemyAnimInstance::OnStun_Implementation(float inStartTime)
+float UEnemyAnimInstance::OnStun_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnStun")), ELogLevel::Warning);
+	return inStartTime;
 }
 
-void UEnemyAnimInstance::OnDeath_Implementation(float inStartTime)
+float UEnemyAnimInstance::OnDeath_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnDeath")), ELogLevel::Warning);
+	return inStartTime;
 }
