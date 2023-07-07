@@ -23,6 +23,10 @@ protected:
 
 public:
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnSpawn(float inStartTime);
+	virtual void OnSpawn_Implementation(float inStartTime);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnIdle(float inStartTime);
 	virtual void OnIdle_Implementation(float inStartTime);
 
@@ -41,6 +45,10 @@ public:
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnAttack(float inStartTime);
 	virtual void OnAttack_Implementation(float inStartTime);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnAttackCritical(float inStartTime);
+	virtual void OnAttackCritical_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnHit(float inStartTime);

@@ -32,11 +32,11 @@ public:
 	void SetEnemyState(const EEnemyStateType& inStateType, const float inStartTime);
 
 public:
-	const int64						GetObjectID()			{ return mObjectID; }
-	const FEnemyData&				GetEnemyDatas()			{ return mDatas; }
-	const FEnemyStatData&			GetEnemyCurrentStats()	{ return mCurrentStats; }
-	const FEnemyStatData&			GetEnemyStats()			{ return mStats; }
-	const EEnemyStateType&			GetCurrentStateType()	{ return mCurrentState; }
+	const int64									GetObjectID()						{ return mObjectID; }
+	const FEnemyData&					GetEnemyDatas()				{ return mDatas; }
+	const FEnemyStatData&				GetEnemyCurrentStats()	{ return mCurrentStats; }
+	const FEnemyStatData&				GetEnemyStats()					{ return mStats; }
+	const EEnemyStateType&			GetCurrentStateType()		{ return mCurrentState; }
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Datas")

@@ -14,6 +14,11 @@ void UEnemyAnimInstance::NativeInitializeAnimation()
 
 }
 
+void UEnemyAnimInstance::OnSpawn_Implementation(float inStartTime)
+{
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnSpawn")), ELogLevel::Warning);
+}
+
 void UEnemyAnimInstance::OnIdle_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnIdle")), ELogLevel::Warning);
@@ -27,7 +32,7 @@ void UEnemyAnimInstance::OnRound_Implementation(float inStartTime)
 void UEnemyAnimInstance::OnRecovery_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnRecovery")), ELogLevel::Warning);
-}
+}	
 
 void UEnemyAnimInstance::OnChase_Implementation(float inStartTime)
 {
@@ -37,6 +42,11 @@ void UEnemyAnimInstance::OnChase_Implementation(float inStartTime)
 void UEnemyAnimInstance::OnAttack_Implementation(float inStartTime)
 {
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnAttack")), ELogLevel::Warning);
+}
+
+void UEnemyAnimInstance::OnAttackCritical_Implementation(float inStartTime)
+{
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnAttackCritical")), ELogLevel::Warning);
 }
 
 void UEnemyAnimInstance::OnHit_Implementation(float inStartTime)
