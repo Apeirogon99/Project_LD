@@ -58,7 +58,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
 	FVector curLocation = pawn->GetActorLocation();
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
-	if (locationDistance > 10.0f)
+	if (locationDistance > 1.0f)
 	{
 		IsCorrection = true;
 		mTargetLoction = inOldMovementLocation;
@@ -70,6 +70,8 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	}
 
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
+
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("NPC Movement %ws"), *inNewMovementLocation.ToString()), ELogLevel::Warning);
 }
 
 void AEnemyController::MoveCorrection(const float inDeltaTime)
@@ -100,5 +102,4 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 		pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
 	}
 
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("NPC Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
 }

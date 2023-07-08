@@ -143,7 +143,7 @@ void AMovementController::SetNewMoveDestination(const FVector DestLocation)
 
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
 
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Des Pos %ws"), *DestLocation.ToString()), ELogLevel::Warning);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Des Pos %ws"), *DestLocation.ToString()), ELogLevel::Warning);
 }
 
 void AMovementController::MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
@@ -158,7 +158,7 @@ void AMovementController::MoveDestination(const FVector inOldMovementLocation, c
 	FVector	direction = inNewMovementLocation - inOldMovementLocation;
 	direction.Normalize();
 
-	FVector velocity = direction * 330.0f;
+	FVector velocity = direction * 340.0f;
 	float	duration = inTime / 1000.0f;
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);

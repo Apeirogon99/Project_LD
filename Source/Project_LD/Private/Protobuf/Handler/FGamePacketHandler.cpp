@@ -370,6 +370,43 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
 
 bool Handle_S2C_TickEnemy(ANetworkController* controller, Protocol::S2C_TickEnemy& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64     objectID = pkt.object_id();
+    auto            stats = pkt.stats();
+    const int64     timestamp = pkt.timestamp();
+    const int64     durationTime = controller->GetServerTimeStamp() - timestamp;
+
+    AActor* actor = gameState->FindGameObject(objectID);
+    if (nullptr == actor)
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AEnemyBase* enemy = Cast<AEnemyBase>(actor);
+    if (nullptr == enemy)
+    {
+        return false;
+    }
+
+    AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
+    if (nullptr == enemyState)
+    {
+        return false;
+    }
+    enemyState->UpdateCurrentStats(stats);
+
     return true;
 }
 
@@ -421,7 +458,7 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
     {
         return false;
     }
-    enemyController->MoveDestination(curLocation, moveLocation, durationTime / 1000.0f);
+    enemyController->MoveDestination(curLocation, moveLocation, durationTime);
 
     return true;
 }
