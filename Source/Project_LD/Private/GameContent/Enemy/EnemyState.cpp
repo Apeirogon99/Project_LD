@@ -5,6 +5,7 @@
 #include "GameContent/Enemy/EnemyController.h"
 #include "GameContent/Enemy/EnemyBase.h"
 
+#include <Struct/Game/CharacterDatas.h>
 #include <Network/NetworkUtils.h>
 
 AEnemyState::AEnemyState()
@@ -30,6 +31,17 @@ void AEnemyState::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void AEnemyState::Destroyed()
 {
 	Super::Destroyed();
+}
+
+void AEnemyState::UpdateCurrentStats(const google::protobuf::RepeatedPtrField<Protocol::SStat>& inStats)
+{
+	const int32 maxSize = inStats.size();
+	for (int32 index = 0; index < maxSize; ++index)
+	{
+		const Protocol::SStat&	stat = inStats.Get(index);
+		//ECharacterStatus		type = stat.stat_type();
+		//const float			value = stat.stat_value();
+	}
 }
 
 void AEnemyState::SetObjectID(const int64 inObjectID)
