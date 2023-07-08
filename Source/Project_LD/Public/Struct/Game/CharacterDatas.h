@@ -378,7 +378,7 @@ public:
 
 public:
 	void SetMaxStats(const FStatsData& inMaxStats) { mMaxStats = inMaxStats; }
-	void SetCurrentStats(const FStatsData& inCurrentStats) { mMaxStats = inCurrentStats; }
+	void SetCurrentStats(const FStatsData& inCurrentStats) { mCurrentStats = inCurrentStats; }
 
 public:
 	FStatsData	GetMaxStats() const { return mMaxStats; }
