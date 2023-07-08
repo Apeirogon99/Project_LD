@@ -50,7 +50,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	FVector	direction = inNewMovementLocation - inOldMovementLocation;
 	direction.Normalize();
 
-	FVector velocity = direction * 100.0f;
+	FVector velocity = direction * enemyState->GetEnemyCurrentStats().GetBaseMovementSpeed();
 	float	duration = inTime / 1000.0f;
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
