@@ -5,6 +5,7 @@
 #include "GameContent/Enemy/EnemyController.h"
 #include "GameContent/Enemy/EnemyBase.h"
 
+#include <Struct/Game/EnemyData.h>
 #include <Struct/Game/CharacterDatas.h>
 #include <Network/NetworkUtils.h>
 
@@ -39,8 +40,10 @@ void AEnemyState::UpdateCurrentStats(const google::protobuf::RepeatedPtrField<Pr
 	for (int32 index = 0; index < maxSize; ++index)
 	{
 		const Protocol::SStat&	stat = inStats.Get(index);
-		//ECharacterStatus		type = stat.stat_type();
-		//const float			value = stat.stat_value();
+		ECharacterStatus		type = StaticCast<ECharacterStatus>(stat.stat_type()); //EStatsType
+		const float					value = stat.stat_value();
+
+		mStats.UpdateStats(type, value);
 	}
 }
 
@@ -54,14 +57,13 @@ void AEnemyState::SetEnemyDatas(const FEnemyData& inEnemeyDatas)
 	mDatas = inEnemeyDatas;
 }
 
-void AEnemyState::SetEnemyCurrentStats(const FEnemyStatData& inEnemeyDatas)
-{
-	mCurrentStats = inEnemeyDatas;
-}
-
 void AEnemyState::SetEnemyStats(const FEnemyStatData& inEnemyStats)
 {
-	mStats = inEnemyStats;
+	FEnemyBaseStats EnemyStat;
+	EnemyStat.SetStatsBaseData(inEnemyStats);
+
+	mStats.FloatToFData(EnemyStat.FDataToFloat());
+	mStats.SetCurrentStats(mStats.GetMaxStats());
 }
 
 void AEnemyState::SetEnemyState(const EEnemyStateType& inStateType, const float inStartTime)

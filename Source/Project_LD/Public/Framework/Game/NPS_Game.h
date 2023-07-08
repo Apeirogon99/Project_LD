@@ -24,12 +24,12 @@ public:
 	void SetRemotePlayerID(const int64 inRemoteID);
 	void SetCharacterData(const FCharacterData& InCharacterDatas);
 	void SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment);
-	void calculationStatus();
+	void calculationStats();
 
 public:
 	const int64				GetRemoteID() const { return mRemoteID; }
 	const FCharacterData&	GetCharacterData()	 const { return mCharacterData; }
-	const FCharacterStats&	GetCharacterStatus() const { return mCharacterStatus; }
+	const FCharacterStats&	GetCharacterStats() const { return mCharacterStats; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState")
@@ -39,5 +39,5 @@ protected:
 		FCharacterData mCharacterData;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Status")
-		FCharacterStats	mCharacterStatus;
+		FCharacterStats	mCharacterStats;
 };

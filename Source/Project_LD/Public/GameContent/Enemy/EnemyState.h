@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Struct/Game/EnemyData.h"
+#include "Struct/Game/CharacterDatas.h"
 #include <Protobuf/Packet/PacketStruct.pb.h>
 #include "GameFramework/PlayerState.h"
 #include "EnemyState.generated.h"
@@ -30,30 +31,27 @@ public:
 
 	void SetObjectID(const int64 inObjectID);
 	void SetEnemyDatas(const FEnemyData& inEnemeyDatas);
-	void SetEnemyCurrentStats(const FEnemyStatData& inEnemeyDatas);
-	void SetEnemyStats(const FEnemyStatData& inEnemyStats);
+	void SetEnemyStats(const FEnemyStatData& inMaxData);
+	void SetEnemyCurrentStats(const FStatsData& inCurrentData);
 	void SetEnemyState(const EEnemyStateType& inStateType, const float inStartTime);
 
 public:
-	const int64									GetObjectID()						{ return mObjectID; }
-	const FEnemyData&					GetEnemyDatas()				{ return mDatas; }
-	const FEnemyStatData&				GetEnemyCurrentStats()	{ return mCurrentStats; }
-	const FEnemyStatData&				GetEnemyStats()					{ return mStats; }
-	const EEnemyStateType&			GetCurrentStateType()		{ return mCurrentState; }
+	const int64									GetObjectID()							{ return mObjectID; }
+	const FEnemyData&					GetEnemyDatas()					{ return mDatas; }
+	const FStatsData							GetEnemyStats()						{ return mStats.GetMaxStats(); }
+	const FStatsData							GetEnemyCurrentStats()		{ return mStats.GetCurrentStats(); }
+	const EEnemyStateType&			GetCurrentStateType()			{ return mCurrentState; }
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Datas")
-	int64						mObjectID;
+	int64								mObjectID;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Datas")
 	FEnemyData					mDatas;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Stats")
-	FEnemyStatData				mCurrentStats;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Stats")
-	FEnemyStatData				mStats;
+	FCharacterStats				mStats;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | State")
-	EEnemyStateType				mCurrentState;
+	EEnemyStateType			mCurrentState;
 };

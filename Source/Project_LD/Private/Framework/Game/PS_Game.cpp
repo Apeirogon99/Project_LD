@@ -72,9 +72,9 @@ void APS_Game::InitializeLocalPlayerState()
 	inventory->InitInventory(mInventoryComponent, 50.0f, mEquipmentComponent);
 
 	mEquipmentComponent->Init(inventory);
-	calculationStatus();
+	calculationStats();
 
-	mCharacterStatus.SetCurrentStatus(mCharacterStatus.GetMaxStatus());
+	mCharacterStats.SetCurrentStats(mCharacterStats.GetMaxStats());
 }
 
 //void APS_Game::UpdateInventory()

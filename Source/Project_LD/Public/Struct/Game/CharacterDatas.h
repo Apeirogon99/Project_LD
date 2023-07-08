@@ -215,13 +215,13 @@ private:
 };
 
 USTRUCT(Atomic, BlueprintType)
-struct FStatusData
+struct FStatsData
 {
 	GENERATED_USTRUCT_BODY()
 
 public:
-	FStatusData() :
-		character_class_id(0),
+	FStatsData() :
+		class_id(0),
 		armor_penetration(0),
 		attack_damage(0),
 		attack_speed(0),
@@ -295,7 +295,7 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus", meta = (AllowPrivateAccess = "true"))
-		float character_class_id;
+		float class_id;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BaseStatus", meta = (AllowPrivateAccess = "true"))
 		float armor_penetration;
@@ -371,28 +371,30 @@ struct FCharacterStats
 
 public:
 	FCharacterStats();
-	FCharacterStats(const FCharacterStats& inCharacterStatus) { UpdateCharacterStatus(inCharacterStatus); }
-	FCharacterStats& operator=(const FCharacterStats& inCharacterStatus) { UpdateCharacterStatus(inCharacterStatus); return *this; }
+	FCharacterStats(const FCharacterStats& inCharacterStats) { UpdateCharacterStats(inCharacterStats); }
+	FCharacterStats& operator=(const FCharacterStats& inCharacterStats) { UpdateCharacterStats(inCharacterStats); return *this; }
 
-	void UpdateCharacterStatus(const FCharacterStats& inCharacterStatus);
-
-public:
-	void SetMaxStatus(const FStatusData& inMaxStatus) { mMaxStatus = inMaxStatus; }
-	void SetCurrentStatus(const FStatusData& inCurrentStatus) { mMaxStatus = inCurrentStatus; }
+	void UpdateCharacterStats(const FCharacterStats& inCharacterStats);
 
 public:
-	FStatusData	GetMaxStatus() const { return mMaxStatus; }
-	FStatusData	GetCurrentStatus() const { return mCurrentStatus; }
+	void SetMaxStats(const FStatsData& inMaxStats) { mMaxStats = inMaxStats; }
+	void SetCurrentStats(const FStatsData& inCurrentStats) { mMaxStats = inCurrentStats; }
+
+public:
+	FStatsData	GetMaxStats() const { return mMaxStats; }
+	FStatsData	GetCurrentStats() const { return mCurrentStats; }
 
 public:
 	TArray<float> FDataToFloat();
 	void	FloatToFData(TArray<float> Data);
 
+	void UpdateStats(ECharacterStatus InStats, float Invalue);
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
-	FStatusData 	mMaxStatus;
+	FStatsData 		mMaxStats;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
-	FStatusData		mCurrentStatus;
+	FStatsData		mCurrentStats;
 };
 
 

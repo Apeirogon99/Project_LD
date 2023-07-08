@@ -91,120 +91,96 @@ public:
 		base_range(0) {}
 
 public:
-	void SetBaseArmorPenetration(const float inbase_armor_penetration)											{ base_armor_penetration = inbase_armor_penetration; }
-	void SetBaseAttackDamage(const float inbase_attack_damage)														{ base_attack_damage = inbase_attack_damage; }
-	void SetBaseAttackSpeed(const float inbase_attack_speed)																{ base_attack_speed = inbase_attack_speed; }
-	void SetBaseCriticalStrikeChance(const float inbase_critical_strike_chance)								{ base_critical_strike_chance = inbase_critical_strike_chance; }
-	void SetBaseCriticalStrikeDamage(const float inbase_cirtical_strike_damage)								{ base_cirtical_strike_damage = inbase_cirtical_strike_damage; }
-	void SetBaseLifeSteal(const float inbase_life_steal)																		{ base_life_steal = inbase_life_steal; }
-	void SetBaseAbilityPower(const float inbase_ability_power)															{ base_ability_power = inbase_ability_power; }
-	void SetBaseMagePenetration(const float inbase_mage_penetration)												{ base_mage_penetration = inbase_mage_penetration; }
-	void SetBaseOmniVamp(const float inbase_omnivamp)																	{ base_omnivamp = inbase_omnivamp; }
-	void SetBasePhysicalVamp(const float inbase_physical_vamp)														{ base_physical_vamp = inbase_physical_vamp; }
-	void SetBaseArmor(const float inbase_armor)																					{ base_armor = inbase_armor; }
-	void SetBaseHealAndShieldPower(const float inbase_heal_and_shield_power)								{ base_heal_and_shield_power = inbase_heal_and_shield_power; }
-	void SetBaseHealth(const float inbase_health)																					{ base_health = inbase_health; }
-	void SetBaseHealthRegeneration(const float inbase_health_regeneration)										{ base_health_regeneration = inbase_health_regeneration; }
-	void SetBaseMagicResistance(const float inbase_magic_resistance)												{ base_magic_resistance = inbase_magic_resistance; }
-	void SetBaseTenacity(const float inbase_tenacity)																			{ base_tenacity = inbase_tenacity; }
-	void SetBaseSlowResist(const float inbase_slow_resist)																	{ base_slow_resist = inbase_slow_resist; }
-	void SetBaseAbilityHaste(const float inbase_ability_haste)																{ base_ability_haste = inbase_ability_haste; }
-	void SetBaseMana(const float inbase_mana)																						{ base_mana = inbase_mana; }
-	void SetBaseManaRegeneration(const float inbase_mana_regeneration)											{ base_mana_regeneration  = inbase_mana_regeneration; }
-	void SetBaseMovementSpeed(const float inbase_movement_speed)													{ base_movement_speed = inbase_movement_speed; }
-	void SetBaseRange(const float inbase_range)																					{ base_range = inbase_range; }
-
-public:
-	float GetBaseArmorPenetration() const						{ return base_armor_penetration; }
-	float GetBaseAttackDamage() const							{ return base_attack_damage; }
-	float GetBaseAttackSpeed() const								{ return base_attack_speed; }
-	float GetBaseCriticalStrikeChance() const				{ return base_critical_strike_chance; }
-	float GetBaseCriticalStrikeDamage() const				{ return base_cirtical_strike_damage; }
-	float GetBaseLifeSteal() const									{ return base_life_steal; }
-	float GetBaseAbilityPower() const								{ return base_ability_power; }
-	float GetBaseMagePenetration() const						{ return base_mage_penetration; }
-	float GetBaseOmniVamp() const								{ return base_omnivamp; }
-	float GetBasePhysicalVamp() const							{ return base_physical_vamp; }
-	float GetBaseArmor() const										{ return base_armor; }
-	float GetBaseHealAndShieldPower() const				{ return base_heal_and_shield_power; }
-	float GetBaseHealth() const										{ return base_health; }
-	float GetBaseHealthRegeneration() const					{ return base_health_regeneration; }
-	float GetBaseMagicResistance() const						{ return base_magic_resistance; }
-	float GetBaseTenacity() const									{ return base_tenacity; }
-	float GetBaseSlowResist() const								{ return base_slow_resist; }
-	float GetBaseAbilityHaste() const								{ return base_ability_haste; }
-	float GetBaseMana() const											{ return base_mana; }
-	float GetBaseManaRegeneration() const					{ return base_mana_regeneration; }
-	float GetBaseMovementSpeed() const						{ return base_movement_speed; }
-	float GetBaseRange() const										{ return base_range; }
-
-private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		int32 enemy_class_id;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_armor_penetration;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_attack_damage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_attack_speed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_critical_strike_chance;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_cirtical_strike_damage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_life_steal;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_ability_power;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_mage_penetration;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_omnivamp;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_physical_vamp;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_armor;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_heal_and_shield_power;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_health;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_health_regeneration;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_magic_resistance;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_tenacity;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_slow_resist;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_ability_haste;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_mana;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_mana_regeneration;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_movement_speed;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Stats", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY()
 		float base_range;
+};
+
+USTRUCT(Atomic, BlueprintType)
+struct FEnemyBaseStats
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FEnemyBaseStats();
+	FEnemyBaseStats(const FEnemyBaseStats& inEnemyStats) { UpdateEnemyStats(inEnemyStats); }
+	FEnemyBaseStats& operator=(const FEnemyBaseStats& inEnemyStats) { UpdateEnemyStats(inEnemyStats); return *this; }
+
+	void UpdateEnemyStats(const FEnemyBaseStats& inCharacterStats);
+	TArray<float> FDataToFloat();
+
+public:
+	void SetStatsBaseData(const FEnemyStatData InBaseStats) { mBaseStats = InBaseStats; }
+
+public:
+	FEnemyStatData GetStatsBaseData() const { return mBaseStats; }
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	FEnemyStatData mBaseStats;
 };

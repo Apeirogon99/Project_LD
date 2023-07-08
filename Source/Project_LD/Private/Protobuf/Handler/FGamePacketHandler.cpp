@@ -860,7 +860,7 @@ bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_Re
         return false;
     }
     playerState->SetCharacterEqipment(updateEquipment);
-    playerState->calculationStatus();
+    playerState->calculationStats();
 
     AC_Game* character = Cast<AC_Game>(remoteController->GetPawn());
     if (nullptr == character)

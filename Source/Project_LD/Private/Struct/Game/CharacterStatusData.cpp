@@ -3,122 +3,122 @@
 
 #include "Struct/Game/CharacterStatusData.h"
 
-FCharacterBaseStatus::FCharacterBaseStatus() :mBaseStatus(FStatusBaseData())
+FCharacterBaseStats::FCharacterBaseStats() :mBaseStats(FStatsBaseData())
 {
 }
 
-void FCharacterBaseStatus::UpdateCharacterBaseStatus(const FCharacterBaseStatus& inCharacterStatus)
+void FCharacterBaseStats::UpdateCharacterBaseStats(const FCharacterBaseStats& inCharacterStats)
 {
-	mBaseStatus = inCharacterStatus.mBaseStatus;
+	mBaseStats = inCharacterStats.mBaseStats;
 }
 
-TArray<float> FCharacterBaseStatus::FDataToFloat()
+TArray<float> FCharacterBaseStats::FDataToFloat()
 {
 	TArray<float> returnData;
 	returnData.SetNum(22);
 
-	returnData[0] = mBaseStatus.GetBaseArmorPenetration();
-	returnData[1] = mBaseStatus.GetBaseAttackDamage();
-	returnData[2] = mBaseStatus.GetBaseAttackSpeed();
-	returnData[3] = mBaseStatus.GetBaseCriticalStrikeChance();
-	returnData[4] = mBaseStatus.GetBaseCriticalStrikeDamage();
-	returnData[5] = mBaseStatus.GetBaseLifeSteal();
-	returnData[6] = mBaseStatus.GetBaseAbilityPower();
-	returnData[7] = mBaseStatus.GetBaseMagePenetration();
-	returnData[8] = mBaseStatus.GetBaseOmniVamp();
-	returnData[9] = mBaseStatus.GetBasePhysicalVamp();
-	returnData[10] = mBaseStatus.GetBaseArmor();
-	returnData[11] = mBaseStatus.GetBaseHealAndShieldPower();
-	returnData[12] = mBaseStatus.GetBaseHealth();
-	returnData[13] = mBaseStatus.GetBaseHealthRegeneration();
-	returnData[14] = mBaseStatus.GetBaseMagicResistance();
-	returnData[15] = mBaseStatus.GetBaseTenacity();
-	returnData[16] = mBaseStatus.GetBaseSlowResist();
-	returnData[17] = mBaseStatus.GetBaseAbilityHaste();
-	returnData[18] = mBaseStatus.GetBaseMana();
-	returnData[19] = mBaseStatus.GetBaseManaRegeneration();
-	returnData[20] = mBaseStatus.GetBaseMovementSpeed();
-	returnData[21] = mBaseStatus.GetBaseRange();
+	returnData[0] = mBaseStats.base_armor_penetration;
+	returnData[1] = mBaseStats.base_attack_damage;
+	returnData[2] = mBaseStats.base_attack_speed;
+	returnData[3] = mBaseStats.base_critical_strike_chance;
+	returnData[4] = mBaseStats.base_cirtical_strike_damage;
+	returnData[5] = mBaseStats.base_life_steal;
+	returnData[6] = mBaseStats.base_ability_power;
+	returnData[7] = mBaseStats.base_mage_penetration;
+	returnData[8] = mBaseStats.base_omnivamp;
+	returnData[9] = mBaseStats.base_physical_vamp;
+	returnData[10] = mBaseStats.base_armor;
+	returnData[11] = mBaseStats.base_heal_and_shield_power;
+	returnData[12] = mBaseStats.base_health;
+	returnData[13] = mBaseStats.base_health_regeneration;
+	returnData[14] = mBaseStats.base_magic_resistance;
+	returnData[15] = mBaseStats.base_tenacity;
+	returnData[16] = mBaseStats.base_slow_resist;
+	returnData[17] = mBaseStats.base_ability_haste;
+	returnData[18] = mBaseStats.base_mana;
+	returnData[19] = mBaseStats.base_mana_regeneration;
+	returnData[20] = mBaseStats.base_movement_speed;
+	returnData[21] = mBaseStats.base_range;
 
 	return returnData;
 }
 
-FCharacterGrowStatus::FCharacterGrowStatus() : mGrowStatus(FStatusGrowthData())
+FCharacterGrowStats::FCharacterGrowStats() : mGrowStats(FStatsGrowthData())
 {
 }
 
-void FCharacterGrowStatus::UpdateCharacterGrowStatus(const FCharacterGrowStatus& inCharacterStatus)
+void FCharacterGrowStats::UpdateCharacterGrowStats(const FCharacterGrowStats& inCharacterStats)
 {
-	mGrowStatus = inCharacterStatus.mGrowStatus;
+	mGrowStats = inCharacterStats.mGrowStats;
 }
 
-TArray<float> FCharacterGrowStatus::FDataToFloat()
+TArray<float> FCharacterGrowStats::FDataToFloat()
 {
 	TArray<float> returnData;
 	returnData.SetNum(22);
 
-	returnData[0] = mGrowStatus.GetGrowArmorPenetration();
-	returnData[1] = mGrowStatus.GetGrowAttackDamage();
-	returnData[2] = mGrowStatus.GetGrowAttackSpeed();
-	returnData[3] = mGrowStatus.GetGrowCriticalStrikeChance();
-	returnData[4] = mGrowStatus.GetGrowCriticalStrikeDamage();
-	returnData[5] = mGrowStatus.GetGrowLifeSteal();
-	returnData[6] = mGrowStatus.GetGrowAbilityPower();
-	returnData[7] = mGrowStatus.GetGrowMagePenetration();
-	returnData[8] = mGrowStatus.GetGrowOmniVamp();
-	returnData[9] = mGrowStatus.GetGrowPhysicalVamp();
-	returnData[10] = mGrowStatus.GetGrowArmor();
-	returnData[11] = mGrowStatus.GetGrowHealAndShieldPower();
-	returnData[12] = mGrowStatus.GetGrowHealth();
-	returnData[13] = mGrowStatus.GetGrowHealthRegeneration();
-	returnData[14] = mGrowStatus.GetGrowMagicResistance();
-	returnData[15] = mGrowStatus.GetGrowTenacity();
-	returnData[16] = mGrowStatus.GetGrowSlowResist();
-	returnData[17] = mGrowStatus.GetGrowAbilityHaste();
-	returnData[18] = mGrowStatus.GetGrowMana();
-	returnData[19] = mGrowStatus.GetGrowManaRegeneration();
-	returnData[20] = mGrowStatus.GetGrowMovementSpeed();
-	returnData[21] = mGrowStatus.GetGrowRange();
+	returnData[0] = mGrowStats.grow_armor_penetration;
+	returnData[1] = mGrowStats.grow_attack_damage;
+	returnData[2] = mGrowStats.grow_attack_speed;
+	returnData[3] = mGrowStats.grow_critical_strike_chance;
+	returnData[4] = mGrowStats.grow_cirtical_strike_damage;
+	returnData[5] = mGrowStats.grow_life_steal;
+	returnData[6] = mGrowStats.grow_ability_power;
+	returnData[7] = mGrowStats.grow_mage_penetration;
+	returnData[8] = mGrowStats.grow_omnivamp;
+	returnData[9] = mGrowStats.grow_physical_vamp;
+	returnData[10] = mGrowStats.grow_armor;
+	returnData[11] = mGrowStats.grow_heal_and_shield_power;
+	returnData[12] = mGrowStats.grow_health;
+	returnData[13] = mGrowStats.grow_health_regeneration;
+	returnData[14] = mGrowStats.grow_magic_resistance;
+	returnData[15] = mGrowStats.grow_tenacity;
+	returnData[16] = mGrowStats.grow_slow_resist;
+	returnData[17] = mGrowStats.grow_ability_haste;
+	returnData[18] = mGrowStats.grow_mana;
+	returnData[19] = mGrowStats.grow_mana_regeneration;
+	returnData[20] = mGrowStats.grow_movement_speed;
+	returnData[21] = mGrowStats.grow_range;
 
 	return returnData;
 }
 
-FCharacterEquipmentStatus::FCharacterEquipmentStatus() : mEquipmentStatus(FEquipmentItemData())
+FCharacterEquipmentStats::FCharacterEquipmentStats() : mEquipmentStats(FEquipmentItemData())
 {
 }
 
-void FCharacterEquipmentStatus::UpdateEquipmentStatus(const FCharacterEquipmentStatus& inCharacterStatus)
+void FCharacterEquipmentStats::UpdateEquipmentStats(const FCharacterEquipmentStats& inCharacterStats)
 {
-	mEquipmentStatus = inCharacterStatus.mEquipmentStatus;
+	mEquipmentStats = inCharacterStats.mEquipmentStats;
 }
 
-TArray<float> FCharacterEquipmentStatus::FDataToFloat()
+TArray<float> FCharacterEquipmentStats::FDataToFloat()
 {
 	TArray<float> returnData;
 	returnData.SetNum(22);
 
-	returnData[0] = mEquipmentStatus.GetArmorPenetration();
-	returnData[1] = mEquipmentStatus.GetAttackDamage();
-	returnData[2] = mEquipmentStatus.GetAttackSpeed();
-	returnData[3] = mEquipmentStatus.GetCriticalStrikeChance();
-	returnData[4] = mEquipmentStatus.GetCriticalStrikeDamage();
-	returnData[5] = mEquipmentStatus.GetLifeSteal();
-	returnData[6] = mEquipmentStatus.GetAbilityPower();
-	returnData[7] = mEquipmentStatus.GetMagePenetration();
-	returnData[8] = mEquipmentStatus.GetOmniVamp();
-	returnData[9] = mEquipmentStatus.GetPhysicalVamp();
-	returnData[10] = mEquipmentStatus.GetArmor();
-	returnData[11] = mEquipmentStatus.GetHealAndShieldPower();
-	returnData[12] = mEquipmentStatus.GetHealth();
-	returnData[13] = mEquipmentStatus.GetHealthRegeneration();
-	returnData[14] = mEquipmentStatus.GetMagicResistance();
-	returnData[15] = mEquipmentStatus.GetTenacity();
-	returnData[16] = mEquipmentStatus.GetSlowResist();
-	returnData[17] = mEquipmentStatus.GetAbilityHaste();
-	returnData[18] = mEquipmentStatus.GetMana();
-	returnData[19] = mEquipmentStatus.GetManaRegeneration();
-	returnData[20] = mEquipmentStatus.GetMovementSpeed();
-	returnData[21] = mEquipmentStatus.GetRange();
+	returnData[0] = mEquipmentStats.armor_penteration;
+	returnData[1] = mEquipmentStats.attack_damage;
+	returnData[2] = mEquipmentStats.attack_speed;
+	returnData[3] = mEquipmentStats.critical_strike_chance;
+	returnData[4] = mEquipmentStats.cirtical_strike_damage;
+	returnData[5] = mEquipmentStats.life_steal;
+	returnData[6] = mEquipmentStats.ability_power;
+	returnData[7] = mEquipmentStats.mage_penetration;
+	returnData[8] = mEquipmentStats.omnivamp;
+	returnData[9] = mEquipmentStats.physical_vamp;
+	returnData[10] = mEquipmentStats.armor;
+	returnData[11] = mEquipmentStats.heal_and_shield_power;
+	returnData[12] = mEquipmentStats.health;
+	returnData[13] = mEquipmentStats.health_regeneration;
+	returnData[14] = mEquipmentStats.magic_resistance;
+	returnData[15] = mEquipmentStats.tenacity;
+	returnData[16] = mEquipmentStats.slow_resist;
+	returnData[17] = mEquipmentStats.ability_haste;
+	returnData[18] = mEquipmentStats.mana;
+	returnData[19] = mEquipmentStats.mana_regeneration;
+	returnData[20] = mEquipmentStats.movement_speed;
+	returnData[21] = mEquipmentStats.range;
 
 	return returnData;
 }

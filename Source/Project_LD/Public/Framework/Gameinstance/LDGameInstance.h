@@ -36,8 +36,8 @@ public:
 public:
 	FItemData*						GetItemData(int32 inCode);
 	FEquipmentItemData*				GetEquipmentItemData(int32 inCode);
-	FStatusBaseData*				GetBaseData(int32 inCode);
-	FStatusGrowthData*				GetGrowthData(int32 inCode);
+	FStatsBaseData*				GetBaseData(int32 inCode);
+	FStatsGrowthData*				GetGrowthData(int32 inCode);
 	FEnemyData*						GetEnemyData(int32 inCode);
 	FEnemyStatData*					GetEnemyStatData(int32 inCode);
 	FString							GetToken();
@@ -51,10 +51,10 @@ public:
 	UDataTable* mEquipmentDataTable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	UDataTable* mCharacterStatusDataTable;
+	UDataTable* mCharacterStatsDataTable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
-	UDataTable* mCharacterStatusGrowthDataTable;
+	UDataTable* mCharacterStatsGrowthDataTable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UDataTable* mEnemyDataTable;

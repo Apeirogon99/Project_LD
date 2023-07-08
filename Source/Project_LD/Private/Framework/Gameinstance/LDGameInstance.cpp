@@ -53,14 +53,14 @@ FEquipmentItemData* ULDGameInstance::GetEquipmentItemData(int32 inCode)
 	return mEquipmentDataTable->FindRow<FEquipmentItemData>(*FString::FromInt(inCode), TEXT(""));
 }
 
-FStatusBaseData* ULDGameInstance::GetBaseData(int32 inCode)
+FStatsBaseData* ULDGameInstance::GetBaseData(int32 inCode)
 {
-	return mCharacterStatusDataTable->FindRow<FStatusBaseData>(*FString::FromInt(inCode), TEXT(""));
+	return mCharacterStatsDataTable->FindRow<FStatsBaseData>(*FString::FromInt(inCode), TEXT(""));
 }
 
-FStatusGrowthData* ULDGameInstance::GetGrowthData(int32 inCode)
+FStatsGrowthData* ULDGameInstance::GetGrowthData(int32 inCode)
 {
-	return mCharacterStatusGrowthDataTable->FindRow<FStatusGrowthData>(*FString::FromInt(inCode), TEXT(""));
+	return mCharacterStatsGrowthDataTable->FindRow<FStatsGrowthData>(*FString::FromInt(inCode), TEXT(""));
 }
 
 FEnemyData* ULDGameInstance::GetEnemyData(int32 inCode)
