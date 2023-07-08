@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Struct/Game/EnemyData.h"
+#include <Protobuf/Packet/PacketStruct.pb.h>
 #include "GameFramework/PlayerState.h"
 #include "EnemyState.generated.h"
 
@@ -25,6 +26,8 @@ public:
 	virtual void Destroyed() override;
 
 public:
+	void UpdateCurrentStats(const google::protobuf::RepeatedPtrField<Protocol::SStat>& inStats);
+
 	void SetObjectID(const int64 inObjectID);
 	void SetEnemyDatas(const FEnemyData& inEnemeyDatas);
 	void SetEnemyCurrentStats(const FEnemyStatData& inEnemeyDatas);

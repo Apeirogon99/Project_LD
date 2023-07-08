@@ -251,7 +251,7 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     FDateTime oldUtcTimeStamp = FDateTime::UtcNow();
     const int64 oldClientUtcTimeStamp = (currentUtcTimeStamp.ToUnixTimestamp() * 1000) + currentUtcTimeStamp.GetMillisecond();
 
-    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MOVEMENT [SERVER::%lld] [CLIENT::%lld] [DURATION::%lld] [EXEC::%lld]"), lastMovementTimeStamp, nowServerTimeStamp, durationTimeStamp, nowClientUtcTimeStamp - oldClientUtcTimeStamp), ELogLevel::Warning);
+    //UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MOVEMENT [SERVER::%lld] [CLIENT::%lld] [DURATION::%lld] [EXEC::%lld]"), lastMovementTimeStamp, nowServerTimeStamp, durationTimeStamp, nowClientUtcTimeStamp - oldClientUtcTimeStamp), ELogLevel::Warning);
 
     return true;
 }
@@ -319,8 +319,17 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
         return false;
     }
 
-    int64 objectID  = pkt.object_id();
-    int32 enemyID   = pkt.enemy_id();
+    //PACKET
+    const int64     objectID        = pkt.object_id();
+    const int32     enemyID         = pkt.enemy_id();
+    EEnemyStateType stateType       = StaticCast<EEnemyStateType>(pkt.state());
+    auto            stats           = pkt.stats();
+    FVector         curLocation     = FVector(pkt.cur_location().x(), pkt.cur_location().y(), pkt.cur_location().z());
+    FVector         moveLocation    = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
+    const int64     timestamp       = pkt.timestamp();
+    const int64     durationTime    = controller->GetServerTimeStamp() - timestamp;
+
+
 
     if (nullptr != gameState->FindGameObject(objectID))
     {
@@ -328,77 +337,39 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
         return false;
     }
 
-    const Protocol::SEnemy& enemyInfo = pkt.enemy();
-    const Protocol::SVector& spawnLocation = enemyInfo.location();
-    FVector itemLocation = FVector(spawnLocation.x(), spawnLocation.y(), spawnLocation.z());
 
-    const Protocol::SRotator& spawnRotation = enemyInfo.rotation();
-    FRotator itemRotator = FRotator(spawnRotation.pitch(), spawnRotation.yaw(), spawnRotation.roll());
-
-    AActor* newActor = gameState->CreateEnemyCharacter(enemyID, itemLocation, itemRotator, objectID);
+    AActor* newActor = gameState->CreateEnemyCharacter(enemyID, curLocation, FRotator::ZeroRotator, objectID);
     if (nullptr == newActor)
     {
         return false;
     }
 
-    //AEnemyBase* newEnemy = Cast<AEnemyBase>(newActor);
-    //if (nullptr == newEnemy)
-    //{
-    //    return false;
-    //}
+    AEnemyBase* newEnemy = Cast<AEnemyBase>(newActor);
+    if (nullptr == newEnemy)
+    {
+        return false;
+    }
+
+    AEnemyState* enemyState = newEnemy->GetPlayerState<AEnemyState>();
+    if (nullptr == enemyState)
+    {
+        return false;
+    }
+    enemyState->SetEnemyState(stateType, durationTime);
+    enemyState->UpdateCurrentStats(stats);
+
+    AEnemyController* enemyController = Cast<AEnemyController>(newEnemy->GetController());
+    if (nullptr == enemyController)
+    {
+        return false;
+    }
+    enemyController->MoveDestination(curLocation, moveLocation, durationTime);
 
     return true;
 }
 
 bool Handle_S2C_TickEnemy(ANetworkController* controller, Protocol::S2C_TickEnemy& pkt)
 {
-    UWorld* world = controller->GetWorld();
-    if (nullptr == world)
-    {
-        return false;
-    }
-
-    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
-    if (nullptr == gameState)
-    {
-        return false;
-    }
-
-    int64 objectID = pkt.object_id();
-
-    AActor* actor = gameState->FindGameObject(objectID);
-    if (nullptr == actor)
-    {
-        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
-    }
-
-    AEnemyBase* enemyBase = Cast<AEnemyBase>(actor);
-    if (nullptr == enemyBase)
-    {
-        return false;
-    }
-
-    AEnemyState* enemyState = enemyBase->GetPlayerState<AEnemyState>();
-    if (nullptr == enemyState)
-    {
-        return false;
-    }
-
-    AEnemyController* enemyController = Cast<AEnemyController>(enemyBase->GetController());
-    if (nullptr == enemyController)
-    {
-        return false;
-    }
-
-    Protocol::SEnemy enemyPacket = pkt.enemy();
-   
-    const int64 worldTime = pkt.timestamp();
-    const int64 serverTime = controller->GetServerTimeStamp();
-    const float startTime = (serverTime - worldTime) / 1000.0f;
-
-    enemyState->SetEnemyState(StaticCast<EEnemyStateType>(enemyPacket.state()), startTime);
-
     return true;
 }
 
@@ -416,7 +387,14 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
         return false;
     }
 
-    int64 objectID = pkt.object_id();
+    //Packet
+    const int64     objectID        = pkt.object_id();
+    EEnemyStateType stateType       = StaticCast<EEnemyStateType>(pkt.state());
+    FVector         curLocation     = FVector(pkt.cur_location().x(), pkt.cur_location().y(), pkt.cur_location().z());
+    FVector         moveLocation    = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
+    const int64     timestamp       = pkt.timestamp();
+    const int64     durationTime    = controller->GetServerTimeStamp() - timestamp;
+
 
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
@@ -431,20 +409,19 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
         return false;
     }
 
+    AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
+    if (nullptr == enemyState)
+    {
+        return false;
+    }
+    enemyState->SetEnemyState(stateType, durationTime);
+
     AEnemyController* enemyController = Cast<AEnemyController>(enemy->GetController());
     if (nullptr == enemyController)
     {
         return false;
     }
-
-    const int64 lastMovementTimeStamp = pkt.timestamp();
-    const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
-    const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
-
-    FVector     oldMovementLocation = FVector(pkt.cur_location().x(), pkt.cur_location().y(), pkt.cur_location().z());
-    FVector     newMovementLocation = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
-
-    enemyController->MoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
+    enemyController->MoveDestination(curLocation, moveLocation, durationTime);
 
     return true;
 }
@@ -463,7 +440,11 @@ bool Handle_S2C_AttackToPlayer(ANetworkController* controller, Protocol::S2C_Att
         return false;
     }
 
-    const int64 objectID = pkt.object_id();
+    //Packet
+    const int64     objectID        = pkt.object_id();
+    const int64     timestamp       = pkt.timestamp();
+    const int64     durationTime    = controller->GetServerTimeStamp() - timestamp;
+
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
     {
@@ -482,18 +463,40 @@ bool Handle_S2C_AttackToPlayer(ANetworkController* controller, Protocol::S2C_Att
     {
         return false;
     }
+    enemyState->SetEnemyState(EEnemyStateType::State_Attack, durationTime);
 
-    const int64 worldTime   = pkt.timestamp();
-    const int64 serverTime  = controller->GetServerTimeStamp();
-    const float startTime = (serverTime - worldTime) / 1000.0f;
-
-    enemyState->SetEnemyState(EEnemyStateType::State_Attack, startTime);
     return true;
 }
 
 bool Handle_S2C_TargetingToPlayer(ANetworkController* controller, Protocol::S2C_TargetingToPlayer& pkt)
 {
-    return false;
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    //const int64 remoteID = pkt.object_id();
+    //AController* remoteController = gameState->FindPlayerController(remoteID);
+    //if (nullptr == remoteController)
+    //{
+    //    return true;
+    //}
+
+
+    return true;
 }
 
 bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy& pkt)
@@ -510,7 +513,11 @@ bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy&
         return false;
     }
 
-    const int64 objectID = pkt.object_id();
+    const int64     objectID        = pkt.object_id();
+    auto            stats           = pkt.stats();
+    const int64     timestamp       = pkt.timestamp();
+    const int64     durationTime    = controller->GetServerTimeStamp() - timestamp;
+
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
     {
@@ -529,12 +536,9 @@ bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy&
     {
         return false;
     }
+    enemyState->SetEnemyState(EEnemyStateType::State_Hit, durationTime);
+    enemyState->UpdateCurrentStats(stats);
 
-    const int64 worldTime = pkt.timestamp();
-    const int64 serverTime = controller->GetServerTimeStamp();
-    const float startTime = (serverTime - worldTime) / 1000.0f;
-
-    enemyState->SetEnemyState(EEnemyStateType::State_Hit, startTime);
     return true;
 }
 
@@ -552,7 +556,10 @@ bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEn
         return false;
     }
 
-    const int64 objectID = pkt.object_id();
+    const int64     objectID = pkt.object_id();
+    const int64     timestamp = pkt.timestamp();
+    const int64     durationTime = controller->GetServerTimeStamp() - timestamp;
+
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
     {
@@ -571,12 +578,8 @@ bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEn
     {
         return false;
     }
+    enemyState->SetEnemyState(EEnemyStateType::State_Death, durationTime);
 
-    const int64 worldTime = pkt.timestamp();
-    const int64 serverTime = controller->GetServerTimeStamp();
-    const float startTime = (serverTime - worldTime) / 1000.0f;
-
-    enemyState->SetEnemyState(EEnemyStateType::State_Death, startTime);
     return true;
 }
 
