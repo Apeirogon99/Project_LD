@@ -355,7 +355,7 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
     {
         return false;
     }
-    enemyState->SetEnemyState(stateType, durationTime);
+    enemyState->SetEnemyState(stateType, durationTime / 1000.0f);
     enemyState->UpdateCurrentStats(stats);
 
     AEnemyController* enemyController = Cast<AEnemyController>(newEnemy->GetController());
@@ -414,14 +414,14 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
     {
         return false;
     }
-    enemyState->SetEnemyState(stateType, durationTime);
+    enemyState->SetEnemyState(stateType, durationTime / 1000.0f);
 
     AEnemyController* enemyController = Cast<AEnemyController>(enemy->GetController());
     if (nullptr == enemyController)
     {
         return false;
     }
-    enemyController->MoveDestination(curLocation, moveLocation, durationTime);
+    enemyController->MoveDestination(curLocation, moveLocation, durationTime / 1000.0f);
 
     return true;
 }
@@ -463,7 +463,7 @@ bool Handle_S2C_AttackToPlayer(ANetworkController* controller, Protocol::S2C_Att
     {
         return false;
     }
-    enemyState->SetEnemyState(EEnemyStateType::State_Attack, durationTime);
+    enemyState->SetEnemyState(EEnemyStateType::State_Attack, durationTime / 1000.0f);
 
     return true;
 }
@@ -536,7 +536,7 @@ bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy&
     {
         return false;
     }
-    enemyState->SetEnemyState(EEnemyStateType::State_Hit, durationTime);
+    enemyState->SetEnemyState(EEnemyStateType::State_Hit, durationTime / 1000.0f);
     enemyState->UpdateCurrentStats(stats);
 
     return true;
@@ -578,7 +578,7 @@ bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEn
     {
         return false;
     }
-    enemyState->SetEnemyState(EEnemyStateType::State_Death, durationTime);
+    enemyState->SetEnemyState(EEnemyStateType::State_Death, durationTime / 1000.0f);
 
     return true;
 }

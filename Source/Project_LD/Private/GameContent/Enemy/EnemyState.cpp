@@ -70,10 +70,6 @@ void AEnemyState::SetEnemyState(const EEnemyStateType& inStateType, const float 
 	{
 		mCurrentState = inStateType;
 	}
-	else if (inStateType == mCurrentState)
-	{
-		return;
-	}
 
 	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Change state [%d] -> [%d]"), StaticCast<int32>(mCurrentState), StaticCast<int32>(inStateType)), ELogLevel::Warning);
 
