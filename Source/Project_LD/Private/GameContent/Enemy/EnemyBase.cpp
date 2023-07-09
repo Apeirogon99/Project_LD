@@ -6,11 +6,18 @@
 #include "GameContent/Enemy/EnemyState.h"
 
 #include <Game/GM_Game.h>
+#include <Framework/Game/GS_Game.h>
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FGamePacketHandler.h>
 
+#include "Widget/Game/Enemy/W_HealthBar.h"
+
+#include <UObject/ConstructorHelpers.h>
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Components/ProgressBar.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -32,6 +39,16 @@ AEnemyBase::AEnemyBase()
 	Tags.Add(FName("Enemy"));
 	
 	GetCapsuleComponent()->SetCollisionProfileName(TEXT("EnemyCollision"));
+
+	TSubclassOf<UW_HealthBar> HealthBarWidgetClass = StaticLoadClass(UW_HealthBar::StaticClass(), NULL, TEXT("WidgetBlueprint'/Game/Blueprint/Widget/Game/Enemy/BW_HealthBar.BW_HealthBar_C'"));
+	if (HealthBarWidgetClass)
+	{
+		mHealthBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBar"));
+		mHealthBar->SetupAttachment(RootComponent);
+		mHealthBar->SetWidgetClass(HealthBarWidgetClass);
+		mHealthBar->SetCollisionProfileName(TEXT("NoCollision"));
+		mHealthBar->SetWidgetSpace(EWidgetSpace::Screen);
+	}
 }
 
 AEnemyBase::~AEnemyBase()
@@ -46,12 +63,98 @@ void AEnemyBase::BeginPlay()
 void AEnemyBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+
+	AEnemyController* controller = Cast<AEnemyController>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	AEnemyState* playerState = controller->GetPlayerState<AEnemyState>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	if (playerState->OnStatsChanged.IsBound())
+	{
+		playerState->OnStatsChanged.Clear();
+	}
 }
 
 void AEnemyBase::Destroyed()
 {
 	Super::Destroyed();
 
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+
+	AEnemyController* controller = Cast<AEnemyController>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	AEnemyState* playerState = controller->GetPlayerState<AEnemyState>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	if (playerState->OnStatsChanged.IsBound())
+	{
+		playerState->OnStatsChanged.Clear();
+	}
+}
+
+void AEnemyBase::Init()
+{
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+
+	AEnemyController* controller = Cast<AEnemyController>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	AEnemyState* playerState = controller->GetPlayerState<AEnemyState>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	playerState->OnStatsChanged.AddUFunction(this, FName(TEXT("UpdateHealthBar")));
 }
 
 void AEnemyBase::ChangeState(const EEnemyStateType inStateType, float inStartTime)
@@ -94,6 +197,39 @@ void AEnemyBase::ChangeState(const EEnemyStateType inStateType, float inStartTim
 	default:
 		break;
 	}
+}
+
+void AEnemyBase::UpdateHealthBar() const
+{
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+
+	AEnemyController* controller = Cast<AEnemyController>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	AEnemyState* playerState = controller->GetPlayerState<AEnemyState>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+	UW_HealthBar* healthbar = Cast<UW_HealthBar>(mHealthBar->GetUserWidgetObject());
+	if(nullptr == healthbar)
+	{
+		return;
+	}
+	healthbar->HealthBar->SetPercent(playerState->GetHealthBarPercent());
 }
 
 void AEnemyBase::Interactive(AC_Game* inPlayer)

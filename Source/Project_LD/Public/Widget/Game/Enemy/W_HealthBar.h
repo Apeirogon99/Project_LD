@@ -4,24 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "W_ItemName.generated.h"
+#include "W_HealthBar.generated.h"
 
 /**
  * 
  */
-class UTextBlock;
+class UProgressBar;
 
 UCLASS()
-class PROJECT_LD_API UW_ItemName : public UUserWidget
+class PROJECT_LD_API UW_HealthBar : public UUserWidget
 {
 	GENERATED_BODY()
-
+	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
-	UTextBlock* mName;
-
-public:
-	void SetNameText(const FString& inName);
+	UProgressBar* HealthBar;
 
 protected:
 	virtual void NativeConstruct() override;

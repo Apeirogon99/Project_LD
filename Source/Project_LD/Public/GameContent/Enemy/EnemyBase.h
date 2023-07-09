@@ -8,6 +8,7 @@
 #include "Framework/Interface/InteractiveInterface.h"
 #include "EnemyBase.generated.h"
 
+class UWidgetComponent;
 
 UCLASS()
 class PROJECT_LD_API AEnemyBase : public ACharacter, public IInteractiveInterface
@@ -19,12 +20,20 @@ public:
 	~AEnemyBase();
 
 public:
-	void ChangeState(const EEnemyStateType inStateType, float inStartTime);
+	UFUNCTION()
+	void UpdateHealthBar() const;
 
-	virtual void Interactive(AC_Game* inPlayer) override;
+public:
+	void ChangeState(const EEnemyStateType inStateType, float inStartTime);
+	virtual void Interactive(AC_Game* inPlayer) override; 
+	virtual void Init();
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Destroyed() override;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UWidgetComponent* mHealthBar;
 };

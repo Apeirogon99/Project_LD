@@ -12,6 +12,8 @@
 /**
  * 
  */
+DECLARE_MULTICAST_DELEGATE(FOnStatsChanged)
+
 UCLASS()
 class PROJECT_LD_API AEnemyState : public APlayerState
 {
@@ -20,6 +22,9 @@ class PROJECT_LD_API AEnemyState : public APlayerState
 public:
 	AEnemyState();
 	~AEnemyState();
+
+public:
+	FOnStatsChanged OnStatsChanged;
 
 public:
 	virtual void BeginPlay() override;
@@ -32,7 +37,6 @@ public:
 	void SetObjectID(const int64 inObjectID);
 	void SetEnemyDatas(const FEnemyData& inEnemeyDatas);
 	void SetEnemyStats(const FEnemyStatData& inMaxData);
-	void SetEnemyCurrentStats(const FStatsData& inCurrentData);
 	void SetEnemyState(const EEnemyStateType& inStateType, const float inStartTime);
 
 public:
@@ -42,6 +46,13 @@ public:
 	const FStatsData							GetEnemyCurrentStats()		{ return mStats.GetCurrentStats(); }
 	const EEnemyStateType&			GetCurrentStateType()			{ return mCurrentState; }
 	
+public:
+	UPROPERTY(BlueprintReadOnly, Category = "ProgressBar")
+	float HealthBarPercent;
+
+	UFUNCTION(BlueprintPure, Category = "ProgressBar")
+	float GetHealthBarPercent() const;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Datas")
 	int64								mObjectID;
@@ -54,4 +65,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | State")
 	EEnemyStateType			mCurrentState;
+
+private:
+	void UpdateHealthBar();
 };

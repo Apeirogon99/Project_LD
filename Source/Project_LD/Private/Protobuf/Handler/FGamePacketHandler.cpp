@@ -365,6 +365,8 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
     }
     enemyController->MoveDestination(curLocation, moveLocation, durationTime);
 
+    newEnemy->Init();
+
     return true;
 }
 

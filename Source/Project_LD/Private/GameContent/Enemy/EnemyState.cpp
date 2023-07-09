@@ -27,6 +27,11 @@ void AEnemyState::BeginPlay()
 void AEnemyState::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+
+	if (OnStatsChanged.IsBound())
+	{
+		OnStatsChanged.Broadcast();
+	}
 }
 
 void AEnemyState::Destroyed()
@@ -45,6 +50,7 @@ void AEnemyState::UpdateCurrentStats(const google::protobuf::RepeatedPtrField<Pr
 
 		mStats.UpdateStats(type, value);
 	}
+	UpdateHealthBar();
 }
 
 void AEnemyState::SetObjectID(const int64 inObjectID)
@@ -84,4 +90,19 @@ void AEnemyState::SetEnemyState(const EEnemyStateType& inStateType, const float 
 	mCurrentState = inStateType;
 
 	enemy->ChangeState(mCurrentState, inStartTime);
+}
+
+float AEnemyState::GetHealthBarPercent() const
+{
+	return HealthBarPercent;
+}
+
+void AEnemyState::UpdateHealthBar()
+{
+	HealthBarPercent = mStats.GetCurrentStats().GetHealth() / mStats.GetMaxStats().GetHealth();
+	if (OnStatsChanged.IsBound())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AEnemyState::UpdateHealthBar"));
+		OnStatsChanged.Broadcast();
+	}
 }
