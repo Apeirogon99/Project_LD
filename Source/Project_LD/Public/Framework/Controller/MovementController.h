@@ -31,7 +31,7 @@ public:
 	void MoveToMouseCursor();
 
 public:
-	void SetNewMoveDestination(const FVector DestLocation);
+	void SetNewMoveDestination(FVector& DestLocation);
 	void MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
 	void MoveCorrection(const float inDeltaTime);
 

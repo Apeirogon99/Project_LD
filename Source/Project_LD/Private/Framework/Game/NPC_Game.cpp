@@ -3,6 +3,7 @@
 
 #include "Framework/Game/NPC_Game.h"
 #include "Framework/Game/NC_Game.h"
+#include "Framework/Game/NPS_Game.h"
 
 #include <Network/NetworkUtils.h>
 
@@ -34,10 +35,16 @@ void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FV
 		return;
 	}
 
+	ANPS_Game* playerState = this->GetPlayerState<ANPS_Game>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
 	FVector	direction = inNewMovementLocation - inOldMovementLocation;
 	direction.Normalize();
 
-	FVector velocity = direction * 330.0f;
+	FVector velocity = direction * playerState->GetCharacterStats().GetCurrentStats().GetMovementSpeed();
 	float	duration = inTime / 1000.0f;
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
@@ -45,7 +52,7 @@ void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FV
 	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
 	FVector curLocation = pawn->GetActorLocation();
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
-	if (locationDistance > 10.0f)
+	if (locationDistance >= 5.0f)
 	{
 		IsCorrection = true;
 		mTargetLoction = inOldMovementLocation;
@@ -73,13 +80,14 @@ void ANPC_Game::MoveCorrection(const float inDeltaTime)
 	}
 
 	FVector curLocation = pawn->GetActorLocation();
-	float	velocity = 10.0f;
+	float	velocity = 3.0f;
 
 	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
 
 	float distance = FVector::Dist2D(curLocation, correctionLocation);
-	if (distance <= 10.0f)
+	if (distance <= 1.0f)
 	{
+		pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);
 		IsCorrection = false;
 	}
 	else

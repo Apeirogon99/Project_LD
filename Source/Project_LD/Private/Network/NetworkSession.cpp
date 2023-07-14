@@ -259,13 +259,13 @@ void FNetworkSession::RegisterSend()
 			bool ret = mSocket->Send(buffer->GetData(), bufferSize - processLen, byteSent);
 			if (false == ret)
 			{
-				RegisterDisconnect("failed to send");
+				Disconnect("failed to send");
 				return;
 			}
 
 			if (0 >= byteSent)
 			{
-				RegisterDisconnect("send 0");
+				Disconnect("send 0");
 				return;
 			}
 
@@ -282,7 +282,7 @@ void FNetworkSession::RegisterRecv()
 	bool ret;
 	if (nullptr == mSocket)
 	{
-		RegisterDisconnect("Invalid Socket");
+		Disconnect("Invalid Socket");
 		return;
 	}
 
@@ -297,13 +297,13 @@ void FNetworkSession::RegisterRecv()
 	ret = mSocket->Recv(&mTempBuffer[0], PendingDataSize, byteRead, ESocketReceiveFlags::Type::None);
 	if (false == ret)
 	{
-		RegisterDisconnect("failed to recv");
+		Disconnect("failed to recv");
 		return;
 	}
 
 	if (0 >= byteRead)
 	{
-		RegisterDisconnect("read 0");
+		Disconnect("read 0");
 		return;
 	}
 
@@ -346,7 +346,7 @@ void FNetworkSession::ProcessRecv(int32 numOfBytes)
 {
 	if (numOfBytes == 0)
 	{
-		RegisterDisconnect(L"Recv 0");
+		Disconnect(L"Recv 0");
 		return;
 	}
 
@@ -362,7 +362,7 @@ void FNetworkSession::ProcessRecv(int32 numOfBytes)
 		bool recvResult = mController->OnRecv(mRecvBuffer, usedSize);
 		if (false == recvResult)
 		{
-			RegisterDisconnect(L"OnRecv Overflow");
+			Disconnect(L"OnRecv Overflow");
 			return;
 		}
 	}
