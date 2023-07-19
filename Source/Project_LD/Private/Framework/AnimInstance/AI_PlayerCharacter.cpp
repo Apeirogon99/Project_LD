@@ -83,10 +83,17 @@ void UAI_PlayerCharacter::AnimNotify_ResetCombo()
 
 void UAI_PlayerCharacter::AnimNotify_AttackServerCheck()
 {
+	if (mMainCharacter->GetIsZoom() == false)
+	{
+		mMainCharacter->SetIsZoom(true);
+		mMainCharacter->OnAttackCameraZoomIn();
+	}
 	if (bAttackLoop && bIsAttack)
 	{
 		bAttackLoop = false;
 		Montage_JumpToSection(FName(TEXT("Combo4")), mAttackMontage);
+		mMainCharacter->SetIsZoom(false);
+		mMainCharacter->OnAttackCameraZoomOut();
 	}
 }
 
