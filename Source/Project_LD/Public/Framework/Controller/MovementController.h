@@ -35,8 +35,6 @@ public:
 	void MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
 	void MoveCorrection(const float inDeltaTime);
 
-	void Interactive();
-
 public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	UParticleSystem* mMouseCursorParticle;

@@ -13,6 +13,7 @@
 #include <Framework/Game/PS_Game.h>
 #include "Components/CapsuleComponent.h"
 #include <GameFramework/PawnMovementComponent.h>
+#include "Framework/AnimInstance/AI_PlayerCharacter.h"
 
 #include <Framework/Character/AppearanceCharacter.h>
 #include <Blueprint/AIBlueprintHelperLibrary.h>
@@ -103,6 +104,11 @@ void AMovementController::MoveToMouseCursor()
 					return;
 				}
 				Cast<IInteractiveInterface>(Hit.Actor)->Interactive(character);
+				if (actortag == FName("Enemy"))
+				{
+					auto animInstance = Cast<UAI_PlayerCharacter>(GetCharacter()->GetMesh()->GetAnimInstance());
+					animInstance->PlayAttackMontage();
+				}
 			}
 		}
 	}

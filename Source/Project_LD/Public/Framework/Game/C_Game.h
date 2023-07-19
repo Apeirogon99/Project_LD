@@ -21,11 +21,29 @@ class PROJECT_LD_API AC_Game : public AAppearanceCharacter
 public:
 	AC_Game();
 	~AC_Game();
-	
+
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void Destroyed() override;
+
+public:
+	void SetIsZoom(const bool& InIsZoom) { bIsZoom = InIsZoom; }
+
+public:
+	FORCEINLINE bool GetIsZoom() const { return bIsZoom; }
+
+public:
+	UFUNCTION(BlueprintNativeEvent, Category = "Camera Control")
+	void OnAttackCameraZoomIn();
+	virtual void OnAttackCameraZoomIn_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent, Category = "Camera Control")
+	void OnAttackCameraZoomOut();
+	virtual void OnAttackCameraZoomOut_Implementation();
+
+public:
+	UCameraComponent* GetCameraComponent() { return mGameCameraComponent; }
 
 protected:
 	/** Top down camera */
@@ -36,9 +54,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* mCameraBoom;
 
-public:
-	UFUNCTION()
-	void Interactive();
-
-	UCameraComponent* GetCameraComponent() { return mGameCameraComponent; }
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Zoom", meta = (AllowPrivateAccess = "true"))
+	bool bIsZoom;
 };

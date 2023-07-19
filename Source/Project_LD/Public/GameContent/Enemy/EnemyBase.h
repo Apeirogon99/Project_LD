@@ -34,6 +34,16 @@ protected:
 	virtual void Destroyed() override;
 
 protected:
+	UFUNCTION(BlueprintCallable)
+	virtual void SetParticleTemplate(UParticleSystem* InParticleTemplate);
+
+	UFUNCTION(BlueprintCallable)
+	virtual void SetParticleLocationAndRotation(const FVector InNewLocation, const FRotator InNewRotation);
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* mHealthBar;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* mParticleSystem;
 };

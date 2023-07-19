@@ -82,7 +82,7 @@ void AAppearanceCharacter::InitCharacterAnimation()
 {
 	if (mCharacterAppearance.GetRace() == ECharacterRace::Male)
 	{
-		mAnimationInstance = LoadClass<UAnimInstance>(nullptr, TEXT("AnimBlueprint'/Game/StylizedCharacter/Animations/Character/Human/Male/ABP_Hu_M.ABP_Hu_M_C'"));
+		mAnimationInstance = LoadClass<UAnimInstance>(nullptr, TEXT("AnimBlueprint'/Game/GameContent/Animation/Male/BP_Anim_Hu_M.BP_Anim_Hu_M_C'"));
 	}
 	else if (mCharacterAppearance.GetRace() == ECharacterRace::Female)
 	{

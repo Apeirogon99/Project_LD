@@ -33,7 +33,7 @@ AC_Game::AC_Game()
 	mCameraBoom->SetupAttachment(RootComponent);
 	mCameraBoom->SetUsingAbsoluteRotation(true);
 	mCameraBoom->TargetArmLength = 1000.f;
-	mCameraBoom->SetRelativeRotation(FRotator(-60.f, 0.f, 0.f));
+	mCameraBoom->SetRelativeRotation(FRotator(300.f, 0.f, 0.f));
 	mCameraBoom->bDoCollisionTest = false;
 
 	mGameCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
@@ -44,6 +44,8 @@ AC_Game::AC_Game()
 
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
+
+	bIsZoom = false;
 }
 
 AC_Game::~AC_Game()
@@ -70,16 +72,10 @@ void AC_Game::Destroyed()
 {
 }
 
-void AC_Game::Interactive()
+void AC_Game::OnAttackCameraZoomIn_Implementation()
 {
-	TArray<AActor*> Result;
-	GetOverlappingActors(Result, AActor::StaticClass());
+}
 
-	for (auto& Actor : Result)
-	{
-		if (Actor->GetClass()->ImplementsInterface(UInteractiveInterface::StaticClass()))
-		{
-			Cast<IInteractiveInterface>(Actor)->Interactive(this);
-		}
-	}
+void AC_Game::OnAttackCameraZoomOut_Implementation()
+{
 }

@@ -14,6 +14,8 @@
 
 #include <UObject/ConstructorHelpers.h>
 
+#include "Particles/ParticleSystemComponent.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
@@ -49,6 +51,8 @@ AEnemyBase::AEnemyBase()
 		mHealthBar->SetCollisionProfileName(TEXT("NoCollision"));
 		mHealthBar->SetWidgetSpace(EWidgetSpace::Screen);
 	}
+
+	mParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSystem"));
 }
 
 AEnemyBase::~AEnemyBase()
@@ -126,6 +130,16 @@ void AEnemyBase::Destroyed()
 	{
 		playerState->OnStatsChanged.Clear();
 	}
+}
+
+void AEnemyBase::SetParticleTemplate(UParticleSystem* InParticleTemplate)
+{
+	mParticleSystem->SetTemplate(InParticleTemplate);
+}
+
+void AEnemyBase::SetParticleLocationAndRotation(const FVector InNewLocation, const FRotator InNewRotation)
+{
+	mParticleSystem->SetRelativeLocationAndRotation(InNewLocation, InNewRotation);
 }
 
 void AEnemyBase::Init()
