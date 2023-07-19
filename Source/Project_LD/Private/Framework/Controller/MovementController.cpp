@@ -233,9 +233,3 @@ void AMovementController::MoveCorrection(const float inDeltaTime)
 	}
 
 }
-
-void AMovementController::Interactive()
-{
-	AC_Game* player = Cast<AC_Game>(GetCharacter());
-	player->Interactive();
-}
