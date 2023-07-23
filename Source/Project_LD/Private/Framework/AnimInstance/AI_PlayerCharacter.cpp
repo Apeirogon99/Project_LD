@@ -4,14 +4,25 @@
 #include "Framework/AnimInstance/AI_PlayerCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/Pawn.h"
+#include "Game/PC_Game.h"
 #include "Game/C_Game.h"
 
 UAI_PlayerCharacter::UAI_PlayerCharacter()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE(TEXT("/Game/GameContent/Animation/Male/Attack/M_Attack_Hu_M.M_Attack_Hu_M"));
-	if (ATTACK_MONTAGE.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE1(TEXT("/Game/GameContent/Animation/Male/Attack/M_ComboAttack1_Hu_M.M_ComboAttack1_Hu_M"));
+	if (ATTACK_MONTAGE1.Succeeded())
 	{
-		mAttackMontage = ATTACK_MONTAGE.Object;
+		mAttackMontage.Add(ATTACK_MONTAGE1.Object);
+	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE2(TEXT("/Game/GameContent/Animation/Male/Attack/M_ComboAttack2_Hu_M.M_ComboAttack2_Hu_M"));
+	if (ATTACK_MONTAGE2.Succeeded())
+	{
+		mAttackMontage.Add(ATTACK_MONTAGE2.Object);
+	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE3(TEXT("/Game/GameContent/Animation/Male/Attack/M_ComboAttack3_Hu_M.M_ComboAttack3_Hu_M"));
+	if (ATTACK_MONTAGE3.Succeeded())
+	{
+		mAttackMontage.Add(ATTACK_MONTAGE3.Object);
 	}
 
 	bIsAttack = false;
@@ -79,39 +90,43 @@ void UAI_PlayerCharacter::AnimNotify_ResetCombo()
 	bSaveAttack = false;
 	bAttackLoop = false;
 	mAttackCount = 0;
+
+	if (mMainCharacter)
+	{
+		APC_Game* controller = Cast<APC_Game>(mMainCharacter->GetController());
+		if (controller)
+		{
+			controller->SetIgnoreMoveInput(false);
+		}
+	}
 }
 
 void UAI_PlayerCharacter::AnimNotify_AttackServerCheck()
 {
-	if (mMainCharacter->GetIsZoom() == false)
+	if (mMainCharacter)
 	{
-		mMainCharacter->SetIsZoom(true);
-		mMainCharacter->OnAttackCameraZoomIn();
+		APC_Game* controller = Cast<APC_Game>(mMainCharacter->GetController());
+		if (controller)
+		{
+			controller->SetIgnoreMoveInput(true);
+		}
 	}
-	if (bAttackLoop && bIsAttack)
-	{
-		bAttackLoop = false;
-		Montage_JumpToSection(FName(TEXT("Combo4")), mAttackMontage);
-		mMainCharacter->SetIsZoom(false);
-		mMainCharacter->OnAttackCameraZoomOut();
-	}
+	//if (mMainCharacter->GetIsZoom() == false)
+	//{
+	//	mMainCharacter->SetIsZoom(true);
+	//	mMainCharacter->OnAttackCameraZoomIn();
+	//}
+	//if (bAttackLoop && bIsAttack)
+	//{
+	//	bAttackLoop = false;
+	//	Montage_JumpToSection(FName(TEXT("Combo4")), mAttackMontage);
+	//	mMainCharacter->SetIsZoom(false);
+	//	mMainCharacter->OnAttackCameraZoomOut();
+	//}
 }
 
 void UAI_PlayerCharacter::JumpAttackMontageSection(const int32 inAttackCount, const float inTimeStamp)
 {
-	switch (inAttackCount)
-	{
-	case 0:
-		Montage_Play(mAttackMontage, 1.f);
-		break;
-	case 1:
-		Montage_JumpToSection(FName(TEXT("Combo2")), mAttackMontage);
-		break;
-	case 2:
-		Montage_JumpToSection(FName(TEXT("Combo3")), mAttackMontage);
-		break;
-	default:
-		break;
-	}
+	Montage_Play(mAttackMontage[inAttackCount], 1.f, EMontagePlayReturnType::MontageLength, inTimeStamp);
 	mAttackCount++;
 }

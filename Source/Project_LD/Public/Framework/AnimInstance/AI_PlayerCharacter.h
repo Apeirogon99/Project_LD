@@ -37,7 +37,7 @@ private:
 	AC_Game* mMainCharacter;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = "true"))
-	UAnimMontage* mAttackMontage;
+	TArray<UAnimMontage*> mAttackMontage;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = "true"))
 	bool bIsAttack;
