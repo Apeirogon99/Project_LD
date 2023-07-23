@@ -33,7 +33,7 @@ void UAI_PlayerCharacter::PlayAttackMontage()
 	else
 	{
 		bIsAttack = true;
-		JumpAttackMontageSection();
+		JumpAttackMontageSection(mAttackCount, 0.0f);
 	}
 }
 
@@ -69,7 +69,7 @@ void UAI_PlayerCharacter::AnimNotify_NextAttackCheck()
 	if (bSaveAttack)
 	{
 		bSaveAttack = false;
-		JumpAttackMontageSection();
+		JumpAttackMontageSection(mAttackCount, 0.0f);
 	}
 }
 
@@ -97,9 +97,9 @@ void UAI_PlayerCharacter::AnimNotify_AttackServerCheck()
 	}
 }
 
-void UAI_PlayerCharacter::JumpAttackMontageSection()
+void UAI_PlayerCharacter::JumpAttackMontageSection(const int32 inAttackCount, const float inTimeStamp)
 {
-	switch (mAttackCount)
+	switch (inAttackCount)
 	{
 	case 0:
 		Montage_Play(mAttackMontage, 1.f);

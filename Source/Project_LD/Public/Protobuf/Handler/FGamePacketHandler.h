@@ -19,14 +19,14 @@ enum class EPakcetID: uint16
 	S2C_MovementCharacter = 2009,
 	C2S_PlayAnimation = 2010,
 	S2C_PlayAnimation = 2011,
-	C2S_AttackToEnemy = 2012,
-	S2C_AttackToEnemy = 2013,
+	C2S_PlayerAutoAttack = 2012,
+	S2C_PlayerAutoAttack = 2013,
 	S2C_AppearItem = 2014,
 	S2C_AppearEnemy = 2015,
 	S2C_TickEnemy = 2016,
-	S2C_MovementEnemy = 2017,
-	S2C_AttackToPlayer = 2018,
-	S2C_TargetingToPlayer = 2019,
+	S2C_DetectChangeEnemy = 2017,
+	S2C_MovementEnemy = 2018,
+	S2C_EnemyAutoAttack = 2019,
 	S2C_HitEnemy = 2020,
 	S2C_DeathEnemy = 2021,
 	S2C_DisAppearGameObject = 2022,
@@ -52,13 +52,13 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
 bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C_DisAppearCharacter& pkt);
 bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_MovementCharacter& pkt);
 bool Handle_S2C_PlayAnimation(ANetworkController* controller, Protocol::S2C_PlayAnimation& pkt);
-bool Handle_S2C_AttackToEnemy(ANetworkController* controller, Protocol::S2C_AttackToEnemy& pkt);
+bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_PlayerAutoAttack& pkt);
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt);
 bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_AppearEnemy& pkt);
 bool Handle_S2C_TickEnemy(ANetworkController* controller, Protocol::S2C_TickEnemy& pkt);
+bool Handle_S2C_DetectChangeEnemy(ANetworkController* controller, Protocol::S2C_DetectChangeEnemy& pkt);
 bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_MovementEnemy& pkt);
-bool Handle_S2C_AttackToPlayer(ANetworkController* controller, Protocol::S2C_AttackToPlayer& pkt);
-bool Handle_S2C_TargetingToPlayer(ANetworkController* controller, Protocol::S2C_TargetingToPlayer& pkt);
+bool Handle_S2C_EnemyAutoAttack(ANetworkController* controller, Protocol::S2C_EnemyAutoAttack& pkt);
 bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy& pkt);
 bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEnemy& pkt);
 bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2C_DisAppearGameObject& pkt);
@@ -81,13 +81,13 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DisAppearCharacter)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DisAppearCharacter>(Handle_S2C_DisAppearCharacter, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_MovementCharacter)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_MovementCharacter>(Handle_S2C_MovementCharacter, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_PlayAnimation)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_PlayAnimation>(Handle_S2C_PlayAnimation, controller, buffer, len); };
-		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AttackToEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AttackToEnemy>(Handle_S2C_AttackToEnemy, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_PlayerAutoAttack)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_PlayerAutoAttack>(Handle_S2C_PlayerAutoAttack, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearItem)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearItem>(Handle_S2C_AppearItem, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearEnemy>(Handle_S2C_AppearEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_TickEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_TickEnemy>(Handle_S2C_TickEnemy, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DetectChangeEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DetectChangeEnemy>(Handle_S2C_DetectChangeEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_MovementEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_MovementEnemy>(Handle_S2C_MovementEnemy, controller, buffer, len); };
-		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AttackToPlayer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AttackToPlayer>(Handle_S2C_AttackToPlayer, controller, buffer, len); };
-		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_TargetingToPlayer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_TargetingToPlayer>(Handle_S2C_TargetingToPlayer, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_EnemyAutoAttack)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_EnemyAutoAttack>(Handle_S2C_EnemyAutoAttack, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_HitEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_HitEnemy>(Handle_S2C_HitEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DeathEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DeathEnemy>(Handle_S2C_DeathEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DisAppearGameObject)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DisAppearGameObject>(Handle_S2C_DisAppearGameObject, controller, buffer, len); };
@@ -103,7 +103,7 @@ public:
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_Tick& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_Tick)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_MovementCharacter& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_MovementCharacter)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_PlayAnimation& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_PlayAnimation)); }
-	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_AttackToEnemy& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_AttackToEnemy)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_PlayerAutoAttack& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_PlayerAutoAttack)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LoadInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LoadInventory)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_InsertInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_InsertInventory)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_UpdateInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_UpdateInventory)); }

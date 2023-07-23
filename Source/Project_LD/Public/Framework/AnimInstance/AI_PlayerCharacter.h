@@ -64,6 +64,6 @@ private:
 	UFUNCTION()
 	void AnimNotify_AttackServerCheck();
 
-private:
-	void JumpAttackMontageSection();
+public:
+	void JumpAttackMontageSection(const int32 inAttackCount, const float inTimeStamp);
 };

@@ -12,6 +12,7 @@
 #include <Game/NPC_Game.h>
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
+#include <Framework/AnimInstance/AI_PlayerCharacter.h>
 
 #include <GameContent/Enemy/EnemyController.h>
 #include <GameContent/Enemy/EnemyState.h>
@@ -261,9 +262,54 @@ bool Handle_S2C_PlayAnimation(ANetworkController* controller, Protocol::S2C_Play
     return true;
 }
 
-bool Handle_S2C_AttackToEnemy(ANetworkController* controller, Protocol::S2C_AttackToEnemy& pkt)
+bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_PlayerAutoAttack& pkt)
 {
-    return false;
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 remoteID = pkt.remote_id();
+    AController* remoteController = gameState->FindPlayerController(remoteID);
+    if (nullptr == remoteController)
+    {
+        return true;
+    }
+
+    AC_Game* player = Cast<AC_Game>(remoteController->GetPawn());
+    if (nullptr == player)
+    {
+        return true;
+    }
+
+    const int64 timeStamp           = pkt.timestamp();
+    const int64 nowServerTimeStamp  = controller->GetServerTimeStamp();
+    const int64 durationTimeStamp   = nowServerTimeStamp - timeStamp;
+    const float millisecondDuration = durationTimeStamp / 1000.0f;
+
+    const int32 combo = pkt.combo();
+
+    UAI_PlayerCharacter* animInstance = Cast<UAI_PlayerCharacter>(player->GetMesh()->GetAnimInstance());
+    if (nullptr == animInstance)
+    {
+        return true;
+    }
+    animInstance->JumpAttackMontageSection(combo, millisecondDuration);
+
+    return true;
 }
 
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt)
@@ -412,6 +458,11 @@ bool Handle_S2C_TickEnemy(ANetworkController* controller, Protocol::S2C_TickEnem
     return true;
 }
 
+bool Handle_S2C_DetectChangeEnemy(ANetworkController* controller, Protocol::S2C_DetectChangeEnemy& pkt)
+{
+    return false;
+}
+
 bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_MovementEnemy& pkt)
 {
     UWorld* world = controller->GetWorld();
@@ -428,7 +479,6 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
 
     //Packet
     const int64     objectID        = pkt.object_id();
-    EEnemyStateType stateType       = StaticCast<EEnemyStateType>(pkt.state());
     FVector         curLocation     = FVector(pkt.cur_location().x(), pkt.cur_location().y(), pkt.cur_location().z());
     FVector         moveLocation    = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
     const int64     timestamp       = pkt.timestamp();
@@ -453,7 +503,7 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
     {
         return false;
     }
-    enemyState->SetEnemyState(stateType, durationTime / 1000.0f);
+    //enemyState->SetEnemyState(stateType, durationTime / 1000.0f);
 
     AEnemyController* enemyController = Cast<AEnemyController>(enemy->GetController());
     if (nullptr == enemyController)
@@ -465,7 +515,7 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
     return true;
 }
 
-bool Handle_S2C_AttackToPlayer(ANetworkController* controller, Protocol::S2C_AttackToPlayer& pkt)
+bool Handle_S2C_EnemyAutoAttack(ANetworkController* controller, Protocol::S2C_EnemyAutoAttack& pkt)
 {
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
@@ -503,37 +553,6 @@ bool Handle_S2C_AttackToPlayer(ANetworkController* controller, Protocol::S2C_Att
         return false;
     }
     enemyState->SetEnemyState(EEnemyStateType::State_Attack, durationTime / 1000.0f);
-
-    return true;
-}
-
-bool Handle_S2C_TargetingToPlayer(ANetworkController* controller, Protocol::S2C_TargetingToPlayer& pkt)
-{
-    UWorld* world = controller->GetWorld();
-    if (nullptr == world)
-    {
-        return false;
-    }
-
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
-    if (nullptr == gameMode)
-    {
-        return false;
-    }
-
-    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
-    if (nullptr == gameState)
-    {
-        return false;
-    }
-
-    //const int64 remoteID = pkt.object_id();
-    //AController* remoteController = gameState->FindPlayerController(remoteID);
-    //if (nullptr == remoteController)
-    //{
-    //    return true;
-    //}
-
 
     return true;
 }

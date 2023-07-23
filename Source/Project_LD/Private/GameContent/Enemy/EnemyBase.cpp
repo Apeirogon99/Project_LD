@@ -7,6 +7,7 @@
 
 #include <Game/GM_Game.h>
 #include <Framework/Game/GS_Game.h>
+#include <Framework/AnimInstance/AI_PlayerCharacter.h>
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FGamePacketHandler.h>
 
@@ -277,7 +278,19 @@ void AEnemyBase::Interactive(AC_Game* inPlayer)
 		return;
 	}
 
-	Protocol::C2S_AttackToEnemy attackPacket;
+	float distance = FVector::Distance(inPlayer->GetActorLocation(), this->GetActorLocation());
+	float range = 100.0f;
+	if (distance <= range)
+	{
+		UAI_PlayerCharacter* animInstance = Cast<UAI_PlayerCharacter>(inPlayer->GetMesh()->GetAnimInstance());
+		if (nullptr == animInstance)
+		{
+			return;
+		}
+		//animInstance->PlayAttackMontage();
+	}
+
+	Protocol::C2S_PlayerAutoAttack attackPacket;
 	attackPacket.set_object_id(state->GetObjectID());
 	attackPacket.set_timestamp(controller->GetServerTimeStamp());
 

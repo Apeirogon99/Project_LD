@@ -104,11 +104,6 @@ void AMovementController::MoveToMouseCursor()
 					return;
 				}
 				Cast<IInteractiveInterface>(Hit.Actor)->Interactive(character);
-				if (actortag == FName("Enemy"))
-				{
-					auto animInstance = Cast<UAI_PlayerCharacter>(GetCharacter()->GetMesh()->GetAnimInstance());
-					animInstance->PlayAttackMontage();
-				}
 			}
 		}
 	}
