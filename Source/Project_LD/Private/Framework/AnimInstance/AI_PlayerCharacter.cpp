@@ -4,6 +4,7 @@
 #include "Framework/AnimInstance/AI_PlayerCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/Pawn.h"
+#include "Framework/Game/NPC_Game.h"
 #include "Game/PC_Game.h"
 #include "Game/C_Game.h"
 
@@ -54,7 +55,7 @@ void UAI_PlayerCharacter::NativeInitializeAnimation()
 
 	if (mMainCharacter == nullptr)
 	{
-		mMainCharacter = Cast<AC_Game>(TryGetPawnOwner());
+		mMainCharacter = Cast<ANC_Game>(TryGetPawnOwner());
 	}
 }
 
@@ -62,7 +63,7 @@ void UAI_PlayerCharacter::UpdateProperties()
 {
 	if (mMainCharacter == nullptr)
 	{
-		mMainCharacter = Cast<AC_Game>(TryGetPawnOwner());
+		mMainCharacter = Cast<ANC_Game>(TryGetPawnOwner());
 	}
 
 	if (mMainCharacter)

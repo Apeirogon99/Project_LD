@@ -190,7 +190,7 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
 	FVector curLocation = character->GetActorLocation();
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
-	if (locationDistance >= 5.0f)
+	if (locationDistance >= 1.0f)
 	{
 		mIsLocationCorrection = true;
 		mTargetLoction = inOldMovementLocation;

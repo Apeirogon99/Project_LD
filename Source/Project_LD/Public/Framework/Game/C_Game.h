@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Component/ACInventoryComponent.h"
 #include "Framework/Character/AppearanceCharacter.h"
+#include "NC_Game.h"
 #include "C_Game.generated.h"
 
 /**
@@ -14,7 +15,7 @@ class UCameraComponent;
 class USpringArmComponent;
 
 UCLASS()
-class PROJECT_LD_API AC_Game : public AAppearanceCharacter
+class PROJECT_LD_API AC_Game : public ANC_Game
 {
 	GENERATED_BODY()
 

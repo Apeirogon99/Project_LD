@@ -523,6 +523,7 @@ bool Handle_S2C_EnemyAutoAttack(ANetworkController* controller, Protocol::S2C_En
     const int64     objectID        = pkt.object_id();
     const int64     timestamp       = pkt.timestamp();
     const int64     durationTime    = controller->GetServerTimeStamp() - timestamp;
+    const FRotator  rotation        = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
 
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
@@ -536,6 +537,7 @@ bool Handle_S2C_EnemyAutoAttack(ANetworkController* controller, Protocol::S2C_En
     {
         return false;
     }
+    enemy->SetActorRotation(rotation);
 
     //AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
     //if (nullptr == enemyState)

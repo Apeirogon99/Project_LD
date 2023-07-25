@@ -10,6 +10,7 @@
  * 
  */
 class AC_Game;
+class ANC_Game;
 class UAnimMontage;
 
 UCLASS()
@@ -34,7 +35,7 @@ private:
 	float mMovementDirection;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", meta = (AllowPrivateAccess = "true"))
-	AC_Game* mMainCharacter;
+	ANC_Game* mMainCharacter;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = "true"))
 	TArray<UAnimMontage*> mAttackMontage;
