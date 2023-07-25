@@ -46,6 +46,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	{
 		return;
 	}
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 
 	FVector	direction = inNewMovementLocation - inOldMovementLocation;
 	direction.Normalize();
@@ -69,9 +70,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 		mTargetLoction = deadReckoningLocation;
 	}
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws] distance %f"), *inOldMovementLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance), ELogLevel::Error);
-
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws] distance[%f]"), *inOldMovementLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance), ELogLevel::Error);
 
 }
 
@@ -89,7 +88,7 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 	}
 
 	FVector curLocation = pawn->GetActorLocation();
-	float	velocity = 3.0f;
+	float	velocity = 1.0f;
 
 	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
 

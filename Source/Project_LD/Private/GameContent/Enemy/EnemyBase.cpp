@@ -278,6 +278,9 @@ void AEnemyBase::Interactive(AC_Game* inPlayer)
 		return;
 	}
 
+	FVector direction = this->GetActorLocation() - inPlayer->GetActorLocation();
+	inPlayer->SetActorRotation(FRotator(0.0f, direction.Rotation().Yaw, 0.0f));
+	
 	float distance = FVector::Distance(inPlayer->GetActorLocation(), this->GetActorLocation());
 	float range = 100.0f;
 	if (distance <= range)

@@ -79,7 +79,7 @@ void AEnemyState::SetEnemyState(const EEnemyStateType& inStateType, const float 
 		mCurrentState = inStateType;
 	}
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Change state [%d] -> [%d]"), StaticCast<int32>(mCurrentState), StaticCast<int32>(inStateType)), ELogLevel::Warning);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Change state [%d] -> [%d] [Duration %f]"), StaticCast<int32>(mCurrentState), StaticCast<int32>(inStateType), inStartTime), ELogLevel::Warning);
 
 	AEnemyBase* enemy = Cast<AEnemyBase>(GetPawn());
 	if (nullptr == enemy)

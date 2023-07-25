@@ -416,7 +416,7 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
     return true;
 }
 
-bool Handle_S2C_TickEnemy(ANetworkController* controller, Protocol::S2C_TickEnemy& pkt)
+bool Handle_S2C_DetectChangeEnemy(ANetworkController* controller, Protocol::S2C_DetectChangeEnemy& pkt)
 {
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
@@ -430,10 +430,11 @@ bool Handle_S2C_TickEnemy(ANetworkController* controller, Protocol::S2C_TickEnem
         return false;
     }
 
-    const int64     objectID = pkt.object_id();
-    auto            stats = pkt.stats();
-    const int64     timestamp = pkt.timestamp();
-    const int64     durationTime = controller->GetServerTimeStamp() - timestamp;
+    const int64     objectID        = pkt.object_id();
+    auto            stats           = pkt.stats();
+    EEnemyStateType state           = StaticCast<EEnemyStateType>(pkt.state());
+    const int64     timestamp       = pkt.timestamp();
+    const int64     durationTime    = controller->GetServerTimeStamp() - timestamp;
 
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
@@ -453,14 +454,10 @@ bool Handle_S2C_TickEnemy(ANetworkController* controller, Protocol::S2C_TickEnem
     {
         return false;
     }
+    enemyState->SetEnemyState(state, durationTime / 1000.0f);
     enemyState->UpdateCurrentStats(stats);
 
     return true;
-}
-
-bool Handle_S2C_DetectChangeEnemy(ANetworkController* controller, Protocol::S2C_DetectChangeEnemy& pkt)
-{
-    return false;
 }
 
 bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_MovementEnemy& pkt)
@@ -497,13 +494,6 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
     {
         return false;
     }
-
-    AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
-    if (nullptr == enemyState)
-    {
-        return false;
-    }
-    //enemyState->SetEnemyState(stateType, durationTime / 1000.0f);
 
     AEnemyController* enemyController = Cast<AEnemyController>(enemy->GetController());
     if (nullptr == enemyController)
@@ -547,12 +537,12 @@ bool Handle_S2C_EnemyAutoAttack(ANetworkController* controller, Protocol::S2C_En
         return false;
     }
 
-    AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
-    if (nullptr == enemyState)
-    {
-        return false;
-    }
-    enemyState->SetEnemyState(EEnemyStateType::State_Attack, durationTime / 1000.0f);
+    //AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
+    //if (nullptr == enemyState)
+    //{
+    //    return false;
+    //}
+    //enemyState->SetEnemyState(EEnemyStateType::State_Attack, durationTime / 1000.0f);
 
     return true;
 }
@@ -572,7 +562,6 @@ bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy&
     }
 
     const int64     objectID        = pkt.object_id();
-    auto            stats           = pkt.stats();
     const int64     timestamp       = pkt.timestamp();
     const int64     durationTime    = controller->GetServerTimeStamp() - timestamp;
 
@@ -589,13 +578,12 @@ bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy&
         return false;
     }
 
-    AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
-    if (nullptr == enemyState)
-    {
-        return false;
-    }
-    enemyState->SetEnemyState(EEnemyStateType::State_Hit, durationTime / 1000.0f);
-    enemyState->UpdateCurrentStats(stats);
+    //AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
+    //if (nullptr == enemyState)
+    //{
+    //    return false;
+    //}
+    //enemyState->SetEnemyState(EEnemyStateType::State_Hit, durationTime / 1000.0f);
 
     return true;
 }
@@ -630,13 +618,13 @@ bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEn
     {
         return false;
     }
-
-    AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
-    if (nullptr == enemyState)
-    {
-        return false;
-    }
-    enemyState->SetEnemyState(EEnemyStateType::State_Death, durationTime / 1000.0f);
+    enemy->Destroy();
+    //AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
+    //if (nullptr == enemyState)
+    //{
+    //    return false;
+    //}
+    //enemyState->SetEnemyState(EEnemyStateType::State_Death, durationTime / 1000.0f);
 
     return true;
 }

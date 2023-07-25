@@ -23,8 +23,9 @@
 
 AMovementController::AMovementController()
 {
-	IsMoveToMouseCursor = false;
-	IsCorrection = false;
+	mIsMoveToMouseCursor	= false;
+	mIsLocationCorrection	= false;
+	mIsRotationCorrection	= false;
 }
 
 AMovementController::~AMovementController()
@@ -35,15 +36,20 @@ void AMovementController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	if (IsMoveToMouseCursor)
+	if (mIsMoveToMouseCursor)
 	{
-		IsMoveToMouseCursor = false;
+		mIsMoveToMouseCursor = false;
 		MoveToMouseCursor();
 	}
 
-	if (IsCorrection)
+	if (mIsLocationCorrection)
 	{
 		MoveCorrection(DeltaTime);
+	}
+
+	if (mIsRotationCorrection)
+	{
+		RotationCorrection(DeltaTime);
 	}
 }
 
@@ -58,12 +64,12 @@ void AMovementController::SetupInputComponent()
 
 void AMovementController::OnSetDestinationPressed()
 {
-	IsMoveToMouseCursor = true;
+	mIsMoveToMouseCursor = true;
 }
 
 void AMovementController::OnSetDestinationReleased()
 {
-	IsMoveToMouseCursor = false;
+	mIsMoveToMouseCursor = false;
 }
 
 void AMovementController::OnSetCameraZoomAxis(const float inValue)
@@ -73,7 +79,7 @@ void AMovementController::OnSetCameraZoomAxis(const float inValue)
 void AMovementController::SwitchMovementMode()
 {
 	bShowMouseCursor = true;
-	IsMoveToMouseCursor = false;
+	mIsMoveToMouseCursor = false;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
 
@@ -158,7 +164,7 @@ void AMovementController::SetNewMoveDestination(FVector& DestLocation)
 
 }
 
-void AMovementController::MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
+void AMovementController::MoveDestination(const FVector& inOldMovementLocation, const FVector& inNewMovementLocation, const int64& inTime)
 {
 
 	ACharacter* character = Cast<ACharacter>(this->GetPawn());
@@ -186,14 +192,16 @@ void AMovementController::MoveDestination(const FVector inOldMovementLocation, c
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
 	if (locationDistance >= 5.0f)
 	{
-		IsCorrection = true;
+		mIsLocationCorrection = true;
 		mTargetLoction = inOldMovementLocation;
 	}
 	else
 	{
-		IsCorrection = true;
+		mIsLocationCorrection = true;
 		mTargetLoction = deadReckoningLocation;
 	}
+
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws] distance[%f]"), *inOldMovementLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance), ELogLevel::Error);
 
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 }
@@ -206,7 +214,7 @@ void AMovementController::MoveCorrection(const float inDeltaTime)
 		return;
 	}
 
-	if (false == IsCorrection)
+	if (false == mIsLocationCorrection)
 	{
 		return;
 	}
@@ -220,11 +228,45 @@ void AMovementController::MoveCorrection(const float inDeltaTime)
 	if (distance <= 1.0f)
 	{
 		pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);
-		IsCorrection = false;
+		mIsLocationCorrection = false;
 	}
 	else
 	{
 		pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
 	}
 
+}
+
+void AMovementController::RotationDestination(const FRotator& inNewRotation, const int64& inTime)
+{
+}
+
+void AMovementController::RotationCorrection(const float inDeltaTime)
+{
+	APawn* pawn = this->GetPawn();
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
+	if (false == mIsRotationCorrection)
+	{
+		return;
+	}
+
+	FRotator	curRotation = pawn->GetActorRotation();
+	float		interpSpeed = 3.0f;
+
+	FRotator correctionRotation = FMath::RInterpTo(curRotation, mTargetRotation, inDeltaTime, interpSpeed);
+
+	float rotationDelta = correctionRotation.Pitch - curRotation.Pitch;
+	if (rotationDelta <= 1.0f)
+	{
+		pawn->SetActorRotation(mTargetRotation, ETeleportType::ResetPhysics);
+		mIsRotationCorrection = false;
+	}
+	else
+	{
+		pawn->SetActorRotation(correctionRotation, ETeleportType::ResetPhysics);
+	}
 }

@@ -32,17 +32,20 @@ public:
 
 public:
 	void SetNewMoveDestination(FVector& DestLocation);
-	void MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
+	void MoveDestination(const FVector& inOldMovementLocation, const FVector& inNewMovementLocation, const int64& inTime);
 	void MoveCorrection(const float inDeltaTime);
+	void RotationDestination(const FRotator& inNewRotation, const int64& inTime);
+	void RotationCorrection(const float inDeltaTime);
 
 public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	UParticleSystem* mMouseCursorParticle;
 
 private:
-	bool IsMoveToMouseCursor;
-	bool IsCorrection;
+	bool		mIsMoveToMouseCursor;
+	bool		mIsLocationCorrection;
+	bool		mIsRotationCorrection;
 
-	FVector mTargetLoction;
-
+	FVector		mTargetLoction;
+	FRotator	mTargetRotation;
 };
