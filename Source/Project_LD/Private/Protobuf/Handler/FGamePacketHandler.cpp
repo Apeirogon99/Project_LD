@@ -294,6 +294,8 @@ bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_P
     {
         return true;
     }
+    Protocol::SRotator rotation = pkt.rotation();
+    player->SetActorRotation(FRotator(rotation.pitch(), rotation.yaw(), rotation.roll()), ETeleportType::ResetPhysics);
 
     const int64 timeStamp           = pkt.timestamp();
     const int64 nowServerTimeStamp  = controller->GetServerTimeStamp();
