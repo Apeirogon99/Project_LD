@@ -654,10 +654,9 @@ bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_DisAppearGameObject] INVALID GameObject : %d"), objectID), ELogLevel::Error);
         return true;
     }
-    else
-    {
-        gameState->RemoveGameObject(objectID);
-    }
+ 
+    bool result = gameState->RemoveGameObject(objectID);
+    //UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_DisAppearGameObject] %ws Remove GameObject : %d"), ((result == true) ? TEXT("Success") : TEXT("Faild")), objectID), ELogLevel::Error);
 
     return true;
 }
