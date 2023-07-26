@@ -4,6 +4,7 @@
 #include "Framework/AnimInstance/AI_PlayerCharacter.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Framework/Game/NPC_Game.h"
 #include "Game/PC_Game.h"
 #include "Game/C_Game.h"
@@ -94,11 +95,8 @@ void UAI_PlayerCharacter::AnimNotify_ResetCombo()
 
 	if (mMainCharacter)
 	{
-		APC_Game* controller = Cast<APC_Game>(mMainCharacter->GetController());
-		if (controller)
-		{
-			controller->SetIgnoreMoveInput(false);
-		}
+		auto movement = Cast<UCharacterMovementComponent>(mMainCharacter->GetMovementComponent());
+		movement->MovementMode = EMovementMode::MOVE_Walking;
 	}
 }
 
@@ -106,11 +104,8 @@ void UAI_PlayerCharacter::AnimNotify_AttackServerCheck()
 {
 	if (mMainCharacter)
 	{
-		APC_Game* controller = Cast<APC_Game>(mMainCharacter->GetController());
-		if (controller)
-		{
-			controller->SetIgnoreMoveInput(true);
-		}
+		auto movement = Cast<UCharacterMovementComponent>(mMainCharacter->GetMovementComponent());
+		movement->MovementMode = EMovementMode::MOVE_None;
 	}
 	//if (mMainCharacter->GetIsZoom() == false)
 	//{
