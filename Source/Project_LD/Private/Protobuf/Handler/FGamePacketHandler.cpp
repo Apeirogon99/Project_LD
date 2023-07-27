@@ -743,6 +743,14 @@ bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_In
         return true;
     }
     //TODO : 줍는 애니메이션
+
+    //TODO : 아이템 삭제
+    const int64 gameObjectID = pkt.object_id();
+    if (false == gameState->RemoveGameObject(gameObjectID))
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_InsertInventory] INVALID Item in world : %d"), remoteID), ELogLevel::Error);
+        return true;
+    }
     
     return true;
 }
