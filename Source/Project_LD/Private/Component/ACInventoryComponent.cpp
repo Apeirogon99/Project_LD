@@ -108,7 +108,7 @@ void UACInventoryComponent::LoadItem(const google::protobuf::RepeatedPtrField<Pr
 	
 		const Protocol::SVector2D& invenPosition = curItem.inven_position();
 		ItemObjectData->SetPositionX(invenPosition.x());
-		ItemObjectData->SetPositionX(invenPosition.y());
+		ItemObjectData->SetPositionY(invenPosition.y());
 		ItemObjectData->SetRotation(curItem.rotation());
 		ItemObjectData->SetType(EItemObjectType::Inventory);
 
