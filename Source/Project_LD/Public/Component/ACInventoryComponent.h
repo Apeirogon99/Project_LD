@@ -50,7 +50,7 @@ public:
 	void											ReplacePacket(UItemObjectData* InvenObjectData, UItemObjectData* EquipObejctData, int32 PartID);
 	void											Refresh();
 	void											ChangeInvenObjectArr();
-	void											LoadItem(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inItems);
+	void											LoadItem(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inItems, const int32& inMoney);
 	void											ClearInventory();
 	void											RemoveItem(UItemObjectData* ItemObjectData);
 	void											AddItemAt(UItemObjectData* ItemObjectData, const int TopLeftIndex);
@@ -122,4 +122,7 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TArray<UItemObjectData*> mInventoryObjectArr;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	int32 mMoney;
 };

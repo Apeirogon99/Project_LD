@@ -89,7 +89,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     playerState->SetCharacterData(newCharacterData);
 
     //Load
-    playerState->mInventoryComponent->LoadItem(pkt.item());
+    playerState->mInventoryComponent->LoadItem(pkt.item(), pkt.money());
     playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
 
     return true;
@@ -686,9 +686,11 @@ bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_Load
     {
         return false;
     }
+
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_InsertInventory] InsertInventory Error : %d"), pkt.money()), ELogLevel::Error);
    
     //Load
-    playerState->mInventoryComponent->LoadItem(pkt.item());
+    playerState->mInventoryComponent->LoadItem(pkt.item(), pkt.money());
     playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
 
     AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());

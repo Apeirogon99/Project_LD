@@ -88,7 +88,7 @@ void UACInventoryComponent::ChangeInvenObjectArr()
 }
 
 //서버에서 아이템 정보를 받아옴
-void UACInventoryComponent::LoadItem(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inItems)
+void UACInventoryComponent::LoadItem(const google::protobuf::RepeatedPtrField<Protocol::SItem>& inItems, const int32& inMoney)
 {
 	ClearInventory();
 
@@ -114,6 +114,8 @@ void UACInventoryComponent::LoadItem(const google::protobuf::RepeatedPtrField<Pr
 
 		mInventoryObjectArr.Add(ItemObjectData);
 	}
+
+	this->mMoney = inMoney;
 
 	Refresh();
 }
