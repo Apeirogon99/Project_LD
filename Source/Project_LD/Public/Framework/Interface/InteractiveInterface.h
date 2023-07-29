@@ -24,7 +24,7 @@ class PROJECT_LD_API IInteractiveInterface
 		// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	//UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interface")
-	virtual void Interactive(AC_Game* Player) = 0;
+	virtual void Interactive(ANC_Game* Player) = 0;
 
 
 };

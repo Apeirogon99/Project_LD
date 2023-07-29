@@ -28,6 +28,8 @@ ANC_Game::ANC_Game()
 
 	AIControllerClass = ANPC_Game::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+
+	bIsAttack = false;
 }
 
 ANC_Game::~ANC_Game()

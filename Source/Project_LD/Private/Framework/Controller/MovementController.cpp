@@ -95,21 +95,37 @@ void AMovementController::MoveToMouseCursor()
 
 	if (Hit.Actor.Get()->Tags.Num() > 0)
 	{
-		FName actortag = Hit.Actor.Get()->Tags[0];
-		if (actortag == FName("Ground"))
+		ANC_Game* character = Cast<ANC_Game>(GetCharacter());
+		if (character == nullptr)
 		{
-			SetNewMoveDestination(Hit.ImpactPoint);
+			return;
 		}
-		else
+
+		FName actortag = Hit.Actor.Get()->Tags[0];
+		if (actortag == FName("Enemy"))
 		{
 			if (Hit.Actor->GetClass()->ImplementsInterface(UInteractiveInterface::StaticClass()))
 			{
-				AC_Game* character = Cast<AC_Game>(GetCharacter());
-				if (character == nullptr)
-				{
-					return;
-				}
 				Cast<IInteractiveInterface>(Hit.Actor)->Interactive(character);
+			}
+		}
+		else
+		{
+			if (character->GetIsAttack() == false)
+			{
+				if (actortag == FName("Ground"))
+				{
+					//Ground
+					SetNewMoveDestination(Hit.ImpactPoint);
+				}
+				else
+				{
+					if (Hit.Actor->GetClass()->ImplementsInterface(UInteractiveInterface::StaticClass()))
+					{
+						//Interactive Things
+						Cast<IInteractiveInterface>(Hit.Actor)->Interactive(character);
+					}
+				}
 			}
 		}
 	}

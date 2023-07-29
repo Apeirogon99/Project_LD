@@ -95,6 +95,8 @@ void UAI_PlayerCharacter::AnimNotify_ResetCombo()
 
 	if (mMainCharacter)
 	{
+		mMainCharacter->SetIsAttack(false);
+
 		auto movement = Cast<UCharacterMovementComponent>(mMainCharacter->GetMovementComponent());
 		movement->MovementMode = EMovementMode::MOVE_Walking;
 	}
@@ -104,6 +106,8 @@ void UAI_PlayerCharacter::AnimNotify_AttackServerCheck()
 {
 	if (mMainCharacter)
 	{
+		mMainCharacter->SetIsAttack(true);
+
 		auto movement = Cast<UCharacterMovementComponent>(mMainCharacter->GetMovementComponent());
 		movement->MovementMode = EMovementMode::MOVE_None;
 	}

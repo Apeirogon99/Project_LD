@@ -18,13 +18,18 @@ public:
 	ANC_Game();
 	~ANC_Game();
 
+public:
+	void SetIsAttack(const bool& InIsAttack) { bIsAttack = InIsAttack; }
+
+public:
+	FORCEINLINE bool GetIsAttack() const { return bIsAttack; }
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Destroyed() override;
 
-public:
-
-private:
-
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationStats", meta = (AllowPrivateAccess = "true"))
+	bool bIsAttack;
 };

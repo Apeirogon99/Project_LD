@@ -102,7 +102,6 @@ void AEnemyState::UpdateHealthBar()
 	HealthBarPercent = mStats.GetCurrentStats().GetHealth() / mStats.GetMaxStats().GetHealth();
 	if (OnStatsChanged.IsBound())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AEnemyState::UpdateHealthBar"));
 		OnStatsChanged.Broadcast();
 	}
 }

@@ -25,7 +25,7 @@ public:
 
 public:
 	void ChangeState(const EEnemyStateType inStateType, float inStartTime);
-	virtual void Interactive(AC_Game* inPlayer) override; 
+	virtual void Interactive(ANC_Game* inPlayer) override; 
 	virtual void Init();
 
 protected:

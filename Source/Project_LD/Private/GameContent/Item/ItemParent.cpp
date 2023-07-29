@@ -136,7 +136,7 @@ void AItemParent::Destroyed()
 	mItemNameWidgetComponent->DestroyComponent();
 }
 
-void AItemParent::Interactive(AC_Game* inPlayer)
+void AItemParent::Interactive(ANC_Game* inPlayer)
 {
 	UWorld* world = GetWorld();
 	if (nullptr == world)
@@ -246,9 +246,10 @@ void AItemParent::FindPlayer()
 void AItemParent::ItemObjectDataInit(int32 Categoryid)
 {
 	//Mesh
-	if (Categoryid > 7)
+	if (Categoryid == 8)
 	{
 		mSkeletalMeshComponent->SetSkeletalMesh(mItemObjectData->GetItemData().GetMesh());
 	}
+
 	mIcon = mItemObjectData->GetItemData().GetIcon();
 }

@@ -30,9 +30,11 @@ public:
 
 public:
 	void SetIsZoom(const bool& InIsZoom) { bIsZoom = InIsZoom; }
+	void SetIsAttack(const bool& InIsAttack) { bIsAttack = InIsAttack; }
 
 public:
 	FORCEINLINE bool GetIsZoom() const { return bIsZoom; }
+	FORCEINLINE bool GetIsAttack() const { return bIsAttack; }
 
 public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Camera Control")

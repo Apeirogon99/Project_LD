@@ -131,6 +131,8 @@ void AEnemyBase::Destroyed()
 	{
 		playerState->OnStatsChanged.Clear();
 	}
+
+	mHealthBar->SetVisibility(false);
 }
 
 void AEnemyBase::SetParticleTemplate(UParticleSystem* InParticleTemplate)
@@ -247,7 +249,7 @@ void AEnemyBase::UpdateHealthBar() const
 	healthbar->HealthBar->SetPercent(playerState->GetHealthBarPercent());
 }
 
-void AEnemyBase::Interactive(AC_Game* inPlayer)
+void AEnemyBase::Interactive(ANC_Game* inPlayer)
 {
 	UWorld* world = GetWorld();
 	if (nullptr == world)

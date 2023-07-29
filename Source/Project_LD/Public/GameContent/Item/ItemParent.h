@@ -26,45 +26,14 @@ public:
 	AItemParent();
 
 public:
-	virtual void Interactive(AC_Game* inPlayer) override;
+	virtual void Interactive(ANC_Game* inPlayer) override;
 	void Init(int32 Code, int32 GameObjectId);
 	void FindPlayer();
-
-public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data")
-	UItemObjectData* mItemObjectData;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Image")
-	UTexture2D* mIcon;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UParticleSystem* mItemSpawnParticle;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<UParticleSystem*> mPickUpParticle;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UParticleSystem* mItemGainParticle;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TSubclassOf<UUserWidget> mItemNameClass;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UParticleSystemComponent* mItemSpawnParticleComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UWidgetComponent* mItemNameWidgetComponent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	AC_Game* mPlayer;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void Destroyed() override;
-
-private:
-	UDataTable* mDataTable;
 
 private:
 	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
@@ -75,6 +44,35 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = "Component")
 	USphereComponent* mSphere;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	UItemObjectData* mItemObjectData;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Image", meta = (AllowPrivateAccess = "true"))
+	UTexture2D* mIcon;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* mItemSpawnParticle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<UParticleSystem*> mPickUpParticle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* mItemGainParticle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UUserWidget> mItemNameClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* mItemSpawnParticleComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UWidgetComponent* mItemNameWidgetComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	AC_Game* mPlayer;
+
+	UDataTable* mDataTable;
 
 private:
 	void ItemObjectDataInit(int32 Categoryid);
