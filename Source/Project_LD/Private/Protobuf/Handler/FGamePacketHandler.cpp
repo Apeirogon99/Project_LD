@@ -622,7 +622,13 @@ bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEn
     {
         return false;
     }
-    enemy->Destroy();
+
+   bool ret = gameState->RemoveGameObject(objectID);
+   if (false == ret)
+   {
+       UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] Can't Remove GameObject : %d"), objectID), ELogLevel::Error);
+   }
+
     //AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
     //if (nullptr == enemyState)
     //{
@@ -656,6 +662,11 @@ bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2
     }
  
     bool result = gameState->RemoveGameObject(objectID);
+    if (false == result)
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_DisAppearGameObject] Can't Remove GameObject : %d"), objectID), ELogLevel::Error);
+        return true;
+    }
     //UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_DisAppearGameObject] %ws Remove GameObject : %d"), ((result == true) ? TEXT("Success") : TEXT("Faild")), objectID), ELogLevel::Error);
 
     return true;
@@ -687,8 +698,6 @@ bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_Load
         return false;
     }
 
-    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_InsertInventory] InsertInventory Error : %d"), pkt.money()), ELogLevel::Error);
-   
     //Load
     playerState->mInventoryComponent->LoadItem(pkt.item(), pkt.money());
     playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());

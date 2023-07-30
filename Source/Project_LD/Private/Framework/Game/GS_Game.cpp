@@ -172,12 +172,12 @@ bool AGS_Game::RemoveGameObject(const int64 inGameObjectID)
     findActor->Destroy();
     
     int32 result = mGameObjects.Remove(inGameObjectID);
-    if (result != 0)
+    if (result == 0)
     {
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 AController* AGS_Game::FindPlayerController(const int64 inRemoteID)

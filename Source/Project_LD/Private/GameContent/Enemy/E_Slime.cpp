@@ -28,6 +28,9 @@ void AE_Slime::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AE_Slime::Destroyed()
 {
+
+	Super::Destroyed();
+
 	UWorld* world = GetWorld();
 	if (nullptr == world)
 	{
@@ -61,6 +64,9 @@ void AE_Slime::Destroyed()
 	world->DestroyActor(playerState);
 
 	world->DestroyActor(controller);
+
+	//Super::Destroyed();
+
 }
 
 void AE_Slime::Tick(float DeltaTime)
