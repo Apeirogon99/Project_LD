@@ -37,6 +37,7 @@ AArcherSkeletonArrow::AArcherSkeletonArrow()
 
 	mMesh->SetupAttachment(RootComponent);
 	mMesh->SetRelativeRotation(FRotator(270.f, 0.f, 270.f));
+	mMesh->SetRelativeLocation(FVector(-40.f, 0.f, 0.f));
 	mMesh->SetRelativeScale3D(FVector(2.f, 1.f, 2.f));
 	mMesh->SetCollisionProfileName(FName(TEXT("NoCollision")));
 
