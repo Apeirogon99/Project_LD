@@ -290,7 +290,7 @@ bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_P
         return true;
     }
 
-    AC_Game* player = Cast<AC_Game>(remoteController->GetPawn());
+    ANC_Game* player = Cast<ANC_Game>(remoteController->GetPawn());
     if (nullptr == player)
     {
         return true;
