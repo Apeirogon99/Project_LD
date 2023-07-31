@@ -102,6 +102,20 @@ AItemParent::AItemParent()
 void AItemParent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FVector location = this->GetActorLocation();
+
+	TArray<TEnumAsByte<EObjectTypeQuery>> objectTypes;
+	TEnumAsByte<EObjectTypeQuery> worldStatic = UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_WorldStatic);
+	objectTypes.Add(worldStatic);
+
+	TArray<AActor*> ignoreActors;
+
+	FHitResult hitResult;
+
+	UKismetSystemLibrary::LineTraceSingleForObjects(this->GetWorld(), location, FVector(location.X, location.Y, location.Z - 10000.0f), objectTypes, false, ignoreActors, EDrawDebugTrace::None, hitResult, true);
+
+	this->SetActorLocation(hitResult.ImpactPoint);
 }
 
 void AItemParent::Tick(float DeltaSeconds)

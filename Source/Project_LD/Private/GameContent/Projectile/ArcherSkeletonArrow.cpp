@@ -10,7 +10,7 @@ AArcherSkeletonArrow::AArcherSkeletonArrow()
 	PrimaryActorTick.bCanEverTick = false;
 
 	mSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereRoot"));
-	mSphere->InitSphereRadius(40.f);
+	mSphere->InitSphereRadius(20.f);
 
 	RootComponent = mSphere;
 }

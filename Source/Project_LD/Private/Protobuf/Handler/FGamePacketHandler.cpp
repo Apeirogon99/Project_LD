@@ -17,6 +17,7 @@
 #include <GameContent/Enemy/EnemyController.h>
 #include <GameContent/Enemy/EnemyState.h>
 #include <GameContent/Enemy/EnemyBase.h>
+#include <GameContent/Projectile/ArcherSkeletonArrow.h>
 
 #include <GameErrorTypes.h>
 
@@ -350,6 +351,76 @@ bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearI
     }
     newItem->Init(itemCode, objectID);
     
+    return true;
+}
+
+bool Handle_S2C_AppearArrow(ANetworkController* controller, Protocol::S2C_AppearArrow& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64     objectID    = pkt.object_id();
+    const FVector   location    = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    const FRotator  rotation    = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
+    const int64     timeStamp   = pkt.timestamp();
+
+    if (nullptr != gameState->FindGameObject(objectID))
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearItem] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AActor* newActor = gameState->CreateGameObject(AArcherSkeletonArrow::StaticClass(), location, rotation, objectID);
+    AArcherSkeletonArrow* newArrow = Cast<AArcherSkeletonArrow>(newActor);
+    if (nullptr == newArrow)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C_MovementProjectile& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64     objectID = pkt.object_id();
+    const FVector   location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    const int64     timeStamp = pkt.timestamp();
+
+    AActor* actor = gameState->FindGameObject(objectID);
+    if (nullptr == actor)
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AArcherSkeletonArrow* arrow = Cast<AArcherSkeletonArrow>(actor);
+    if (nullptr == arrow)
+    {
+        return false;
+    }
+    arrow->SetActorLocation(location, false, nullptr, ETeleportType::None);
+
     return true;
 }
 
