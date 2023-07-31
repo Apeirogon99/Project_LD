@@ -2,6 +2,8 @@
 
 #include "GameContent/Projectile/ArcherSkeletonArrow.h"
 #include "Components/SphereComponent.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 AArcherSkeletonArrow::AArcherSkeletonArrow()
@@ -23,7 +25,21 @@ AArcherSkeletonArrow::AArcherSkeletonArrow()
 	}
 
 	mMesh->SetupAttachment(RootComponent);
+	mMesh->SetRelativeRotation(FRotator(270.f, 0.f, 270.f));
 	mMesh->SetRelativeScale3D(FVector(2.f, 1.f, 2.f));
+	mMesh->SetCollisionProfileName(FName(TEXT("NoCollision")));
+
+	mArrowTail = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ArrowTail"));
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> P_ArrowTail(TEXT("ParticleSystem'/Game/GameContent/Projectile/Arrow/P_ArrowTail.P_ArrowTail'"));
+	if (P_ArrowTail.Succeeded())
+	{
+		mArrowTail->SetTemplate(P_ArrowTail.Object);
+	}
+
+	mArrowTail->SetupAttachment(mMesh);
+	mArrowTail->SetRelativeLocation(FVector(0.f, -40.f, 0.f));
+
 }
 
 // Called when the game starts or when spawned
