@@ -20,6 +20,11 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
+
+public:
+	void ArrowSyncMovement(const FVector& inLocation, const float& inDuration);
+	void ArrowMovementCorrection(const float inDeltaTime);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -29,5 +34,11 @@ private:
 	UStaticMeshComponent* mMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UProjectileMovementComponent* mProjectileMovementComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UParticleSystemComponent* mArrowTail;
+
+	bool	mIsLocationCorrection;
+	FVector mTargetLoction;
 };

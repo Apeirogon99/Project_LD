@@ -440,7 +440,7 @@ bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C
     {
         return false;
     }
-    arrow->SetActorLocation(location, false, nullptr, ETeleportType::None);
+    arrow->ArrowSyncMovement(location, timeStamp / 1000.0f);
 
     return true;
 }

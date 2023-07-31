@@ -1,7 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameContent/Projectile/ArcherSkeletonArrow.h"
+#include <Network/NetworkUtils.h>
 #include "Components/SphereComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 
@@ -9,10 +11,19 @@
 AArcherSkeletonArrow::AArcherSkeletonArrow()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+	mIsLocationCorrection = false;
 
 	mSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereRoot"));
 	mSphere->InitSphereRadius(20.f);
+
+	mProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("mProjectileMovementComponent"));
+	mProjectileMovementComponent->SetUpdatedComponent(mSphere);
+	mProjectileMovementComponent->InitialSpeed = 1000.0f;
+	mProjectileMovementComponent->MaxSpeed = 1000.0f;
+	mProjectileMovementComponent->bRotationFollowsVelocity = false;
+	mProjectileMovementComponent->bShouldBounce = false;
+	mProjectileMovementComponent->ProjectileGravityScale = 0.0f;
 
 	RootComponent = mSphere;
 
@@ -47,4 +58,51 @@ void AArcherSkeletonArrow::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void AArcherSkeletonArrow::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	ArrowMovementCorrection(DeltaTime);
+}
+
+void AArcherSkeletonArrow::ArrowSyncMovement(const FVector& inLocation, const float& inDuration)
+{
+	FVector curLocation = this->GetActorLocation();
+	float locationDistance = FVector::Dist2D(curLocation, inLocation);
+	if (locationDistance >= 1.0f)
+	{
+		mIsLocationCorrection = true;
+		mTargetLoction = inLocation;
+	}
+
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], new[%ws] distance[%f]"), *curLocation.ToString(), *inLocation.ToString(), locationDistance), ELogLevel::Error);
+}
+
+void AArcherSkeletonArrow::ArrowMovementCorrection(const float inDeltaTime)
+{
+
+	if (false == mIsLocationCorrection)
+	{
+		return;
+	}
+
+	FVector curLocation = this->GetActorLocation();
+	float	velocity = 10.0f;
+
+	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
+
+	float distance = FVector::Dist2D(curLocation, correctionLocation);
+	if (distance <= 1.0f)
+	{
+		this->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::None);
+		mIsLocationCorrection = false;
+	}
+	else
+	{
+		this->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::None);
+	}
+
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], cor[%ws], distance[%f]"), *curLocation.ToString(), *correctionLocation.ToString(), distance), ELogLevel::Error);
 }
