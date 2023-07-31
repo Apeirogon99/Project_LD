@@ -13,6 +13,17 @@ AArcherSkeletonArrow::AArcherSkeletonArrow()
 	mSphere->InitSphereRadius(20.f);
 
 	RootComponent = mSphere;
+
+	mMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ArrowMesh"));
+
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Arrow(TEXT("StaticMesh'/Game/UndeadPack/SkeletonEnemy/Mesh/Weapon/Bow/Arrow/SM_Arrow.SM_Arrow'"));
+	if (SM_Arrow.Succeeded())
+	{
+		mMesh->SetStaticMesh(SM_Arrow.Object);
+	}
+
+	mMesh->SetupAttachment(RootComponent);
+	mMesh->SetRelativeScale3D(FVector(2.f, 1.f, 2.f));
 }
 
 // Called when the game starts or when spawned
