@@ -8,6 +8,7 @@
 #include <Network/NetworkUtils.h>
 
 #include <GameFramework/PawnMovementComponent.h>
+#include <GameFramework/CharacterMovementComponent.h>
 #include <Blueprint/AIBlueprintHelperLibrary.h>
 
 ANPC_Game::ANPC_Game()
@@ -96,4 +97,18 @@ void ANPC_Game::MoveCorrection(const float inDeltaTime)
 	}
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("NPC Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
+}
+
+void ANPC_Game::StopMovementController(const FVector& inStopLocation)
+{
+	ACharacter* character = Cast<ACharacter>(this->GetPawn());
+	if (nullptr == character)
+	{
+		return;
+	}
+
+	IsCorrection = false;
+	mTargetLoction = inStopLocation;
+
+	character->SetActorLocation(FVector(inStopLocation.X, inStopLocation.Y, character->GetActorLocation().Z), false, nullptr, ETeleportType::ResetPhysics);
 }

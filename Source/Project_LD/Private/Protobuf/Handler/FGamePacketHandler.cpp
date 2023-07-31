@@ -298,6 +298,8 @@ bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_P
     Protocol::SRotator rotation = pkt.rotation();
     player->SetActorRotation(FRotator(rotation.pitch(), rotation.yaw(), rotation.roll()), ETeleportType::ResetPhysics);
 
+    FVector location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+
     const int64 timeStamp           = pkt.timestamp();
     const int64 nowServerTimeStamp  = controller->GetServerTimeStamp();
     const int64 durationTimeStamp   = nowServerTimeStamp - timeStamp;
@@ -311,6 +313,25 @@ bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_P
         return true;
     }
     animInstance->JumpAttackMontageSection(combo, millisecondDuration);
+
+    if (gameMode->CompareNetworkController(remoteController))
+    {
+        AMovementController* movementController = Cast<AMovementController>(remoteController);
+        if (nullptr == movementController)
+        {
+            return false;
+        }
+        movementController->StopMovementController(location);
+    }
+    else
+    {
+        ANPC_Game* npcController = Cast<ANPC_Game>(remoteController);
+        if (nullptr == npcController)
+        {
+            return false;
+        }
+        npcController->StopMovementController(location);
+    }
 
     return true;
 }

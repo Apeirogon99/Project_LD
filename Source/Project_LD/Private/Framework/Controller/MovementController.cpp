@@ -13,6 +13,7 @@
 #include <Framework/Game/PS_Game.h>
 #include "Components/CapsuleComponent.h"
 #include <GameFramework/PawnMovementComponent.h>
+#include <GameFramework/CharacterMovementComponent.h>
 #include "Framework/AnimInstance/AI_PlayerCharacter.h"
 
 #include <Framework/Character/AppearanceCharacter.h>
@@ -285,4 +286,18 @@ void AMovementController::RotationCorrection(const float inDeltaTime)
 	{
 		pawn->SetActorRotation(correctionRotation, ETeleportType::ResetPhysics);
 	}
+}
+
+void AMovementController::StopMovementController(const FVector& inStopLocation)
+{
+	ACharacter* character = Cast<ACharacter>(this->GetPawn());
+	if (nullptr == character)
+	{
+		return;
+	}
+
+	mIsLocationCorrection	= false;
+	mTargetLoction			= inStopLocation;
+
+	character->SetActorLocation(FVector(inStopLocation.X, inStopLocation.Y, character->GetActorLocation().Z), false, nullptr, ETeleportType::ResetPhysics);
 }

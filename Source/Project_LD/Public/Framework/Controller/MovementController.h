@@ -37,6 +37,8 @@ public:
 	void RotationDestination(const FRotator& inNewRotation, const int64& inTime);
 	void RotationCorrection(const float inDeltaTime);
 
+	void StopMovementController(const FVector& inStopLocation);
+
 public:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
 	UParticleSystem* mMouseCursorParticle;
