@@ -41,6 +41,10 @@ void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		OnInventoryChanged.Unbind();
 	}
+	if (OnMoneyChanged.IsBound() == true)
+	{
+		OnMoneyChanged.Unbind();
+	}
 }
 
 //GridInven에서 바인딩 된 델리게이트 호출
@@ -50,6 +54,10 @@ void UACInventoryComponent::Refresh()
 	{
 		ChangeInvenObjectArr();
 		OnInventoryChanged.ExecuteIfBound();
+	}
+	if (OnMoneyChanged.IsBound() == true)
+	{
+		OnMoneyChanged.ExecuteIfBound();
 	}
 }
 
@@ -172,30 +180,30 @@ bool UACInventoryComponent::TryAddItem(UItemObjectData* ItemObjectData)
 		return false;
 	}
 
-	if(ItemObjectData->IsValid() == true)
+	if (ItemObjectData->IsValid() == true)
 	{
 		//데이터 먹기
 		int itemIndex = 0;
 		for (UItemObjectData*& itemData : mInventoryData)
 		{
-			if(IsRoomAvailable(ItemObjectData,itemIndex))
+			if (IsRoomAvailable(ItemObjectData, itemIndex))
 			{
-				AddItemAt(ItemObjectData,itemIndex);
-				return true;	
+				AddItemAt(ItemObjectData, itemIndex);
+				return true;
 			}
 			itemIndex++;
 		}
-		
+
 		//돌려서 먹어보기
 		ItemObjectData->Rotate();
 		itemIndex = 0;
 		for (UItemObjectData*& itemData : mInventoryData)
 		{
-			if(IsRoomAvailable(ItemObjectData,itemIndex))
+			if (IsRoomAvailable(ItemObjectData, itemIndex))
 			{
-				AddItemAt(ItemObjectData,itemIndex);
+				AddItemAt(ItemObjectData, itemIndex);
 				return true;
-			}		
+			}
 			itemIndex++;
 		}
 		return false;

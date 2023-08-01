@@ -59,6 +59,9 @@ public:
 	
 	UPROPERTY()
 	UWidget* mEquipRightWeapon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Main | Money", meta = (BindWidget))
+	UTextBlock* TB_Money;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components | Detail | Canvas", meta = (BindWidget))
 	UCanvasPanel* DetailCanvas;
@@ -186,6 +189,9 @@ public:
 
 	UFUNCTION()
 	void ToggleDetailPanel();
+
+	UFUNCTION()
+	void UpdateMoney();
 
 public:
 	void InitInventory(UACInventoryComponent* InventoryComponent, float size, UACEquipment* EquipmentComponent);

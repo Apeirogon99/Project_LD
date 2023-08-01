@@ -37,6 +37,8 @@ void UUWInventory::NativeConstruct()
 	Btn_CloseInventory = Cast<UButton>(GetWidgetFromName(TEXT("Btn_CloseInventory")));
 	Btn_DetailStatus = Cast<UButton>(GetWidgetFromName(TEXT("Btn_DetailStatus")));
 
+	TB_Money = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Money")));
+
 	TB_Level = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Level")));
 	TB_CharacterName = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_CharacterName")));
 	TB_Power = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_Power")));
@@ -296,6 +298,8 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		return;
 	}
 
+	InventoryComponent->OnMoneyChanged.BindUFunction(this, FName("UpdateMoney"));
+
 	mGridInventory = this->WidgetTree->FindWidget(FName(TEXT("BW_GridInventory")));
 	if (mGridInventory != nullptr)
 	{
@@ -475,6 +479,16 @@ void UUWInventory::ToggleDetailPanel()
 			}
 		}
 	}
+}
+
+void UUWInventory::UpdateMoney()
+{
+	if (mInvenComponent == nullptr)
+	{
+		return;
+	}
+
+	TB_Money->SetText(FText::FromString(FString::FromInt(mInvenComponent->GetMoney())));
 }
 
 /*

@@ -21,6 +21,7 @@ enum class EInventoryType
 
 
 DECLARE_DELEGATE(FOnInventoryChanged);
+DECLARE_DELEGATE(FOnMoneyChanged);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECT_LD_API UACInventoryComponent : public UActorComponent
@@ -33,10 +34,12 @@ public:
 
 public:
 	FOnInventoryChanged OnInventoryChanged;
+	FOnMoneyChanged OnMoneyChanged;
 
 public:
 	FORCEINLINE int												GetColums() const							{ return mColums; }
 	FORCEINLINE int												GetRows() const								{ return mRows; }
+	FORCEINLINE int32											GetMoney() const							{ return mMoney; }
 	FORCEINLINE TArray<UItemObjectData*>		GetInventoryData() const				{ return mInventoryData; }
 	FORCEINLINE TArray<UItemObjectData*>		GetInventoryObjectArr() const		{ return mInventoryObjectArr; }
 

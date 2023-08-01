@@ -260,7 +260,7 @@ void AItemParent::FindPlayer()
 void AItemParent::ItemObjectDataInit(int32 Categoryid)
 {
 	//Mesh
-	if (Categoryid == 8)
+	if (Categoryid == 11)
 	{
 		mSkeletalMeshComponent->SetSkeletalMesh(mItemObjectData->GetItemData().GetMesh());
 	}
