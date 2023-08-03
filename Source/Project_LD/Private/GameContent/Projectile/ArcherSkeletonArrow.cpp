@@ -6,6 +6,8 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
+#include <Niagara/Classes/NiagaraSystem.h>
+#include <NiagaraComponent.h>
 
 // Sets default values
 AArcherSkeletonArrow::AArcherSkeletonArrow()
@@ -41,17 +43,16 @@ AArcherSkeletonArrow::AArcherSkeletonArrow()
 	mMesh->SetRelativeScale3D(FVector(2.f, 1.f, 2.f));
 	mMesh->SetCollisionProfileName(FName(TEXT("NoCollision")));
 
-	mArrowTail = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ArrowTail"));
+	mArrowTail = CreateDefaultSubobject<UNiagaraComponent>(TEXT("ArrowTail"));
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> P_ArrowTail(TEXT("ParticleSystem'/Game/GameContent/Projectile/Arrow/P_ArrowTail.P_ArrowTail'"));
-	if (P_ArrowTail.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NS_ArrowTail(TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Skeleton/Effect/NS_ArrowTail.NS_ArrowTail'"));
+	if (NS_ArrowTail.Succeeded())
 	{
-		mArrowTail->SetTemplate(P_ArrowTail.Object);
+		mArrowTail->SetAsset(NS_ArrowTail.Object);
 	}
-
 	mArrowTail->SetupAttachment(mMesh);
 	mArrowTail->SetRelativeLocation(FVector(0.f, -40.f, 0.f));
-
+	mArrowTail->SetRelativeRotation(FRotator(0.f,0.f,270.f));
 }
 
 // Called when the game starts or when spawned

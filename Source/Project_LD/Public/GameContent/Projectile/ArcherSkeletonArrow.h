@@ -7,6 +7,7 @@
 #include "ArcherSkeletonArrow.generated.h"
 
 class USphereComponent;
+class UNiagaraComponent;
 
 UCLASS()
 class PROJECT_LD_API AArcherSkeletonArrow : public AActor
@@ -37,7 +38,7 @@ private:
 	class UProjectileMovementComponent* mProjectileMovementComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UParticleSystemComponent* mArrowTail;
+	UNiagaraComponent* mArrowTail;
 
 	bool	mIsLocationCorrection;
 	FVector mTargetLoction;

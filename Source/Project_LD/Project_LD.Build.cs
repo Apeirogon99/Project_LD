@@ -54,7 +54,8 @@ public class Project_LD : ModuleRules
                             "NavigationSystem",
                             "AIModule",
                             "ProtobufLibrary",
-                            "CommonLibrary"
+                            "CommonLibrary",
+                            "Niagara"
                 }
             );
 
