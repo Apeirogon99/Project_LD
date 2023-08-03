@@ -117,6 +117,8 @@ void APC_Game::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	InputComponent->BindAction("ToggleInventory",IE_Pressed,this,&APC_Game::SwitchInventory);
+
+	InputComponent->BindAction("ToggleChat", IE_Pressed, this, &APC_Game::SwitchChat);
 }
 
 void APC_Game::SwitchUIMode()
@@ -145,4 +147,27 @@ void APC_Game::SwitchInventory()
 	UW_MainGame* maingame = Cast<UW_MainGame>(widget);
 
 	maingame->InventoryOpenRequest();
+}
+
+void APC_Game::SwitchChat()
+{
+	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+	if (nullptr == widget)
+	{
+		return;
+	}
+
+	UW_MainGame* mainGame = Cast<UW_MainGame>(widget);
+	if (nullptr == mainGame)
+	{
+		return;
+	}
+
+	mainGame->FocusChat();
 }

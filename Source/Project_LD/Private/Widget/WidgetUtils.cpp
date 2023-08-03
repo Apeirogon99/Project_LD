@@ -76,3 +76,25 @@ bool UWidgetUtils::SetReconfirm(AClientHUD* inHUD, const FString& inTitle, const
     inHUD->ShowWidgetFromName(TEXT("Reconfirm"));
     return true;
 }
+
+bool UWidgetUtils::SetChatWidget(AClientHUD* inHUD, const FString& inPlayerName, const FString& inMessage, const int32& inChatType)
+{
+
+    UW_Chat* chat = nullptr;
+    UUserWidget* outWidget = inHUD->GetWidgetFromName(TEXT("Chat"));
+    if (outWidget == nullptr)
+    {
+        return false;
+    }
+
+    chat = Cast<UW_Chat>(outWidget);
+    if (chat == nullptr)
+    {
+        return false;
+
+    }
+    chat->AddMessage(inPlayerName, inMessage, StaticCast<EChat>(inChatType));
+
+    //inHUD->ShowWidgetFromName(TEXT("BW_Chatting"));
+    return true;
+}

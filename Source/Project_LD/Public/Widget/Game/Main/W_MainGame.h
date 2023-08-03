@@ -19,7 +19,15 @@ class PROJECT_LD_API UW_MainGame : public UUserWidget
 
 public:
 	UFUNCTION()
+	void ChatOpen();
+
+	UFUNCTION()
+	void FocusChat();
+
+	UFUNCTION()
 	void InventoryOpenRequest();
+
+	UFUNCTION()
 	void InventoryOpenResponse();
 
 protected:
@@ -27,8 +35,12 @@ protected:
 
 private:
 	bool misInventoryOpen;
+	bool misChatOpen;
 
 private:
+	UPROPERTY(meta = (BindWidget))
+		UButton* Btn_Chat;
+
 	UPROPERTY(meta = (BindWidget))
 		UButton* Btn_Inventory;
 };

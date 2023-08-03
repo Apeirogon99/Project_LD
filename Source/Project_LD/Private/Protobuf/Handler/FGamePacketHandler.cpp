@@ -2,6 +2,8 @@
 #include <FCommonPacketHandler.h>
 
 #include <Network/NetworkUtils.h>
+#include <WidgetUtils.h>
+#include <PacketUtils.h>
 
 #include <Framework/Controller/MovementController.h>
 
@@ -331,6 +333,48 @@ bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_P
             return false;
         }
         npcController->StopMovementController(location);
+    }
+
+    return true;
+}
+
+bool Handle_S2C_Chat(ANetworkController* controller, Protocol::S2C_Chat& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    FString playerName  = UNetworkUtils::ConvertFString(pkt.name());
+    FString message     = UNetworkUtils::ConvertFString(pkt.message());
+    int32   chatType      = static_cast<int32>(pkt.chat_type());
+
+    //채팅창
+    bool ret = UWidgetUtils::SetChatWidget(clientHUD, playerName, message, chatType);
+    if (ret == false)
+    {
+        return false;
+    }
+    
+    //캐릭터 UI
+    const int64 remoteID = pkt.remote_id();
+    AController* remoteController = gameState->FindPlayerController(remoteID);
+    if (nullptr == remoteController)
+    {
+        return true;
     }
 
     return true;
@@ -851,7 +895,7 @@ bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_In
     const int64 gameObjectID = pkt.object_id();
     if (false == gameState->RemoveGameObject(gameObjectID))
     {
-        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_InsertInventory] INVALID Item in world : %d"), remoteID), ELogLevel::Error);
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_InsertInventory] INVALID Item in world : %d"), gameObjectID), ELogLevel::Error);
         return true;
     }
     

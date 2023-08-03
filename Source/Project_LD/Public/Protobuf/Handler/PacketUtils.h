@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include <Struct/Game/CharacterDatas.h>
+#include <Protobuf/Packet/PacketEnum.pb.h>
+#include <Protobuf/Packet/PacketStruct.pb.h>
 #include "PacketUtils.generated.h"
 
 
