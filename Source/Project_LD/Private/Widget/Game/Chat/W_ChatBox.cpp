@@ -2,9 +2,7 @@
 
 
 #include "Widget/Game/Chat/W_ChatBox.h"
-
 #include <Components/TextBlock.h>
-#include <Blueprint/WidgetLayoutLibrary.h>
 
 void UW_ChatBox::NativeConstruct()
 {
