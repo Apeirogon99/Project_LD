@@ -47,11 +47,12 @@ public:
 	const EEnemyStateType&			GetCurrentStateType()			{ return mCurrentState; }
 	
 public:
-	UPROPERTY(BlueprintReadOnly, Category = "ProgressBar")
-	float HealthBarPercent;
-
 	UFUNCTION(BlueprintPure, Category = "ProgressBar")
 	float GetHealthBarPercent() const;
+
+private:
+	UPROPERTY(BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
+	float mHealthBarPercent;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Enemy | Datas")

@@ -15,6 +15,16 @@ class PROJECT_LD_API UW_BottomUI : public UUserWidget
 	GENERATED_BODY()
 	
 public:
+	void Init();
+
+public:
+	UFUNCTION()
+	void UpdateHealthBar();
+
+	UFUNCTION()
+	void UpdateManaBar();
+
+public:
 	UPROPERTY()
 	UWidget* mPlayerBar;
 

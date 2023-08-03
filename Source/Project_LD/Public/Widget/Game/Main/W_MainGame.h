@@ -34,6 +34,9 @@ public:
 	UFUNCTION()
 	void InventoryOpenResponse();
 
+public:
+	void Init();
+
 protected:
 	virtual void NativeConstruct() override;
 

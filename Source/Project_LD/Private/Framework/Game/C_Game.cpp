@@ -8,6 +8,13 @@
 
 #include "GameContent/Item/ItemParent.h"
 
+#include <Widget/Handler/ClientHUD.h>
+#include <Widget/Game/Main/W_MainGame.h>
+
+#include <Game/GM_Game.h>
+#include <Game/PC_Game.h>
+#include <Game/PS_Game.h>
+
 #include "GameContent/Enemy/E_Slime.h"
 #include "GameContent/Enemy/E_NomalSkeleton.h"
 #include "GameContent/Enemy/E_ArcherSkeleton.h"
@@ -50,7 +57,41 @@ AC_Game::AC_Game()
 
 AC_Game::~AC_Game()
 {
+	/*
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
 
+	AGM_Game* gamemode = Cast<AGM_Game>(world->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return;
+	}
+
+	APC_Game* playercontroller = Cast<APC_Game>(gamemode->GetNetworkController());
+	if (nullptr == playercontroller)
+	{
+		return;
+	}
+
+	APS_Game* playerstate = playercontroller->GetPlayerState<APS_Game>();
+	if (nullptr == playerstate)
+	{
+		return;
+	}
+
+	if (playerstate->OnCharacterHealthChanged.IsBound())
+	{
+		playerstate->OnCharacterHealthChanged.Clear();
+	}
+
+	if (playerstate->OnCharacterManaChanged.IsBound())
+	{
+		playerstate->OnCharacterManaChanged.Clear();
+	}
+	*/
 }
 
 void AC_Game::BeginPlay()

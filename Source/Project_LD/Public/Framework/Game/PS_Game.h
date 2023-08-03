@@ -13,6 +13,9 @@
  * 
  */
 
+DECLARE_MULTICAST_DELEGATE(FOnCharacterHealthChanged)
+DECLARE_MULTICAST_DELEGATE(FOnCharacterManaChanged)
+
 UCLASS()
 class PROJECT_LD_API APS_Game : public ANPS_Game
 {
@@ -23,12 +26,35 @@ public:
 	~APS_Game();
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component", meta = (AllowPrivateAccess = "true"))
+	FOnCharacterHealthChanged OnCharacterHealthChanged;
+	FOnCharacterManaChanged OnCharacterManaChanged;
+
+public:
+	void UpdateCurrentStats();
+	void InitializeLocalPlayerState();
+
+public:
+	UFUNCTION(BlueprintPure, Category = "ProgressBar")
+		float GetHealthBarPercent() const;
+
+	UFUNCTION(BlueprintPure, Category = "ProgressBar")
+		float GetManaBarPercent() const;
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component")
 	UACInventoryComponent* mInventoryComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component")
 	UACEquipment* mEquipmentComponent;
 
-public:
-	void InitializeLocalPlayerState();
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
+	float mHealthBarPercent;
+
+	UPROPERTY(BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
+	float mManaBarPercent;
+
+protected:
+	virtual void UpdateHealthBar();
+	virtual void UpdateManaBar();
 };

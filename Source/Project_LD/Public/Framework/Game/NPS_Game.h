@@ -11,6 +11,8 @@
 /**
  * 
  */
+
+
 UCLASS()
 class PROJECT_LD_API ANPS_Game : public ANetworkPlayerState
 {
@@ -21,6 +23,7 @@ public:
 	~ANPS_Game();
 
 public:
+	void UpdateCurrentStats(); // stats Update
 	void SetRemotePlayerID(const int64 inRemoteID);
 	void SetCharacterData(const FCharacterData& InCharacterDatas);
 	void SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment);
@@ -33,14 +36,11 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState")
-		int64 mRemoteID;
+	int64 mRemoteID;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Data")
-		FCharacterData mCharacterData;
+	FCharacterData mCharacterData;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Status")
-		FCharacterStats	mCharacterStats;
-
-private:
-	void UpdateHealthBar();
+	FCharacterStats	mCharacterStats;
 };

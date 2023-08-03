@@ -30,7 +30,7 @@ void AEnemyState::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 	if (OnStatsChanged.IsBound())
 	{
-		OnStatsChanged.Broadcast();
+		OnStatsChanged.Clear();
 	}
 }
 
@@ -94,12 +94,12 @@ void AEnemyState::SetEnemyState(const EEnemyStateType& inStateType, const float 
 
 float AEnemyState::GetHealthBarPercent() const
 {
-	return HealthBarPercent;
+	return mHealthBarPercent;
 }
 
 void AEnemyState::UpdateHealthBar()
 {
-	HealthBarPercent = mStats.GetCurrentStats().GetHealth() / mStats.GetMaxStats().GetHealth();
+	mHealthBarPercent = mStats.GetCurrentStats().GetHealth() / mStats.GetMaxStats().GetHealth();
 	if (OnStatsChanged.IsBound())
 	{
 		OnStatsChanged.Broadcast();

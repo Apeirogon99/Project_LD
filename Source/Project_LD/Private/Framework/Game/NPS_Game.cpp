@@ -11,6 +11,12 @@ ANPS_Game::ANPS_Game()
 
 ANPS_Game::~ANPS_Game()
 {
+
+}
+
+void ANPS_Game::UpdateCurrentStats()
+{
+	//stats update
 }
 
 void ANPS_Game::SetRemotePlayerID(const int64 inRemoteID)
@@ -71,8 +77,4 @@ void ANPS_Game::calculationStats()
 	}
 
 	mCharacterStats.FloatToFData(Total);
-}
-
-void ANPS_Game::UpdateHealthBar()
-{
 }

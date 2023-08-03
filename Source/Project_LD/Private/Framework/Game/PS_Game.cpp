@@ -5,6 +5,7 @@
 #include <Handler/ClientHUD.h>
 #include <Widget/Game/Inventory/UWInventory.h>
 #include <Widget/Game/Item/W_ItemSpace.h>
+#include <Widget/Game/Main/W_MainGame.h>
 
 #include <GM_Game.h>
 #include <PC_Game.h>
@@ -18,6 +19,24 @@ APS_Game::APS_Game()
 
 APS_Game::~APS_Game()
 {
+}
+
+float APS_Game::GetHealthBarPercent() const
+{
+	return mHealthBarPercent;
+}
+
+float APS_Game::GetManaBarPercent() const
+{
+	return mManaBarPercent;
+}
+
+void APS_Game::UpdateCurrentStats()
+{
+	//UpdateStats
+
+	UpdateHealthBar();
+	UpdateManaBar();
 }
 
 void APS_Game::InitializeLocalPlayerState()
@@ -75,6 +94,29 @@ void APS_Game::InitializeLocalPlayerState()
 	calculationStats();
 
 	mCharacterStats.SetCurrentStats(mCharacterStats.GetMaxStats());
+
+	auto maingame = clientHUD->GetWidgetFromName(TEXT("MainGame"));
+	Cast<UW_MainGame>(maingame)->Init();
+
+	UpdateCurrentStats();
+}
+
+void APS_Game::UpdateHealthBar()
+{
+	mHealthBarPercent = mCharacterStats.GetCurrentStats().GetHealth() / mCharacterStats.GetMaxStats().GetHealth();
+	if (OnCharacterHealthChanged.IsBound())
+	{
+		OnCharacterHealthChanged.Broadcast();
+	}
+}
+
+void APS_Game::UpdateManaBar()
+{
+	mManaBarPercent = mCharacterStats.GetCurrentStats().GetMana() / mCharacterStats.GetMaxStats().GetMana();
+	if (OnCharacterManaChanged.IsBound())
+	{
+		OnCharacterManaChanged.Broadcast();
+	}
 }
 
 //void APS_Game::UpdateInventory()

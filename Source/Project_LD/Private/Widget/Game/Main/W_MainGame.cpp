@@ -4,6 +4,7 @@
 #include "Widget/Game/Main/W_MainGame.h"
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Chat/W_Chat.h>
+#include <Widget/Game/Main/W_BottomUI.h>
 #include "Components/Button.h"
 #include "Blueprint/WidgetTree.h"
 
@@ -37,6 +38,11 @@ void UW_MainGame::NativeConstruct()
 
 	misInventoryOpen = false;
 	misChatOpen = false;
+}
+
+void UW_MainGame::Init()
+{
+	Cast<UW_BottomUI>(mBottomUI)->Init();
 }
 
 void UW_MainGame::ChatOpen()
