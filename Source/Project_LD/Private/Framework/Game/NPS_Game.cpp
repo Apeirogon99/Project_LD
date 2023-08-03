@@ -72,3 +72,7 @@ void ANPS_Game::calculationStats()
 
 	mCharacterStats.FloatToFData(Total);
 }
+
+void ANPS_Game::UpdateHealthBar()
+{
+}

@@ -18,6 +18,10 @@ class PROJECT_LD_API UW_MainGame : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UPROPERTY()
+	UWidget* mBottomUI;
+
+public:
 	UFUNCTION()
 	void ChatOpen();
 

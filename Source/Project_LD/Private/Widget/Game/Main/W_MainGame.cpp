@@ -2,11 +2,13 @@
 
 
 #include "Widget/Game/Main/W_MainGame.h"
-#include <Game/GM_Game.h>
-#include <Game/PC_Game.h>
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Chat/W_Chat.h>
 #include "Components/Button.h"
+#include "Blueprint/WidgetTree.h"
+
+#include <Game/GM_Game.h>
+#include <Game/PC_Game.h>
 
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FGamePacketHandler.h>
@@ -25,6 +27,12 @@ void UW_MainGame::NativeConstruct()
 	if (Btn_Inventory != nullptr)
 	{
 		Btn_Chat->OnClicked.AddUniqueDynamic(this, &UW_MainGame::ChatOpen);
+	}
+
+	mBottomUI = this->WidgetTree->FindWidget(FName(TEXT("BW_BottomUI")));
+	if (mBottomUI == nullptr)
+	{
+		return;
 	}
 
 	misInventoryOpen = false;

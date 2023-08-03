@@ -40,4 +40,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Status")
 		FCharacterStats	mCharacterStats;
+
+private:
+	void UpdateHealthBar();
 };
