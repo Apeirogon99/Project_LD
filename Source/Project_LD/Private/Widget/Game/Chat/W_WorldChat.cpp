@@ -12,6 +12,7 @@ void UW_WorldChat::NativeConstruct()
 
 	mChatTime = 0.0f;
 	mIsMessage = false;
+	this->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UW_WorldChat::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -45,7 +46,7 @@ void UW_WorldChat::SetWorldChat(const FString& inPlayerName, const FString& inMe
 	FText newChatLog = FText::FromString(tempChatLog);
 	mChatLog->SetText(newChatLog);
 
-	mChatTime = 3.0f;
+	mChatTime = (3.0f - inDuration) >= 3.0f ? 3.0f : (3.0f - inDuration);
 	mIsMessage = true;
 
 	this->SetVisibility(ESlateVisibility::Visible);

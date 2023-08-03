@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Framework/Character/AppearanceCharacter.h"
+#include <Components/WidgetComponent.h>
 #include "NC_Game.generated.h"
 
 /**
@@ -23,6 +24,7 @@ public:
 
 public:
 	FORCEINLINE bool GetIsAttack() const { return bIsAttack; }
+	void ShowWorldChat(const FString& inPlayerName, const FString& inMessage, const float& inDuration);
 
 protected:
 	virtual void BeginPlay() override;
@@ -32,4 +34,7 @@ protected:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationStats", meta = (AllowPrivateAccess = "true"))
 	bool bIsAttack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget", meta = (AllowPrivateAccess = "true"))
+	UWidgetComponent* mChatWidget;
 };

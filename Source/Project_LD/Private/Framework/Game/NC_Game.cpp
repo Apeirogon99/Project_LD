@@ -6,7 +6,10 @@
 #include "Framework/Game/GS_Game.h"
 #include "Framework/Game/PS_Game.h"
 
+#include <Widget/Game/Chat/W_WorldChat.h>
+
 #include "Components/CapsuleComponent.h"
+#include <Components/WidgetComponent.h>
 #include "GameFramework/CharacterMovementComponent.h"
 
 ANC_Game::ANC_Game()
@@ -29,11 +32,38 @@ ANC_Game::ANC_Game()
 	AIControllerClass = ANPC_Game::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
+	TSubclassOf<UW_WorldChat> chatWidgetClass = StaticLoadClass(UW_WorldChat::StaticClass(), NULL, TEXT("WidgetBlueprint'/Game/Blueprint/Widget/Game/Chatting/BW_WorldChat.BW_WorldChat_C'"));
+	if (chatWidgetClass)
+	{
+		mChatWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("mChatWidget"));
+		mChatWidget->SetupAttachment(RootComponent);
+		mChatWidget->SetWidgetClass(chatWidgetClass);
+		mChatWidget->SetCollisionProfileName(TEXT("NoCollision"));
+		mChatWidget->SetWidgetSpace(EWidgetSpace::Screen);
+		mChatWidget->SetDrawAtDesiredSize(true);
+	}
+
 	bIsAttack = false;
 }
 
 ANC_Game::~ANC_Game()
 {
+}
+
+void ANC_Game::ShowWorldChat(const FString& inPlayerName, const FString& inMessage, const float& inDuration)
+{
+	UUserWidget* widget = mChatWidget->GetUserWidgetObject();
+	if (nullptr == widget)
+	{
+		return;
+	}
+
+	UW_WorldChat* chat = Cast<UW_WorldChat>(widget);
+	if (nullptr == chat)
+	{
+		return;
+	}
+	chat->SetWorldChat(inPlayerName, inMessage, inDuration);
 }
 
 void ANC_Game::BeginPlay()

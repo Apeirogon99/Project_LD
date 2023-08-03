@@ -377,6 +377,16 @@ bool Handle_S2C_Chat(ANetworkController* controller, Protocol::S2C_Chat& pkt)
         return true;
     }
 
+    ANC_Game* character = Cast<ANC_Game>(remoteController->GetPawn());
+    if (nullptr == character)
+    {
+        return false;
+    }
+
+    const int64 timeStamp = pkt.timestamp();
+    const int64 durationTime = controller->GetServerTimeStamp() - timeStamp;
+    character->ShowWorldChat(playerName, message, durationTime / 1000.0f);
+
     return true;
 }
 
@@ -471,6 +481,7 @@ bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C
     const int64     objectID = pkt.object_id();
     const FVector   location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
     const int64     timeStamp = pkt.timestamp();
+    const int64     durationTime = controller->GetServerTimeStamp() - timeStamp;
 
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
@@ -484,7 +495,7 @@ bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C
     {
         return false;
     }
-    arrow->ArrowSyncMovement(location, timeStamp / 1000.0f);
+    arrow->ArrowSyncMovement(location, durationTime / 1000.0f);
 
     return true;
 }
