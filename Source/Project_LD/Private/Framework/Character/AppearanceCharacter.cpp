@@ -218,6 +218,22 @@ void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterP
 	}
 }
 
+void AAppearanceCharacter::UpdateCharacterMontage(UAnimMontage* inMontageToPlay, const float& inStartAtTime)
+{
+	USkeletalMeshComponent* meshRoot = GetMesh();
+	meshRoot->GetAnimInstance()->Montage_Play(inMontageToPlay, 1.0f, EMontagePlayReturnType::MontageLength, inStartAtTime);
+
+	int32 maxChild = meshRoot->GetNumChildrenComponents();
+	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
+	{
+		USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
+		if (partMesh->GetAnimInstance())
+		{
+			partMesh->GetAnimInstance()->Montage_Play(inMontageToPlay, 1.0f, EMontagePlayReturnType::MontageLength, inStartAtTime);
+		}
+	}
+}
+
 void AAppearanceCharacter::UpdateDefaultAnimation()
 {
 	/*

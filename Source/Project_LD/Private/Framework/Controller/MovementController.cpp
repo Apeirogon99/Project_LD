@@ -48,10 +48,10 @@ void AMovementController::PlayerTick(float DeltaTime)
 		MoveCorrection(DeltaTime);
 	}
 
-	if (mIsRotationCorrection)
-	{
-		RotationCorrection(DeltaTime);
-	}
+	//if (mIsRotationCorrection)
+	//{
+	//	RotationCorrection(DeltaTime);
+	//}
 }
 
 void AMovementController::SetupInputComponent()

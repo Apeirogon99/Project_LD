@@ -127,6 +127,17 @@ void UAI_PlayerCharacter::AnimNotify_AttackServerCheck()
 
 void UAI_PlayerCharacter::JumpAttackMontageSection(const int32 inAttackCount, const float inTimeStamp)
 {
-	Montage_Play(mAttackMontage[inAttackCount], 1.f, EMontagePlayReturnType::MontageLength, inTimeStamp);
+	APawn* pawn = this->TryGetPawnOwner();
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
+	AAppearanceCharacter* character = Cast<AAppearanceCharacter>(pawn);
+	if (nullptr == character)
+	{
+		return;
+	}
+	character->UpdateCharacterMontage(mAttackMontage[inAttackCount], inTimeStamp);
 	mAttackCount++;
 }

@@ -30,6 +30,7 @@ public:
 	void UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance);
 
 	void UpdateCharacterPose(const ECharacterPose InCharacterPose);
+	void UpdateCharacterMontage(UAnimMontage* inMontageToPlay, const float& inStartAtTime);
 	void UpdateDefaultAnimation();
 
 	void SetSkeletalPartColor(USkeletalMeshComponent* inMesh, const FString& inParamterName, int32 inIndex, uint32 inColor);
