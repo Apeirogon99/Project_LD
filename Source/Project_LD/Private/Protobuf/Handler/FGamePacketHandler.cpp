@@ -265,6 +265,43 @@ bool Handle_S2C_PlayAnimation(ANetworkController* controller, Protocol::S2C_Play
     return true;
 }
 
+bool Handle_S2C_DetectChangePlayer(ANetworkController* controller, Protocol::S2C_DetectChangePlayer& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 remoteID = pkt.remote_id();
+    AController* remoteController = gameState->FindPlayerController(remoteID);
+    if (nullptr == remoteController)
+    {
+        return true;
+    }
+
+    ANPS_Game* playerState = remoteController->GetPlayerState<ANPS_Game>();
+    if (nullptr == playerState)
+    {
+        return true;
+    }
+
+
+    return true;
+}
+
 bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_PlayerAutoAttack& pkt)
 {
     UWorld* world = controller->GetWorld();

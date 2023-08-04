@@ -19,31 +19,32 @@ enum class EPakcetID: uint16
 	S2C_MovementCharacter = 2009,
 	C2S_PlayAnimation = 2010,
 	S2C_PlayAnimation = 2011,
-	C2S_PlayerAutoAttack = 2012,
-	S2C_PlayerAutoAttack = 2013,
-	C2S_Chat = 2014,
-	S2C_Chat = 2015,
-	S2C_AppearItem = 2016,
-	S2C_AppearArrow = 2017,
-	S2C_MovementProjectile = 2018,
-	S2C_AppearEnemy = 2019,
-	S2C_DetectChangeEnemy = 2020,
-	S2C_MovementEnemy = 2021,
-	S2C_EnemyAutoAttack = 2022,
-	S2C_HitEnemy = 2023,
-	S2C_DeathEnemy = 2024,
-	S2C_DisAppearGameObject = 2025,
-	C2S_LoadInventory = 2026,
-	S2C_LoadInventory = 2027,
-	C2S_InsertInventory = 2028,
-	S2C_InsertInventory = 2029,
-	C2S_UpdateInventory = 2030,
-	S2C_UpdateInventory = 2031,
-	C2S_DeleteInventory = 2032,
-	S2C_DeleteInventory = 2033,
-	S2C_RollbackInventory = 2034,
-	C2S_ReplaceEqipment = 2035,
-	S2C_ReplaceEqipment = 2036,
+	S2C_DetectChangePlayer = 2012,
+	C2S_PlayerAutoAttack = 2013,
+	S2C_PlayerAutoAttack = 2014,
+	C2S_Chat = 2015,
+	S2C_Chat = 2016,
+	S2C_AppearItem = 2017,
+	S2C_AppearArrow = 2018,
+	S2C_MovementProjectile = 2019,
+	S2C_AppearEnemy = 2020,
+	S2C_DetectChangeEnemy = 2021,
+	S2C_MovementEnemy = 2022,
+	S2C_EnemyAutoAttack = 2023,
+	S2C_HitEnemy = 2024,
+	S2C_DeathEnemy = 2025,
+	S2C_DisAppearGameObject = 2026,
+	C2S_LoadInventory = 2027,
+	S2C_LoadInventory = 2028,
+	C2S_InsertInventory = 2029,
+	S2C_InsertInventory = 2030,
+	C2S_UpdateInventory = 2031,
+	S2C_UpdateInventory = 2032,
+	C2S_DeleteInventory = 2033,
+	S2C_DeleteInventory = 2034,
+	S2C_RollbackInventory = 2035,
+	C2S_ReplaceEqipment = 2036,
+	S2C_ReplaceEqipment = 2037,
 };
 */
 
@@ -55,6 +56,7 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
 bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C_DisAppearCharacter& pkt);
 bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_MovementCharacter& pkt);
 bool Handle_S2C_PlayAnimation(ANetworkController* controller, Protocol::S2C_PlayAnimation& pkt);
+bool Handle_S2C_DetectChangePlayer(ANetworkController* controller, Protocol::S2C_DetectChangePlayer& pkt);
 bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_PlayerAutoAttack& pkt);
 bool Handle_S2C_Chat(ANetworkController* controller, Protocol::S2C_Chat& pkt);
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt);
@@ -86,6 +88,7 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DisAppearCharacter)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DisAppearCharacter>(Handle_S2C_DisAppearCharacter, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_MovementCharacter)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_MovementCharacter>(Handle_S2C_MovementCharacter, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_PlayAnimation)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_PlayAnimation>(Handle_S2C_PlayAnimation, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DetectChangePlayer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DetectChangePlayer>(Handle_S2C_DetectChangePlayer, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_PlayerAutoAttack)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_PlayerAutoAttack>(Handle_S2C_PlayerAutoAttack, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_Chat)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_Chat>(Handle_S2C_Chat, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearItem)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearItem>(Handle_S2C_AppearItem, controller, buffer, len); };
