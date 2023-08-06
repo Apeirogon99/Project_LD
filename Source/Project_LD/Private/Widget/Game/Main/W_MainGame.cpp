@@ -174,3 +174,38 @@ void UW_MainGame::InventoryOpenResponse()
 	playerController->SwitchUIMode();
 	
 }
+
+void UW_MainGame::SkillTreeOpenRequest()
+{
+	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return;
+	}
+
+	APC_Game* playerController = Cast<APC_Game>(gamemode->GetNetworkController());
+	if (GetOwningPlayer() != playerController)
+	{
+		return;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(gamemode->GetClientHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	if (misSkillTreeOpen)
+	{
+		clientHUD->CleanWidgetFromName(FString(TEXT("SkillTree")));
+	}
+	else
+	{
+		clientHUD->ShowWidgetFromName(FString(TEXT("SkillTree")));
+	}
+	misSkillTreeOpen = !misSkillTreeOpen;
+}
+
+void UW_MainGame::SkillTreeOpenResponse()
+{
+}

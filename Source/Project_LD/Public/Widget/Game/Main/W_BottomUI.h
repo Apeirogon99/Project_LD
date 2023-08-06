@@ -9,6 +9,8 @@
 /**
  * 
  */
+class UTexture2D;
+
 UCLASS()
 class PROJECT_LD_API UW_BottomUI : public UUserWidget
 {
@@ -28,6 +30,24 @@ public:
 	UPROPERTY()
 	UWidget* mPlayerBar;
 
+	UPROPERTY()
+	UWidget* mSkill_Q;
+
+	UPROPERTY()
+	UWidget* mSkill_W;
+
+	UPROPERTY()
+	UWidget* mSkill_E;
+
+	UPROPERTY()
+	UWidget* mSkill_R;
+
 protected:
 	virtual void NativeConstruct() override;
+	virtual void NativePreConstruct() override;
+	virtual void NativeDestruct() override;
+
+private:
+	UPROPERTY()
+	TArray<UTexture2D*> mSkillTextureArray;
 };

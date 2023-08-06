@@ -117,8 +117,13 @@ void APC_Game::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	InputComponent->BindAction("ToggleInventory",IE_Pressed,this,&APC_Game::SwitchInventory);
-
 	InputComponent->BindAction("ToggleChat", IE_Pressed, this, &APC_Game::SwitchChat);
+	InputComponent->BindAction("ToggleSkillTree", IE_Pressed, this, &APC_Game::SwitchSkillTree);
+	
+	InputComponent->BindAction("SkillQ", IE_Pressed, this, &APC_Game::UseSkill_Q);
+	InputComponent->BindAction("SkillW", IE_Pressed, this, &APC_Game::UseSkill_W);
+	InputComponent->BindAction("SkillE", IE_Pressed, this, &APC_Game::UseSkill_E);
+	InputComponent->BindAction("SkillR", IE_Pressed, this, &APC_Game::UseSkill_R);
 }
 
 void APC_Game::SwitchUIMode()
@@ -145,6 +150,10 @@ void APC_Game::SwitchInventory()
 	}
 
 	UW_MainGame* maingame = Cast<UW_MainGame>(widget);
+	if (nullptr == maingame)
+	{
+		return;
+	}
 
 	maingame->InventoryOpenRequest();
 }
@@ -170,4 +179,43 @@ void APC_Game::SwitchChat()
 	}
 
 	mainGame->FocusChat();
+}
+
+void APC_Game::SwitchSkillTree()
+{
+	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+	if (nullptr == widget)
+	{
+		return;
+	}
+
+	UW_MainGame* maingame = Cast<UW_MainGame>(widget);
+	if (nullptr == maingame)
+	{
+		return;
+	}
+
+	maingame->SkillTreeOpenRequest();
+}
+
+void APC_Game::UseSkill_Q()
+{
+}
+
+void APC_Game::UseSkill_W()
+{
+}
+
+void APC_Game::UseSkill_E()
+{
+}
+
+void APC_Game::UseSkill_R()
+{
 }

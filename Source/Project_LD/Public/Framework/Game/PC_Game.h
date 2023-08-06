@@ -19,6 +19,17 @@ public:
 	~APC_Game();
 
 public:
+	void SwitchUIMode();
+	void SwitchInventory();
+	void SwitchChat();
+	void SwitchSkillTree();
+
+	void UseSkill_Q();
+	void UseSkill_W();
+	void UseSkill_E();
+	void UseSkill_R();
+
+public:
 	virtual void BeginPlay() override;
 	
 public:
@@ -33,10 +44,5 @@ public:
 
 protected:
 	virtual void SetupInputComponent() override;
-
-public:
-	void SwitchUIMode();
-	void SwitchInventory();
-	void SwitchChat();
 };
 	

@@ -34,6 +34,12 @@ public:
 	UFUNCTION()
 	void InventoryOpenResponse();
 
+	UFUNCTION()
+	void SkillTreeOpenRequest();
+
+	UFUNCTION()
+	void SkillTreeOpenResponse();
+
 public:
 	void Init();
 
@@ -42,6 +48,7 @@ protected:
 
 private:
 	bool misInventoryOpen;
+	bool misSkillTreeOpen;
 	bool misChatOpen;
 
 private:
