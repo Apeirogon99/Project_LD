@@ -24,27 +24,35 @@ enum class EPakcetID: uint16
 	S2C_PlayerAutoAttack = 2014,
 	C2S_Chat = 2015,
 	S2C_Chat = 2016,
-	S2C_AppearItem = 2017,
-	S2C_AppearArrow = 2018,
-	S2C_MovementProjectile = 2019,
-	S2C_AppearEnemy = 2020,
-	S2C_DetectChangeEnemy = 2021,
-	S2C_MovementEnemy = 2022,
-	S2C_EnemyAutoAttack = 2023,
-	S2C_HitEnemy = 2024,
-	S2C_DeathEnemy = 2025,
-	S2C_DisAppearGameObject = 2026,
-	C2S_LoadInventory = 2027,
-	S2C_LoadInventory = 2028,
-	C2S_InsertInventory = 2029,
-	S2C_InsertInventory = 2030,
-	C2S_UpdateInventory = 2031,
-	S2C_UpdateInventory = 2032,
-	C2S_DeleteInventory = 2033,
-	S2C_DeleteInventory = 2034,
-	S2C_RollbackInventory = 2035,
-	C2S_ReplaceEqipment = 2036,
-	S2C_ReplaceEqipment = 2037,
+	C2S_LoadFriendList = 2017,
+	S2C_LoadFriendList = 2018,
+	C2S_RequestFriend = 2019,
+	S2C_RequestFriend = 2020,
+	C2S_BlockFriend = 2021,
+	S2C_BlockFriend = 2022,
+	S2C_ConnectFriend = 2023,
+	S2C_DisConnectFriend = 2024,
+	S2C_AppearItem = 2025,
+	S2C_AppearArrow = 2026,
+	S2C_MovementProjectile = 2027,
+	S2C_AppearEnemy = 2028,
+	S2C_DetectChangeEnemy = 2029,
+	S2C_MovementEnemy = 2030,
+	S2C_EnemyAutoAttack = 2031,
+	S2C_HitEnemy = 2032,
+	S2C_DeathEnemy = 2033,
+	S2C_DisAppearGameObject = 2034,
+	C2S_LoadInventory = 2035,
+	S2C_LoadInventory = 2036,
+	C2S_InsertInventory = 2037,
+	S2C_InsertInventory = 2038,
+	C2S_UpdateInventory = 2039,
+	S2C_UpdateInventory = 2040,
+	C2S_DeleteInventory = 2041,
+	S2C_DeleteInventory = 2042,
+	S2C_RollbackInventory = 2043,
+	C2S_ReplaceEqipment = 2044,
+	S2C_ReplaceEqipment = 2045,
 };
 */
 
@@ -59,6 +67,11 @@ bool Handle_S2C_PlayAnimation(ANetworkController* controller, Protocol::S2C_Play
 bool Handle_S2C_DetectChangePlayer(ANetworkController* controller, Protocol::S2C_DetectChangePlayer& pkt);
 bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_PlayerAutoAttack& pkt);
 bool Handle_S2C_Chat(ANetworkController* controller, Protocol::S2C_Chat& pkt);
+bool Handle_S2C_LoadFriendList(ANetworkController* controller, Protocol::S2C_LoadFriendList& pkt);
+bool Handle_S2C_RequestFriend(ANetworkController* controller, Protocol::S2C_RequestFriend& pkt);
+bool Handle_S2C_BlockFriend(ANetworkController* controller, Protocol::S2C_BlockFriend& pkt);
+bool Handle_S2C_ConnectFriend(ANetworkController* controller, Protocol::S2C_ConnectFriend& pkt);
+bool Handle_S2C_DisConnectFriend(ANetworkController* controller, Protocol::S2C_DisConnectFriend& pkt);
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt);
 bool Handle_S2C_AppearArrow(ANetworkController* controller, Protocol::S2C_AppearArrow& pkt);
 bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C_MovementProjectile& pkt);
@@ -91,6 +104,11 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DetectChangePlayer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DetectChangePlayer>(Handle_S2C_DetectChangePlayer, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_PlayerAutoAttack)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_PlayerAutoAttack>(Handle_S2C_PlayerAutoAttack, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_Chat)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_Chat>(Handle_S2C_Chat, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_LoadFriendList)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_LoadFriendList>(Handle_S2C_LoadFriendList, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_RequestFriend)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_RequestFriend>(Handle_S2C_RequestFriend, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_BlockFriend)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_BlockFriend>(Handle_S2C_BlockFriend, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_ConnectFriend)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_ConnectFriend>(Handle_S2C_ConnectFriend, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DisConnectFriend)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DisConnectFriend>(Handle_S2C_DisConnectFriend, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearItem)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearItem>(Handle_S2C_AppearItem, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearArrow)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearArrow>(Handle_S2C_AppearArrow, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_MovementProjectile)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_MovementProjectile>(Handle_S2C_MovementProjectile, controller, buffer, len); };
@@ -115,6 +133,9 @@ public:
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_PlayAnimation& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_PlayAnimation)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_PlayerAutoAttack& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_PlayerAutoAttack)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_Chat& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_Chat)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LoadFriendList& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LoadFriendList)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_RequestFriend& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_RequestFriend)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_BlockFriend& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_BlockFriend)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LoadInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LoadInventory)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_InsertInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_InsertInventory)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_UpdateInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_UpdateInventory)); }

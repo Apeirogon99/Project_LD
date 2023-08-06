@@ -215,7 +215,7 @@ bool ANetworkGameMode::IsNetworkInit()
 		return false;
 	}
 
-	mClientHUD->FadeOut();
+	//mClientHUD->FadeOut();
 
 	NetworkGameModeLog(FString(TEXT("complete network init")));
 

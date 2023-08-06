@@ -95,6 +95,8 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     playerState->mInventoryComponent->LoadItem(pkt.item(), pkt.money());
     playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
 
+
+    gameMode->GetClientHUD()->FadeOut();
     return true;
 }
 
@@ -425,6 +427,31 @@ bool Handle_S2C_Chat(ANetworkController* controller, Protocol::S2C_Chat& pkt)
     character->ShowWorldChat(playerName, message, durationTime / 1000.0f);
 
     return true;
+}
+
+bool Handle_S2C_LoadFriendList(ANetworkController* controller, Protocol::S2C_LoadFriendList& pkt)
+{
+    return false;
+}
+
+bool Handle_S2C_RequestFriend(ANetworkController* controller, Protocol::S2C_RequestFriend& pkt)
+{
+    return false;
+}
+
+bool Handle_S2C_BlockFriend(ANetworkController* controller, Protocol::S2C_BlockFriend& pkt)
+{
+    return false;
+}
+
+bool Handle_S2C_ConnectFriend(ANetworkController* controller, Protocol::S2C_ConnectFriend& pkt)
+{
+    return false;
+}
+
+bool Handle_S2C_DisConnectFriend(ANetworkController* controller, Protocol::S2C_DisConnectFriend& pkt)
+{
+    return false;
 }
 
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt)
