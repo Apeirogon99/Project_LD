@@ -378,6 +378,82 @@ bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_P
     return true;
 }
 
+bool Handle_S2C_UpdateExperience(ANetworkController* controller, Protocol::S2C_UpdateExperience& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 remoteID = pkt.remote_id();
+    AController* remoteController = gameState->FindPlayerController(remoteID);
+    if (nullptr == remoteController)
+    {
+        return true;
+    }
+
+    if (false  == gameMode->CompareNetworkController(remoteController))
+    {
+        return true;
+    }
+
+    //TODO: 경험치 증가
+
+    return true;
+}
+
+bool Handle_S2C_LevelUp(ANetworkController* controller, Protocol::S2C_LevelUp& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 remoteID = pkt.remote_id();
+    AController* remoteController = gameState->FindPlayerController(remoteID);
+    if (nullptr == remoteController)
+    {
+        return true;
+    }
+
+    //TODO: 레벨업
+
+    if (false == gameMode->CompareNetworkController(remoteController))
+    {
+        return true;
+    }
+
+    //TODO: 경험치 증가
+
+    return true;
+}
+
 bool Handle_S2C_Chat(ANetworkController* controller, Protocol::S2C_Chat& pkt)
 {
     UWorld* world = controller->GetWorld();

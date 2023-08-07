@@ -73,6 +73,11 @@ FEnemyStatData* ULDGameInstance::GetEnemyStatData(int32 inCode)
 	return mEnemyStatDataTable->FindRow<FEnemyStatData>(*FString::FromInt(inCode), TEXT(""));
 }
 
+FLevelDataTable* ULDGameInstance::GetLevelDataTable(int32 inLevel)
+{
+	return mLevelDataTable->FindRow<FLevelDataTable>(*FString::FromInt(inLevel), TEXT(""));
+}
+
 FString ULDGameInstance::GetToken()
 {
 	return mToken;

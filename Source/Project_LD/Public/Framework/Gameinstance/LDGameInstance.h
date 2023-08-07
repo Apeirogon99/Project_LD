@@ -7,6 +7,7 @@
 #include <Struct/Game/CharacterDatas.h>
 #include <Struct/Game/CharacterStatusData.h>
 #include <Struct/Game/EnemyData.h>
+#include <Struct/Game/LevelDataTablle.h>
 #include "LDGameInstance.generated.h"
 
 class UDataTable;
@@ -40,6 +41,7 @@ public:
 	FStatsGrowthData*				GetGrowthData(int32 inCode);
 	FEnemyData*						GetEnemyData(int32 inCode);
 	FEnemyStatData*					GetEnemyStatData(int32 inCode);
+	FLevelDataTable*				GetLevelDataTable(int32 inLevel);
 	FString							GetToken();
 	UServerData*					GetServerData();
 
@@ -61,6 +63,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UDataTable* mEnemyStatDataTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UDataTable* mLevelDataTable;
 
 private:
 	UPROPERTY()
