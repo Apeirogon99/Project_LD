@@ -1,4 +1,4 @@
-#include "FGamePacketHandler.h"
+﻿#include "FGamePacketHandler.h"
 #include <FCommonPacketHandler.h>
 
 #include <Network/NetworkUtils.h>
@@ -21,6 +21,7 @@
 #include <GameContent/Enemy/EnemyBase.h>
 #include <GameContent/Projectile/ArcherSkeletonArrow.h>
 
+#include "CommonErrorTypes.h"
 #include <GameErrorTypes.h>
 
 #include <Widget/Handler/ClientHUD.h>
@@ -401,14 +402,14 @@ bool Handle_S2C_Chat(ANetworkController* controller, Protocol::S2C_Chat& pkt)
     FString message     = UNetworkUtils::ConvertFString(pkt.message());
     int32   chatType      = static_cast<int32>(pkt.chat_type());
 
-    //ä��â
+    //채팅창
     bool ret = UWidgetUtils::SetChatWidget(clientHUD, playerName, message, chatType);
     if (ret == false)
     {
         return false;
     }
     
-    //ĳ���� UI
+    //캐릭터 UI
     const int64 remoteID = pkt.remote_id();
     AController* remoteController = gameState->FindPlayerController(remoteID);
     if (nullptr == remoteController)
@@ -431,27 +432,194 @@ bool Handle_S2C_Chat(ANetworkController* controller, Protocol::S2C_Chat& pkt)
 
 bool Handle_S2C_LoadFriendList(ANetworkController* controller, Protocol::S2C_LoadFriendList& pkt)
 {
-    return false;
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+    if (nullptr == widget)
+    {
+        return false;
+    }
+
+    UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+    if (nullptr == mainGameWidget)
+    {
+        return false;
+    }
+
+    mainGameWidget->FriendOpenResponse(pkt.friends(), pkt.list_type());
+    return true;
 }
 
 bool Handle_S2C_RequestFriend(ANetworkController* controller, Protocol::S2C_RequestFriend& pkt)
 {
-    return false;
+    AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    FString title;
+    FString description;
+    FString buttonText = TEXT("확인");
+
+    int32 error = pkt.error();
+    if (error != GetDatabaseErrorToInt(EDCommonErrorType::SUCCESS))
+    {
+        title = TEXT("친구 요청 실패");
+        description = UNetworkUtils::GetNetworkErrorToString(error);
+    }
+    else
+    {
+        title = TEXT("친구 요청 성공");
+        description = TEXT("요청에 성공하였습니다.");
+    }
+
+    FNotificationDelegate notificationDelegate;
+    notificationDelegate.BindLambda([=]()
+        {
+            clientHUD->CleanWidgetFromName(TEXT("Notification"));
+        });
+
+    bool ret = UWidgetUtils::SetNotification(clientHUD, title, description, buttonText, notificationDelegate);
+    if (ret == false)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool Handle_S2C_BlockFriend(ANetworkController* controller, Protocol::S2C_BlockFriend& pkt)
 {
-    return false;
+    AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    FString title;
+    FString description;
+    FString buttonText = TEXT("확인");
+
+    int32 error = pkt.error();
+    if (error != GetDatabaseErrorToInt(EDCommonErrorType::SUCCESS))
+    {
+        title = TEXT("친구 차단 실패");
+        description = UNetworkUtils::GetNetworkErrorToString(error);
+    }
+    else
+    {
+        title = TEXT("친구 차단 성공");
+        description = TEXT("차단에 성공하였습니다.");
+    }
+
+    FNotificationDelegate notificationDelegate;
+    notificationDelegate.BindLambda([=]()
+        {
+            clientHUD->CleanWidgetFromName(TEXT("Notification"));
+        });
+
+    bool ret = UWidgetUtils::SetNotification(clientHUD, title, description, buttonText, notificationDelegate);
+    if (ret == false)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 bool Handle_S2C_ConnectFriend(ANetworkController* controller, Protocol::S2C_ConnectFriend& pkt)
 {
-    return false;
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+    if (nullptr == widget)
+    {
+        return false;
+    }
+
+    UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+    if (nullptr == mainGameWidget)
+    {
+        return false;
+    }
+   
+    const FString playerName = UNetworkUtils::ConvertFString(pkt.nick_name());
+    mainGameWidget->FriendNotifyGame(playerName, true);
+    return true;
 }
 
 bool Handle_S2C_DisConnectFriend(ANetworkController* controller, Protocol::S2C_DisConnectFriend& pkt)
 {
-    return false;
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+    if (nullptr == widget)
+    {
+        return false;
+    }
+
+    UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+    if (nullptr == mainGameWidget)
+    {
+        return false;
+    }
+
+    const FString playerName = UNetworkUtils::ConvertFString(pkt.nick_name());
+    mainGameWidget->FriendNotifyGame(playerName, false);
+    return true;
 }
 
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt)
@@ -964,9 +1132,9 @@ bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_In
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_InsertInventory] INVALID RemotePlayer : %d"), remoteID), ELogLevel::Error);
         return true;
     }
-    //TODO : �ݴ� �ִϸ��̼�
+    //TODO : 줍는 애니메이션
 
-    //TODO : ������ ����
+    //TODO : 아이템 삭제
     const int64 gameObjectID = pkt.object_id();
     if (false == gameState->RemoveGameObject(gameObjectID))
     {
@@ -1034,7 +1202,7 @@ bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_De
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_DeleteInventory] INVALID RemotePlayer : %d"), remoteID), ELogLevel::Error);
         return true;
     }
-    //TODO : ������ �ִϸ��̼�
+    //TODO : 버리는 애니메이션
 
     //const Protocol::SItem& itemInfo = pkt.item();
     //AActor* actor = gameState->FindGameObject(itemInfo.object_id());

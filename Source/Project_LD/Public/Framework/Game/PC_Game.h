@@ -23,6 +23,7 @@ public:
 	void SwitchInventory();
 	void SwitchChat();
 	void SwitchSkillTree();
+	void SwitchFriend();
 
 	void UseSkill_Q();
 	void UseSkill_W();

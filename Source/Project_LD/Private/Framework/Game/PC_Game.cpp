@@ -119,6 +119,7 @@ void APC_Game::SetupInputComponent()
 	InputComponent->BindAction("ToggleInventory",IE_Pressed,this,&APC_Game::SwitchInventory);
 	InputComponent->BindAction("ToggleChat", IE_Pressed, this, &APC_Game::SwitchChat);
 	InputComponent->BindAction("ToggleSkillTree", IE_Pressed, this, &APC_Game::SwitchSkillTree);
+	InputComponent->BindAction("ToggleFriend", IE_Pressed, this, &APC_Game::SwitchFriend);
 	
 	InputComponent->BindAction("SkillQ", IE_Pressed, this, &APC_Game::UseSkill_Q);
 	InputComponent->BindAction("SkillW", IE_Pressed, this, &APC_Game::UseSkill_W);
@@ -202,6 +203,29 @@ void APC_Game::SwitchSkillTree()
 	}
 
 	maingame->SkillTreeOpenRequest();
+}
+
+void APC_Game::SwitchFriend()
+{
+	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+	if (nullptr == widget)
+	{
+		return;
+	}
+
+	UW_MainGame* mainGame = Cast<UW_MainGame>(widget);
+	if (nullptr == mainGame)
+	{
+		return;
+	}
+
+	mainGame->FriendOpenRequest();
 }
 
 void APC_Game::UseSkill_Q()

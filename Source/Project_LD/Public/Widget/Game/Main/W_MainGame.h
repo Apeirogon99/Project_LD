@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "Blueprint/WidgetTree.h"
 #include "Blueprint/UserWidget.h"
+#include <Protobuf/Handler/FClientPacketHandler.h>
+#include <Protobuf/Handler/FGamePacketHandler.h>
 #include "W_MainGame.generated.h"
 
 /**
@@ -29,6 +31,14 @@ public:
 	void FocusChat();
 
 	UFUNCTION()
+	void FriendOpenRequest();
+
+	void FriendOpenResponse(const google::protobuf::RepeatedPtrField<Protocol::SFriend>& inFriends, const int32& inListType);
+
+	UFUNCTION()
+	void FriendNotifyGame(const FString& inPlayerName, const bool& inConnect);
+
+	UFUNCTION()
 	void InventoryOpenRequest();
 
 	UFUNCTION()
@@ -50,6 +60,7 @@ private:
 	bool misInventoryOpen;
 	bool misSkillTreeOpen;
 	bool misChatOpen;
+	bool misFriendOpen;
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -57,4 +68,10 @@ private:
 
 	UPROPERTY(meta = (BindWidget))
 		UButton* Btn_Inventory;
+
+	UPROPERTY(meta = (BindWidget))
+		UButton* Btn_Friend;
+
+	UPROPERTY(meta = (BindWidget))
+		UWidget* mNotifyFriend;
 };

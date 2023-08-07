@@ -87,6 +87,7 @@ void UW_EditBox::Click_Confirm()
 		mConfirmDelegate.Execute(mEditValue);
 	}
 
+	mEditbox->SetText(FText::GetEmpty());
 	//AClientHUD* clientHUD = Cast<AClientHUD>(GetOwningPlayer()->GetHUD());
 	//clientHUD->CleanWidgetFromName("EditBox");
 

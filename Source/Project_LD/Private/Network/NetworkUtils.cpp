@@ -8,6 +8,7 @@
 #include "Windows/HideWindowsPlatformTypes.h"
 
 #include <DatabaseErrorTypes.h>
+#include "CommonErrorTypes.h"
 
 DEFINE_LOG_CATEGORY(NETWORK_LOG);
 
@@ -118,7 +119,7 @@ uint32 UNetworkUtils::ConverLinerColorToInt(FLinearColor inValue)
 
 FString UNetworkUtils::GetNetworkErrorToString(const int32 inError)
 {
-	const std::string errorStr = GetDatabaseError(inError);
+	const std::string errorStr = GetNetworkError(inError);
 
 	const char* tempStr = errorStr.c_str();
 	const int32 tempLen = strlen(tempStr) + 1;

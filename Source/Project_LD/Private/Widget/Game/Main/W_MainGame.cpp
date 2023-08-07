@@ -5,6 +5,8 @@
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Chat/W_Chat.h>
 #include <Widget/Game/Main/W_BottomUI.h>
+#include <Widget/Game/Friend/W_FriendMain.h>
+#include <Widget/Game/Friend/W_NotifyFriend.h>
 #include "Components/Button.h"
 #include "Blueprint/WidgetTree.h"
 
@@ -30,14 +32,28 @@ void UW_MainGame::NativeConstruct()
 		Btn_Chat->OnClicked.AddUniqueDynamic(this, &UW_MainGame::ChatOpen);
 	}
 
+	Btn_Friend = Cast<UButton>(GetWidgetFromName(TEXT("Btn_Friend")));
+	if (Btn_Friend != nullptr)
+	{
+		Btn_Friend->OnClicked.AddUniqueDynamic(this, &UW_MainGame::FriendOpenRequest);
+	}
+
 	mBottomUI = this->WidgetTree->FindWidget(FName(TEXT("BW_BottomUI")));
 	if (mBottomUI == nullptr)
 	{
 		return;
 	}
 
+	mNotifyFriend = this->WidgetTree->FindWidget(FName(TEXT("mNotifyFriend")));
+	if (mNotifyFriend != nullptr)
+	{
+		UW_NotifyFriend* notify = Cast<UW_NotifyFriend>(mNotifyFriend);
+		notify->SetVisibility(ESlateVisibility::Hidden);
+	}
+
 	misInventoryOpen = false;
 	misChatOpen = false;
+	misFriendOpen = false;
 }
 
 void UW_MainGame::Init()
@@ -112,6 +128,80 @@ void UW_MainGame::FocusChat()
 	}
 	chat->FocusChat();
 
+}
+
+void UW_MainGame::FriendOpenRequest()
+{
+	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return;
+	}
+
+	APC_Game* playerController = Cast<APC_Game>(gamemode->GetNetworkController());
+	if (GetOwningPlayer() != playerController)
+	{
+		return;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(gamemode->GetClientHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	if (misFriendOpen)
+	{
+		misFriendOpen = !misFriendOpen;
+		clientHUD->CleanWidgetFromName(FString(TEXT("FriendMain")));
+	}
+	else
+	{
+		const int64 serverTimeStamp = playerController->GetServerTimeStamp();
+		const int32 listType = Cast<UW_FriendMain>(clientHUD->GetWidgetFromName(FString(TEXT("FriendMain"))))->GetFriendListType();
+
+		Protocol::C2S_LoadFriendList loadFriendPacket;
+		loadFriendPacket.set_list_type(listType);
+		loadFriendPacket.set_timestamp(serverTimeStamp);
+		playerController->Send(FGamePacketHandler::MakeSendBuffer(playerController, loadFriendPacket));
+	}
+}
+
+void UW_MainGame::FriendOpenResponse(const google::protobuf::RepeatedPtrField<Protocol::SFriend>& inFriends, const int32& inListType)
+{
+	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return;
+	}
+
+	APC_Game* playerController = Cast<APC_Game>(gamemode->GetNetworkController());
+	if (GetOwningPlayer() != playerController)
+	{
+		return;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(gamemode->GetClientHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	misFriendOpen = !misFriendOpen;
+	Cast<UW_FriendMain>(clientHUD->GetWidgetFromName(FString(TEXT("FriendMain"))))->LoadFriendListType(inFriends, inListType);
+	clientHUD->ShowWidgetFromName(FString(TEXT("FriendMain")));
+}
+
+void UW_MainGame::FriendNotifyGame(const FString& inPlayerName, const bool& inConnect)
+{
+	UW_NotifyFriend* notify = Cast<UW_NotifyFriend>(mNotifyFriend);
+	if (nullptr == notify)
+	{
+		return;
+	}
+
+	notify->SetVisibility(ESlateVisibility::Visible);
+	notify->SetNotifyFriend(inPlayerName, inConnect);
 }
 
 void UW_MainGame::InventoryOpenRequest()
