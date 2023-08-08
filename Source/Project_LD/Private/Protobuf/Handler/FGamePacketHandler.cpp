@@ -96,6 +96,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     playerState->mInventoryComponent->LoadItem(pkt.item(), pkt.money());
     playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
 
+    playerState->InitializeLocalPlayerData();
 
     gameMode->GetClientHUD()->FadeOut();
     return true;

@@ -107,10 +107,31 @@ void APS_Game::InitializeLocalPlayerState()
 
 	mCharacterStats.SetCurrentStats(mCharacterStats.GetMaxStats());
 
+	UpdateCurrentStats();
+}
+
+void APS_Game::InitializeLocalPlayerData()
+{
+	AGM_Game* gameMode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gameMode)
+	{
+		return;
+	}
+
+	APC_Game* playercontroller = Cast<APC_Game>(gameMode->GetNetworkController());
+	if (nullptr == playercontroller)
+	{
+		return;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(playercontroller->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
 	auto maingame = clientHUD->GetWidgetFromName(TEXT("MainGame"));
 	Cast<UW_MainGame>(maingame)->Init();
-
-	UpdateCurrentStats();
 }
 
 void APS_Game::UpdateHealthBar()
@@ -138,8 +159,8 @@ void APS_Game::UpdateExpBar()
 	//기본 레벨이 0으로 되있어서 +2 -> +1로 변경예정
 	float nextlevelExp = leveldata->next_experience;
 
-	mExpBarPercent = 55.f / nextlevelExp;
-	//mExpBarPercent = mCurrentExp / nextlevelExp;
+	//mExpBarPercent = 55.f / nextlevelExp;
+	mExpBarPercent = mCurrentExp / nextlevelExp;
 	if (OnCharacterExpChanged.IsBound())
 	{
 		OnCharacterExpChanged.Broadcast();

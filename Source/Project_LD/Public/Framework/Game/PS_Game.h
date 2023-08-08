@@ -35,6 +35,7 @@ public:
 	void UpdateCurrentStats();
 	void UpdateExpValue(float InExp);
 	void InitializeLocalPlayerState();
+	void InitializeLocalPlayerData();
 
 public:
 	UFUNCTION(BlueprintPure, Category = "ProgressBar")
@@ -54,16 +55,16 @@ public:
 	UACEquipment* mEquipmentComponent;
 
 protected:
-	UPROPERTY(BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
 	float mHealthBarPercent;
 
-	UPROPERTY(BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
 	float mManaBarPercent;
 
-	UPROPERTY(BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
 	float mExpBarPercent;
 
-	UPROPERTY(BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
 	float mCurrentExp;
 
 protected:
