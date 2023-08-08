@@ -70,7 +70,7 @@ public:
 	void SetPlayerName(const FString& inPlayerName);
 
 	UFUNCTION()
-	void SetPlayerInfo(const int32& inLevel, const int32& inClass, const int32& inLocale);
+	void SetPlayerInfo(const int32& inLevel, const int32& inClass, const int32& inLocale, const bool& inVisuble);
 
 	UFUNCTION()
 	void SetConnectStateImage(const EConnectState& inConnectState, const bool& inVisuble);

@@ -15,7 +15,6 @@ void UW_NotifyFriend::SetNotifyFriend(const FString& inPlayerName, const bool& i
 {
 	FString tempText;
 	tempText.Append(inPlayerName);
-
 	if (inConnect)
 	{
 		mNotifyFriend->SetColorAndOpacity(FSlateColor(FLinearColor::Green));

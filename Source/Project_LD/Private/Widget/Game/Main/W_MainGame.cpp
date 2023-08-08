@@ -200,7 +200,6 @@ void UW_MainGame::FriendNotifyGame(const FString& inPlayerName, const bool& inCo
 		return;
 	}
 
-	notify->SetVisibility(ESlateVisibility::Visible);
 	notify->SetNotifyFriend(inPlayerName, inConnect);
 }
 

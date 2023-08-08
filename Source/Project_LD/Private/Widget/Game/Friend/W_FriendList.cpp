@@ -51,8 +51,8 @@ void UW_FriendList::AddFriendList(const FString& inPlayerName, const int32& inLe
 		return;
 	}
 	newCell->SetPlayerName(inPlayerName);
-	newCell->SetPlayerInfo(inLevel, inClass, inLocale);
-	newCell->SetConnectStateImage(StaticCast<EConnectState>(inState), false);
+	newCell->SetPlayerInfo(inLevel, inClass, inLocale, true);
+	newCell->SetConnectStateImage(StaticCast<EConnectState>(inState), true);
 	newCell->SetActionImage(EActionState::Invite);
 
 	mFriendScrollBox->AddChild(newCell);

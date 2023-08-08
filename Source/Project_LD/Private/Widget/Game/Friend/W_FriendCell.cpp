@@ -41,7 +41,7 @@ void UW_FriendCell::SetPlayerName(const FString& inPlayerName)
 	mName = inPlayerName;
 }
 
-void UW_FriendCell::SetPlayerInfo(const int32& inLevel, const int32& inClass, const int32& inLocale)
+void UW_FriendCell::SetPlayerInfo(const int32& inLevel, const int32& inClass, const int32& inLocale, const bool& inVisuble)
 {
 	FString tempText;
 	tempText.Append(FString::FromInt(inLevel));

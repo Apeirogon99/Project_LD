@@ -110,6 +110,7 @@ void UW_FriendRequestList::AddFriendList(const FString& inPlayerName)
 		return;
 	}
 	newCell->SetPlayerName(inPlayerName);
+	newCell->SetPlayerInfo(0, 0, 0, false);
 	newCell->SetConnectStateImage(EConnectState::None, false);
 	newCell->SetActionImage(EActionState::Request);
 
@@ -148,7 +149,7 @@ void UW_FriendRequestList::AddFriendList(const FString& inPlayerName)
 
 			Protocol::C2S_RequestFriend requestPacket;
 			requestPacket.set_nick_name(friendName);
-			requestPacket.set_action(1);
+			requestPacket.set_action(2);
 			requestPacket.set_timestamp(networkController->GetServerTimeStamp());
 
 			SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(networkController, requestPacket);

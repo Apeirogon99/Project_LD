@@ -564,8 +564,16 @@ bool Handle_S2C_RequestFriend(ANetworkController* controller, Protocol::S2C_Requ
     }
     else
     {
-        title = TEXT("친구 요청 성공");
-        description = TEXT("요청에 성공하였습니다.");
+        if (pkt.action() == 1)
+        {
+            title = TEXT("요청 성공");
+            description = TEXT("요청에 성공하였습니다.");
+        }
+        else
+        {
+            title = TEXT("요청 응답 성공");
+            description = TEXT("요청 응답에 성공하였습니다.");
+        }
     }
 
     FNotificationDelegate notificationDelegate;
@@ -605,8 +613,16 @@ bool Handle_S2C_BlockFriend(ANetworkController* controller, Protocol::S2C_BlockF
     }
     else
     {
-        title = TEXT("친구 차단 성공");
-        description = TEXT("차단에 성공하였습니다.");
+        if (pkt.action() == 1)
+        {
+            title = TEXT("차단 성공");
+            description = TEXT("차단에 성공하였습니다.");
+        }
+        else
+        {
+            title = TEXT("차단 해제 성공");
+            description = TEXT("차단 해제에 성공하였습니다.");
+        }
     }
 
     FNotificationDelegate notificationDelegate;

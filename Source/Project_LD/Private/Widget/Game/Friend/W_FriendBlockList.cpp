@@ -109,6 +109,7 @@ void UW_FriendBlockList::AddFriendList(const FString& inPlayerName)
 		return;
 	}
 	newCell->SetPlayerName(inPlayerName);
+	newCell->SetPlayerInfo(0, 0, 0, false);
 	newCell->SetConnectStateImage(EConnectState::None, false);
 	newCell->SetActionImage(EActionState::Block);
 
@@ -147,7 +148,7 @@ void UW_FriendBlockList::AddFriendList(const FString& inPlayerName)
 
 			Protocol::C2S_BlockFriend BlockPacket;
 			BlockPacket.set_nick_name(friendName);
-			BlockPacket.set_action(1);
+			BlockPacket.set_action(2);
 			BlockPacket.set_timestamp(networkController->GetServerTimeStamp());
 
 			SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(networkController, BlockPacket);
