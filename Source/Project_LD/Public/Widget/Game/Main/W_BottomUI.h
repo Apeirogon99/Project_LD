@@ -42,6 +42,15 @@ public:
 	UPROPERTY()
 	UWidget* mSkill_R;
 
+	UPROPERTY()
+	UWidget* mSkill_BasicAttack;
+
+	UPROPERTY()
+	UWidget* mSkill_UseItem1;
+
+	UPROPERTY()
+	UWidget* mSkill_UseItem2;
+
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativePreConstruct() override;

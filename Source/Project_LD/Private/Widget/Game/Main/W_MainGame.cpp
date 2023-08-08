@@ -5,6 +5,7 @@
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Chat/W_Chat.h>
 #include <Widget/Game/Main/W_BottomUI.h>
+#include <Widget/Game/Main/W_MainPlayerInfo.h>
 #include <Widget/Game/Friend/W_FriendMain.h>
 #include <Widget/Game/Friend/W_NotifyFriend.h>
 #include "Components/Button.h"
@@ -44,6 +45,12 @@ void UW_MainGame::NativeConstruct()
 		return;
 	}
 
+	mMainPlayerInfo = this->WidgetTree->FindWidget(FName(TEXT("BW_MainPlayerInfo")));
+	if (mMainPlayerInfo == nullptr)
+	{
+		return;
+	}
+
 	mNotifyFriend = this->WidgetTree->FindWidget(FName(TEXT("mNotifyFriend")));
 	if (mNotifyFriend != nullptr)
 	{
@@ -59,6 +66,7 @@ void UW_MainGame::NativeConstruct()
 void UW_MainGame::Init()
 {
 	Cast<UW_BottomUI>(mBottomUI)->Init();
+	Cast<UW_MainPlayerInfo>(mMainPlayerInfo)->Init();
 }
 
 void UW_MainGame::ChatOpen()

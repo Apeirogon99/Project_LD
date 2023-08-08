@@ -175,15 +175,39 @@ void UW_BottomUI::NativePreConstruct()
 		return;
 	}
 
+	mSkill_BasicAttack = this->WidgetTree->FindWidget(FName(TEXT("BW_Skill_BasicAttack")));
+	if (mSkill_BasicAttack == nullptr)
+	{
+		return;
+	}
+
+	mSkill_UseItem1 = this->WidgetTree->FindWidget(FName(TEXT("BW_UseItem1")));
+	if (mSkill_UseItem1 == nullptr)
+	{
+		return;
+	}
+
+	mSkill_UseItem2 = this->WidgetTree->FindWidget(FName(TEXT("BW_UseItem2")));
+	if (mSkill_UseItem2 == nullptr)
+	{
+		return;
+	}
+
 	Cast<UW_Skill>(mSkill_Q)->TB_KeyBind->SetText(FText::FromString(TEXT("Q")));
 	Cast<UW_Skill>(mSkill_W)->TB_KeyBind->SetText(FText::FromString(TEXT("W")));
 	Cast<UW_Skill>(mSkill_E)->TB_KeyBind->SetText(FText::FromString(TEXT("E")));
 	Cast<UW_Skill>(mSkill_R)->TB_KeyBind->SetText(FText::FromString(TEXT("R")));
+	Cast<UW_Skill>(mSkill_BasicAttack)->TB_KeyBind->SetText(FText::FromString(TEXT("0")));
+	Cast<UW_Skill>(mSkill_UseItem1)->TB_KeyBind->SetText(FText::FromString(TEXT("1")));
+	Cast<UW_Skill>(mSkill_UseItem2)->TB_KeyBind->SetText(FText::FromString(TEXT("2")));
 
 	Cast<UW_Skill>(mSkill_Q)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[0]);
 	Cast<UW_Skill>(mSkill_W)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[1]);
 	Cast<UW_Skill>(mSkill_E)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[2]);
 	Cast<UW_Skill>(mSkill_R)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[3]);
+	Cast<UW_Skill>(mSkill_BasicAttack)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[0]);
+	Cast<UW_Skill>(mSkill_UseItem1)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[1]);
+	Cast<UW_Skill>(mSkill_UseItem2)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[2]);
 }
 
 void UW_BottomUI::NativeDestruct()

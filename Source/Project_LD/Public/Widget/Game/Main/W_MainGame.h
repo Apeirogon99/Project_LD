@@ -23,6 +23,9 @@ public:
 	UPROPERTY()
 	UWidget* mBottomUI;
 
+	UPROPERTY()
+	UWidget* mMainPlayerInfo;
+
 public:
 	UFUNCTION()
 	void ChatOpen();

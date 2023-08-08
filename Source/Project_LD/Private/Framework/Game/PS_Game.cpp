@@ -31,12 +31,24 @@ float APS_Game::GetManaBarPercent() const
 	return mManaBarPercent;
 }
 
+float APS_Game::GetExpBarPercent() const
+{
+	return mExpBarPercent;
+}
+
 void APS_Game::UpdateCurrentStats()
 {
 	//UpdateStats
 
 	UpdateHealthBar();
 	UpdateManaBar();
+	UpdateExpBar();
+}
+
+void APS_Game::UpdateExpValue(float InExp)
+{
+	mCurrentExp = InExp;
+	UpdateExpBar();
 }
 
 void APS_Game::InitializeLocalPlayerState()
@@ -116,6 +128,21 @@ void APS_Game::UpdateManaBar()
 	if (OnCharacterManaChanged.IsBound())
 	{
 		OnCharacterManaChanged.Broadcast();
+	}
+}
+
+void APS_Game::UpdateExpBar()
+{
+	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+	FLevelDataTable* leveldata = Instance->GetLevelDataTable(mCharacterData.GetLevel() + 2);
+	//기본 레벨이 0으로 되있어서 +2 -> +1로 변경예정
+	float nextlevelExp = leveldata->next_experience;
+
+	mExpBarPercent = 55.f / nextlevelExp;
+	//mExpBarPercent = mCurrentExp / nextlevelExp;
+	if (OnCharacterExpChanged.IsBound())
+	{
+		OnCharacterExpChanged.Broadcast();
 	}
 }
 
