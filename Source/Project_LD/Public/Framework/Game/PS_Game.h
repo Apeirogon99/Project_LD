@@ -34,6 +34,7 @@ public:
 public:
 	void UpdateCurrentStats();
 	void UpdateExpValue(float InExp);
+	void IncreaseExp(float InExp);
 	void InitializeLocalPlayerState();
 	void InitializeLocalPlayerData();
 

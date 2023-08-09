@@ -51,6 +51,12 @@ void APS_Game::UpdateExpValue(float InExp)
 	UpdateExpBar();
 }
 
+void APS_Game::IncreaseExp(float InExp)
+{
+	mCurrentExp = mCurrentExp + InExp;
+	UpdateExpBar();
+}
+
 void APS_Game::InitializeLocalPlayerState()
 {
 

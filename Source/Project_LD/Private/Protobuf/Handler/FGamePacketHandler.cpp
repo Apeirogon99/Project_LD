@@ -412,6 +412,13 @@ bool Handle_S2C_UpdateExperience(ANetworkController* controller, Protocol::S2C_U
     }
 
     //TODO: 경험치 증가
+    APS_Game* playerState = remoteController->GetPlayerState<APS_Game>();
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+
+    playerState->IncreaseExp(5.f);
 
     return true;
 }
