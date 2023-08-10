@@ -418,7 +418,7 @@ bool Handle_S2C_UpdateExperience(ANetworkController* controller, Protocol::S2C_U
         return false;
     }
 
-    playerState->IncreaseExp(5.f);
+    playerState->IncreaseExp(pkt.experience());
 
     return true;
 }
@@ -450,7 +450,14 @@ bool Handle_S2C_LevelUp(ANetworkController* controller, Protocol::S2C_LevelUp& p
         return true;
     }
 
+    APS_Game* playerState = remoteController->GetPlayerState<APS_Game>();
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+
     //TODO: 레벨업
+    playerState->GetCharacterData().SetLevel(pkt.level());
 
     if (false == gameMode->CompareNetworkController(remoteController))
     {
@@ -458,6 +465,7 @@ bool Handle_S2C_LevelUp(ANetworkController* controller, Protocol::S2C_LevelUp& p
     }
 
     //TODO: 경험치 증가
+    playerState->UpdateExpValue(pkt.experience());
 
     return true;
 }

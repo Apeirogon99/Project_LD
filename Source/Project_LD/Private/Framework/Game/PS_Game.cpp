@@ -42,12 +42,11 @@ void APS_Game::UpdateCurrentStats()
 
 	UpdateHealthBar();
 	UpdateManaBar();
-	UpdateExpBar();
 }
 
-void APS_Game::UpdateExpValue(float InExp)
+void APS_Game::UpdateExpValue(int InExp)
 {
-	mCurrentExp = InExp;
+	mCurrentExp = StaticCast<float>(InExp);
 	UpdateExpBar();
 }
 
@@ -161,7 +160,7 @@ void APS_Game::UpdateManaBar()
 void APS_Game::UpdateExpBar()
 {
 	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	FLevelDataTable* leveldata = Instance->GetLevelDataTable(mCharacterData.GetLevel() + 2);
+	FLevelDataTable* leveldata = Instance->GetLevelDataTable(mCharacterData.GetLevel() + 1);
 	//기본 레벨이 0으로 되있어서 +2 -> +1로 변경예정
 	float nextlevelExp = leveldata->next_experience;
 

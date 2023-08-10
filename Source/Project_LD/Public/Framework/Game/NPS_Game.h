@@ -31,8 +31,8 @@ public:
 
 public:
 	const int64				GetRemoteID() const { return mRemoteID; }
-	const FCharacterData&	GetCharacterData()	 const { return mCharacterData; }
-	const FCharacterStats&	GetCharacterStats() const { return mCharacterStats; }
+	FCharacterData&	GetCharacterData()	 { return mCharacterData; }
+	FCharacterStats&	GetCharacterStats() { return mCharacterStats; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState")
