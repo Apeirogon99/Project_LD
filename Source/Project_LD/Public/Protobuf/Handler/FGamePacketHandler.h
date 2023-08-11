@@ -34,30 +34,39 @@ enum class EPakcetID: uint16
 	S2C_BlockFriend = 2024,
 	S2C_ConnectFriend = 2025,
 	S2C_DisConnectFriend = 2026,
-	S2C_AppearItem = 2027,
-	S2C_AppearArrow = 2028,
-	S2C_MovementProjectile = 2029,
-	S2C_AppearEnemy = 2030,
-	S2C_DetectChangeEnemy = 2031,
-	S2C_MovementEnemy = 2032,
-	S2C_EnemyAutoAttack = 2033,
-	S2C_HitEnemy = 2034,
-	S2C_DeathEnemy = 2035,
-	S2C_DisAppearGameObject = 2036,
-	C2S_LoadInventory = 2037,
-	S2C_LoadInventory = 2038,
-	C2S_InsertInventory = 2039,
-	S2C_InsertInventory = 2040,
-	C2S_UpdateInventory = 2041,
-	S2C_UpdateInventory = 2042,
-	C2S_DeleteInventory = 2043,
-	S2C_DeleteInventory = 2044,
-	S2C_RollbackInventory = 2045,
-	C2S_ReplaceEqipment = 2046,
-	S2C_ReplaceEqipment = 2047,
-	S2C_LoadSkillTree = 2048,
-	C2S_UpdateSkillTree = 2049,
-	S2C_UpdateSkillTree = 2050,
+	C2S_CreateParty = 2027,
+	S2C_CreateParty = 2028,
+	C2S_RequestParty = 2029,
+	S2C_RequestParty = 2030,
+	C2S_ResponeParty = 2031,
+	S2C_ResponeParty = 2032,
+	S2C_NotifyParty = 2033,
+	S2C_EnterPartyPlayer = 2034,
+	S2C_LeavePartyPlayer = 2035,
+	S2C_AppearItem = 2036,
+	S2C_AppearArrow = 2037,
+	S2C_MovementProjectile = 2038,
+	S2C_AppearEnemy = 2039,
+	S2C_DetectChangeEnemy = 2040,
+	S2C_MovementEnemy = 2041,
+	S2C_EnemyAutoAttack = 2042,
+	S2C_HitEnemy = 2043,
+	S2C_DeathEnemy = 2044,
+	S2C_DisAppearGameObject = 2045,
+	C2S_LoadInventory = 2046,
+	S2C_LoadInventory = 2047,
+	C2S_InsertInventory = 2048,
+	S2C_InsertInventory = 2049,
+	C2S_UpdateInventory = 2050,
+	S2C_UpdateInventory = 2051,
+	C2S_DeleteInventory = 2052,
+	S2C_DeleteInventory = 2053,
+	S2C_RollbackInventory = 2054,
+	C2S_ReplaceEqipment = 2055,
+	S2C_ReplaceEqipment = 2056,
+	S2C_LoadSkillTree = 2057,
+	C2S_UpdateSkillTree = 2058,
+	S2C_UpdateSkillTree = 2059,
 };
 */
 
@@ -79,6 +88,12 @@ bool Handle_S2C_RequestFriend(ANetworkController* controller, Protocol::S2C_Requ
 bool Handle_S2C_BlockFriend(ANetworkController* controller, Protocol::S2C_BlockFriend& pkt);
 bool Handle_S2C_ConnectFriend(ANetworkController* controller, Protocol::S2C_ConnectFriend& pkt);
 bool Handle_S2C_DisConnectFriend(ANetworkController* controller, Protocol::S2C_DisConnectFriend& pkt);
+bool Handle_S2C_CreateParty(ANetworkController* controller, Protocol::S2C_CreateParty& pkt);
+bool Handle_S2C_RequestParty(ANetworkController* controller, Protocol::S2C_RequestParty& pkt);
+bool Handle_S2C_ResponeParty(ANetworkController* controller, Protocol::S2C_ResponeParty& pkt);
+bool Handle_S2C_NotifyParty(ANetworkController* controller, Protocol::S2C_NotifyParty& pkt);
+bool Handle_S2C_EnterPartyPlayer(ANetworkController* controller, Protocol::S2C_EnterPartyPlayer& pkt);
+bool Handle_S2C_LeavePartyPlayer(ANetworkController* controller, Protocol::S2C_LeavePartyPlayer& pkt);
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt);
 bool Handle_S2C_AppearArrow(ANetworkController* controller, Protocol::S2C_AppearArrow& pkt);
 bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C_MovementProjectile& pkt);
@@ -120,6 +135,12 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_BlockFriend)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_BlockFriend>(Handle_S2C_BlockFriend, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_ConnectFriend)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_ConnectFriend>(Handle_S2C_ConnectFriend, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DisConnectFriend)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DisConnectFriend>(Handle_S2C_DisConnectFriend, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_CreateParty)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_CreateParty>(Handle_S2C_CreateParty, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_RequestParty)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_RequestParty>(Handle_S2C_RequestParty, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_ResponeParty)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_ResponeParty>(Handle_S2C_ResponeParty, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_NotifyParty)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_NotifyParty>(Handle_S2C_NotifyParty, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_EnterPartyPlayer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_EnterPartyPlayer>(Handle_S2C_EnterPartyPlayer, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_LeavePartyPlayer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_LeavePartyPlayer>(Handle_S2C_LeavePartyPlayer, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearItem)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearItem>(Handle_S2C_AppearItem, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearArrow)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearArrow>(Handle_S2C_AppearArrow, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_MovementProjectile)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_MovementProjectile>(Handle_S2C_MovementProjectile, controller, buffer, len); };
@@ -149,6 +170,9 @@ public:
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LoadFriendList& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LoadFriendList)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_RequestFriend& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_RequestFriend)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_BlockFriend& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_BlockFriend)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_CreateParty& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_CreateParty)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_RequestParty& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_RequestParty)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_ResponeParty& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_ResponeParty)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LoadInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LoadInventory)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_InsertInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_InsertInventory)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_UpdateInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_UpdateInventory)); }
