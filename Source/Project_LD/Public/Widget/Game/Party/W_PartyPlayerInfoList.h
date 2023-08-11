@@ -7,6 +7,7 @@
 #include "W_PartyPlayerInfoList.generated.h"
 
 class UScrollBox;
+class UButton;
 /**
  * 
  */
@@ -26,6 +27,9 @@ public:
 	UPROPERTY(Meta = (BindWidget))
 		UScrollBox* mPartyPlayerInfoScrollBox;
 
+	UPROPERTY(Meta = (BindWidget))
+		UButton* mDragButton;
+
 public:
 	UFUNCTION()
 		void ClearPartyPlayerInfoList();
@@ -36,10 +40,24 @@ public:
 	UFUNCTION()
 		void RemovePartyPlayerInfo(const int64& inRemoteID);
 
+public:
+	UFUNCTION()
+		void UpdateLocation();
+
+	UFUNCTION()
+		void Pressed_Drag();
+
+	UFUNCTION()
+		void Released_Drag();
+
 private:
 	UPROPERTY(EditAnywhere, Category = "Widget")
 		TSubclassOf<UUserWidget> mPartyPlayerInfoClass;
 
 	UPROPERTY()
 		TArray<UUserWidget*> mPartyPlayerInfoLists;
+
+private:
+	FVector2D		mPressedMousePoint;
+	FTimerHandle	mUpdateLocationTimerHandle;
 };

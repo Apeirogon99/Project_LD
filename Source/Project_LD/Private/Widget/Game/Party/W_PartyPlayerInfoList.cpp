@@ -6,6 +6,7 @@
 #include <Widget/WidgetUtils.h>
 
 #include <Components/ScrollBox.h>
+#include <Components/Button.h>
 
 #include <NetworkController.h>
 #include <NetworkGameMode.h>
@@ -19,6 +20,15 @@ void UW_PartyPlayerInfoList::NativeConstruct()
 	Super::NativeConstruct();
 
 	mPartyPlayerInfoScrollBox = Cast<UScrollBox>(GetWidgetFromName(TEXT("mPartyPlayerInfoScrollBox")));
+	mDragButton = Cast<UButton>(GetWidgetFromName(TEXT("mDragButton")));
+
+	if (mDragButton != nullptr)
+	{
+		mDragButton->OnPressed.AddUniqueDynamic(this, &UW_PartyPlayerInfoList::Pressed_Drag);
+		mDragButton->OnReleased.AddUniqueDynamic(this, &UW_PartyPlayerInfoList::Released_Drag);
+	}
+
+	this->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UW_PartyPlayerInfoList::NativeDestruct()
@@ -54,6 +64,8 @@ void UW_PartyPlayerInfoList::AddPartyList(const int64& inRemoteID, const int32& 
 
 	mPartyPlayerInfoScrollBox->AddChild(newCell);
 	mPartyPlayerInfoScrollBox->ScrollToEnd();
+
+	this->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UW_PartyPlayerInfoList::RemovePartyPlayerInfo(const int64& inRemoteID)
@@ -74,10 +86,50 @@ void UW_PartyPlayerInfoList::RemovePartyPlayerInfo(const int64& inRemoteID)
 		}
 	}
 
-	mPartyPlayerInfoScrollBox->ClearChildren();
-	for (UUserWidget* widget : mPartyPlayerInfoLists)
+	if (0 == mPartyPlayerInfoLists.Num())
 	{
-		mPartyPlayerInfoScrollBox->AddChild(widget);
+		this->SetVisibility(ESlateVisibility::Hidden);
 	}
-	mPartyPlayerInfoScrollBox->ScrollToEnd();
+	else
+	{
+		mPartyPlayerInfoScrollBox->ClearChildren();
+		for (UUserWidget* widget : mPartyPlayerInfoLists)
+		{
+			mPartyPlayerInfoScrollBox->AddChild(widget);
+		}
+		mPartyPlayerInfoScrollBox->ScrollToEnd();
+	}
+}
+
+void UW_PartyPlayerInfoList::UpdateLocation()
+{
+	float WaitTime = 0.01f;
+	GetWorld()->GetTimerManager().SetTimer(mUpdateLocationTimerHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			FVector2D currentMousePoint = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
+
+			FWidgetTransform widgetTransform;
+			widgetTransform.Translation = currentMousePoint - mPressedMousePoint;
+			widgetTransform.Scale = FVector2D(1, 1);
+			widgetTransform.Shear = FVector2D(0, 0);
+			widgetTransform.Angle = 0.0f;
+			SetRenderTransform(widgetTransform);
+
+		}), WaitTime, true);
+}
+
+void UW_PartyPlayerInfoList::Pressed_Drag()
+{
+	FVector2D currentMousePoint = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
+	FVector2D currentViewportPoint = RenderTransform.Translation;
+	mPressedMousePoint = currentMousePoint - currentViewportPoint;
+	UpdateLocation();
+}
+
+void UW_PartyPlayerInfoList::Released_Drag()
+{
+	if (true == GetWorld()->GetTimerManager().IsTimerActive(mUpdateLocationTimerHandle))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(mUpdateLocationTimerHandle);
+	}
 }
