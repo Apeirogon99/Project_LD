@@ -730,6 +730,36 @@ bool Handle_S2C_DisConnectFriend(ANetworkController* controller, Protocol::S2C_D
     return true;
 }
 
+bool Handle_S2C_CreateParty(ANetworkController* controller, Protocol::S2C_CreateParty& pkt)
+{
+    return false;
+}
+
+bool Handle_S2C_RequestParty(ANetworkController* controller, Protocol::S2C_RequestParty& pkt)
+{
+    return false;
+}
+
+bool Handle_S2C_ResponeParty(ANetworkController* controller, Protocol::S2C_ResponeParty& pkt)
+{
+    return false;
+}
+
+bool Handle_S2C_NotifyParty(ANetworkController* controller, Protocol::S2C_NotifyParty& pkt)
+{
+    return false;
+}
+
+bool Handle_S2C_EnterPartyPlayer(ANetworkController* controller, Protocol::S2C_EnterPartyPlayer& pkt)
+{
+    return false;
+}
+
+bool Handle_S2C_LeavePartyPlayer(ANetworkController* controller, Protocol::S2C_LeavePartyPlayer& pkt)
+{
+    return false;
+}
+
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt)
 {
     UWorld* world = controller->GetWorld();
