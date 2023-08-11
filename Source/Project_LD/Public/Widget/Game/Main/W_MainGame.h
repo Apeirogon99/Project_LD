@@ -39,7 +39,13 @@ public:
 	void FriendOpenResponse(const google::protobuf::RepeatedPtrField<Protocol::SFriend>& inFriends, const int32& inListType);
 
 	UFUNCTION()
-		void PartyOpenRequest();
+	void PartyOpenRequest();
+
+	UFUNCTION()
+	void PushPartyPlayerInfo(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsLeader);
+
+	UFUNCTION()
+	void ReleasePartyPlayerInfo(const int64& inRemoteID);
 
 	UFUNCTION()
 	void FriendNotifyGame(const FString& inPlayerName, const bool& inConnect);
@@ -91,4 +97,6 @@ private:
 	UPROPERTY(meta = (BindWidget))
 		UWidget* mNotifyParty;
 	
+	UPROPERTY(meta = (BindWidget))
+		UWidget* mPartyPlayerInfoList;
 };

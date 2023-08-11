@@ -16,6 +16,7 @@
 
 #include <Blueprint/WidgetTree.h>
 #include <Components/Button.h>
+#include <Blueprint/WidgetLayoutLibrary.h>
 
 void UW_FriendMain::NativeConstruct()
 {
@@ -24,6 +25,8 @@ void UW_FriendMain::NativeConstruct()
 	mFriendTab	= Cast<UButton>(GetWidgetFromName(TEXT("mFriendTab")));
 	mRequestTab = Cast<UButton>(GetWidgetFromName(TEXT("mRequestTab")));
 	mBlockTab	= Cast<UButton>(GetWidgetFromName(TEXT("mBlockTab")));
+
+	mDragButton = Cast<UButton>(GetWidgetFromName(TEXT("mDragButton")));
 
 	if (mFriendTab != nullptr)
 	{
@@ -38,6 +41,12 @@ void UW_FriendMain::NativeConstruct()
 	if (mBlockTab != nullptr)
 	{
 		mBlockTab->OnClicked.AddUniqueDynamic(this, &UW_FriendMain::Click_BlockTab);
+	}
+
+	if (mDragButton != nullptr)
+	{
+		mDragButton->OnPressed.AddUniqueDynamic(this, &UW_FriendMain::Pressed_Drag);
+		mDragButton->OnReleased.AddUniqueDynamic(this, &UW_FriendMain::Released_Drag);
 	}
 
 	mFriendList = this->WidgetTree->FindWidget(FName(TEXT("BW_FriendList")));
@@ -220,6 +229,39 @@ void UW_FriendMain::LoadFriendListType(const google::protobuf::RepeatedPtrField<
 	else
 	{
 
+	}
+}
+
+void UW_FriendMain::UpdateLocation()
+{
+	float WaitTime = 0.01f;
+	GetWorld()->GetTimerManager().SetTimer(mUpdateLocationTimerHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			FVector2D currentMousePoint = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
+
+			FWidgetTransform widgetTransform;
+			widgetTransform.Translation = currentMousePoint - mPressedMousePoint;
+			widgetTransform.Scale = FVector2D(1, 1);
+			widgetTransform.Shear = FVector2D(0, 0);
+			widgetTransform.Angle = 0.0f;
+			SetRenderTransform(widgetTransform);
+
+		}), WaitTime, true);
+}
+
+void UW_FriendMain::Pressed_Drag()
+{
+	FVector2D currentMousePoint = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
+	FVector2D currentViewportPoint = RenderTransform.Translation;
+	mPressedMousePoint = currentMousePoint - currentViewportPoint;
+	UpdateLocation();
+}
+
+void UW_FriendMain::Released_Drag()
+{
+	if (true == GetWorld()->GetTimerManager().IsTimerActive(mUpdateLocationTimerHandle))
+	{
+		GetWorld()->GetTimerManager().ClearTimer(mUpdateLocationTimerHandle);
 	}
 }
 

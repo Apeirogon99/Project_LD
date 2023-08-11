@@ -9,6 +9,8 @@
 #include <Widget/Game/Friend/W_FriendMain.h>
 #include <Widget/Game/Friend/W_NotifyFriend.h>
 #include <Widget/Game/Party/W_PartyNotify.h>
+#include <Widget/Game/Party/W_PartyPlayerInfo.h>
+#include <Widget/Game/Party/W_PartyPlayerInfoList.h>
 #include "Components/Button.h"
 #include "Blueprint/WidgetTree.h"
 
@@ -54,6 +56,12 @@ void UW_MainGame::NativeConstruct()
 
 	mMainPlayerInfo = this->WidgetTree->FindWidget(FName(TEXT("BW_MainPlayerInfo")));
 	if (mMainPlayerInfo == nullptr)
+	{
+		return;
+	}
+
+	mPartyPlayerInfoList = this->WidgetTree->FindWidget(FName(TEXT("mPartyPlayerInfoList")));
+	if (mPartyPlayerInfoList == nullptr)
 	{
 		return;
 	}
@@ -245,6 +253,28 @@ void UW_MainGame::PartyOpenRequest()
 		clientHUD->ShowWidgetFromName(FString(TEXT("FriendMain")));
 	}
 	misPartyOpen = !misPartyOpen;
+}
+
+void UW_MainGame::PushPartyPlayerInfo(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsLeader)
+{
+	UW_PartyPlayerInfoList* list = Cast<UW_PartyPlayerInfoList>(mPartyPlayerInfoList);
+	if (nullptr == list)
+	{
+		return;
+	}
+
+	list->AddPartyList(inRemoteID, inLevel, inClass, inPlayerName, inIsLeader);
+}
+
+void UW_MainGame::ReleasePartyPlayerInfo(const int64& inRemoteID)
+{
+	UW_PartyPlayerInfoList* list = Cast<UW_PartyPlayerInfoList>(mPartyPlayerInfoList);
+	if (nullptr == list)
+	{
+		return;
+	}
+
+	list->RemovePartyPlayerInfo(inRemoteID);
 }
 
 void UW_MainGame::FriendNotifyGame(const FString& inPlayerName, const bool& inConnect)

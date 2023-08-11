@@ -14,4 +14,11 @@ class PROJECT_LD_API UW_PlayerBuffInfo : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+	//virtual void NativeOnInitialized() override;
+	//virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
+
 };

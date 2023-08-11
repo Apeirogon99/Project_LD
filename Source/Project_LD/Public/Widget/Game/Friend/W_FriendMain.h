@@ -34,6 +34,9 @@ public:
 	UPROPERTY(Meta = (BindWidget))
 		UButton* mBlockTab;
 
+	UPROPERTY(Meta = (BindWidget))
+		UButton* mDragButton;
+
 public:
 	UFUNCTION()
 		void Click_FriendTab();
@@ -60,6 +63,15 @@ public:
 public:
 	void LoadFriendListType(const google::protobuf::RepeatedPtrField<Protocol::SFriend>& inFriends, const int32& inListType);
 
+	UFUNCTION()
+		void UpdateLocation();
+
+	UFUNCTION()
+		void Pressed_Drag();
+
+	UFUNCTION()
+		void Released_Drag();
+
 public:
 	const int32& GetFriendListType();
 
@@ -75,4 +87,8 @@ private:
 
 	UPROPERTY()
 		int32	mFriendListType;
+
+private:
+	FVector2D		mPressedMousePoint;
+	FTimerHandle	mUpdateLocationTimerHandle;
 };

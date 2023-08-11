@@ -3,3 +3,10 @@
 
 #include "Widget/Game/Party/W_PlayerBuffInfo.h"
 
+void UW_PlayerBuffInfo::NativeConstruct()
+{
+}
+
+void UW_PlayerBuffInfo::NativeDestruct()
+{
+}
