@@ -50,10 +50,56 @@ void UW_FriendList::AddFriendList(const FString& inPlayerName, const int32& inLe
 	{
 		return;
 	}
+
+	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gameMode)
+	{
+		return;
+
+	}
+
+	APlayerController* owningController = GetOwningPlayer();
+	if (nullptr == owningController)
+	{
+		return;
+
+	}
+
+	ANetworkController* networkController = Cast<ANetworkController>(owningController);
+	if (nullptr == networkController)
+	{
+		return;
+
+	}
+
+	AClientHUD* clientHUD = gameMode->GetClientHUD();
+	if (nullptr == clientHUD)
+	{
+		return;
+
+	}
+
 	newCell->SetPlayerName(inPlayerName);
 	newCell->SetPlayerInfo(inLevel, inClass, inLocale, true);
 	newCell->SetConnectStateImage(StaticCast<EConnectState>(inState), true);
 	newCell->SetActionImage(EActionState::Invite);
+
+	FActionButtonDelegate actionButtonDelegatge;
+	actionButtonDelegatge.BindLambda([=]()
+		{
+			std::string partyName = UNetworkUtils::ConvertString(inPlayerName);
+
+			Protocol::C2S_RequestEnterParty requestPartyPacket;
+			requestPartyPacket.set_nick_name(partyName);
+			requestPartyPacket.set_timestamp(networkController->GetServerTimeStamp());
+
+			SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(networkController, requestPartyPacket);
+			networkController->Send(pakcetBuffer);
+
+			clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
+		});
+
+	newCell->mActionButtonDelegate = actionButtonDelegatge;
 
 	mFriendScrollBox->AddChild(newCell);
 	mFriendScrollBox->ScrollToEnd();

@@ -70,10 +70,10 @@ public:
 		void SetPlayerInfo(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName);
 	
 	UFUNCTION()
-		void SetListType(const EPartyListType& inPartyListType, const bool& inVisible);
+		void SetListType(const bool& inIsSelf, const EPartyListType& inPartyListType, const bool& inIsLeader);
 
 	UFUNCTION()
-		void SetLeader(const bool& inIsLeader);
+		const int64& GetRemoteID();
 
 public:
 	FPartyActionButtonDelegate mActionButtonDelegateA;

@@ -39,7 +39,13 @@ public:
 	void FriendOpenResponse(const google::protobuf::RepeatedPtrField<Protocol::SFriend>& inFriends, const int32& inListType);
 
 	UFUNCTION()
+		void PartyOpenRequest();
+
+	UFUNCTION()
 	void FriendNotifyGame(const FString& inPlayerName, const bool& inConnect);
+
+	UFUNCTION()
+	void PartyNotifyGame(const FString& inPlayerName, const int32& inAction);
 
 	UFUNCTION()
 	void InventoryOpenRequest();
@@ -64,6 +70,7 @@ private:
 	bool misSkillTreeOpen;
 	bool misChatOpen;
 	bool misFriendOpen;
+	bool misPartyOpen;
 
 private:
 	UPROPERTY(meta = (BindWidget))
@@ -76,5 +83,12 @@ private:
 		UButton* Btn_Friend;
 
 	UPROPERTY(meta = (BindWidget))
+		UButton* Btn_Party;
+
+	UPROPERTY(meta = (BindWidget))
 		UWidget* mNotifyFriend;
+
+	UPROPERTY(meta = (BindWidget))
+		UWidget* mNotifyParty;
+	
 };

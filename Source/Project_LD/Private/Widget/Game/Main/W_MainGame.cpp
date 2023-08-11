@@ -8,6 +8,7 @@
 #include <Widget/Game/Main/W_MainPlayerInfo.h>
 #include <Widget/Game/Friend/W_FriendMain.h>
 #include <Widget/Game/Friend/W_NotifyFriend.h>
+#include <Widget/Game/Party/W_PartyNotify.h>
 #include "Components/Button.h"
 #include "Blueprint/WidgetTree.h"
 
@@ -39,6 +40,12 @@ void UW_MainGame::NativeConstruct()
 		Btn_Friend->OnClicked.AddUniqueDynamic(this, &UW_MainGame::FriendOpenRequest);
 	}
 
+	Btn_Party = Cast<UButton>(GetWidgetFromName(TEXT("Btn_Party")));
+	if (Btn_Party != nullptr)
+	{
+		Btn_Party->OnClicked.AddUniqueDynamic(this, &UW_MainGame::PartyOpenRequest);
+	}
+
 	mBottomUI = this->WidgetTree->FindWidget(FName(TEXT("BW_BottomUI")));
 	if (mBottomUI == nullptr)
 	{
@@ -50,7 +57,7 @@ void UW_MainGame::NativeConstruct()
 	{
 		return;
 	}
-
+	
 	mNotifyFriend = this->WidgetTree->FindWidget(FName(TEXT("mNotifyFriend")));
 	if (mNotifyFriend != nullptr)
 	{
@@ -58,9 +65,17 @@ void UW_MainGame::NativeConstruct()
 		notify->SetVisibility(ESlateVisibility::Hidden);
 	}
 
+	mNotifyParty = this->WidgetTree->FindWidget(FName(TEXT("mNotifyParty")));
+	if (mNotifyParty != nullptr)
+	{
+		UW_PartyNotify* notify = Cast<UW_PartyNotify>(mNotifyParty);
+		notify->SetVisibility(ESlateVisibility::Hidden);
+	}
+
 	misInventoryOpen = false;
 	misChatOpen = false;
 	misFriendOpen = false;
+	misPartyOpen = false;
 }
 
 void UW_MainGame::Init()
@@ -200,6 +215,38 @@ void UW_MainGame::FriendOpenResponse(const google::protobuf::RepeatedPtrField<Pr
 	clientHUD->ShowWidgetFromName(FString(TEXT("FriendMain")));
 }
 
+void UW_MainGame::PartyOpenRequest()
+{
+	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return;
+	}
+
+	APC_Game* playerController = Cast<APC_Game>(gamemode->GetNetworkController());
+	if (GetOwningPlayer() != playerController)
+	{
+		return;
+	}
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(gamemode->GetClientHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+
+	if (misPartyOpen)
+	{
+		clientHUD->CleanWidgetFromName(FString(TEXT("FriendMain")));
+	}
+	else
+	{
+		clientHUD->ShowWidgetFromName(FString(TEXT("FriendMain")));
+	}
+	misPartyOpen = !misPartyOpen;
+}
+
 void UW_MainGame::FriendNotifyGame(const FString& inPlayerName, const bool& inConnect)
 {
 	UW_NotifyFriend* notify = Cast<UW_NotifyFriend>(mNotifyFriend);
@@ -209,6 +256,17 @@ void UW_MainGame::FriendNotifyGame(const FString& inPlayerName, const bool& inCo
 	}
 
 	notify->SetNotifyFriend(inPlayerName, inConnect);
+}
+
+void UW_MainGame::PartyNotifyGame(const FString& inPlayerName, const int32& inAction)
+{
+	UW_PartyNotify* notify = Cast<UW_PartyNotify>(mNotifyParty);
+	if (nullptr == notify)
+	{
+		return;
+	}
+
+	notify->SetNotifyParty(inPlayerName, inAction);
 }
 
 void UW_MainGame::InventoryOpenRequest()

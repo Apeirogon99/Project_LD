@@ -732,32 +732,42 @@ bool Handle_S2C_DisConnectFriend(ANetworkController* controller, Protocol::S2C_D
 
 bool Handle_S2C_CreateParty(ANetworkController* controller, Protocol::S2C_CreateParty& pkt)
 {
-    return false;
+    return true;
 }
 
-bool Handle_S2C_RequestParty(ANetworkController* controller, Protocol::S2C_RequestParty& pkt)
+bool Handle_S2C_RequestEnterParty(ANetworkController* controller, Protocol::S2C_RequestEnterParty& pkt)
 {
-    return false;
+    return true;
+}
+
+bool Handle_S2C_RequestLeaveParty(ANetworkController* controller, Protocol::S2C_RequestLeaveParty& pkt)
+{
+    return true;
+}
+
+bool Handle_S2C_RequestLeaderParty(ANetworkController* controller, Protocol::S2C_RequestLeaderParty& pkt)
+{
+    return true;
 }
 
 bool Handle_S2C_ResponeParty(ANetworkController* controller, Protocol::S2C_ResponeParty& pkt)
 {
-    return false;
+    return true;
 }
 
 bool Handle_S2C_NotifyParty(ANetworkController* controller, Protocol::S2C_NotifyParty& pkt)
 {
-    return false;
+    return true;
 }
 
 bool Handle_S2C_EnterPartyPlayer(ANetworkController* controller, Protocol::S2C_EnterPartyPlayer& pkt)
 {
-    return false;
+    return true;
 }
 
 bool Handle_S2C_LeavePartyPlayer(ANetworkController* controller, Protocol::S2C_LeavePartyPlayer& pkt)
 {
-    return false;
+    return true;
 }
 
 bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearItem& pkt)
