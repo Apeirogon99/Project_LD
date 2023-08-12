@@ -24,6 +24,7 @@ public:
 	void SwitchChat();
 	void SwitchSkillTree();
 	void SwitchFriend();
+	void SwitchParty();
 
 	void UseSkill_Q();
 	void UseSkill_W();
