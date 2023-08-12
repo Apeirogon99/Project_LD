@@ -74,10 +74,10 @@ public:
 	void Click_PartyTab();
 
 	UFUNCTION()
-		void Pressed_Drag();
+	void Pressed_Drag();
 
 	UFUNCTION()
-		void Released_Drag();
+	void Released_Drag();
 
 	UFUNCTION()
 	void Click_FriendTab();
@@ -94,6 +94,9 @@ public:
 
 	UFUNCTION()
 	void FocusChat();
+
+	UFUNCTION()
+	bool SendMessage(const FString& inMessage);
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Widget")

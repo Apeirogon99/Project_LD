@@ -28,6 +28,8 @@ void UW_PartyPlayerInfoList::NativeConstruct()
 		mDragButton->OnReleased.AddUniqueDynamic(this, &UW_PartyPlayerInfoList::Released_Drag);
 	}
 
+	ClearPartyPlayerInfoList();
+
 	this->SetVisibility(ESlateVisibility::Hidden);
 }
 

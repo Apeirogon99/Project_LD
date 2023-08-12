@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Widget/Game/Party/W_PartyPlayerInfo.h"
@@ -26,7 +26,7 @@ void UW_PartyPlayerInfo::SetPlayerInfo(const int64& inRemoteID, const int32& inL
 {
 	FString tempText;
 	tempText.Append(FString::FromInt(inLevel));
-	tempText.Append(TEXT("·¹º§"));
+	tempText.Append(TEXT("ë ˆë²¨"));
 	FText netText = FText::FromString(tempText);
 
 	mLevel->SetText(netText);

@@ -27,6 +27,7 @@
 #include <Widget/Handler/ClientHUD.h>
 #include <GameContent/Item/ItemParent.h>
 #include <Widget/Game/Main/W_MainGame.h>
+#include <Widget/Game/Party/W_PartyMain.h>
 
 bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_EnterGameServer& pkt)
 {
@@ -732,41 +733,705 @@ bool Handle_S2C_DisConnectFriend(ANetworkController* controller, Protocol::S2C_D
 
 bool Handle_S2C_CreateParty(ANetworkController* controller, Protocol::S2C_CreateParty& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+    FCharacterData& characterData = playerState->GetCharacterData();
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    int32 error = pkt.error();
+    if (error != GetDatabaseErrorToInt(EDCommonErrorType::SUCCESS))
+    {
+
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 생성 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    {
+        UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("PartyMain")));
+        if (nullptr == widget)
+        {
+            return false;
+        }
+
+        UW_PartyMain* partyMainWidget = Cast<UW_PartyMain>(widget);
+        if (nullptr == partyMainWidget)
+        {
+            return false;
+        }
+
+        partyMainWidget->PushPlayerList(playerState->GetRemoteID(), characterData.GetLevel(), StaticCast<int32>(characterData.GetClass()), characterData.GetName(), true, true);
+    }
+
+    {
+        UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+        if (nullptr == widget)
+        {
+            return false;
+        }
+
+        UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+        if (nullptr == mainGameWidget)
+        {
+            return false;
+        }
+
+        mainGameWidget->PushPartyPlayerInfo(playerState->GetRemoteID(), characterData.GetLevel(), StaticCast<int32>(characterData.GetClass()), characterData.GetName(), true);
+    }
+
     return true;
 }
 
 bool Handle_S2C_RequestEnterParty(ANetworkController* controller, Protocol::S2C_RequestEnterParty& pkt)
 {
-    return true;
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+    FCharacterData& characterData = playerState->GetCharacterData();
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    int32 error = pkt.error();
+    if (error != GetDatabaseErrorToInt(EDCommonErrorType::SUCCESS))
+    {
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 요청 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    else
+    {
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 요청 성공"), TEXT("파티를 요청하였습니다."), TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+}
+
+bool Handle_S2C_RequestParty(ANetworkController* controller, Protocol::S2C_RequestParty& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    int64   remoteID = pkt.remote_id();
+    int32   level = pkt.level();
+    int32   characterClass = static_cast<int32>(pkt.character_class());
+    FString name = UNetworkUtils::ConvertFString(pkt.nick_name());
+
+    {
+        UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+        if (nullptr == widget)
+        {
+            return false;
+        }
+
+        UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+        if (nullptr == mainGameWidget)
+        {
+            return false;
+        }
+        mainGameWidget->PartyNotifyGame(name, 1);
+    }
+
+
+    {
+        UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("PartyMain")));
+        if (nullptr == widget)
+        {
+            return false;
+        }
+
+        UW_PartyMain* partyMainWidget = Cast<UW_PartyMain>(widget);
+        if (nullptr == partyMainWidget)
+        {
+            return false;
+        }
+        partyMainWidget->PushRequestList(remoteID, level, characterClass, name);
+        return true;
+    }
 }
 
 bool Handle_S2C_RequestLeaveParty(ANetworkController* controller, Protocol::S2C_RequestLeaveParty& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+    FCharacterData& characterData = playerState->GetCharacterData();
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    int32 error = pkt.error();
+    if (error != GetDatabaseErrorToInt(EDCommonErrorType::SUCCESS))
+    {
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 탈퇴 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+
+        return true;
+    }
+    else
+    {
+        FString causeString;
+        switch (pkt.cause())
+        {
+        case 1:
+            causeString = TEXT("강제 퇴장 당하셨습니다.");
+            break;
+        case 2:
+            causeString = TEXT("권한을 위임하고 탈퇴 하였습니다.");
+            break;
+        case 3:
+            causeString = TEXT("파티를 탈퇴 하였습니다.");
+            break;
+        default:
+            causeString = TEXT("알 수 없는 에러.");
+            break;
+        }
+
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 탈퇴 성공"), causeString, TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+
+        {
+            UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("PartyMain")));
+            if (nullptr == widget)
+            {
+                return false;
+            }
+
+            UW_PartyMain* partyMainWidget = Cast<UW_PartyMain>(widget);
+            if (nullptr == partyMainWidget)
+            {
+                return false;
+            }
+
+            partyMainWidget->ClearPlayerList();
+        }
+
+        {
+            UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+            if (nullptr == widget)
+            {
+                return false;
+            }
+
+            UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+            if (nullptr == mainGameWidget)
+            {
+                return false;
+            }
+
+            mainGameWidget->ClearPartyPlayerInfo();
+        }
+    }
+
     return true;
 }
 
 bool Handle_S2C_RequestLeaderParty(ANetworkController* controller, Protocol::S2C_RequestLeaderParty& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    int32 error = pkt.error();
+    if (error != GetDatabaseErrorToInt(EDCommonErrorType::SUCCESS))
+    {
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 권한 위임 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+
+    }
+
     return true;
 }
 
 bool Handle_S2C_ResponeParty(ANetworkController* controller, Protocol::S2C_ResponeParty& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    int32 error = pkt.error();
+    if (error != GetDatabaseErrorToInt(EDCommonErrorType::SUCCESS))
+    {
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 응답 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+
+    }
+    else
+    {
+
+        FString description;
+        if (pkt.action() == 2)
+        {
+            description = TEXT("파티 참가를 수락하였습니다");
+        }
+        else if(pkt.action() == 3)
+        {
+            description = TEXT("파티 참가를 거절하였습니다");
+        }
+        else
+        {
+            description = TEXT("알 수 없는 에러");
+        }
+
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 응답 성공"), description, TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+
+        {
+            UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("PartyMain")));
+            if (nullptr == widget)
+            {
+                return false;
+            }
+
+            UW_PartyMain* partyMainWidget = Cast<UW_PartyMain>(widget);
+            if (nullptr == partyMainWidget)
+            {
+                return false;
+            }
+            partyMainWidget->ReleaseRequestList(pkt.remote_id());
+            return true;
+        }
+
+    }
+
+    return true;
+}
+
+bool Handle_S2C_LoadParty(ANetworkController* controller, Protocol::S2C_LoadParty& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+
+    int32 error = pkt.error();
+    if (error != GetDatabaseErrorToInt(EDCommonErrorType::SUCCESS))
+    {
+
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 로드 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    UW_PartyMain* partyMainWidget = Cast<UW_PartyMain>(clientHUD->GetWidgetFromName(FString(TEXT("PartyMain"))));
+    if (nullptr == partyMainWidget)
+    {
+        return false;
+    }
+    partyMainWidget->ClearPlayerList();
+
+    UW_MainGame* mainGameWidget = Cast<UW_MainGame>(clientHUD->GetWidgetFromName(FString(TEXT("MainGame"))));
+    if (nullptr == mainGameWidget)
+    {
+        return false;
+    }
+    mainGameWidget->ClearPartyPlayerInfo();
+
+    const int32 maxSize = pkt.remote_id_size();
+    for (int32 index = 0; index < maxSize; ++index)
+    {
+
+        int64   remoteID        = pkt.mutable_remote_id()->Get(index);
+        int32   level           = pkt.mutable_level()->Get(index);
+        int32   characterClass  = static_cast<int32>(pkt.mutable_character_class()->Get(index));
+        FString name            = UNetworkUtils::ConvertFString(pkt.mutable_nick_name()->Get(index));
+        bool    isSelf          = remoteID == playerState->GetRemoteID();
+        bool    isLeader        = static_cast<bool>(pkt.mutable_is_leader()->Get(index));
+
+        {
+            partyMainWidget->PushPlayerList(remoteID, level, characterClass, name, isSelf, isLeader);
+        }
+
+        {
+            mainGameWidget->PushPartyPlayerInfo(remoteID, level, characterClass, name, isLeader);
+        }
+    }
+
     return true;
 }
 
 bool Handle_S2C_NotifyParty(ANetworkController* controller, Protocol::S2C_NotifyParty& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+    if (nullptr == widget)
+    {
+        return false;
+    }
+
+    UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+    if (nullptr == mainGameWidget)
+    {
+        return false;
+    }
+
+    const FString playerName = UNetworkUtils::ConvertFString(pkt.nick_name());
+    mainGameWidget->PartyNotifyGame(playerName, pkt.action());
     return true;
 }
 
 bool Handle_S2C_EnterPartyPlayer(ANetworkController* controller, Protocol::S2C_EnterPartyPlayer& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+
+
+    int64   remoteID            = pkt.remote_id();
+    int32   level               = pkt.level();
+    int32   characterClass      = static_cast<int32>(pkt.character_class());
+    FString name                = UNetworkUtils::ConvertFString(pkt.nick_name());
+    bool    isSelf              = remoteID == playerState->GetRemoteID();
+    bool    isLeader            = static_cast<bool>(pkt.is_leader());
+
+    {
+        UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("PartyMain")));
+        if (nullptr == widget)
+        {
+            return false;
+        }
+
+        UW_PartyMain* partyMainWidget = Cast<UW_PartyMain>(widget);
+        if (nullptr == partyMainWidget)
+        {
+            return false;
+        }
+
+        partyMainWidget->PushPlayerList(remoteID, level, characterClass, name, isSelf, isLeader);
+    }
+
+    {
+        UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+        if (nullptr == widget)
+        {
+            return false;
+        }
+
+        UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+        if (nullptr == mainGameWidget)
+        {
+            return false;
+        }
+
+        mainGameWidget->PushPartyPlayerInfo(remoteID, level, characterClass, name, isLeader);
+    }
+
     return true;
 }
 
 bool Handle_S2C_LeavePartyPlayer(ANetworkController* controller, Protocol::S2C_LeavePartyPlayer& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    {
+        UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("PartyMain")));
+        if (nullptr == widget)
+        {
+            return false;
+        }
+
+        UW_PartyMain* partyMainWidget = Cast<UW_PartyMain>(widget);
+        if (nullptr == partyMainWidget)
+        {
+            return false;
+        }
+
+        partyMainWidget->ReleasePlayerList(pkt.remote_id());
+    }
+
+    {
+        UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+        if (nullptr == widget)
+        {
+            return false;
+        }
+
+        UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+        if (nullptr == mainGameWidget)
+        {
+            return false;
+        }
+
+        mainGameWidget->ReleasePartyPlayerInfo(pkt.remote_id());
+    }
+
     return true;
 }
 

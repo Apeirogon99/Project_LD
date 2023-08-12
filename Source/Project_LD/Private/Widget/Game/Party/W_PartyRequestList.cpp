@@ -19,6 +19,8 @@ void UW_PartyRequestList::NativeConstruct()
 	Super::NativeConstruct();
 
 	mPartyScrollBox = Cast<UScrollBox>(GetWidgetFromName(TEXT("mPartyScrollBox")));
+
+	ClearPartyList();
 }
 
 void UW_PartyRequestList::NativeDestruct()
@@ -34,6 +36,7 @@ void UW_PartyRequestList::ClearPartyList()
 	{
 		widget->RemoveFromParent();
 	}
+	mPartyPlayerLists.Empty();
 
 	for (int32 ChildIndex = mPartyScrollBox->GetChildrenCount() - 1; ChildIndex >= 0; ChildIndex--)
 	{
@@ -43,7 +46,12 @@ void UW_PartyRequestList::ClearPartyList()
 	mPartyScrollBox->ClearChildren();
 }
 
-void UW_PartyRequestList::AddPartyList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName)
+int32 UW_PartyRequestList::GetRequestPartyPlayerListNumber()
+{
+	return mPartyPlayerLists.Num();
+}
+
+void UW_PartyRequestList::AddRequestPartyList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName)
 {
 	UW_PartyPlayerCell* newCell = Cast<UW_PartyPlayerCell>(CreateWidget(GetWorld(), mPartyPlayerCellClass));
 	if (nullptr == newCell)
@@ -82,11 +90,9 @@ void UW_PartyRequestList::AddPartyList(const int64& inRemoteID, const int32& inL
 	FPartyActionButtonDelegate actionButtonDelegatgeA;
 	actionButtonDelegatgeA.BindLambda([=]()
 		{
-			std::string partyName = UNetworkUtils::ConvertString(inPlayerName);
-
 			Protocol::C2S_ResponeParty responePartyPacket;
-			responePartyPacket.set_nick_name(partyName);
-			responePartyPacket.set_action(1);
+			responePartyPacket.set_remote_id(inRemoteID);
+			responePartyPacket.set_action(2);
 			responePartyPacket.set_timestamp(networkController->GetServerTimeStamp());
 
 			SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(networkController, responePartyPacket);
@@ -103,8 +109,8 @@ void UW_PartyRequestList::AddPartyList(const int64& inRemoteID, const int32& inL
 			std::string partyName = UNetworkUtils::ConvertString(inPlayerName);
 
 			Protocol::C2S_ResponeParty responePartyPacket;
-			responePartyPacket.set_nick_name(partyName);
-			responePartyPacket.set_action(2);
+			responePartyPacket.set_remote_id(inRemoteID);
+			responePartyPacket.set_action(3);
 			responePartyPacket.set_timestamp(networkController->GetServerTimeStamp());
 
 			SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(networkController, responePartyPacket);
@@ -118,6 +124,34 @@ void UW_PartyRequestList::AddPartyList(const int64& inRemoteID, const int32& inL
 	newCell->SetPlayerInfo(inRemoteID, inLevel, inClass, inPlayerName);
 	newCell->SetListType(false, EPartyListType::RequestList, false);
 
+	mPartyPlayerLists.Push(newCell);
+
 	mPartyScrollBox->AddChild(newCell);
+	mPartyScrollBox->ScrollToEnd();
+}
+
+void UW_PartyRequestList::RemoveRequestPartyList(const int64& inRemoteID)
+{
+	for (UUserWidget* widget : mPartyPlayerLists)
+	{
+		UW_PartyPlayerCell* partyWidget = Cast<UW_PartyPlayerCell>(widget);
+		if (nullptr == partyWidget)
+		{
+			return;
+		}
+
+		if (inRemoteID == partyWidget->GetRemoteID())
+		{
+			widget->RemoveFromParent();
+			mPartyPlayerLists.Remove(widget);
+			break;
+		}
+	}
+
+	mPartyScrollBox->ClearChildren();
+	for (UUserWidget* widget : mPartyPlayerLists)
+	{
+		mPartyScrollBox->AddChild(widget);
+	}
 	mPartyScrollBox->ScrollToEnd();
 }

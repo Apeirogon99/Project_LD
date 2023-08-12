@@ -42,6 +42,9 @@ public:
 	void PartyOpenRequest();
 
 	UFUNCTION()
+	void ClearPartyPlayerInfo();
+
+	UFUNCTION()
 	void PushPartyPlayerInfo(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsLeader);
 
 	UFUNCTION()

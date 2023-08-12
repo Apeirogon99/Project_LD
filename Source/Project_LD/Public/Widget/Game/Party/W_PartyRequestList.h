@@ -31,7 +31,13 @@ public:
 		void ClearPartyList();
 
 	UFUNCTION()
-		void AddPartyList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName);
+		void AddRequestPartyList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName);
+
+	UFUNCTION()
+		void RemoveRequestPartyList(const int64& inRemoteID);
+
+public:
+	int32 GetRequestPartyPlayerListNumber();
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Widget")

@@ -6,7 +6,9 @@
 #include "Blueprint/UserWidget.h"
 #include "W_PartyMain.generated.h"
 
+class UTextBlock;
 class UButton;
+class UImage;
 /**
  * 
  */
@@ -34,6 +36,31 @@ public:
 
 	UPROPERTY(Meta = (BindWidget))
 		UButton* mDragButton;
+
+	UPROPERTY(Meta = (BindWidget))
+		UTextBlock* mPlayerCount;
+
+	UPROPERTY(Meta = (BindWidget))
+		UImage* mResponeImage;
+
+public:
+	UFUNCTION()
+	void ClearPlayerList();
+
+	UFUNCTION()
+	void PushPlayerList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf, const bool& inIsLeader);
+
+	UFUNCTION()
+	void ReleasePlayerList(const int64& inRemoteID);
+
+	UFUNCTION()
+	void ClearRequestList();
+
+	UFUNCTION()
+	void PushRequestList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName);
+
+	UFUNCTION()
+	void ReleaseRequestList(const int64& inRemoteID);
 
 public:
 	UFUNCTION()
@@ -63,6 +90,13 @@ public:
 
 	UFUNCTION()
 		void Released_Drag();
+
+public:
+	UPROPERTY(EditAnywhere, Category = "Widget")
+		UTexture2D* mHaveRequestListTexture;
+
+	UPROPERTY(EditAnywhere, Category = "Widget")
+		UTexture2D* mNotHaveRequestListTexture;
 
 private:
 	UPROPERTY()

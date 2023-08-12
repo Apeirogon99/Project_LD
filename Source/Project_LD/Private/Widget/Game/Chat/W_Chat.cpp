@@ -83,22 +83,7 @@ void UW_Chat::Committed_Message(const FText& inEditValue, ETextCommit::Type inCo
 			return;
 		}
 
-		APlayerController* owningController = GetOwningPlayer();
-		ANetworkController* networkController = Cast<ANetworkController>(owningController);
-		if (nullptr == networkController)
-		{
-			return;
-		}
-
-		std::string message = UNetworkUtils::ConvertString(inEditValue.ToString());
-		const int64 timeStamp = networkController->GetServerTimeStamp();
-
-		Protocol::C2S_Chat chatPacket;
-		chatPacket.set_message(message);
-		chatPacket.set_timestamp(timeStamp);
-
-		SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(nullptr, chatPacket);
-		networkController->Send(sendBuffer);
+		this->SendMessage(inEditValue.ToString());
 
 		mEditMessage->SetText(FText::GetEmpty());
 		mChangeMessage = FText::GetEmpty();
@@ -114,27 +99,13 @@ void UW_Chat::Chanage_Message(const FText& inEditValue)
 
 void UW_Chat::Click_SendButton()
 {
-	APlayerController* owningController = GetOwningPlayer();
-	ANetworkController* networkController = Cast<ANetworkController>(owningController);
-	if (nullptr == networkController)
-	{
-		return;
-	}
 
 	if (mChangeMessage.IsEmpty())
 	{
 		return;
 	}
 
-	std::string message = UNetworkUtils::ConvertString(mChangeMessage.ToString());
-	const int64 timeStamp = networkController->GetServerTimeStamp();
-
-	Protocol::C2S_Chat chatPacket;
-	chatPacket.set_message(message);
-	chatPacket.set_timestamp(timeStamp);
-
-	SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(nullptr, chatPacket);
-	networkController->Send(sendBuffer);
+	this->SendMessage(mChangeMessage.ToString());
 
 	mEditMessage->SetText(FText::GetEmpty());
 	mChangeMessage = FText::GetEmpty();
@@ -248,4 +219,40 @@ void UW_Chat::FocusChat()
 	owningController->SetInputMode(inputMode);
 	
 	mEditMessage->SetKeyboardFocus();
+}
+
+bool UW_Chat::SendMessage(const FString& inMessage)
+{
+	APlayerController* owningController = GetOwningPlayer();
+	ANetworkController* networkController = Cast<ANetworkController>(owningController);
+	if (nullptr == networkController)
+	{
+		return false;
+	}
+	std::string message = UNetworkUtils::ConvertString(mChangeMessage.ToString());
+	const int64 timeStamp = networkController->GetServerTimeStamp();
+
+	if (mChatType == EChat::Chat_World)
+	{
+		Protocol::C2S_Chat chatPacket;
+		chatPacket.set_message(message);
+		chatPacket.set_timestamp(timeStamp);
+
+		SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(nullptr, chatPacket);
+		networkController->Send(sendBuffer);
+	}
+	else if (mChatType == EChat::Chat_Party)
+	{
+
+	}
+	else if (mChatType == EChat::Chat_Friend)
+	{
+
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
 }

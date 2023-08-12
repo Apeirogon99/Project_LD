@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Widget/Game/Party/W_PartyMain.h"
@@ -6,6 +6,7 @@
 #include "Widget/Game/Party/W_PartyPlayerCell.h"
 #include "Widget/Game/Party/W_PartyPlayerInfo.h"
 #include "Widget/Game/Party/W_PartyPlayerInfoList.h"
+#include "Widget/Game/Party/W_PartyPlayerList.h"
 #include "Widget/Game/Party/W_PartyRequestList.h"
 #include "Widget/Game/Party/W_PlayerBuffInfo.h"
 
@@ -21,6 +22,8 @@
 #include <Blueprint/WidgetTree.h>
 
 #include <Components/Button.h>
+#include <Components/Image.h>
+#include <Components/TextBlock.h>
 #include <Blueprint/WidgetLayoutLibrary.h>
 
 void UW_PartyMain::NativeConstruct()
@@ -31,7 +34,11 @@ void UW_PartyMain::NativeConstruct()
 	mRequestPartyTab = Cast<UButton>(GetWidgetFromName(TEXT("mRequestPartyTab")));
 	mRequestListTab = Cast<UButton>(GetWidgetFromName(TEXT("mRequestListTab")));
 
+	mPlayerCount = Cast<UTextBlock>(GetWidgetFromName(TEXT("mPlayerCount")));
+
 	mDragButton = Cast<UButton>(GetWidgetFromName(TEXT("mDragButton")));
+
+	mResponeImage = Cast<UImage>(GetWidgetFromName(TEXT("mResponeImage")));
 
 	if (mPlayerListTab != nullptr)
 	{
@@ -57,18 +64,138 @@ void UW_PartyMain::NativeConstruct()
 	mPartyPlayerList = this->WidgetTree->FindWidget(FName(TEXT("BW_PartyPlayerList")));
 	if (mPartyPlayerList != nullptr)
 	{
+		UW_PartyPlayerList* widget = Cast<UW_PartyPlayerList>(mPartyPlayerList);
+		if (nullptr == widget)
+		{
+			return;
+		}
 
+		FString countText;
+		countText.Append(FString::FromInt(widget->GetPartyPlayerListNumber()));
+		countText.Append(TEXT(" / 4"));
+		mPlayerCount->SetText(FText::FromString(countText));
 	}
 
 	mPartyRequesrList = this->WidgetTree->FindWidget(FName(TEXT("BW_PartyRequestList")));
 	if (mPartyRequesrList != nullptr)
 	{
+		UW_PartyRequestList* widget = Cast<UW_PartyRequestList>(mPartyRequesrList);
+		if (nullptr == widget)
+		{
+			return;
+		}
 
+		if (widget->GetRequestPartyPlayerListNumber())
+		{
+			mResponeImage->SetBrushFromTexture(mHaveRequestListTexture);
+		}
+		else
+		{
+			mResponeImage->SetBrushFromTexture(mNotHaveRequestListTexture);
+		}
 	}
 }
 
 void UW_PartyMain::NativeDestruct()
 {
+	UW_PartyPlayerList* playerList = Cast<UW_PartyPlayerList>(mPartyPlayerList);
+	if (nullptr == playerList)
+	{
+		return;
+	}
+	playerList->RemoveFromParent();
+
+	UW_PartyRequestList* requestList = Cast<UW_PartyRequestList>(mPartyRequesrList);
+	if (nullptr == requestList)
+	{
+		return;
+	}
+	requestList->RemoveFromParent();
+}
+
+void UW_PartyMain::ClearPlayerList()
+{
+	UW_PartyPlayerList* widget = Cast<UW_PartyPlayerList>(mPartyPlayerList);
+	if (nullptr == widget)
+	{
+		return;
+	}
+	widget->ClearPartyList();
+
+	FString countText;
+	countText.Append(FString::FromInt(widget->GetPartyPlayerListNumber()));
+	countText.Append(TEXT(" / 4"));
+	mPlayerCount->SetText(FText::FromString(countText));
+}
+
+void UW_PartyMain::PushPlayerList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf, const bool& inIsLeader)
+{
+	UW_PartyPlayerList* widget = Cast<UW_PartyPlayerList>(mPartyPlayerList);
+	if (nullptr == widget)
+	{
+		return;
+	}
+	widget->AddPartyList(inRemoteID, inLevel, inClass, inPlayerName, inIsSelf, inIsLeader);
+
+	FString countText;
+	countText.Append(FString::FromInt(widget->GetPartyPlayerListNumber()));
+	countText.Append(TEXT(" / 4"));
+	mPlayerCount->SetText(FText::FromString(countText));
+}
+
+void UW_PartyMain::ReleasePlayerList(const int64& inRemoteID)
+{
+	UW_PartyPlayerList* widget = Cast<UW_PartyPlayerList>(mPartyPlayerList);
+	if (nullptr == widget)
+	{
+		return;
+	}
+	widget->RemovePartyList(inRemoteID);
+
+	FString countText;
+	countText.Append(FString::FromInt(widget->GetPartyPlayerListNumber()));
+	countText.Append(TEXT(" / 4"));
+	mPlayerCount->SetText(FText::FromString(countText));
+}
+
+void UW_PartyMain::ClearRequestList()
+{
+	UW_PartyRequestList* widget = Cast<UW_PartyRequestList>(mPartyRequesrList);
+	if (nullptr == widget)
+	{
+		return;
+	}
+	widget->ClearPartyList();
+}
+
+void UW_PartyMain::PushRequestList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName)
+{
+	UW_PartyRequestList* widget = Cast<UW_PartyRequestList>(mPartyRequesrList);
+	if (nullptr == widget)
+	{
+		return;
+	}
+	widget->AddRequestPartyList(inRemoteID, inLevel, inClass, inPlayerName);
+
+	if (widget->GetRequestPartyPlayerListNumber())
+	{
+		mResponeImage->SetBrushFromTexture(mHaveRequestListTexture);
+	}
+}
+
+void UW_PartyMain::ReleaseRequestList(const int64& inRemoteID)
+{
+	UW_PartyRequestList* widget = Cast<UW_PartyRequestList>(mPartyRequesrList);
+	if (nullptr == widget)
+	{
+		return;
+	}
+	widget->RemoveRequestPartyList(inRemoteID);
+
+	if (0 == widget->GetRequestPartyPlayerListNumber())
+	{
+		mResponeImage->SetBrushFromTexture(mNotHaveRequestListTexture);
+	}
 }
 
 void UW_PartyMain::Click_PartyListTab()
@@ -106,6 +233,32 @@ void UW_PartyMain::Click_RequestPartyTab()
 
 	}
 
+	{
+		UW_PartyPlayerList* widget = Cast<UW_PartyPlayerList>(mPartyPlayerList);
+		if (nullptr == widget)
+		{
+			return;
+		}
+
+		if (0 == widget->GetPartyPlayerListNumber())
+		{
+			FNotificationDelegate notificationDelegate;
+			notificationDelegate.BindLambda([=]()
+				{
+					clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				});
+
+			bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 생성"), TEXT("먼저 파티를 생성해 주세요"), TEXT("확인"), notificationDelegate);
+			if (ret == false)
+			{
+				return;
+			}
+
+			return;
+		}
+
+	}
+
 	FButtonDelegate buttonDelegate;
 	buttonDelegate.BindLambda([=](const FString& inFriendName)
 		{
@@ -122,7 +275,7 @@ void UW_PartyMain::Click_RequestPartyTab()
 			clientHUD->CleanWidgetFromName(TEXT("EditBox"));
 		});
 
-	UWidgetUtils::SetEditBox(clientHUD, TEXT("��Ƽ ��û"), TEXT("ģ�� �̸�"), TEXT("��û"), buttonDelegate);
+	UWidgetUtils::SetEditBox(clientHUD, TEXT("파티 요청"), TEXT("친구 이름"), TEXT("요청"), buttonDelegate);
 }
 
 void UW_PartyMain::Click_RequestListTab()

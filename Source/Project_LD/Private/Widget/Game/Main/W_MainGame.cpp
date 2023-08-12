@@ -4,13 +4,18 @@
 #include "Widget/Game/Main/W_MainGame.h"
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Chat/W_Chat.h>
+
 #include <Widget/Game/Main/W_BottomUI.h>
 #include <Widget/Game/Main/W_MainPlayerInfo.h>
+
 #include <Widget/Game/Friend/W_FriendMain.h>
 #include <Widget/Game/Friend/W_NotifyFriend.h>
+
 #include <Widget/Game/Party/W_PartyNotify.h>
 #include <Widget/Game/Party/W_PartyPlayerInfo.h>
 #include <Widget/Game/Party/W_PartyPlayerInfoList.h>
+#include <Widget/Game/Party/W_PartyMain.h>
+
 #include "Components/Button.h"
 #include "Blueprint/WidgetTree.h"
 
@@ -246,13 +251,23 @@ void UW_MainGame::PartyOpenRequest()
 
 	if (misPartyOpen)
 	{
-		clientHUD->CleanWidgetFromName(FString(TEXT("FriendMain")));
+		clientHUD->CleanWidgetFromName(FString(TEXT("PartyMain")));
 	}
 	else
 	{
-		clientHUD->ShowWidgetFromName(FString(TEXT("FriendMain")));
+		clientHUD->ShowWidgetFromName(FString(TEXT("PartyMain")));
 	}
 	misPartyOpen = !misPartyOpen;
+}
+
+void UW_MainGame::ClearPartyPlayerInfo()
+{
+	UW_PartyPlayerInfoList* list = Cast<UW_PartyPlayerInfoList>(mPartyPlayerInfoList);
+	if (nullptr == list)
+	{
+		return;
+	}
+	list->ClearPartyPlayerInfoList();
 }
 
 void UW_MainGame::PushPartyPlayerInfo(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsLeader)

@@ -6,6 +6,7 @@
 #include <Widget/WidgetUtils.h>
 
 #include <Components/ScrollBox.h>
+#include <Components/Button.h>
 
 #include <NetworkController.h>
 #include <NetworkGameMode.h>
@@ -19,6 +20,17 @@ void UW_PartyPlayerList::NativeConstruct()
 	Super::NativeConstruct();
 
 	mPartyScrollBox = Cast<UScrollBox>(GetWidgetFromName(TEXT("mPartyScrollBox")));
+
+	mCreateParty = Cast<UButton>(GetWidgetFromName(TEXT("mCreateParty")));
+
+	if (mCreateParty != nullptr)
+	{
+		mCreateParty->OnClicked.AddUniqueDynamic(this, &UW_PartyPlayerList::Click_CreateParty);
+	}
+
+	ClearPartyList();
+
+	UpdatePartyList();
 }
 
 void UW_PartyPlayerList::NativeDestruct()
@@ -28,19 +40,64 @@ void UW_PartyPlayerList::NativeDestruct()
 	ClearPartyList();
 }
 
+void UW_PartyPlayerList::Click_CreateParty()
+{
+	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
+	if (nullptr == gameMode)
+	{
+		return;
+
+	}
+
+	APlayerController* owningController = GetOwningPlayer();
+	if (nullptr == owningController)
+	{
+		return;
+
+	}
+
+	ANetworkController* networkController = Cast<ANetworkController>(owningController);
+	if (nullptr == networkController)
+	{
+		return;
+
+	}
+
+	AClientHUD* clientHUD = gameMode->GetClientHUD();
+	if (nullptr == clientHUD)
+	{
+		return;
+
+	}
+
+	if (0 == this->GetPartyPlayerListNumber())
+	{
+		Protocol::C2S_CreateParty createPartyPacket;
+		createPartyPacket.set_timestamp(networkController->GetServerTimeStamp());
+
+		SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(networkController, createPartyPacket);
+		networkController->Send(pakcetBuffer);
+
+		clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
+	}
+}
+
 void UW_PartyPlayerList::ClearPartyList()
 {
 	for (UUserWidget* widget : mPartyPlayerLists)
 	{
 		widget->RemoveFromParent();
 	}
+	mPartyPlayerLists.Empty();
 
 	for (int32 ChildIndex = mPartyScrollBox->GetChildrenCount() - 1; ChildIndex >= 0; ChildIndex--)
 	{
 		mPartyScrollBox->RemoveChildAt(ChildIndex);
 	}
-
 	mPartyScrollBox->ClearChildren();
+
+
+	OnChangeCreateWidget(true);
 }
 
 void UW_PartyPlayerList::AddPartyList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf, const bool& inIsLeader)
@@ -82,10 +139,8 @@ void UW_PartyPlayerList::AddPartyList(const int64& inRemoteID, const int32& inLe
 	FPartyActionButtonDelegate actionButtonDelegatgeA;
 	actionButtonDelegatgeA.BindLambda([=]()
 		{
-			std::string partyName = UNetworkUtils::ConvertString(inPlayerName);
-
 			Protocol::C2S_RequestLeaderParty leaderPartyPacket;
-			leaderPartyPacket.set_nick_name(partyName);
+			leaderPartyPacket.set_remote_id(inRemoteID);
 			leaderPartyPacket.set_timestamp(networkController->GetServerTimeStamp());
 
 			SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(networkController, leaderPartyPacket);
@@ -99,10 +154,8 @@ void UW_PartyPlayerList::AddPartyList(const int64& inRemoteID, const int32& inLe
 	FPartyActionButtonDelegate actionButtonDelegatgeB;
 	actionButtonDelegatgeB.BindLambda([=]()
 		{
-			std::string partyName = UNetworkUtils::ConvertString(inPlayerName);
-
 			Protocol::C2S_RequestLeaveParty leavePartyPacket;
-			leavePartyPacket.set_nick_name(partyName);
+			leavePartyPacket.set_remote_id(inRemoteID);
 			leavePartyPacket.set_timestamp(networkController->GetServerTimeStamp());
 
 			SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(networkController, leavePartyPacket);
@@ -116,8 +169,12 @@ void UW_PartyPlayerList::AddPartyList(const int64& inRemoteID, const int32& inLe
 	newCell->SetPlayerInfo(inRemoteID, inLevel, inClass, inPlayerName);
 	newCell->SetListType(inIsSelf, EPartyListType::PlayerList, inIsLeader);
 
+	mPartyPlayerLists.Push(newCell);
+
 	mPartyScrollBox->AddChild(newCell);
 	mPartyScrollBox->ScrollToEnd();
+
+	UpdatePartyList();
 }
 
 void UW_PartyPlayerList::RemovePartyList(const int64& inRemoteID)
@@ -144,4 +201,28 @@ void UW_PartyPlayerList::RemovePartyList(const int64& inRemoteID)
 		mPartyScrollBox->AddChild(widget);
 	}
 	mPartyScrollBox->ScrollToEnd();
+
+	UpdatePartyList();
+}
+
+void UW_PartyPlayerList::UpdatePartyList()
+{
+	if (0 == this->GetPartyPlayerListNumber())
+	{
+		OnChangeCreateWidget(true);
+	}
+	else
+	{
+		OnChangeCreateWidget(false);
+	}
+}
+
+bool UW_PartyPlayerList::OnChangeCreateWidget_Implementation(bool isCreate)
+{
+	return false;
+}
+
+int32 UW_PartyPlayerList::GetPartyPlayerListNumber()
+{
+	return mPartyPlayerLists.Num();
 }

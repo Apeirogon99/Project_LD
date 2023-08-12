@@ -7,6 +7,7 @@
 #include "W_PartyPlayerList.generated.h"
 
 class UScrollBox;
+class UButton;
 /**
  * 
  */
@@ -26,6 +27,13 @@ public:
 	UPROPERTY(Meta = (BindWidget))
 		UScrollBox* mPartyScrollBox;
 
+	UPROPERTY(Meta = (BindWidget))
+		UButton* mCreateParty;
+
+public:
+	UFUNCTION()
+		void Click_CreateParty();
+
 public:
 	UFUNCTION()
 		void ClearPartyList();
@@ -35,6 +43,17 @@ public:
 
 	UFUNCTION()
 	void RemovePartyList(const int64& inRemoteID);
+
+	UFUNCTION()
+		void UpdatePartyList();
+
+public:
+	UFUNCTION(BlueprintNativeEvent)
+		void OnChangeCreateWidget(bool isCreate);
+	virtual bool OnChangeCreateWidget_Implementation(bool isCreate);
+	
+public:
+	int32 GetPartyPlayerListNumber();
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Widget")

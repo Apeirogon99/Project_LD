@@ -93,6 +93,15 @@ void UW_PartyPlayerCell::SetListType(const bool& inIsSelf, const EPartyListType&
 		mActionImageB->SetBrushFromTexture(mCancleTexture);
 		return;
 	}
+	else if(EPartyListType::PlayerList == inPartyListType)
+	{
+		mActionImageA->SetBrushFromTexture(mLeaderTexture);
+		mActionImageB->SetBrushFromTexture(mKickOutTexture);
+	}
+	else
+	{
+		return;
+	}
 
 	if (inIsLeader)
 	{
@@ -101,14 +110,14 @@ void UW_PartyPlayerCell::SetListType(const bool& inIsSelf, const EPartyListType&
 		if (inIsSelf)
 		{
 			//리더이면서 본인이면 파티위임 불가능, 탈퇴 가능
-			mActionImageA->SetVisibility(ESlateVisibility::Hidden);
-			mActionImageB->SetVisibility(ESlateVisibility::Visible);
+			mActionButtonA->SetVisibility(ESlateVisibility::Hidden);
+			mActionButtonB->SetVisibility(ESlateVisibility::Visible);
 		}
 		else
 		{
 			//리더이면서 본인이 아니면 파티위임 가능, 탈퇴 가능
-			mActionImageA->SetVisibility(ESlateVisibility::Visible);
-			mActionImageB->SetVisibility(ESlateVisibility::Visible);
+			mActionButtonA->SetVisibility(ESlateVisibility::Visible);
+			mActionButtonB->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
 	else
@@ -118,14 +127,14 @@ void UW_PartyPlayerCell::SetListType(const bool& inIsSelf, const EPartyListType&
 		if (inIsSelf)
 		{
 			//리더가 아니고 본인이라면 파티위임 불가능, 탈퇴 가능
-			mActionImageA->SetVisibility(ESlateVisibility::Hidden);
-			mActionImageB->SetVisibility(ESlateVisibility::Visible);
+			mActionButtonA->SetVisibility(ESlateVisibility::Hidden);
+			mActionButtonB->SetVisibility(ESlateVisibility::Visible);
 		}
 		else
 		{
 			//리더가 아니고 본인이 아니면 파티위임 불가능, 탈퇴 불가능
-			mActionImageA->SetVisibility(ESlateVisibility::Hidden);
-			mActionImageB->SetVisibility(ESlateVisibility::Hidden);
+			mActionButtonA->SetVisibility(ESlateVisibility::Hidden);
+			mActionButtonB->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 
