@@ -94,7 +94,7 @@ void FCharacterAppearance::UpdateAppearance(const Protocol::SCharacterAppearance
 	mEyebrow_Color	= inCharacterAppearance.eyebrow_color();
 }
 
-FCharacterData::FCharacterData() : mName(TEXT("")), mLevel(0), mClass(ECharacterClass::None), mAppearance(), mEquipment()
+FCharacterData::FCharacterData() : mName(TEXT("")), mLevel(0),mExp(0), mClass(ECharacterClass::None), mAppearance(), mEquipment()
 {
 }
 
@@ -102,6 +102,7 @@ void FCharacterData::UpdateCharacterData(const FCharacterData& inCharacterData)
 {
 	mName					= inCharacterData.mName;
 	mLevel					= inCharacterData.mLevel;
+	mExp						= inCharacterData.mExp;
 	mClass						= inCharacterData.mClass;
 
 	mAppearance			= inCharacterData.mAppearance;
@@ -112,6 +113,7 @@ void FCharacterData::UpdateCharacterData(const Protocol::SCharacterData& inChara
 {
 	mName			= UNetworkUtils::ConvertFString(inCharacterData.name());
 	mLevel			= inCharacterData.level();
+	mExp				= inCharacterData.experience();
 	mClass				= StaticCast<ECharacterClass>(inCharacterData.character_class());
 
 	const Protocol::SCharacterAppearance& appearance = inCharacterData.appearance();

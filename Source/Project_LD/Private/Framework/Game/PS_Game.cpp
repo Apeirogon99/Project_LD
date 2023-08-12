@@ -10,7 +10,6 @@
 #include <GM_Game.h>
 #include <PC_Game.h>
 #include <C_Game.h>
-#include <LDGameInstance.h>
 
 APS_Game::APS_Game()
 {
@@ -46,13 +45,7 @@ void APS_Game::UpdateCurrentStats()
 
 void APS_Game::UpdateExpValue(int InExp)
 {
-	mCurrentExp = StaticCast<float>(InExp);
-	UpdateExpBar();
-}
-
-void APS_Game::IncreaseExp(float InExp)
-{
-	mCurrentExp = mCurrentExp + InExp;
+	mCharacterData.SetExp(InExp);
 	UpdateExpBar();
 }
 
@@ -141,7 +134,6 @@ void APS_Game::InitializeLocalPlayerData()
 
 void APS_Game::UpdateHealthBar()
 {
-	mHealthBarPercent = mCharacterStats.GetCurrentStats().GetHealth() / mCharacterStats.GetMaxStats().GetHealth();
 	if (OnCharacterHealthChanged.IsBound())
 	{
 		OnCharacterHealthChanged.Broadcast();
@@ -150,7 +142,6 @@ void APS_Game::UpdateHealthBar()
 
 void APS_Game::UpdateManaBar()
 {
-	mManaBarPercent = mCharacterStats.GetCurrentStats().GetMana() / mCharacterStats.GetMaxStats().GetMana();
 	if (OnCharacterManaChanged.IsBound())
 	{
 		OnCharacterManaChanged.Broadcast();
@@ -159,13 +150,6 @@ void APS_Game::UpdateManaBar()
 
 void APS_Game::UpdateExpBar()
 {
-	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	FLevelDataTable* leveldata = Instance->GetLevelDataTable(mCharacterData.GetLevel() + 1);
-	//기본 레벨이 0으로 되있어서 +2 -> +1로 변경예정
-	float nextlevelExp = leveldata->next_experience;
-
-	//mExpBarPercent = 55.f / nextlevelExp;
-	mExpBarPercent = mCurrentExp / nextlevelExp;
 	if (OnCharacterExpChanged.IsBound())
 	{
 		OnCharacterExpChanged.Broadcast();

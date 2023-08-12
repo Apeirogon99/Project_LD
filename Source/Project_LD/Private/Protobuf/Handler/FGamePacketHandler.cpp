@@ -419,7 +419,7 @@ bool Handle_S2C_UpdateExperience(ANetworkController* controller, Protocol::S2C_U
         return false;
     }
 
-    playerState->IncreaseExp(pkt.experience());
+    playerState->UpdateExpValue(pkt.experience());
 
     return true;
 }

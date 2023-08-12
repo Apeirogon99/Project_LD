@@ -34,7 +34,6 @@ public:
 public:
 	void UpdateCurrentStats();
 	void UpdateExpValue(int InExp);
-	void IncreaseExp(float InExp);
 	void InitializeLocalPlayerState();
 	void InitializeLocalPlayerData();
 
@@ -64,9 +63,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
 	float mExpBarPercent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
-	float mCurrentExp;
 
 protected:
 	virtual void UpdateHealthBar();

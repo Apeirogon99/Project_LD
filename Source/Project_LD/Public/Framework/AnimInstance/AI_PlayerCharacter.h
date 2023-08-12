@@ -22,7 +22,16 @@ public:
 	UAI_PlayerCharacter();
 	~UAI_PlayerCharacter();
 
+public:
 	void PlayAttackMontage();
+	void PlayClientMontage();
+
+public:
+	void SetClientAnimWorking(bool InClientAnimWorking) { bClientAnimWorking = InClientAnimWorking; }
+
+public:
+	int32 GetAttackCount() const { return mAttackCount; }
+	bool GetClientAnimWorking() const { return bClientAnimWorking; }
 
 protected:
 	virtual void NativeInitializeAnimation() override;
@@ -37,20 +46,26 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", meta = (AllowPrivateAccess = "true"))
 	ANC_Game* mMainCharacter;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = "true"))
-	TArray<UAnimMontage*> mAttackMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Anim", Meta = (AllowPrivateAccess = "true"))
+	TArray<UAnimMontage*> mAttackFullMontage;	
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Anim", Meta = (AllowPrivateAccess = "true"))
+	TArray<UAnimMontage*> mAttackClientMontage;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", Meta = (AllowPrivateAccess = "true"))
 	bool bIsAttack;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", Meta = (AllowPrivateAccess = "true"))
 	bool bSaveAttack;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = "true"))
-	int32 mAttackCount;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", Meta = (AllowPrivateAccess = "true"))
 	bool bAttackLoop;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Client", Meta = (AllowPrivateAccess = "true"))
+	bool bClientAnimWorking;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Int", Meta = (AllowPrivateAccess = "true"))
+	int32 mAttackCount;
 
 private:
 	UFUNCTION(BlueprintCallable, Category = "Update Properties")

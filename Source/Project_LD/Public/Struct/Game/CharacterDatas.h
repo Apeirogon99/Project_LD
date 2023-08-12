@@ -206,6 +206,7 @@ public:
 public:
 	void SetName(const FString inName)													{ mName = inName; }
 	void SetLevel (const int32 inLevel)														{ mLevel = inLevel; }
+	void SetExp (const int32 inExp)															{ mExp = inExp; }
 	void SetClass(const ECharacterClass inClass)										{ mClass = inClass; }
 	void SetAppearance(const FCharacterAppearance inAppearance)		{ mAppearance = inAppearance; }
 	void SetEquipment(const FCharacterEquipment inEquipment)			{ mEquipment = inEquipment; }
@@ -213,6 +214,7 @@ public:
 public:
 	FString							GetName() const						{ return mName; }
 	int32								GetLevel() const						{ return mLevel; }
+	int32								GetExp() const						{ return mExp; }
 	ECharacterClass				GetClass() const						{ return mClass; }
 	FCharacterAppearance	GetAppearance() const			{ return mAppearance; }
 	FCharacterEquipment		GetEquipment() const				{ return mEquipment; }
@@ -223,6 +225,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
 	int32					mLevel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32					mExp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
 	ECharacterClass			mClass;
