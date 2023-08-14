@@ -168,6 +168,6 @@ void UAI_PlayerCharacter::JumpAttackMontageSection(const int32 inAttackCount, co
 		return;
 	}
 	character->UpdateCharacterMontage(mAttackFullMontage[inAttackCount], inTimeStamp);
-	mAttackCount++;
+	mAttackCount = inAttackCount + 1;
 	bClientAnimWorking = false;
 }
