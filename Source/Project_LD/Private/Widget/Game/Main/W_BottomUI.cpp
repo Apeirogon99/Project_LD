@@ -43,6 +43,8 @@ void UW_BottomUI::Init()
 	playerstate->OnCharacterHealthChanged.AddUFunction(this, FName(TEXT("UpdateHealthBar")));
 	playerstate->OnCharacterManaChanged.AddUFunction(this, FName(TEXT("UpdateManaBar")));
 
+
+
 	UpdateHealthBar();
 	UpdateManaBar();
 }
@@ -79,7 +81,11 @@ void UW_BottomUI::UpdateHealthBar()
 		return;
 	}
 
-	playerBar->HealthBar->SetPercent(playerstate->GetHealthBarPercent());
+	float CurrentHealthPercent = playerstate->GetCharacterStats().GetCurrentStats().GetHealth();
+	float MaxHealthPercent = playerstate->GetCharacterStats().GetMaxStats().GetHealth();
+	float HealthPercent = CurrentHealthPercent / MaxHealthPercent;
+
+	playerBar->HealthBar->SetPercent(HealthPercent);
 }
 
 void UW_BottomUI::UpdateManaBar()
@@ -113,6 +119,10 @@ void UW_BottomUI::UpdateManaBar()
 	{
 		return;
 	}
+
+	float CurrentManaPercent = playerstate->GetCharacterStats().GetCurrentStats().GetMana();
+	float MaxManaPercent = playerstate->GetCharacterStats().GetMaxStats().GetMana();
+	float ManaPercent = CurrentManaPercent / MaxManaPercent;
 
 	playerBar->ManaBar->SetPercent(playerstate->GetManaBarPercent());
 }

@@ -13,6 +13,7 @@
 #include "Components/TextBlock.h"
 
 #include <Struct/Game/CharacterDatas.h>
+#include <LDGameInstance.h>
 
 void UW_MainPlayerInfo::NativeConstruct()
 {
@@ -28,7 +29,6 @@ void UW_MainPlayerInfo::NativeConstruct()
 		return;
 	}
 }
-
 
 void UW_MainPlayerInfo::Init()
 {
@@ -95,5 +95,11 @@ void UW_MainPlayerInfo::UpdateExpBar()
 		return;
 	}
 
-	expBar->ExpBar->SetPercent(playerstate->GetExpBarPercent());
+	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+	int32 CurrentLevel = playerstate->GetCharacterData().GetLevel();
+	FLevelDataTable* leveldata = Instance->GetLevelDataTable(CurrentLevel + 1);
+	float nextlevelExp = leveldata->next_experience;
+	float ExpBarPercent = playerstate->GetCharacterData().GetExp() / nextlevelExp;
+
+	expBar->ExpBar->SetPercent(ExpBarPercent);
 }

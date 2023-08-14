@@ -11,25 +11,40 @@
 
 UAI_PlayerCharacter::UAI_PlayerCharacter()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE1(TEXT("/Game/GameContent/Animation/Male/Attack/M_ComboAttack1_Hu_M.M_ComboAttack1_Hu_M"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE1(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Attack/M_ComboAttack1_Full_Hu_M.M_ComboAttack1_Full_Hu_M'"));
 	if (ATTACK_MONTAGE1.Succeeded())
 	{
-		mAttackMontage.Add(ATTACK_MONTAGE1.Object);
+		mAttackFullMontage.Add(ATTACK_MONTAGE1.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE2(TEXT("/Game/GameContent/Animation/Male/Attack/M_ComboAttack2_Hu_M.M_ComboAttack2_Hu_M"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE2(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Attack/M_ComboAttack2_Full_Hu_M.M_ComboAttack2_Full_Hu_M'"));
 	if (ATTACK_MONTAGE2.Succeeded())
 	{
-		mAttackMontage.Add(ATTACK_MONTAGE2.Object);
+		mAttackFullMontage.Add(ATTACK_MONTAGE2.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE3(TEXT("/Game/GameContent/Animation/Male/Attack/M_ComboAttack3_Hu_M.M_ComboAttack3_Hu_M"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE3(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Attack/M_ComboAttack3_Full_Hu_M.M_ComboAttack3_Full_Hu_M'"));
 	if (ATTACK_MONTAGE3.Succeeded())
 	{
-		mAttackMontage.Add(ATTACK_MONTAGE3.Object);
+		mAttackFullMontage.Add(ATTACK_MONTAGE3.Object);
+	}	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE1Client(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Attack/M_ComboAttack1_Client_Hu_M.M_ComboAttack1_Client_Hu_M'"));
+	if (ATTACK_MONTAGE1.Succeeded())
+	{
+		mAttackClientMontage.Add(ATTACK_MONTAGE1Client.Object);
+	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE2Client(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Attack/M_ComboAttack2_Client_Hu_M.M_ComboAttack2_Client_Hu_M'"));
+	if (ATTACK_MONTAGE2.Succeeded())
+	{
+		mAttackClientMontage.Add(ATTACK_MONTAGE2Client.Object);
+	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE3Client(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Attack/M_ComboAttack3_Client_Hu_M.M_ComboAttack3_Client_Hu_M'"));
+	if (ATTACK_MONTAGE3.Succeeded())
+	{
+		mAttackClientMontage.Add(ATTACK_MONTAGE3Client.Object);
 	}
 
 	bIsAttack = false;
 	bSaveAttack = false;
 	bAttackLoop = false;
+	bClientAnimWorking = false;
 	mAttackCount = 0;
 }
 
@@ -47,6 +62,20 @@ void UAI_PlayerCharacter::PlayAttackMontage()
 	{
 		bIsAttack = true;
 		JumpAttackMontageSection(mAttackCount, 0.0f);
+	}
+}
+
+void UAI_PlayerCharacter::PlayClientMontage()
+{
+	if (mMainCharacter != nullptr)
+	{
+		if (mAttackCount < 3)
+		{
+			if (bClientAnimWorking == false)
+			{
+				mMainCharacter->UpdateCharacterMontage(mAttackClientMontage[mAttackCount], 0.f);
+			}
+		}
 	}
 }
 
@@ -138,6 +167,7 @@ void UAI_PlayerCharacter::JumpAttackMontageSection(const int32 inAttackCount, co
 	{
 		return;
 	}
-	character->UpdateCharacterMontage(mAttackMontage[inAttackCount], inTimeStamp);
+	character->UpdateCharacterMontage(mAttackFullMontage[inAttackCount], inTimeStamp);
 	mAttackCount++;
+	bClientAnimWorking = false;
 }
