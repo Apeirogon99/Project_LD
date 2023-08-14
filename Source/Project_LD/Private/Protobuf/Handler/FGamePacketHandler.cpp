@@ -989,6 +989,7 @@ bool Handle_S2C_RequestLeaveParty(ANetworkController* controller, Protocol::S2C_
         {
         case 0:
             causeString = TEXT("강제 퇴장 하였습니다.");
+            break;
         case 1:
             causeString = TEXT("강제 퇴장 당하셨습니다.");
             break;
