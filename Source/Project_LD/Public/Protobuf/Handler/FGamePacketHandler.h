@@ -73,6 +73,7 @@ enum class EPakcetID: uint16
 	S2C_LoadSkillTree = 2063,
 	C2S_UpdateSkillTree = 2064,
 	S2C_UpdateSkillTree = 2065,
+	S2C_AppearBuff = 2066,
 };
 */
 
@@ -122,6 +123,7 @@ bool Handle_S2C_RollbackInventory(ANetworkController* controller, Protocol::S2C_
 bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_ReplaceEqipment& pkt);
 bool Handle_S2C_LoadSkillTree(ANetworkController* controller, Protocol::S2C_LoadSkillTree& pkt);
 bool Handle_S2C_UpdateSkillTree(ANetworkController* controller, Protocol::S2C_UpdateSkillTree& pkt);
+bool Handle_S2C_AppearBuff(ANetworkController* controller, Protocol::S2C_AppearBuff& pkt);
 
 class FGamePacketHandler
 {
@@ -173,6 +175,7 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_ReplaceEqipment)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_ReplaceEqipment>(Handle_S2C_ReplaceEqipment, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_LoadSkillTree)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_LoadSkillTree>(Handle_S2C_LoadSkillTree, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_UpdateSkillTree)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_UpdateSkillTree>(Handle_S2C_UpdateSkillTree, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearBuff)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearBuff>(Handle_S2C_AppearBuff, controller, buffer, len); };
 	}
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_EnterGameServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_EnterGameServer)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LeaveGameServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LeaveGameServer)); }

@@ -303,6 +303,12 @@ bool Handle_S2C_DetectChangePlayer(ANetworkController* controller, Protocol::S2C
         return true;
     }
 
+    const int32 indexSize = pkt.stats_size();
+    for (int32 index = 0; index < indexSize; ++index)
+    {
+        const Protocol::SStat& stat = pkt.stats().Get(index);
+        playerState->GetCharacterStats().UpdateStats(StaticCast<ECharacterStatus>(stat.stat_type()), stat.stat_value());
+    }
 
     return true;
 }
@@ -2134,5 +2140,11 @@ bool Handle_S2C_LoadSkillTree(ANetworkController* controller, Protocol::S2C_Load
 
 bool Handle_S2C_UpdateSkillTree(ANetworkController* controller, Protocol::S2C_UpdateSkillTree& pkt)
 {
+    return true;
+}
+
+bool Handle_S2C_AppearBuff(ANetworkController* controller, Protocol::S2C_AppearBuff& pkt)
+{
+
     return true;
 }
