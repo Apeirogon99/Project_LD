@@ -7,6 +7,10 @@
 #include <Components/Button.h>
 #include <Components/Image.h>
 
+#include <Framework/Game/PS_Game.h>
+#include <NetworkController.h>
+#include <NetworkGameMode.h>
+
 void UW_PartyPlayerCell::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -80,10 +84,11 @@ void UW_PartyPlayerCell::SetPlayerInfo(const int64& inRemoteID, const int32& inL
 
 	FText netText = FText::FromString(tempText);
 	mPlayerInfo->SetText(netText);
-	mRemoteID = inRemoteID;
+
+	this->mRemoteID = inRemoteID;
 }
 
-void UW_PartyPlayerCell::SetListType(const bool& inIsSelf, const EPartyListType& inPartyListType, const bool& inIsLeader)
+void UW_PartyPlayerCell::SetListType(const bool& inIsSelf,  const int64& inLeaderRemoteID, const EPartyListType& inPartyListType)
 {
 
 	if (EPartyListType::RequestList == inPartyListType)
@@ -103,36 +108,60 @@ void UW_PartyPlayerCell::SetListType(const bool& inIsSelf, const EPartyListType&
 		return;
 	}
 
-	if (inIsLeader)
+	APlayerController* owningController = GetOwningPlayer();
+	if (nullptr == owningController)
 	{
-		mLeaderImage->SetVisibility(ESlateVisibility::Visible);
+		return;
 
+	}
+
+	APS_Game* playerState = owningController->GetPlayerState<APS_Game>();
+	if (nullptr == playerState)
+	{
+		return;
+
+	}
+
+	bool isLeader	= inLeaderRemoteID == this->mRemoteID;
+	bool ownerLeader = inLeaderRemoteID == playerState->GetRemoteID();
+
+	if (ownerLeader)
+	{
 		if (inIsSelf)
 		{
-			//리더이면서 본인이면 파티위임 불가능, 탈퇴 가능
+			//자신 리더O 리더O 본인O	리더 문장O, 팀장 위임X, 파티 퇴장O
+			mLeaderImage->SetVisibility(ESlateVisibility::Visible);
 			mActionButtonA->SetVisibility(ESlateVisibility::Hidden);
 			mActionButtonB->SetVisibility(ESlateVisibility::Visible);
 		}
-		else
+		else if (!inIsSelf)
 		{
-			//리더이면서 본인이 아니면 파티위임 가능, 탈퇴 가능
+			//자신 리더O 리더O 본인X	리더 문장X, 팀장 위임O, 파티 퇴장O
+			mLeaderImage->SetVisibility(ESlateVisibility::Hidden);
 			mActionButtonA->SetVisibility(ESlateVisibility::Visible);
 			mActionButtonB->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
 	else
 	{
-		mLeaderImage->SetVisibility(ESlateVisibility::Hidden);
-
-		if (inIsSelf)
+		if (!isLeader && inIsSelf)
 		{
-			//리더가 아니고 본인이라면 파티위임 불가능, 탈퇴 가능
+			//자신 리더X 리더X 본인O	리더 문장X, 팀장 위임X, 파티 퇴장O
+			mLeaderImage->SetVisibility(ESlateVisibility::Hidden);
 			mActionButtonA->SetVisibility(ESlateVisibility::Hidden);
 			mActionButtonB->SetVisibility(ESlateVisibility::Visible);
 		}
-		else
+		else if (isLeader && !inIsSelf)
 		{
-			//리더가 아니고 본인이 아니면 파티위임 불가능, 탈퇴 불가능
+			//자신 리더X 리더O 본인X 리더 문장O, 팀장 위임X, 파티 퇴장X
+			mLeaderImage->SetVisibility(ESlateVisibility::Visible);
+			mActionButtonA->SetVisibility(ESlateVisibility::Hidden);
+			mActionButtonB->SetVisibility(ESlateVisibility::Hidden);
+		}
+		else if (!isLeader && !inIsSelf)
+		{
+			//자신 리더X 리더X 본인X	리더 문장X, 팀장 위임X, 파티 퇴장X
+			mLeaderImage->SetVisibility(ESlateVisibility::Hidden);
 			mActionButtonA->SetVisibility(ESlateVisibility::Hidden);
 			mActionButtonB->SetVisibility(ESlateVisibility::Hidden);
 		}

@@ -70,7 +70,7 @@ public:
 		void SetPlayerInfo(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName);
 	
 	UFUNCTION()
-		void SetListType(const bool& inIsSelf, const EPartyListType& inPartyListType, const bool& inIsLeader);
+		void SetListType(const bool& inIsSelf, const int64& inLeaderRemoteID, const EPartyListType& inPartyListType);
 
 	UFUNCTION()
 		const int64& GetRemoteID();
@@ -97,6 +97,6 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Widget")
 		UTexture2D* mCancleTexture;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, Category = "Widget")
 		int64	mRemoteID;
 };

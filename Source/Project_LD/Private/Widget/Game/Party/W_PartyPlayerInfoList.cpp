@@ -46,6 +46,7 @@ void UW_PartyPlayerInfoList::ClearPartyPlayerInfoList()
 	{
 		widget->RemoveFromParent();
 	}
+	mPartyPlayerInfoLists.Empty();
 
 	for (int32 ChildIndex = mPartyPlayerInfoScrollBox->GetChildrenCount() - 1; ChildIndex >= 0; ChildIndex--)
 	{
@@ -55,17 +56,20 @@ void UW_PartyPlayerInfoList::ClearPartyPlayerInfoList()
 	mPartyPlayerInfoScrollBox->ClearChildren();
 }
 
-void UW_PartyPlayerInfoList::AddPartyList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsLeader)
+void UW_PartyPlayerInfoList::AddPartyList(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf)
 {
 	UW_PartyPlayerInfo* newCell = Cast<UW_PartyPlayerInfo>(CreateWidget(GetWorld(), mPartyPlayerInfoClass));
 	if (nullptr == newCell)
 	{
 		return;
 	}
-	newCell->SetPlayerInfo(inRemoteID, inLevel, inClass, inPlayerName, inIsLeader);
+
+	mPartyPlayerInfoLists.Push(newCell);
 
 	mPartyPlayerInfoScrollBox->AddChild(newCell);
 	mPartyPlayerInfoScrollBox->ScrollToEnd();
+
+	newCell->SetPlayerInfo(inRemoteID, inLeaderRemoteID, inLevel, inClass, inPlayerName, inIsSelf);
 
 	this->SetVisibility(ESlateVisibility::Visible);
 }

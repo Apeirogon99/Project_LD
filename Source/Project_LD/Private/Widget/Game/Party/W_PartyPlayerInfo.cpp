@@ -22,7 +22,7 @@ void UW_PartyPlayerInfo::NativeDestruct()
 {
 }
 
-void UW_PartyPlayerInfo::SetPlayerInfo(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsLeader)
+void UW_PartyPlayerInfo::SetPlayerInfo(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf)
 {
 	FString tempText;
 	tempText.Append(FString::FromInt(inLevel));
@@ -47,7 +47,7 @@ void UW_PartyPlayerInfo::SetPlayerInfo(const int64& inRemoteID, const int32& inL
 		break;
 	}
 
-	if (inIsLeader)
+	if (inRemoteID == inLeaderRemoteID)
 	{
 		mLeaderImage->SetVisibility(ESlateVisibility::Visible);
 	}

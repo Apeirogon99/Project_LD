@@ -59,6 +59,11 @@ void UW_PartyRequestList::AddRequestPartyList(const int64& inRemoteID, const int
 		return;
 	}
 
+	mPartyPlayerLists.Push(newCell);
+
+	mPartyScrollBox->AddChild(newCell);
+	mPartyScrollBox->ScrollToEnd();
+
 	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gameMode)
 	{
@@ -122,12 +127,7 @@ void UW_PartyRequestList::AddRequestPartyList(const int64& inRemoteID, const int
 	newCell->mActionButtonDelegateB = actionButtonDelegatgeB;
 
 	newCell->SetPlayerInfo(inRemoteID, inLevel, inClass, inPlayerName);
-	newCell->SetListType(false, EPartyListType::RequestList, false);
-
-	mPartyPlayerLists.Push(newCell);
-
-	mPartyScrollBox->AddChild(newCell);
-	mPartyScrollBox->ScrollToEnd();
+	newCell->SetListType(false, 0, EPartyListType::RequestList);
 }
 
 void UW_PartyRequestList::RemoveRequestPartyList(const int64& inRemoteID)

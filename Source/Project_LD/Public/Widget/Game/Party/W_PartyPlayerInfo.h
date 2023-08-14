@@ -38,7 +38,7 @@ public:
 
 public:
 	UFUNCTION()
-		void SetPlayerInfo(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsLeader);
+		void SetPlayerInfo(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf);
 
 public:
 	const int64& GetRemoteID();

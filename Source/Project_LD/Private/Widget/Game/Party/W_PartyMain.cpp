@@ -128,14 +128,14 @@ void UW_PartyMain::ClearPlayerList()
 	mPlayerCount->SetText(FText::FromString(countText));
 }
 
-void UW_PartyMain::PushPlayerList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf, const bool& inIsLeader)
+void UW_PartyMain::PushPlayerList(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf)
 {
 	UW_PartyPlayerList* widget = Cast<UW_PartyPlayerList>(mPartyPlayerList);
 	if (nullptr == widget)
 	{
 		return;
 	}
-	widget->AddPartyList(inRemoteID, inLevel, inClass, inPlayerName, inIsSelf, inIsLeader);
+	widget->AddPartyList(inRemoteID, inLeaderRemoteID, inLevel, inClass, inPlayerName, inIsSelf);
 
 	FString countText;
 	countText.Append(FString::FromInt(widget->GetPartyPlayerListNumber()));

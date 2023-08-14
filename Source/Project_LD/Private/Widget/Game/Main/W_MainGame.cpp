@@ -270,7 +270,7 @@ void UW_MainGame::ClearPartyPlayerInfo()
 	list->ClearPartyPlayerInfoList();
 }
 
-void UW_MainGame::PushPartyPlayerInfo(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsLeader)
+void UW_MainGame::PushPartyPlayerInfo(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf)
 {
 	UW_PartyPlayerInfoList* list = Cast<UW_PartyPlayerInfoList>(mPartyPlayerInfoList);
 	if (nullptr == list)
@@ -278,7 +278,7 @@ void UW_MainGame::PushPartyPlayerInfo(const int64& inRemoteID, const int32& inLe
 		return;
 	}
 
-	list->AddPartyList(inRemoteID, inLevel, inClass, inPlayerName, inIsLeader);
+	list->AddPartyList(inRemoteID, inLeaderRemoteID, inLevel, inClass, inPlayerName, inIsSelf);
 }
 
 void UW_MainGame::ReleasePartyPlayerInfo(const int64& inRemoteID)

@@ -100,13 +100,18 @@ void UW_PartyPlayerList::ClearPartyList()
 	OnChangeCreateWidget(true);
 }
 
-void UW_PartyPlayerList::AddPartyList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf, const bool& inIsLeader)
+void UW_PartyPlayerList::AddPartyList(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf)
 {
 	UW_PartyPlayerCell* newCell = Cast<UW_PartyPlayerCell>(CreateWidget(GetWorld(), mPartyPlayerCellClass));
 	if (nullptr == newCell)
 	{
 		return;
 	}
+
+	mPartyPlayerLists.Push(newCell);
+
+	mPartyScrollBox->AddChild(newCell);
+	mPartyScrollBox->ScrollToEnd();
 
 	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gameMode)
@@ -167,12 +172,7 @@ void UW_PartyPlayerList::AddPartyList(const int64& inRemoteID, const int32& inLe
 	newCell->mActionButtonDelegateB = actionButtonDelegatgeB;
 
 	newCell->SetPlayerInfo(inRemoteID, inLevel, inClass, inPlayerName);
-	newCell->SetListType(inIsSelf, EPartyListType::PlayerList, inIsLeader);
-
-	mPartyPlayerLists.Push(newCell);
-
-	mPartyScrollBox->AddChild(newCell);
-	mPartyScrollBox->ScrollToEnd();
+	newCell->SetListType(inIsSelf, inLeaderRemoteID, EPartyListType::PlayerList);
 
 	UpdatePartyList();
 }

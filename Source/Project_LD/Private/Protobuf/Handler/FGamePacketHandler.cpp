@@ -792,7 +792,7 @@ bool Handle_S2C_CreateParty(ANetworkController* controller, Protocol::S2C_Create
             return false;
         }
 
-        partyMainWidget->PushPlayerList(playerState->GetRemoteID(), characterData.GetLevel(), StaticCast<int32>(characterData.GetClass()), characterData.GetName(), true, true);
+        partyMainWidget->PushPlayerList(playerState->GetRemoteID(), playerState->GetRemoteID(), characterData.GetLevel(), StaticCast<int32>(characterData.GetClass()), characterData.GetName(), true);
     }
 
     {
@@ -808,7 +808,7 @@ bool Handle_S2C_CreateParty(ANetworkController* controller, Protocol::S2C_Create
             return false;
         }
 
-        mainGameWidget->PushPartyPlayerInfo(playerState->GetRemoteID(), characterData.GetLevel(), StaticCast<int32>(characterData.GetClass()), characterData.GetName(), true);
+        mainGameWidget->PushPartyPlayerInfo(playerState->GetRemoteID(), playerState->GetRemoteID(), characterData.GetLevel(), StaticCast<int32>(characterData.GetClass()), characterData.GetName(), true);
     }
 
     return true;
@@ -858,7 +858,6 @@ bool Handle_S2C_RequestEnterParty(ANetworkController* controller, Protocol::S2C_
             return false;
         }
 
-        return true;
     }
     else
     {
@@ -874,9 +873,9 @@ bool Handle_S2C_RequestEnterParty(ANetworkController* controller, Protocol::S2C_
             return false;
         }
 
-        return true;
     }
 
+    return true;
 }
 
 bool Handle_S2C_RequestParty(ANetworkController* controller, Protocol::S2C_RequestParty& pkt)
@@ -988,6 +987,8 @@ bool Handle_S2C_RequestLeaveParty(ANetworkController* controller, Protocol::S2C_
         FString causeString;
         switch (pkt.cause())
         {
+        case 0:
+            causeString = TEXT("강제 퇴장 하였습니다.");
         case 1:
             causeString = TEXT("강제 퇴장 당하셨습니다.");
             break;
@@ -1014,36 +1015,39 @@ bool Handle_S2C_RequestLeaveParty(ANetworkController* controller, Protocol::S2C_
             return false;
         }
 
+        if (pkt.cause() != 0)
         {
-            UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("PartyMain")));
-            if (nullptr == widget)
             {
-                return false;
+                UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("PartyMain")));
+                if (nullptr == widget)
+                {
+                    return false;
+                }
+
+                UW_PartyMain* partyMainWidget = Cast<UW_PartyMain>(widget);
+                if (nullptr == partyMainWidget)
+                {
+                    return false;
+                }
+
+                partyMainWidget->ClearPlayerList();
             }
 
-            UW_PartyMain* partyMainWidget = Cast<UW_PartyMain>(widget);
-            if (nullptr == partyMainWidget)
             {
-                return false;
+                UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+                if (nullptr == widget)
+                {
+                    return false;
+                }
+
+                UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
+                if (nullptr == mainGameWidget)
+                {
+                    return false;
+                }
+
+                mainGameWidget->ClearPartyPlayerInfo();
             }
-
-            partyMainWidget->ClearPlayerList();
-        }
-
-        {
-            UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
-            if (nullptr == widget)
-            {
-                return false;
-            }
-
-            UW_MainGame* mainGameWidget = Cast<UW_MainGame>(widget);
-            if (nullptr == mainGameWidget)
-            {
-                return false;
-            }
-
-            mainGameWidget->ClearPartyPlayerInfo();
         }
     }
 
@@ -1093,6 +1097,20 @@ bool Handle_S2C_RequestLeaderParty(ANetworkController* controller, Protocol::S2C
             return false;
         }
 
+    }
+    else
+    {
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("파티 권한 위임 성공"), TEXT("파티 권환을 양도하였습니다."), TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
     }
 
     return true;
@@ -1184,7 +1202,6 @@ bool Handle_S2C_ResponeParty(ANetworkController* controller, Protocol::S2C_Respo
                 return false;
             }
             partyMainWidget->ReleaseRequestList(pkt.remote_id());
-            return true;
         }
 
     }
@@ -1260,14 +1277,14 @@ bool Handle_S2C_LoadParty(ANetworkController* controller, Protocol::S2C_LoadPart
         int32   characterClass  = static_cast<int32>(pkt.mutable_character_class()->Get(index));
         FString name            = UNetworkUtils::ConvertFString(pkt.mutable_nick_name()->Get(index));
         bool    isSelf          = remoteID == playerState->GetRemoteID();
-        bool    isLeader        = static_cast<bool>(pkt.mutable_is_leader()->Get(index));
+        int64   leaderID        = pkt.leader_id();
 
         {
-            partyMainWidget->PushPlayerList(remoteID, level, characterClass, name, isSelf, isLeader);
+            partyMainWidget->PushPlayerList(remoteID, leaderID, level, characterClass, name, isSelf);
         }
 
         {
-            mainGameWidget->PushPartyPlayerInfo(remoteID, level, characterClass, name, isLeader);
+            mainGameWidget->PushPartyPlayerInfo(remoteID, leaderID, level, characterClass, name, isSelf);
         }
     }
 
@@ -1343,7 +1360,7 @@ bool Handle_S2C_EnterPartyPlayer(ANetworkController* controller, Protocol::S2C_E
     int32   characterClass      = static_cast<int32>(pkt.character_class());
     FString name                = UNetworkUtils::ConvertFString(pkt.nick_name());
     bool    isSelf              = remoteID == playerState->GetRemoteID();
-    bool    isLeader            = static_cast<bool>(pkt.is_leader());
+    int64   leaderID            = pkt.leader_id();
 
     {
         UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("PartyMain")));
@@ -1358,7 +1375,7 @@ bool Handle_S2C_EnterPartyPlayer(ANetworkController* controller, Protocol::S2C_E
             return false;
         }
 
-        partyMainWidget->PushPlayerList(remoteID, level, characterClass, name, isSelf, isLeader);
+        partyMainWidget->PushPlayerList(remoteID, leaderID, level, characterClass, name, isSelf);
     }
 
     {
@@ -1374,7 +1391,7 @@ bool Handle_S2C_EnterPartyPlayer(ANetworkController* controller, Protocol::S2C_E
             return false;
         }
 
-        mainGameWidget->PushPartyPlayerInfo(remoteID, level, characterClass, name, isLeader);
+        mainGameWidget->PushPartyPlayerInfo(remoteID, leaderID, level, characterClass, name, isSelf);
     }
 
     return true;

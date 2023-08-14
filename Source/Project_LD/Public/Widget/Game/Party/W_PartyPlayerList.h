@@ -39,7 +39,7 @@ public:
 		void ClearPartyList();
 
 	UFUNCTION()
-		void AddPartyList(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf, const bool& inIsLeader);
+		void AddPartyList(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf);
 
 	UFUNCTION()
 	void RemovePartyList(const int64& inRemoteID);

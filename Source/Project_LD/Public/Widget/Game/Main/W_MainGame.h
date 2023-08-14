@@ -45,7 +45,7 @@ public:
 	void ClearPartyPlayerInfo();
 
 	UFUNCTION()
-	void PushPartyPlayerInfo(const int64& inRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsLeader);
+	void PushPartyPlayerInfo(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf);
 
 	UFUNCTION()
 	void ReleasePartyPlayerInfo(const int64& inRemoteID);
