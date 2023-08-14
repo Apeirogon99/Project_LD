@@ -254,16 +254,36 @@ void APC_Game::SwitchParty()
 
 void APC_Game::UseSkill_Q()
 {
+	Protocol::C2S_PressedUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(81);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
 }
 
 void APC_Game::UseSkill_W()
 {
+	Protocol::C2S_PressedUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(87);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
 }
 
 void APC_Game::UseSkill_E()
 {
+	Protocol::C2S_PressedUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(69);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
 }
 
 void APC_Game::UseSkill_R()
 {
+	Protocol::C2S_PressedUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(82);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
 }

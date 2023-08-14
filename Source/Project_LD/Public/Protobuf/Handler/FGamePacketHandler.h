@@ -73,7 +73,9 @@ enum class EPakcetID: uint16
 	S2C_LoadSkillTree = 2063,
 	C2S_UpdateSkillTree = 2064,
 	S2C_UpdateSkillTree = 2065,
-	S2C_AppearBuff = 2066,
+	C2S_PressedUseKeyAction = 2066,
+	C2S_ReleaseUseKeyAction = 2067,
+	S2C_AppearBuff = 2068,
 };
 */
 
@@ -198,5 +200,7 @@ public:
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_DeleteInventory& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_DeleteInventory)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_ReplaceEqipment& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_ReplaceEqipment)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_UpdateSkillTree& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_UpdateSkillTree)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_PressedUseKeyAction& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_PressedUseKeyAction)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_ReleaseUseKeyAction& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_ReleaseUseKeyAction)); }
 
 };

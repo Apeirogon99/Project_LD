@@ -2145,6 +2145,38 @@ bool Handle_S2C_UpdateSkillTree(ANetworkController* controller, Protocol::S2C_Up
 
 bool Handle_S2C_AppearBuff(ANetworkController* controller, Protocol::S2C_AppearBuff& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64&       remoteID = pkt.remote_id();
+    const int64&       objectID = pkt.object_id();
+    const FVector&     location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    const FRotator&    rotation = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
+    const float&       duration = pkt.duration() / 1000.0f;
+
+    if (nullptr != gameState->FindGameObject(objectID))
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearBuff] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    //TODO: Buff 초기화 (remoteID = 시전자, duration = 남은 지속시간)
+    //AActor* newActor = gameState->CreateGameObject(AItemParent::StaticClass(), location, rotation, objectID);
+    //if (nullptr == newActor)
+    //{
+    //    return false;
+    //}
+
+
 
     return true;
 }
