@@ -48,7 +48,7 @@ void AEnemyState::UpdateCurrentStats(const google::protobuf::RepeatedPtrField<Pr
 		ECharacterStatus		type = StaticCast<ECharacterStatus>(stat.stat_type()); //EStatsType
 		const float					value = stat.stat_value();
 
-		mStats.UpdateStats(type, value);
+		mStats.UpdateCurrentStats(type, value);
 	}
 	UpdateHealthBar();
 }
@@ -68,7 +68,7 @@ void AEnemyState::SetEnemyStats(const FEnemyStatData& inEnemyStats)
 	FEnemyBaseStats EnemyStat;
 	EnemyStat.SetStatsBaseData(inEnemyStats);
 
-	mStats.FloatToFData(EnemyStat.FDataToFloat());
+	mStats.MaxFloatToFData(EnemyStat.FDataToFloat());
 	mStats.SetCurrentStats(mStats.GetMaxStats());
 }
 

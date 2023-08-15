@@ -20,29 +20,6 @@ APS_Game::~APS_Game()
 {
 }
 
-float APS_Game::GetHealthBarPercent() const
-{
-	return mHealthBarPercent;
-}
-
-float APS_Game::GetManaBarPercent() const
-{
-	return mManaBarPercent;
-}
-
-float APS_Game::GetExpBarPercent() const
-{
-	return mExpBarPercent;
-}
-
-void APS_Game::UpdateCurrentStats()
-{
-	//UpdateStats
-
-	UpdateHealthBar();
-	UpdateManaBar();
-}
-
 void APS_Game::UpdateExpValue(int InExp)
 {
 	mCharacterData.SetExp(InExp);
@@ -101,11 +78,6 @@ void APS_Game::InitializeLocalPlayerState()
 	inventory->InitInventory(mInventoryComponent, 50.0f, mEquipmentComponent);
 
 	mEquipmentComponent->Init(inventory);
-	calculationStats();
-
-	mCharacterStats.SetCurrentStats(mCharacterStats.GetMaxStats());
-
-	UpdateCurrentStats();
 }
 
 void APS_Game::InitializeLocalPlayerData()
@@ -130,22 +102,12 @@ void APS_Game::InitializeLocalPlayerData()
 
 	auto maingame = clientHUD->GetWidgetFromName(TEXT("MainGame"));
 	Cast<UW_MainGame>(maingame)->Init();
-}
 
-void APS_Game::UpdateHealthBar()
-{
-	if (OnCharacterHealthChanged.IsBound())
-	{
-		OnCharacterHealthChanged.Broadcast();
-	}
-}
+	calculationStats();
 
-void APS_Game::UpdateManaBar()
-{
-	if (OnCharacterManaChanged.IsBound())
-	{
-		OnCharacterManaChanged.Broadcast();
-	}
+	mCharacterStats.SetCurrentStats(mCharacterStats.GetMaxStats());
+
+	UpdateCurrentStatsBar();
 }
 
 void APS_Game::UpdateExpBar()

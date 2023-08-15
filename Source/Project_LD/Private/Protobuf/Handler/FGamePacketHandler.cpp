@@ -5,6 +5,7 @@
 #include <WidgetUtils.h>
 #include <PacketUtils.h>
 
+#include <Framework/AnimInstance/AI_PlayerCharacter.h>
 #include <Framework/Controller/MovementController.h>
 
 #include <Game/GM_Game.h>
@@ -14,20 +15,20 @@
 #include <Game/NPC_Game.h>
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
-#include <Framework/AnimInstance/AI_PlayerCharacter.h>
 
 #include <GameContent/Enemy/EnemyController.h>
 #include <GameContent/Enemy/EnemyState.h>
 #include <GameContent/Enemy/EnemyBase.h>
 #include <GameContent/Projectile/ArcherSkeletonArrow.h>
+#include <GameContent/Skill/Skill_Buff.h>
+
+#include <GameContent/Item/ItemParent.h>
+#include <Widget/Handler/ClientHUD.h>
+#include <Widget/Game/Main/W_MainGame.h>
+#include <Widget/Game/Party/W_PartyMain.h>
 
 #include "CommonErrorTypes.h"
 #include <GameErrorTypes.h>
-
-#include <Widget/Handler/ClientHUD.h>
-#include <GameContent/Item/ItemParent.h>
-#include <Widget/Game/Main/W_MainGame.h>
-#include <Widget/Game/Party/W_PartyMain.h>
 
 bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_EnterGameServer& pkt)
 {
@@ -307,8 +308,9 @@ bool Handle_S2C_DetectChangePlayer(ANetworkController* controller, Protocol::S2C
     for (int32 index = 0; index < indexSize; ++index)
     {
         const Protocol::SStat& stat = pkt.stats().Get(index);
-        playerState->GetCharacterStats().UpdateStats(StaticCast<ECharacterStatus>(stat.stat_type()), stat.stat_value());
+        playerState->GetCharacterStats().UpdateCurrentStats(StaticCast<ECharacterStatus>(stat.stat_type()), stat.stat_value());
     }
+    playerState->UpdateCurrentStatsBar();
 
     return true;
 }
@@ -2157,6 +2159,18 @@ bool Handle_S2C_AppearBuff(ANetworkController* controller, Protocol::S2C_AppearB
         return false;
     }
 
+    ANC_Game* character = Cast<ANC_Game>(controller->GetCharacter());
+    if (nullptr == character)
+    {
+        return false;
+    }
+
+    UAI_PlayerCharacter* animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+    if (nullptr == animation)
+    {
+        return false;
+    }
+
     const int64&       remoteID = pkt.remote_id();
     const int64&       objectID = pkt.object_id();
     const FVector&     location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
@@ -2169,14 +2183,14 @@ bool Handle_S2C_AppearBuff(ANetworkController* controller, Protocol::S2C_AppearB
         return false;
     }
 
+    animation->PlaySkillMontage(2, 0.f);
+
     //TODO: Buff 초기화 (remoteID = 시전자, duration = 남은 지속시간)
-    //AActor* newActor = gameState->CreateGameObject(AItemParent::StaticClass(), location, rotation, objectID);
-    //if (nullptr == newActor)
-    //{
-    //    return false;
-    //}
-
-
+    AActor* newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
+    if (nullptr == newActor)
+    {
+        return false;
+    }
 
     return true;
 }

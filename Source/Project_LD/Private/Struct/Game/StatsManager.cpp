@@ -20,7 +20,7 @@ void FCharacterStats::UpdateCharacterStats(const FCharacterStats& inCharacterSta
 	mCurrentStats = inCharacterStats.mCurrentStats;
 }
 
-TArray<float> FCharacterStats::FDataToFloat()
+TArray<float> FCharacterStats::MaxFDataToFloat()
 {
 	TArray<float> returnData;
 	returnData.SetNum(22);
@@ -51,7 +51,38 @@ TArray<float> FCharacterStats::FDataToFloat()
 	return returnData;
 }
 
-void FCharacterStats::FloatToFData(TArray<float> Data)
+TArray<float> FCharacterStats::CurrentFDataToFloat()
+{
+	TArray<float> returnData;
+	returnData.SetNum(22);
+
+	returnData[0] = mCurrentStats.GetArmorPenetration();
+	returnData[1] = mCurrentStats.GetAttackDamage();
+	returnData[2] = mCurrentStats.GetAttackSpeed();
+	returnData[3] = mCurrentStats.GetCriticalStrikeChance();
+	returnData[4] = mCurrentStats.GetCriticalStrikeDamage();
+	returnData[5] = mCurrentStats.GetLifeSteal();
+	returnData[6] = mCurrentStats.GetAbilityPower();
+	returnData[7] = mCurrentStats.GetMagePenetration();
+	returnData[8] = mCurrentStats.GetOmniVamp();
+	returnData[9] = mCurrentStats.GetPhysicalVamp();
+	returnData[10] = mCurrentStats.GetArmor();
+	returnData[11] = mCurrentStats.GetHealAndShieldPower();
+	returnData[12] = mCurrentStats.GetHealth();
+	returnData[13] = mCurrentStats.GetHealthRegeneration();
+	returnData[14] = mCurrentStats.GetMagicResistance();
+	returnData[15] = mCurrentStats.GetTenacity();
+	returnData[16] = mCurrentStats.GetSlowResist();
+	returnData[17] = mCurrentStats.GetAbilityHaste();
+	returnData[18] = mCurrentStats.GetMana();
+	returnData[19] = mCurrentStats.GetManaRegeneration();
+	returnData[20] = mCurrentStats.GetMovementSpeed();
+	returnData[21] = mCurrentStats.GetRange();
+
+	return returnData;
+}
+
+void FCharacterStats::MaxFloatToFData(TArray<float> Data)
 {
 	mMaxStats.SetArmorPenetration(Data[0]);
 	mMaxStats.SetAttackDamage(Data[1]);
@@ -77,7 +108,110 @@ void FCharacterStats::FloatToFData(TArray<float> Data)
 	mMaxStats.SetRange(Data[21]);
 }
 
-void FCharacterStats::UpdateStats(ECharacterStatus InStats, float Invalue)
+void FCharacterStats::CurrentFloatToFData(TArray<float> Data)
+{
+	mCurrentStats.SetArmorPenetration(Data[0]);
+	mCurrentStats.SetAttackDamage(Data[1]);
+	mCurrentStats.SetAttackSpeed(Data[2]);
+	mCurrentStats.SetCriticalStrikeChance(Data[3]);
+	mCurrentStats.SetCriticalStrikeDamage(Data[4]);
+	mCurrentStats.SetLifeSteal(Data[5]);
+	mCurrentStats.SetAbilityPower(Data[6]);
+	mCurrentStats.SetMagePenetration(Data[7]);
+	mCurrentStats.SetOmniVamp(Data[8]);
+	mCurrentStats.SetPhysicalVamp(Data[9]);
+	mCurrentStats.SetArmor(Data[10]);
+	mCurrentStats.SetHealAndShieldPower(Data[11]);
+	mCurrentStats.SetHealth(Data[12]);
+	mCurrentStats.SetHealthRegeneration(Data[13]);
+	mCurrentStats.SetMagicResistance(Data[14]);
+	mCurrentStats.SetTenacity(Data[15]);
+	mCurrentStats.SetSlowResist(Data[16]);
+	mCurrentStats.SetAbilityHaste(Data[17]);
+	mCurrentStats.SetMana(Data[18]);
+	mCurrentStats.SetManaRegeneration(Data[19]);
+	mCurrentStats.SetMovementSpeed(Data[20]);
+	mCurrentStats.SetRange(Data[21]);
+}
+
+void FCharacterStats::UpdateMaxStats(ECharacterStatus InStats, float Invalue)
+{
+	switch (InStats)
+	{
+	case ECharacterStatus::None:
+		break;
+	case ECharacterStatus::ArmorPenetration:
+		mMaxStats.SetArmorPenetration(Invalue);
+		break;
+	case ECharacterStatus::AttackDamage:
+		mMaxStats.SetAttackDamage(Invalue);
+		break;
+	case ECharacterStatus::AttackSpeed:
+		mMaxStats.SetAttackSpeed(Invalue);
+		break;
+	case ECharacterStatus::CriticalStrikeChance:
+		mMaxStats.SetCriticalStrikeChance(Invalue);
+		break;
+	case ECharacterStatus::CriticalStrikeDamage:
+		mMaxStats.SetCriticalStrikeDamage(Invalue);
+		break;
+	case ECharacterStatus::LifeSteal:
+		mMaxStats.SetLifeSteal(Invalue);
+		break;
+	case ECharacterStatus::AbilityPower:
+		mMaxStats.SetAbilityPower(Invalue);
+		break;
+	case ECharacterStatus::MagePenetration:
+		mMaxStats.SetMagePenetration(Invalue);
+		break;
+	case ECharacterStatus::Omnivamp:
+		mMaxStats.SetOmniVamp(Invalue);
+		break;
+	case ECharacterStatus::PhysicalVamp:
+		mMaxStats.SetPhysicalVamp(Invalue);
+		break;
+	case ECharacterStatus::Armor:
+		mMaxStats.SetArmor(Invalue);
+		break;
+	case ECharacterStatus::HealAndShieldPower:
+		mMaxStats.SetHealAndShieldPower(Invalue);
+		break;
+	case ECharacterStatus::Health:
+		mMaxStats.SetHealth(Invalue);
+		break;
+	case ECharacterStatus::HealthRegeneration:
+		mMaxStats.SetHealthRegeneration(Invalue);
+		break;
+	case ECharacterStatus::MagicResistance:
+		mMaxStats.SetMagicResistance(Invalue);
+		break;
+	case ECharacterStatus::Tenacity:
+		mMaxStats.SetTenacity(Invalue);
+		break;
+	case ECharacterStatus::SlowResist:
+		mMaxStats.SetSlowResist(Invalue);
+		break;
+	case ECharacterStatus::AbilityHaste:
+		mMaxStats.SetAbilityHaste(Invalue);
+		break;
+	case ECharacterStatus::Mana:
+		mMaxStats.SetMana(Invalue);
+		break;
+	case ECharacterStatus::ManaRegeneration:
+		mMaxStats.SetManaRegeneration(Invalue);
+		break;
+	case ECharacterStatus::MovementSpeed:
+		mMaxStats.SetMovementSpeed(Invalue);
+		break;
+	case ECharacterStatus::Range:
+		mMaxStats.SetRange(Invalue);
+		break;
+	default:
+		break;
+	}
+}
+
+void FCharacterStats::UpdateCurrentStats(ECharacterStatus InStats, float Invalue)
 {
 	switch (InStats)
 	{

@@ -12,6 +12,8 @@
  * 
  */
 
+DECLARE_MULTICAST_DELEGATE(FOnCharacterHealthChanged)
+DECLARE_MULTICAST_DELEGATE(FOnCharacterManaChanged)
 
 UCLASS()
 class PROJECT_LD_API ANPS_Game : public ANetworkPlayerState
@@ -23,7 +25,11 @@ public:
 	~ANPS_Game();
 
 public:
-	void UpdateCurrentStats(); // stats Update
+	FOnCharacterHealthChanged			OnCharacterHealthChanged;
+	FOnCharacterManaChanged			OnCharacterManaChanged;
+
+public:
+	void UpdateCurrentStatsBar(); // stats Update
 	void SetRemotePlayerID(const int64 inRemoteID);
 	void SetCharacterData(const FCharacterData& InCharacterDatas);
 	void SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment);
@@ -43,4 +49,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Status")
 	FCharacterStats	mCharacterStats;
+protected:
+	virtual void UpdateHealthBar();
+	virtual void UpdateManaBar();
 };

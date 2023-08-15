@@ -14,9 +14,10 @@ ANPS_Game::~ANPS_Game()
 
 }
 
-void ANPS_Game::UpdateCurrentStats()
+void ANPS_Game::UpdateCurrentStatsBar()
 {
-	//stats update
+	UpdateHealthBar();
+	UpdateManaBar();
 }
 
 void ANPS_Game::SetRemotePlayerID(const int64 inRemoteID)
@@ -76,5 +77,21 @@ void ANPS_Game::calculationStats()
 		Total[i] = IBase[i] + IGrow[i] + PartData;
 	}
 
-	mCharacterStats.FloatToFData(Total);
+	mCharacterStats.MaxFloatToFData(Total);
+}
+
+void ANPS_Game::UpdateHealthBar()
+{
+	if (OnCharacterHealthChanged.IsBound())
+	{
+		OnCharacterHealthChanged.Broadcast();
+	}
+}
+
+void ANPS_Game::UpdateManaBar()
+{
+	if (OnCharacterManaChanged.IsBound())
+	{
+		OnCharacterManaChanged.Broadcast();
+	}
 }

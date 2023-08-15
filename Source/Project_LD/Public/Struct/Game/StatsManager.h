@@ -205,10 +205,13 @@ public:
 	FStatsData	GetCurrentStats() const { return mCurrentStats; }
 
 public:
-	TArray<float> FDataToFloat();
-	void	FloatToFData(TArray<float> Data);
+	TArray<float> MaxFDataToFloat();
+	TArray<float> CurrentFDataToFloat();
+	void	MaxFloatToFData(TArray<float> Data);
+	void	CurrentFloatToFData(TArray<float> Data);
 
-	void UpdateStats(ECharacterStatus InStats, float Invalue);
+	void UpdateMaxStats(ECharacterStatus InStats, float Invalue);
+	void UpdateCurrentStats(ECharacterStatus InStats, float Invalue);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))

@@ -13,8 +13,6 @@
  * 
  */
 
-DECLARE_MULTICAST_DELEGATE(FOnCharacterHealthChanged)
-DECLARE_MULTICAST_DELEGATE(FOnCharacterManaChanged)
 DECLARE_MULTICAST_DELEGATE(FOnCharacterExpChanged)
 
 UCLASS()
@@ -27,25 +25,12 @@ public:
 	~APS_Game();
 
 public:
-	FOnCharacterHealthChanged			OnCharacterHealthChanged;
-	FOnCharacterManaChanged			OnCharacterManaChanged;
 	FOnCharacterExpChanged				OnCharacterExpChanged;
 
 public:
-	void UpdateCurrentStats();
 	void UpdateExpValue(int InExp);
 	void InitializeLocalPlayerState();
 	void InitializeLocalPlayerData();
-
-public:
-	UFUNCTION(BlueprintPure, Category = "ProgressBar")
-	float GetHealthBarPercent() const;
-
-	UFUNCTION(BlueprintPure, Category = "ProgressBar")
-	float GetManaBarPercent() const;
-
-	UFUNCTION(BlueprintPure, Category = "ProgressBar")
-	float GetExpBarPercent() const;
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component")
@@ -55,17 +40,5 @@ public:
 	UACEquipment* mEquipmentComponent;
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
-	float mHealthBarPercent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
-	float mManaBarPercent;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ProgressBar", meta = (AllowPrivateAccess = "true"))
-	float mExpBarPercent;
-
-protected:
-	virtual void UpdateHealthBar();
-	virtual void UpdateManaBar();
 	virtual void UpdateExpBar();
 };

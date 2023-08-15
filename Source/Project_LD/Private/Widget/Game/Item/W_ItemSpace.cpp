@@ -16,6 +16,7 @@
 #include "Components/Image.h"
 
 #include <UObject/ConstructorHelpers.h>
+#include <Framework/Game/NPS_Game.h>
 
 #include <Struct/Game/GameDatas.h>
 
@@ -242,6 +243,17 @@ void UW_ItemSpace::ReMakeWidget(UItemObjectData* ItemObjectData)
 
 void UW_ItemSpace::CreateItemWidget(UItemObjectData* ItemObjectData)
 {
+	APlayerController* controller = GetOwningPlayer();
+	if (controller == nullptr)
+	{
+		return;
+	}
+	ANPS_Game* playerState = controller->GetPlayerState<ANPS_Game>();
+	if (playerState == nullptr)
+	{
+		return;
+	}
+
 	mEquipmentItemSlot = Cast<UUWEquipItem>(CreateWidget(GetWorld(), mImageAsset));
 	if (mEquipmentItemSlot)
 	{
@@ -255,5 +267,7 @@ void UW_ItemSpace::CreateItemWidget(UItemObjectData* ItemObjectData)
 		UCanvasPanelSlot* Local_CanvasSlot = Cast<UCanvasPanelSlot>(ItemCanvas->AddChild(mEquipmentItemSlot));
 		Local_CanvasSlot->SetAnchors(FAnchors(0.f, 0.f, 1.f, 1.f));
 		Local_CanvasSlot->SetOffsets(FMargin(0.f, 0.f, 0.f, 0.f));
+	
+		playerState->calculationStats();
 	}
 }

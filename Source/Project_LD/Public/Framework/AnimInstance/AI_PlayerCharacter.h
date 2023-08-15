@@ -23,8 +23,10 @@ public:
 	~UAI_PlayerCharacter();
 
 public:
-	void PlayAttackMontage();
-	void PlayClientMontage();
+	void PlayClientAttackMontage();
+	void PlayClientSkillMontage(const int32 inSkillid);
+	void PlaySkillMontage(const int32 inSkillid, const float inTimeStamp);
+	void JumpAttackMontageSection(const int32 inAttackCount, const float inTimeStamp);
 
 public:
 	void SetClientAnimWorking(bool InClientAnimWorking) { bClientAnimWorking = InClientAnimWorking; }
@@ -46,25 +48,31 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character", meta = (AllowPrivateAccess = "true"))
 	ANC_Game* mMainCharacter;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Anim", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Anim", meta = (AllowPrivateAccess = "true"))
 	TArray<UAnimMontage*> mAttackFullMontage;	
 	
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Anim", Meta = (AllowPrivateAccess = "true"))
-	TArray<UAnimMontage*> mAttackClientMontage;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Anim", meta = (AllowPrivateAccess = "true"))
+	TArray<UAnimMontage*> mAttackClientMontage;	
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Skill | Anim", meta = (AllowPrivateAccess = "true"))
+	TArray<UAnimMontage*> mSkillFullMontage;	
+	
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Skill | Anim", meta = (AllowPrivateAccess = "true"))
+	TArray<UAnimMontage*> mSkillClientMontage;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", meta = (AllowPrivateAccess = "true"))
 	bool bIsAttack;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", meta = (AllowPrivateAccess = "true"))
 	bool bSaveAttack;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", meta = (AllowPrivateAccess = "true"))
 	bool bAttackLoop;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Client", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Client", meta = (AllowPrivateAccess = "true"))
 	bool bClientAnimWorking;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Int", Meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Int", meta = (AllowPrivateAccess = "true"))
 	int32 mAttackCount;
 
 private:
@@ -79,7 +87,8 @@ private:
 
 	UFUNCTION()
 	void AnimNotify_AttackServerCheck();
-
-public:
-	void JumpAttackMontageSection(const int32 inAttackCount, const float inTimeStamp);
+	
+private:
+	void InitAttackMontage();
+	void InitSkillMontage();
 };

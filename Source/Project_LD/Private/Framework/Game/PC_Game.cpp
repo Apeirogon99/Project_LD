@@ -2,6 +2,7 @@
 
 
 #include "Framework/Game/PC_Game.h"
+#include "Framework/AnimInstance/AI_PlayerCharacter.h"
 #include <Network/NetworkGameMode.h>
 #include <Network/NetworkSession.h>
 #include <Network/NetworkController.h>
@@ -17,6 +18,7 @@
 
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
+#include <Game/C_Game.h>
 
 APC_Game::APC_Game()
 {
@@ -254,6 +256,20 @@ void APC_Game::SwitchParty()
 
 void APC_Game::UseSkill_Q()
 {
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	playerAnim->PlayClientSkillMontage(2);
+
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(81);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
@@ -263,6 +279,20 @@ void APC_Game::UseSkill_Q()
 
 void APC_Game::UseSkill_W()
 {
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	playerAnim->PlayClientSkillMontage(1);
+
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(87);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
@@ -272,6 +302,20 @@ void APC_Game::UseSkill_W()
 
 void APC_Game::UseSkill_E()
 {
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	playerAnim->PlayClientSkillMontage(2);
+
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(69);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
@@ -281,6 +325,20 @@ void APC_Game::UseSkill_E()
 
 void APC_Game::UseSkill_R()
 {
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	playerAnim->PlayClientSkillMontage(3);
+
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(82);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
