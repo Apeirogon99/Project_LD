@@ -2145,7 +2145,12 @@ bool Handle_S2C_UpdateSkillTree(ANetworkController* controller, Protocol::S2C_Up
     return true;
 }
 
-bool Handle_S2C_AppearBuff(ANetworkController* controller, Protocol::S2C_AppearBuff& pkt)
+bool Handle_S2C_SetUseKeyAction(ANetworkController* controller, Protocol::S2C_SetUseKeyAction& pkt)
+{
+    return false;
+}
+
+bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_AppearSkill& pkt)
 {
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
@@ -2171,11 +2176,12 @@ bool Handle_S2C_AppearBuff(ANetworkController* controller, Protocol::S2C_AppearB
         return false;
     }
 
-    const int64&       remoteID = pkt.remote_id();
-    const int64&       objectID = pkt.object_id();
-    const FVector&     location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
-    const FRotator&    rotation = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
-    const float&       duration = pkt.duration() / 1000.0f;
+    const int64& remoteID = pkt.remote_id();
+    const int64& objectID = pkt.object_id();
+    const int32& skillID    = pkt.skill_id();
+    const FVector& location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    const FRotator& rotation = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
+    const float& duration = pkt.duration() / 1000.0f;
 
     if (nullptr != gameState->FindGameObject(objectID))
     {
