@@ -64,7 +64,7 @@ float UEnemyAnimInstance::OnHit_Implementation(float inStartTime)
 
 float UEnemyAnimInstance::OnStun_Implementation(float inStartTime)
 {
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnStun")), ELogLevel::Warning);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnStun")), ELogLevel::Warning);
 	return inStartTime;
 }
 
