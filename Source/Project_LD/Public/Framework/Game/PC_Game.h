@@ -26,10 +26,14 @@ public:
 	void SwitchFriend();
 	void SwitchParty();
 
-	void UseSkill_Q();
-	void UseSkill_W();
-	void UseSkill_E();
-	void UseSkill_R();
+	void UseSkill_Q_Pressed();
+	void UseSkill_Q_Released();
+	void UseSkill_W_Pressed();
+	void UseSkill_W_Released();
+	void UseSkill_E_Pressed();
+	void UseSkill_E_Released();
+	void UseSkill_R_Pressed();
+	void UseSkill_R_Released();
 
 public:
 	virtual void BeginPlay() override;

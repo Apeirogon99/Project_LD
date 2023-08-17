@@ -2189,7 +2189,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         return false;
     }
 
-    animation->PlaySkillMontage(2, 0.f);
+    animation->PlaySkillMontage(2, duration);
 
     //TODO: Buff 초기화 (remoteID = 시전자, duration = 남은 지속시간)
     AActor* newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);

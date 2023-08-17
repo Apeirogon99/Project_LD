@@ -124,10 +124,15 @@ void APC_Game::SetupInputComponent()
 	InputComponent->BindAction("ToggleFriend", IE_Pressed, this, &APC_Game::SwitchFriend);
 	InputComponent->BindAction("ToggleParty", IE_Pressed, this, &APC_Game::SwitchParty);
 	
-	InputComponent->BindAction("SkillQ", IE_Pressed, this, &APC_Game::UseSkill_Q);
-	InputComponent->BindAction("SkillW", IE_Pressed, this, &APC_Game::UseSkill_W);
-	InputComponent->BindAction("SkillE", IE_Pressed, this, &APC_Game::UseSkill_E);
-	InputComponent->BindAction("SkillR", IE_Pressed, this, &APC_Game::UseSkill_R);
+	InputComponent->BindAction("SkillQ", IE_Pressed, this, &APC_Game::UseSkill_Q_Pressed);
+	InputComponent->BindAction("SkillW", IE_Pressed, this, &APC_Game::UseSkill_W_Pressed);
+	InputComponent->BindAction("SkillE", IE_Pressed, this, &APC_Game::UseSkill_E_Pressed);
+	InputComponent->BindAction("SkillR", IE_Pressed, this, &APC_Game::UseSkill_R_Pressed);
+
+	InputComponent->BindAction("SkillQ", IE_Released, this, &APC_Game::UseSkill_Q_Released);
+	InputComponent->BindAction("SkillW", IE_Released, this, &APC_Game::UseSkill_W_Released);
+	InputComponent->BindAction("SkillE", IE_Released, this, &APC_Game::UseSkill_E_Released);
+	InputComponent->BindAction("SkillR", IE_Released, this, &APC_Game::UseSkill_R_Released);
 }
 
 void APC_Game::SwitchUIMode()
@@ -254,7 +259,7 @@ void APC_Game::SwitchParty()
 	mainGame->PartyOpenRequest();
 }
 
-void APC_Game::UseSkill_Q()
+void APC_Game::UseSkill_Q_Pressed()
 {
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
@@ -277,7 +282,28 @@ void APC_Game::UseSkill_Q()
 	this->Send(pakcetBuffer);
 }
 
-void APC_Game::UseSkill_W()
+void APC_Game::UseSkill_Q_Released()
+{
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(81);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
+}
+
+void APC_Game::UseSkill_W_Pressed()
 {
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
@@ -300,7 +326,28 @@ void APC_Game::UseSkill_W()
 	this->Send(pakcetBuffer);
 }
 
-void APC_Game::UseSkill_E()
+void APC_Game::UseSkill_W_Released()
+{
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(87);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
+}
+
+void APC_Game::UseSkill_E_Pressed()
 {
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
@@ -323,7 +370,7 @@ void APC_Game::UseSkill_E()
 	this->Send(pakcetBuffer);
 }
 
-void APC_Game::UseSkill_R()
+void APC_Game::UseSkill_E_Released()
 {
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
@@ -337,9 +384,52 @@ void APC_Game::UseSkill_R()
 		return;
 	}
 
-	playerAnim->PlayClientSkillMontage(3);
+	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(69);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
+}
+
+void APC_Game::UseSkill_R_Pressed()
+{
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	//playerAnim->PlayClientSkillMontage(3);
+	playerAnim->PlaySkillMontage(3, 0.f);
 
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(82);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
+}
+
+void APC_Game::UseSkill_R_Released()
+{
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(82);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
 	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);

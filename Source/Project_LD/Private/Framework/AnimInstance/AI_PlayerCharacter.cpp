@@ -181,6 +181,7 @@ void UAI_PlayerCharacter::AnimNotify_AttackServerCheck()
 
 void UAI_PlayerCharacter::InitAttackMontage()
 {
+	// Server //
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE1(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Attack/M_ComboAttack1_Full_Hu_M.M_ComboAttack1_Full_Hu_M'"));
 	if (ATTACK_MONTAGE1.Succeeded())
 	{
@@ -196,6 +197,9 @@ void UAI_PlayerCharacter::InitAttackMontage()
 	{
 		mAttackFullMontage.Add(ATTACK_MONTAGE3.Object);
 	}	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE1Client(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Attack/M_ComboAttack1_Client_Hu_M.M_ComboAttack1_Client_Hu_M'"));
+
+	// Client //
+
 	if (ATTACK_MONTAGE1.Succeeded())
 	{
 		mAttackClientMontage.Add(ATTACK_MONTAGE1Client.Object);
@@ -214,6 +218,7 @@ void UAI_PlayerCharacter::InitAttackMontage()
 
 void UAI_PlayerCharacter::InitSkillMontage()
 {
+	// Server //
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_Q_MONTAGE(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Counter/M_Counter_Full_Hu_M.M_Counter_Full_Hu_M'"));
 	if (SKILL_Q_MONTAGE.Succeeded())
 	{
@@ -239,6 +244,9 @@ void UAI_PlayerCharacter::InitSkillMontage()
 	{
 		mSkillFullMontage.Add(SKILL_R_Attack_MONTAGE.Object);
 	}
+
+	// Client //
+
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_Q_MONTAGEClient(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Counter/M_Counter_Client_Hu_M.M_Counter_Client_Hu_M'"));
 	if (SKILL_Q_MONTAGEClient.Succeeded())
 	{
