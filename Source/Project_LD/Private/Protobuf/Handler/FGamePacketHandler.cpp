@@ -30,6 +30,9 @@
 #include "CommonErrorTypes.h"
 #include <GameErrorTypes.h>
 
+#include <Framework/Debug/Debug_Box.h>
+#include <Framework/Debug/Debug_Circle.h>
+
 bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_EnterGameServer& pkt)
 {
 
@@ -2251,6 +2254,19 @@ bool Handle_S2C_DebugBox(ANetworkController* controller, Protocol::S2C_DebugBox&
     FVector extent          = FVector(pkt.extent().x(), pkt.extent().y(), pkt.extent().z());
     float duration          = pkt.duration();
 
+    UBlueprint* BlueprintObj = Cast<UBlueprint>(StaticLoadObject(UBlueprint::StaticClass(), nullptr, TEXT("Blueprint'/Game/Test/DebugActor_Box.DebugActor_Box'")));
+    if (BlueprintObj)
+    {
+        UClass* DebugActorClass = BlueprintObj->GeneratedClass;
+        UWorld* world = controller->GetWorld();
+        if (world == nullptr)
+        {
+            return false;
+        }
+        Cast<ADebug_Box>(world->SpawnActor<AActor>(DebugActorClass, FVector(), FRotator()))->DebugInit(startLocation, endLocation, extent);
+        UE_LOG(LogTemp, Warning, TEXT("CALL DEBUGBOX"));
+    }
+
     return true;
 }
 
@@ -2259,6 +2275,8 @@ bool Handle_S2C_DebugCircle(ANetworkController* controller, Protocol::S2C_DebugC
     FVector location    = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
     float radius        = pkt.radius();
     float duration      = pkt.duration();
+
+
 
     return true;
 }
