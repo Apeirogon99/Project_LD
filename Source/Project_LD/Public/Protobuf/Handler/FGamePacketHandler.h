@@ -78,6 +78,8 @@ enum class EPakcetID: uint16
 	C2S_PressedUseKeyAction = 2068,
 	C2S_ReleaseUseKeyAction = 2069,
 	S2C_AppearSkill = 2070,
+	S2C_DebugBox = 2071,
+	S2C_DebugCircle = 2072,
 };
 */
 
@@ -129,6 +131,8 @@ bool Handle_S2C_LoadSkillTree(ANetworkController* controller, Protocol::S2C_Load
 bool Handle_S2C_UpdateSkillTree(ANetworkController* controller, Protocol::S2C_UpdateSkillTree& pkt);
 bool Handle_S2C_SetUseKeyAction(ANetworkController* controller, Protocol::S2C_SetUseKeyAction& pkt);
 bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_AppearSkill& pkt);
+bool Handle_S2C_DebugBox(ANetworkController* controller, Protocol::S2C_DebugBox& pkt);
+bool Handle_S2C_DebugCircle(ANetworkController* controller, Protocol::S2C_DebugCircle& pkt);
 
 class FGamePacketHandler
 {
@@ -182,6 +186,8 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_UpdateSkillTree)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_UpdateSkillTree>(Handle_S2C_UpdateSkillTree, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_SetUseKeyAction)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_SetUseKeyAction>(Handle_S2C_SetUseKeyAction, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearSkill)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearSkill>(Handle_S2C_AppearSkill, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DebugBox)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DebugBox>(Handle_S2C_DebugBox, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DebugCircle)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DebugCircle>(Handle_S2C_DebugCircle, controller, buffer, len); };
 	}
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_EnterGameServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_EnterGameServer)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LeaveGameServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LeaveGameServer)); }

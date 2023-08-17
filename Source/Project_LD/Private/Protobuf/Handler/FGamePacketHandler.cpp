@@ -2242,3 +2242,13 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
     return true;
 }
+
+bool Handle_S2C_DebugBox(ANetworkController* controller, Protocol::S2C_DebugBox& pkt)
+{
+    return true;
+}
+
+bool Handle_S2C_DebugCircle(ANetworkController* controller, Protocol::S2C_DebugCircle& pkt)
+{
+    return true;
+}
