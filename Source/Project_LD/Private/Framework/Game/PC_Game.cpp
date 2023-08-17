@@ -273,7 +273,7 @@ void APC_Game::UseSkill_Q_Pressed()
 		return;
 	}
 
-	playerAnim->PlayClientSkillMontage(0);
+	playerAnim->PlayClientSkillMontage(1);
 
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(81);
@@ -317,7 +317,7 @@ void APC_Game::UseSkill_W_Pressed()
 		return;
 	}
 
-	playerAnim->PlayClientSkillMontage(1);
+	playerAnim->PlayClientSkillMontage(2);
 
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(87);
@@ -361,7 +361,7 @@ void APC_Game::UseSkill_E_Pressed()
 		return;
 	}
 
-	playerAnim->PlayClientSkillMontage(2);
+	playerAnim->PlayClientSkillMontage(0);
 
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(69);

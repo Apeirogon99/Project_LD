@@ -2189,13 +2189,55 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         return false;
     }
 
-    animation->PlaySkillMontage(2, duration);
+    AActor* newActor;
 
-    //TODO: Buff 초기화 (remoteID = 시전자, duration = 남은 지속시간)
-    AActor* newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
-    if (nullptr == newActor)
+    switch (skillID)  
     {
-        return false;
+    case 1:
+        /* 버프 */
+        animation->PlaySkillMontage(0, duration);
+        newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 2:
+        /* 패링 */
+        animation->PlaySkillMontage(1, duration);
+        /*
+        newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        */
+        break;
+    case 3:
+        /* 바닥 */
+        animation->PlaySkillMontage(2, duration);
+        /*
+        newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        */
+        break;
+    case 4:
+        /* 검기 */
+        animation->PlaySkillMontage(3, duration);
+        /*
+        newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        */
+        break;
+    default:
+        UE_LOG(LogTemp, Warning, TEXT("Wrong SkillID"));
+        break;
     }
 
     return true;

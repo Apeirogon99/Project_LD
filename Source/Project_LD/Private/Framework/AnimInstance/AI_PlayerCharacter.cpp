@@ -219,6 +219,11 @@ void UAI_PlayerCharacter::InitAttackMontage()
 void UAI_PlayerCharacter::InitSkillMontage()
 {
 	// Server //
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_E_MONTAGE(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Buff/M_Buff_Full_Hu_M.M_Buff_Full_Hu_M'"));
+	if (SKILL_E_MONTAGE.Succeeded())
+	{
+		mSkillFullMontage.Add(SKILL_E_MONTAGE.Object);
+	}
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_Q_MONTAGE(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Counter/M_Counter_Full_Hu_M.M_Counter_Full_Hu_M'"));
 	if (SKILL_Q_MONTAGE.Succeeded())
 	{
@@ -228,11 +233,6 @@ void UAI_PlayerCharacter::InitSkillMontage()
 	if (SKILL_W_MONTAGE.Succeeded())
 	{
 		mSkillFullMontage.Add(SKILL_W_MONTAGE.Object);
-	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_E_MONTAGE(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Buff/M_Buff_Full_Hu_M.M_Buff_Full_Hu_M'"));
-	if (SKILL_E_MONTAGE.Succeeded())
-	{
-		mSkillFullMontage.Add(SKILL_E_MONTAGE.Object);
 	}
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_R_Charge_MONTAGE(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/SwordSpirit/M_SwordSpirit_Charge_Full_Hu_M.M_SwordSpirit_Charge_Full_Hu_M'"));
 	if (SKILL_R_Charge_MONTAGE.Succeeded())
@@ -247,6 +247,11 @@ void UAI_PlayerCharacter::InitSkillMontage()
 
 	// Client //
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_E_MONTAGEClient(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Buff/M_Buff_Client_Hu_M.M_Buff_Client_Hu_M'	"));
+	if (SKILL_E_MONTAGEClient.Succeeded())
+	{
+		mSkillClientMontage.Add(SKILL_E_MONTAGEClient.Object);
+	}
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_Q_MONTAGEClient(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Counter/M_Counter_Client_Hu_M.M_Counter_Client_Hu_M'"));
 	if (SKILL_Q_MONTAGEClient.Succeeded())
 	{
@@ -256,11 +261,6 @@ void UAI_PlayerCharacter::InitSkillMontage()
 	if (SKILL_W_MONTAGEClient.Succeeded())
 	{
 		mSkillClientMontage.Add(SKILL_W_MONTAGEClient.Object);
-	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_E_MONTAGEClient(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Buff/M_Buff_Client_Hu_M.M_Buff_Client_Hu_M'	"));
-	if (SKILL_E_MONTAGEClient.Succeeded())
-	{
-		mSkillClientMontage.Add(SKILL_E_MONTAGEClient.Object);
 	}
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_R_Charge_MONTAGEClient(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/SwordSpirit/M_SwordSpirit_Charge_Client_Hu_M.M_SwordSpirit_Charge_Client_Hu_M'"));
 	if (SKILL_R_Charge_MONTAGEClient.Succeeded())
