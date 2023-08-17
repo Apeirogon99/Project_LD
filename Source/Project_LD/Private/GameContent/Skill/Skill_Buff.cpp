@@ -4,6 +4,7 @@
 #include "GameContent/Skill/Skill_Buff.h"
 #include "Niagara/Public/NiagaraComponent.h"
 #include "Niagara/Classes/NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
 #include "UObject/ConstructorHelpers.h"
 
 // Sets default values
@@ -14,23 +15,18 @@ ASkill_Buff::ASkill_Buff()
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 
-	mParticle = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
+	mSummonParticle = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 
-	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> FIELDPARTICLE(TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/Buff/NS_Buff_Summon.NS_Buff_Summon'"));
-	if (FIELDPARTICLE.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> FIELD_PARTICLE(TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/Buff/NS_Buff_Summon.NS_Buff_Summon'"));
+	if (FIELD_PARTICLE.Succeeded())
 	{
-		mParticle->SetAsset(FIELDPARTICLE.Object);
+		mSummonParticle->SetAsset(FIELD_PARTICLE.Object);
 	}
 
-	mParticle->SetupAttachment(RootComponent);
+	mSummonParticle->SetupAttachment(RootComponent);
 
-	mParticle->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
-	mParticle->SetRelativeScale3D(FVector(5.f, 5.f, 5.f));
-}
-
-ASkill_Buff::~ASkill_Buff()
-{
-	//사라지는 파티클
+	mSummonParticle->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
+	mSummonParticle->SetRelativeScale3D(FVector(5.f, 5.f, 5.f));
 }
 
 // Called every frame
@@ -46,5 +42,17 @@ void ASkill_Buff::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ASkill_Buff::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/Buff/NS_Buff_Disappear.NS_Buff_Disappear'")))
+	{
+		FVector Location = GetActorLocation();
+		Location.Z = Location.Z - 90.f;
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Location);
+	}
 }
 

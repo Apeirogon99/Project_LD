@@ -268,7 +268,7 @@ void APC_Game::UseSkill_Q()
 		return;
 	}
 
-	playerAnim->PlayClientSkillMontage(2);
+	playerAnim->PlayClientSkillMontage(0);
 
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(81);

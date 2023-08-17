@@ -16,7 +16,6 @@ class PROJECT_LD_API ASkill_Buff : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ASkill_Buff();
-	~ASkill_Buff();
 
 public:
 	// Called every frame
@@ -25,8 +24,9 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UNiagaraComponent* mParticle;
+	UNiagaraComponent* mSummonParticle;
 };

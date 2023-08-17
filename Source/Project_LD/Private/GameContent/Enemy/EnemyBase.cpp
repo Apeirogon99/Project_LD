@@ -292,8 +292,8 @@ void AEnemyBase::Interactive(ANC_Game* inPlayer)
 		{
 			return;
 		}
-		animInstance->PlayClientAttackMontage();
-		animInstance->SetClientAnimWorking(true);
+		//animInstance->PlayClientAttackMontage();
+		//animInstance->SetClientAnimWorking(true);
 	}
 	Protocol::C2S_PlayerAutoAttack attackPacket;
 	attackPacket.set_object_id(state->GetObjectID());
