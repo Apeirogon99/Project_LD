@@ -2249,14 +2249,16 @@ bool Handle_S2C_DebugBox(ANetworkController* controller, Protocol::S2C_DebugBox&
     FVector startLocation   = FVector(pkt.start_location().x(), pkt.start_location().y(), pkt.start_location().z());
     FVector endLocation     = FVector(pkt.end_location().x(), pkt.end_location().y(), pkt.end_location().z());
     FVector extent          = FVector(pkt.extent().x(), pkt.extent().y(), pkt.extent().z());
+    float duration          = pkt.duration();
 
     return true;
 }
 
 bool Handle_S2C_DebugCircle(ANetworkController* controller, Protocol::S2C_DebugCircle& pkt)
 {
-    FVector location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
-    float radius = pkt.radius();
+    FVector location    = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    float radius        = pkt.radius();
+    float duration      = pkt.duration();
 
     return true;
 }
