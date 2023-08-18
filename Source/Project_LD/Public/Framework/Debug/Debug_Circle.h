@@ -17,8 +17,8 @@ public:
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
-	void Init(float Radian, FVector StartVector);
-	virtual void Init_Implementation(float Radian, FVector StartVector);
+	void DebugInit(float Radian, FVector StartVector, float duration);
+	virtual void DebugInit_Implementation(float Radian, FVector StartVector, float duration);
 
 protected:
 	// Called when the game starts or when spawned

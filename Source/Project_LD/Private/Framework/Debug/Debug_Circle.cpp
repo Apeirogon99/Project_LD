@@ -11,7 +11,7 @@ ADebug_Circle::ADebug_Circle()
 
 }
 
-void ADebug_Circle::Init_Implementation(float Radian, FVector StartVector)
+void ADebug_Circle::DebugInit_Implementation(float Radian, FVector StartVector, float duration)
 {
 }
 

@@ -2263,7 +2263,7 @@ bool Handle_S2C_DebugBox(ANetworkController* controller, Protocol::S2C_DebugBox&
         {
             return false;
         }
-        Cast<ADebug_Box>(world->SpawnActor<AActor>(DebugActorClass, FVector(), FRotator()))->DebugInit(startLocation, endLocation, extent);
+        Cast<ADebug_Box>(world->SpawnActor<AActor>(DebugActorClass, FVector(), FRotator()))->DebugInit(startLocation, endLocation, extent, duration);
         UE_LOG(LogTemp, Warning, TEXT("CALL DEBUGBOX"));
     }
 
@@ -2276,7 +2276,18 @@ bool Handle_S2C_DebugCircle(ANetworkController* controller, Protocol::S2C_DebugC
     float radius        = pkt.radius();
     float duration      = pkt.duration();
 
-
+    UBlueprint* BlueprintObj = Cast<UBlueprint>(StaticLoadObject(UBlueprint::StaticClass(), nullptr, TEXT("Blueprint'/Game/Test/DebugActor_Circle.DebugActor_Circle'")));
+    if (BlueprintObj)
+    {
+        UClass* DebugActorClass = BlueprintObj->GeneratedClass;
+        UWorld* world = controller->GetWorld();
+        if (world == nullptr)
+        {
+            return false;
+        }
+        Cast<ADebug_Circle>(world->SpawnActor<AActor>(DebugActorClass, FVector(), FRotator()))->DebugInit(radius, location, duration);
+        UE_LOG(LogTemp, Warning, TEXT("CALL DEBUGCircle"));
+    }
 
     return true;
 }

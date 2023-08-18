@@ -17,8 +17,8 @@ public:
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
-	void DebugInit(FVector StartVector, FVector EndVector, FVector BoxVector);
-	virtual void DebugInit_Implementation(FVector StartVector, FVector EndVector, FVector BoxVector);
+	void DebugInit(FVector StartVector, FVector EndVector, FVector BoxVector, float duration);
+	virtual void DebugInit_Implementation(FVector StartVector, FVector EndVector, FVector BoxVector, float duration);
 
 protected:
 	// Called when the game starts or when spawned
