@@ -54,6 +54,17 @@ AEnemyBase::AEnemyBase()
 	}
 
 	mParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("ParticleSystem"));
+	mSlowParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("mSlowParticleSystem"));
+	mParticleSystem->SetupAttachment(RootComponent);
+	mSlowParticleSystem->SetupAttachment(RootComponent);
+
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> SLOWPARTICLE(TEXT("ParticleSystem'/Game/Test/P_SlowTest.P_SlowTest'"));
+	if (SLOWPARTICLE.Succeeded())
+	{
+		mSlowParticle = SLOWPARTICLE.Object;
+	}
+
+	bSpeedCheck = false;
 }
 
 AEnemyBase::~AEnemyBase()
@@ -93,9 +104,9 @@ void AEnemyBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		return;
 	}
 
-	if (playerState->OnStatsChanged.IsBound())
+	if (playerState->OnMovementSpeedChanged.IsBound())
 	{
-		playerState->OnStatsChanged.Clear();
+		playerState->OnMovementSpeedChanged.Clear();
 	}
 }
 
@@ -127,9 +138,9 @@ void AEnemyBase::Destroyed()
 		return;
 	}
 
-	if (playerState->OnStatsChanged.IsBound())
+	if (playerState->OnMovementSpeedChanged.IsBound())
 	{
-		playerState->OnStatsChanged.Clear();
+		playerState->OnMovementSpeedChanged.Clear();
 	}
 
 	mHealthBar->SetVisibility(false);
@@ -176,7 +187,8 @@ void AEnemyBase::Init()
 		return;
 	}
 
-	playerState->OnStatsChanged.AddUFunction(this, FName(TEXT("UpdateHealthBar")));
+	playerState->OnHealthChanged.AddUFunction(this, FName(TEXT("UpdateHealthBar")));
+	playerState->OnMovementSpeedChanged.AddUFunction(this, FName(TEXT("UpdateMovementSpeed")));
 }
 
 void AEnemyBase::ChangeState(const EEnemyStateType inStateType, float inStartTime)
@@ -251,11 +263,65 @@ void AEnemyBase::UpdateHealthBar() const
 	{
 		return;
 	}
-	healthbar->HealthBar->SetPercent(playerState->GetHealthBarPercent());
+	float MaxHealth = playerState->GetEnemyStats().GetHealth();
+	float CurrentHealth = playerState->GetEnemyCurrentStats().GetHealth();
+
+	float HealthPercent = CurrentHealth / MaxHealth;
+
+	healthbar->HealthBar->SetPercent(HealthPercent);
+}
+
+void AEnemyBase::UpdateMovementSpeed()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Call UpdateMovementSpeed"));
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+
+	AEnemyController* controller = Cast<AEnemyController>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	AEnemyState* playerState = controller->GetPlayerState<AEnemyState>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+	
+	float MaxSpeed = playerState->GetEnemyStats().GetMovementSpeed();
+	float CurrentSpeed = playerState->GetEnemyCurrentStats().GetMovementSpeed();
+
+	if (MaxSpeed > CurrentSpeed)
+	{
+		if (bSpeedCheck == false)
+		{
+			bSpeedCheck = true;
+			mSlowParticleSystem->SetTemplate(mSlowParticle);
+		}
+	}
+	else
+	{
+		if (bSpeedCheck == true)
+		{
+			bSpeedCheck = false;
+			mSlowParticleSystem->SetTemplate(nullptr);
+		}
+	}
 }
 
 void AEnemyBase::Interactive(ANC_Game* inPlayer)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Not MAX>Current"));
 	UWorld* world = GetWorld();
 	if (nullptr == world)
 	{
@@ -306,5 +372,4 @@ void AEnemyBase::Interactive(ANC_Game* inPlayer)
 
 	SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(controller, attackPacket);
 	controller->Send(sendBuffer);
-
 }

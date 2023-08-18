@@ -23,6 +23,9 @@ public:
 	UFUNCTION()
 	void UpdateHealthBar() const;
 
+	UFUNCTION()
+	void UpdateMovementSpeed();
+
 public:
 	void ChangeState(const EEnemyStateType inStateType, float inStartTime);
 	virtual void Interactive(ANC_Game* inPlayer) override; 
@@ -49,4 +52,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	UParticleSystemComponent* mParticleSystem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* mSlowParticleSystem;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* mSlowParticle;
+
+	bool bSpeedCheck;
 };
