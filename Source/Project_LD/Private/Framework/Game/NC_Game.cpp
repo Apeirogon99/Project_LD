@@ -12,6 +12,10 @@
 #include <Components/WidgetComponent.h>
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Particles/ParticleSystemComponent.h"
+
+#include <UObject/ConstructorHelpers.h>
+
 ANC_Game::ANC_Game()
 {
 	//PrimaryActorTick.bCanEverTick = true;
@@ -43,6 +47,18 @@ ANC_Game::ANC_Game()
 		mChatWidget->SetDrawAtDesiredSize(true);
 	}
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> LEVELUP_PARTICLE(TEXT("ParticleSystem'/Game/RPGEffects/Particles/P_Status_LevelUp.P_Status_LevelUp'"));
+	if (LEVELUP_PARTICLE.Succeeded())
+	{
+		mLevelUpParticle = LEVELUP_PARTICLE.Object;
+	}
+
+	mLevelUpParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("LevelUpParticle"));
+	mLevelUpParticleSystem->SetupAttachment(RootComponent);
+	mLevelUpParticleSystem->bAutoActivate = false;
+
+	mLevelUpParticleSystem->SetTemplate(mLevelUpParticle);
+
 	bIsAttack = false;
 }
 
@@ -64,6 +80,11 @@ void ANC_Game::ShowWorldChat(const FString& inPlayerName, const FString& inMessa
 		return;
 	}
 	chat->SetWorldChat(inPlayerName, inMessage, inDuration);
+}
+
+void ANC_Game::ShowLevelUpParticle()
+{
+	mLevelUpParticleSystem->Activate();
 }
 
 void ANC_Game::BeginPlay()

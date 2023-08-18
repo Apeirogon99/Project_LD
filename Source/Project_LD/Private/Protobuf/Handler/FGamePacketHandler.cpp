@@ -468,6 +468,14 @@ bool Handle_S2C_LevelUp(ANetworkController* controller, Protocol::S2C_LevelUp& p
         return false;
     }
 
+    ANC_Game* character = Cast<ANC_Game>(remoteController->GetCharacter());
+    if (nullptr == character)
+    {
+        return false;
+    }
+
+    character->ShowLevelUpParticle();
+
     //TODO: 레벨업
     playerState->GetCharacterData().SetLevel(pkt.level());
 

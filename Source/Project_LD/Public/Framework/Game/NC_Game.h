@@ -10,6 +10,7 @@
 /**
  * 
  */
+
 UCLASS()
 class PROJECT_LD_API ANC_Game : public AAppearanceCharacter
 {
@@ -24,7 +25,10 @@ public:
 
 public:
 	FORCEINLINE bool GetIsAttack() const { return bIsAttack; }
+
+public:
 	void ShowWorldChat(const FString& inPlayerName, const FString& inMessage, const float& inDuration);
+	void ShowLevelUpParticle();
 
 protected:
 	virtual void BeginPlay() override;
@@ -37,4 +41,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget", meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* mChatWidget;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* mLevelUpParticleSystem;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UParticleSystem* mLevelUpParticle;
 };
