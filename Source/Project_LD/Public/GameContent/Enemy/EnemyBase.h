@@ -40,6 +40,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual void SetParticleLocationAndRotation(const FVector InNewLocation, const FRotator InNewRotation);
 
+	UFUNCTION(BlueprintCallable)
+	virtual void SetParticleScale(FVector InNewScale);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* mHealthBar;

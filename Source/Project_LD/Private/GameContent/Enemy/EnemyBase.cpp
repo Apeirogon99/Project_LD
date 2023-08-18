@@ -145,6 +145,11 @@ void AEnemyBase::SetParticleLocationAndRotation(const FVector InNewLocation, con
 	mParticleSystem->SetRelativeLocationAndRotation(InNewLocation, InNewRotation);
 }
 
+void AEnemyBase::SetParticleScale(FVector InNewScale)
+{
+	mParticleSystem->SetRelativeScale3D(InNewScale);
+}
+
 void AEnemyBase::Init()
 {
 	UWorld* world = GetWorld();
