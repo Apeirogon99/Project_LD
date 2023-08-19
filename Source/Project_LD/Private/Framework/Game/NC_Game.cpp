@@ -60,6 +60,7 @@ ANC_Game::ANC_Game()
 	mLevelUpParticleSystem->SetTemplate(mLevelUpParticle);
 
 	bIsAttack = false;
+	bBuffActive = false;
 }
 
 ANC_Game::~ANC_Game()
@@ -85,6 +86,82 @@ void ANC_Game::ShowWorldChat(const FString& inPlayerName, const FString& inMessa
 void ANC_Game::ShowLevelUpParticle()
 {
 	mLevelUpParticleSystem->Activate();
+}
+
+void ANC_Game::InitSetting()
+{
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+
+	ANPC_Game* controller = Cast<ANPC_Game>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	ANPS_Game* playerState = controller->GetPlayerState<ANPS_Game>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	playerState->OnCharacterApplyBuff.AddUFunction(this, FName(TEXT("ShowBuffParticle")));
+}
+
+void ANC_Game::ShowBuffParticle()
+{
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+
+	ANPC_Game* controller = Cast<ANPC_Game>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	ANPS_Game* playerState = controller->GetPlayerState<ANPS_Game>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	float MaxDamage = playerState->GetCharacterStats().GetMaxStats().GetAttackDamage();
+	float CurrentDamage = playerState->GetCharacterStats().GetCurrentStats().GetAttackDamage();
+
+	if (MaxDamage > CurrentDamage)
+	{
+		if (bBuffActive == false)
+		{
+			bBuffActive = true;
+			
+		}
+	}
+	else
+	{
+		if (bBuffActive == true)
+		{
+			bBuffActive = false;
+			
+		}
+	}
 }
 
 void ANC_Game::BeginPlay()

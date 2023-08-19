@@ -29,6 +29,11 @@ public:
 public:
 	void ShowWorldChat(const FString& inPlayerName, const FString& inMessage, const float& inDuration);
 	void ShowLevelUpParticle();
+	void InitSetting();
+
+public:
+	UFUNCTION()
+	void ShowBuffParticle();
 
 protected:
 	virtual void BeginPlay() override;
@@ -47,4 +52,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* mLevelUpParticle;
+
+private:
+	bool bBuffActive;
 };

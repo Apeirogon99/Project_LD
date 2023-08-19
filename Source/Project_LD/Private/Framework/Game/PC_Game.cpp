@@ -429,6 +429,8 @@ void APC_Game::UseSkill_R_Released()
 		return;
 	}
 
+	playerAnim->PlayClientSkillMontage(4);
+
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(82);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());

@@ -15,12 +15,18 @@ public:
 	// Sets default values for this actor's properties
 	ASkill_SwordSpirit_Range();
 
+public:
+	void InCreaseCount();
+
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	int32 ChargeCount;
 };

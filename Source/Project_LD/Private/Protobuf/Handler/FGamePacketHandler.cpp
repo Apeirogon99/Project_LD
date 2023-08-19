@@ -20,7 +20,12 @@
 #include <GameContent/Enemy/EnemyState.h>
 #include <GameContent/Enemy/EnemyBase.h>
 #include <GameContent/Projectile/ArcherSkeletonArrow.h>
+
 #include <GameContent/Skill/Skill_Buff.h>
+#include <GameContent/Skill/Skill_Counter.h>
+#include <GameContent/Skill/Skill_SlamAttack.h>
+#include <GameContent/Skill/Skill_SwordSpirit.h>
+#include <GameContent/Skill/Skill_SwordSpirit_Range.h>
 
 #include <GameContent/Item/ItemParent.h>
 #include <Widget/Handler/ClientHUD.h>
@@ -102,6 +107,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
 
     playerState->InitializeLocalPlayerData();
+    newCharacter->InitSetting();
 
     gameMode->GetClientHUD()->FadeOut();
     return true;
@@ -314,6 +320,7 @@ bool Handle_S2C_DetectChangePlayer(ANetworkController* controller, Protocol::S2C
         playerState->GetCharacterStats().UpdateCurrentStats(StaticCast<ECharacterStatus>(stat.stat_type()), stat.stat_value());
     }
     playerState->UpdateCurrentStatsBar();
+    playerState->CheckBuff();
 
     return true;
 }
@@ -2216,35 +2223,29 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
     case 2:
         /* 패링 */
         animation->PlaySkillMontage(1, duration);
-        /*
-        newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
+        newActor = gameState->CreateGameObject(ASkill_Counter::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
         {
             return false;
         }
-        */
         break;
     case 3:
         /* 바닥 */
         animation->PlaySkillMontage(2, duration);
-        /*
-        newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
+        newActor = gameState->CreateGameObject(ASkill_SlamAttack::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
         {
             return false;
         }
-        */
         break;
     case 4:
         /* 검기 */
         animation->PlaySkillMontage(3, duration);
-        /*
-        newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
+        newActor = gameState->CreateGameObject(ASkill_SwordSpirit::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
         {
             return false;
         }
-        */
         break;
     default:
         UE_LOG(LogTemp, Warning, TEXT("Wrong SkillID"));

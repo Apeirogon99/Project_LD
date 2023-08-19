@@ -20,6 +20,14 @@ void ANPS_Game::UpdateCurrentStatsBar()
 	UpdateManaBar();
 }
 
+void ANPS_Game::CheckBuff()
+{
+	if (OnCharacterApplyBuff.IsBound())
+	{
+		OnCharacterApplyBuff.Broadcast();
+	}
+}
+
 void ANPS_Game::SetRemotePlayerID(const int64 inRemoteID)
 {
 	mRemoteID = inRemoteID;

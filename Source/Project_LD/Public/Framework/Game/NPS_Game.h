@@ -14,6 +14,7 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnCharacterHealthChanged)
 DECLARE_MULTICAST_DELEGATE(FOnCharacterManaChanged)
+DECLARE_MULTICAST_DELEGATE(FOnCharacterApplyBuff)
 
 UCLASS()
 class PROJECT_LD_API ANPS_Game : public ANetworkPlayerState
@@ -27,9 +28,11 @@ public:
 public:
 	FOnCharacterHealthChanged			OnCharacterHealthChanged;
 	FOnCharacterManaChanged			OnCharacterManaChanged;
+	FOnCharacterApplyBuff					OnCharacterApplyBuff;
 
 public:
 	void UpdateCurrentStatsBar(); // stats Update
+	void CheckBuff();
 	void SetRemotePlayerID(const int64 inRemoteID);
 	void SetCharacterData(const FCharacterData& InCharacterDatas);
 	void SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment);
