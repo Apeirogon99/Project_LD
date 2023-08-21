@@ -2255,6 +2255,52 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
     return true;
 }
 
+bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_ReactionSkill& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    ANC_Game* character = Cast<ANC_Game>(controller->GetCharacter());
+    if (nullptr == character)
+    {
+        return false;
+    }
+
+    const int64&    remoteID    = pkt.remote_id();
+    const int64&    objectID    = pkt.object_id();
+    const int32&    skillID     = pkt.skill_id();
+    const FVector&  location    = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    const FRotator& rotation    = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
+    const float&    duration    = pkt.duration() / 1000.0f;
+
+    AActor* actor = gameState->FindGameObject(objectID);
+    if (nullptr == actor)
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_ReactionSkill] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return true;
+    }
+
+    //스킬 상속 받은거
+    //EX
+    //SkillParent* skill = Cast<SkillParent>(actor);
+    //bool ret = skill->crossCheack(remoteID, objectID, skillID);
+    //skill->ReactionSkill(location, rotation, duration)
+
+    //TODO : 삭제할것
+    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_ReactionSkill"));
+
+    return true;
+}
+
 bool Handle_S2C_DebugBox(ANetworkController* controller, Protocol::S2C_DebugBox& pkt)
 {
 
@@ -2273,7 +2319,6 @@ bool Handle_S2C_DebugBox(ANetworkController* controller, Protocol::S2C_DebugBox&
             return false;
         }
         Cast<ADebug_Box>(world->SpawnActor<AActor>(DebugActorClass, FVector(), FRotator()))->DebugInit(startLocation, endLocation, extent, duration);
-        UE_LOG(LogTemp, Warning, TEXT("CALL DEBUGBOX"));
     }
 
     return true;
@@ -2295,7 +2340,6 @@ bool Handle_S2C_DebugCircle(ANetworkController* controller, Protocol::S2C_DebugC
             return false;
         }
         Cast<ADebug_Circle>(world->SpawnActor<AActor>(DebugActorClass, FVector(), FRotator()))->DebugInit(radius, location, duration);
-        UE_LOG(LogTemp, Warning, TEXT("CALL DEBUGCircle"));
     }
 
     return true;
