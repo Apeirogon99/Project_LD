@@ -20,6 +20,11 @@ APS_Game::~APS_Game()
 {
 }
 
+void APS_Game::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 void APS_Game::UpdateExpValue(int InExp)
 {
 	mCharacterData.SetExp(InExp);
@@ -54,6 +59,15 @@ void APS_Game::InitializeLocalPlayerState()
 		{
 			return;
 		}
+
+		mPartyComponent = NewObject<UACPartyComponent>(this, TEXT("Party"));
+		if (mPartyComponent == nullptr)
+		{
+			return;
+		}
+		this->AddOwnedComponent(mPartyComponent);
+		mPartyComponent->RegisterComponent();
+
 	}
 	APC_Game* playercontroller = Cast<APC_Game>(gameMode->GetNetworkController());
 	if (nullptr == playercontroller)
@@ -108,6 +122,11 @@ void APS_Game::InitializeLocalPlayerData()
 	mCharacterStats.SetCurrentStats(mCharacterStats.GetMaxStats());
 
 	UpdateCurrentStatsBar();
+}
+
+UACPartyComponent* APS_Game::GetPartyComponent()
+{
+	return mPartyComponent;
 }
 
 void APS_Game::UpdateExpBar()

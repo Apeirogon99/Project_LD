@@ -238,3 +238,40 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
 	FCharacterEquipment		mEquipment;
 };
+
+
+USTRUCT(Atomic, BlueprintType)
+struct FPartyPlayerInfo
+{
+	GENERATED_BODY()
+
+public:
+	FPartyPlayerInfo();
+	~FPartyPlayerInfo();
+
+public:
+	void SetValid(const bool inValid)				{ mValid = inValid; }
+	void SetLevel(const int32 inLevel)				{ mLevel = inLevel; }
+	void SetClass(const ECharacterClass inClass)	{ mCharacterClass = inClass; }
+	void SetName(const FString inName)				{ mName = inName; }
+
+public:
+	bool			IsValidArea()		const { return mValid; }
+	int32			GetLevel()			const { return mLevel; }
+	ECharacterClass	GetCharacterClass() const { return mCharacterClass; }
+	FString			GetName()			const { return mName; }
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+		bool mValid;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+		int32 mLevel;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+		ECharacterClass	mCharacterClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+		FString mName;
+
+};

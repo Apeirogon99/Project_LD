@@ -7,6 +7,7 @@
 #include <Struct/Inventory/InventoryFrame.h>
 #include <Component/ACInventoryComponent.h>
 #include <Component/ACEquipment.h>
+#include <Component/ACPartyComponent.h>
 #include "PS_Game.generated.h"
 
 /**
@@ -27,6 +28,9 @@ public:
 public:
 	FOnCharacterExpChanged				OnCharacterExpChanged;
 
+protected:
+	virtual void BeginPlay() override;
+
 public:
 	void UpdateExpValue(int InExp);
 	void InitializeLocalPlayerState();
@@ -39,6 +43,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component")
 	UACEquipment* mEquipmentComponent;
 
+public:
+	UACPartyComponent* GetPartyComponent();
+
 protected:
 	virtual void UpdateExpBar();
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component", meta = (AllowPrivateAccess = "true"))
+		UACPartyComponent* mPartyComponent;
 };

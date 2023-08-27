@@ -51,5 +51,6 @@ public:
 		UTexture2D* mWizardClassTexture;
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
 	int64 mRemoteID;
 };

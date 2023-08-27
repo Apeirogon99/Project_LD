@@ -63,13 +63,14 @@ void UW_PartyPlayerInfoList::AddPartyList(const int64& inRemoteID, const int64& 
 	{
 		return;
 	}
+	newCell->SetPlayerInfo(inRemoteID, inLeaderRemoteID, inLevel, inClass, inPlayerName, inIsSelf);
 
 	mPartyPlayerInfoLists.Push(newCell);
 
-	mPartyPlayerInfoScrollBox->AddChild(newCell);
+	UPanelSlot* child = mPartyPlayerInfoScrollBox->AddChild(newCell);
 	mPartyPlayerInfoScrollBox->ScrollToEnd();
 
-	newCell->SetPlayerInfo(inRemoteID, inLeaderRemoteID, inLevel, inClass, inPlayerName, inIsSelf);
+	Cast<UW_PartyPlayerInfo>(child->Content)->SetPlayerInfo(inRemoteID, inLeaderRemoteID, inLevel, inClass, inPlayerName, inIsSelf);
 
 	this->SetVisibility(ESlateVisibility::Visible);
 }

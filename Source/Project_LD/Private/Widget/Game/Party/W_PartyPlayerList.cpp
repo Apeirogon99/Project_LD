@@ -110,8 +110,10 @@ void UW_PartyPlayerList::AddPartyList(const int64& inRemoteID, const int64& inLe
 
 	mPartyPlayerLists.Push(newCell);
 
-	mPartyScrollBox->AddChild(newCell);
+	UPanelSlot* child = mPartyScrollBox->AddChild(newCell);
 	mPartyScrollBox->ScrollToEnd();
+
+	Cast<UW_PartyPlayerCell>(child->Content)->SetPlayerInfo(inRemoteID, inLevel, inClass, inPlayerName);
 
 	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gameMode)

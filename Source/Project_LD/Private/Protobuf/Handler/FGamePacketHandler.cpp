@@ -808,6 +808,11 @@ bool Handle_S2C_CreateParty(ANetworkController* controller, Protocol::S2C_Create
     }
 
     {
+        playerState->GetPartyComponent()->CreateParty();
+    }
+
+    {
+        
         UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("PartyMain")));
         if (nullptr == widget)
         {
@@ -1077,6 +1082,11 @@ bool Handle_S2C_RequestLeaveParty(ANetworkController* controller, Protocol::S2C_
 
                 mainGameWidget->ClearPartyPlayerInfo();
             }
+
+            {
+                playerState->GetPartyComponent()->ClearParty();
+            }
+
         }
     }
 
@@ -1297,6 +1307,13 @@ bool Handle_S2C_LoadParty(ANetworkController* controller, Protocol::S2C_LoadPart
     }
     mainGameWidget->ClearPartyPlayerInfo();
 
+    UACPartyComponent* partyComponent = playerState->GetPartyComponent();
+    if (nullptr == partyComponent)
+    {
+        return false;
+    }
+    partyComponent->ClearParty();
+
     const int32 maxSize = pkt.remote_id_size();
     for (int32 index = 0; index < maxSize; ++index)
     {
@@ -1314,6 +1331,10 @@ bool Handle_S2C_LoadParty(ANetworkController* controller, Protocol::S2C_LoadPart
 
         {
             mainGameWidget->PushPartyPlayerInfo(remoteID, leaderID, level, characterClass, name, isSelf);
+        }
+
+        {
+            partyComponent->EnterParty(remoteID, level, characterClass, name);
         }
     }
 
@@ -1423,6 +1444,16 @@ bool Handle_S2C_EnterPartyPlayer(ANetworkController* controller, Protocol::S2C_E
         mainGameWidget->PushPartyPlayerInfo(remoteID, leaderID, level, characterClass, name, isSelf);
     }
 
+    {
+        UACPartyComponent* partyComponent = playerState->GetPartyComponent();
+        if (nullptr == partyComponent)
+        {
+            return false;
+        }
+
+        partyComponent->EnterParty(remoteID, level, characterClass, name);
+    }
+
     return true;
 }
 
@@ -1436,6 +1467,12 @@ bool Handle_S2C_LeavePartyPlayer(ANetworkController* controller, Protocol::S2C_L
 
     AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
     if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == playerState)
     {
         return false;
     }
@@ -1476,6 +1513,16 @@ bool Handle_S2C_LeavePartyPlayer(ANetworkController* controller, Protocol::S2C_L
         }
 
         mainGameWidget->ReleasePartyPlayerInfo(pkt.remote_id());
+    }
+
+    {
+        UACPartyComponent* partyComponent = playerState->GetPartyComponent();
+        if (nullptr == partyComponent)
+        {
+            return false;
+        }
+
+        partyComponent->LeaveParty(pkt.remote_id());
     }
 
     return true;

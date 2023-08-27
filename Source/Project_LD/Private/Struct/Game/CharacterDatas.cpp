@@ -122,3 +122,11 @@ void FCharacterData::UpdateCharacterData(const Protocol::SCharacterData& inChara
 	const Protocol::SCharacterEqipment& eqipment = inCharacterData.eqipment();
 	mEquipment.UpdateEquipments(eqipment);
 }
+
+FPartyPlayerInfo::FPartyPlayerInfo() : mValid(false), mLevel(0), mCharacterClass(ECharacterClass::None), mName(TEXT(""))
+{
+}
+
+FPartyPlayerInfo::~FPartyPlayerInfo()
+{
+}

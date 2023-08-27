@@ -27,7 +27,9 @@ public:
 	AActor*		FindGameObject(const int64 inGameObject);
 	bool		RemoveGameObject(const int64 inGameObjectID);
 
+	UFUNCTION(BlueprintCallable, Category = "NetworkGameState")
 	AController*			FindPlayerController(const int64 inRemoteID);
+
 	AAppearanceCharacter*	GetPreviewCharacter();
 	
 private:
