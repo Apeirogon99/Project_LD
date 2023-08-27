@@ -163,7 +163,9 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     FVector                         newMovementLocation     = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
     FCharacterData                  characterData           = pkt.character_data();
 
-    ANC_Game* character = Cast<ANC_Game>(gameState->CreateNPCCharacter(FVector::ZeroVector, FRotator::ZeroRotator, characterData, newRemoteID));
+    FVector	direction = newMovementLocation - oldMovementLocation;
+
+    ANC_Game* character = Cast<ANC_Game>(gameState->CreateNPCCharacter(oldMovementLocation, direction.Rotation(), characterData, newRemoteID));
     if (nullptr == character)
     {
         return false;
@@ -1535,7 +1537,8 @@ bool Handle_S2C_AppearArrow(ANetworkController* controller, Protocol::S2C_Appear
     const int64     objectID    = pkt.object_id();
     const FVector   location    = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
     const FRotator  rotation    = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
-    const int64     timeStamp   = pkt.timestamp();
+    const int64     timeStamp = pkt.timestamp();
+    const int64     durationTime = controller->GetServerTimeStamp() - timeStamp;
 
     if (nullptr != gameState->FindGameObject(objectID))
     {
@@ -1549,6 +1552,7 @@ bool Handle_S2C_AppearArrow(ANetworkController* controller, Protocol::S2C_Appear
     {
         return false;
     }
+    newArrow->ArrowSyncMovement(location, rotation, durationTime / 1000.0f);
 
     return true;
 }
@@ -1569,6 +1573,7 @@ bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C
 
     const int64     objectID = pkt.object_id();
     const FVector   location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    const FRotator  rotation = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
     const int64     timeStamp = pkt.timestamp();
     const int64     durationTime = controller->GetServerTimeStamp() - timeStamp;
 
@@ -1584,7 +1589,7 @@ bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C
     {
         return false;
     }
-    arrow->ArrowSyncMovement(location, durationTime / 1000.0f);
+    arrow->ArrowSyncMovement(location, rotation, durationTime / 1000.0f);
 
     return true;
 }

@@ -50,4 +50,6 @@ private:
 
 	FVector		mTargetLoction;
 	FRotator	mTargetRotation;
+
+	float		mCorrectionVelocity;
 };

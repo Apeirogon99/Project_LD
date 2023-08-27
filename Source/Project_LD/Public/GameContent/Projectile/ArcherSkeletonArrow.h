@@ -24,7 +24,7 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 public:
-	void ArrowSyncMovement(const FVector& inLocation, const float& inDuration);
+	void ArrowSyncMovement(const FVector& inLocation, const FRotator& inRotation, const float& inDuration);
 	void ArrowMovementCorrection(const float inDeltaTime);
 
 private:
@@ -42,4 +42,6 @@ private:
 
 	bool	mIsLocationCorrection;
 	FVector mTargetLoction;
+
+	float	mCorrectionVelocity;
 };

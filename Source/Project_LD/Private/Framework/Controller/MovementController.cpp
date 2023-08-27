@@ -27,6 +27,7 @@ AMovementController::AMovementController()
 	mIsMoveToMouseCursor	= false;
 	mIsLocationCorrection	= false;
 	mIsRotationCorrection	= false;
+	mCorrectionVelocity = 0.0f;
 }
 
 AMovementController::~AMovementController()
@@ -196,31 +197,36 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 		return;
 	}
 
-	FVector	direction = inNewMovementLocation - inOldMovementLocation;
-	direction.Normalize();
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 
-	FVector velocity = direction * playerState->GetCharacterStats().GetCurrentStats().GetMovementSpeed();
+	float movedistance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
+	if (movedistance < 1.0f)
+	{
+		return;
+	}
+
+	FVector	direction = inNewMovementLocation - inOldMovementLocation;
+	FRotator rotation = direction.Rotation();
+	FVector foward = rotation.Quaternion().GetForwardVector();
+
+	FVector velocity = foward * 330.0f;
 	float	duration = inTime / 1000.0f;
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
 
 	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
 	FVector curLocation = character->GetActorLocation();
-	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
-	if (locationDistance >= 1.0f)
-	{
-		mIsLocationCorrection = true;
-		mTargetLoction = inOldMovementLocation;
-	}
-	else
+	float locationDistance = FVector::Dist(curLocation, deadReckoningLocation);
+	if (locationDistance > 1.0f)
 	{
 		mIsLocationCorrection = true;
 		mTargetLoction = deadReckoningLocation;
+		mCorrectionVelocity = 0.2f;
+		//character->SetActorRotation(direction.Rotation());
 	}
 
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws] distance[%f]"), *inOldMovementLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance), ELogLevel::Error);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance, duration), ELogLevel::Error);
 
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 }
 
 void AMovementController::MoveCorrection(const float inDeltaTime)
@@ -237,11 +243,10 @@ void AMovementController::MoveCorrection(const float inDeltaTime)
 	}
 
 	FVector curLocation = pawn->GetActorLocation();
-	float	velocity = 3.0f;
 
-	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
+	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, mCorrectionVelocity);
 
-	float distance = FVector::Dist2D(curLocation, correctionLocation);
+	float distance = FVector::Dist(curLocation, correctionLocation);
 	if (distance <= 1.0f)
 	{
 		pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);

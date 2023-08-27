@@ -46,12 +46,21 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	{
 		return;
 	}
+
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 
-	FVector	direction = inNewMovementLocation - inOldMovementLocation;
-	direction.Normalize();
+	float movedistance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
+	if (movedistance < 1.0f)
+	{
+		return;
+	}
 
-	FVector velocity = direction * enemyState->GetEnemyStats().GetMovementSpeed();
+	FVector	direction = inNewMovementLocation - inOldMovementLocation;
+	FRotator rotation = direction.Rotation();
+	FVector foward = rotation.Quaternion().GetForwardVector();
+
+	const float speed = enemyState->GetEnemyStats().GetMovementSpeed();
+	FVector velocity = foward * speed;
 	float	duration = inTime / 1000.0f;
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
@@ -59,18 +68,15 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
 	FVector curLocation = pawn->GetActorLocation();
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
-	if (locationDistance >= 5.0f)
-	{
-		IsCorrection = true;
-		mTargetLoction = inOldMovementLocation;
-	}
-	else
+	if (locationDistance > 1.0f)
 	{
 		IsCorrection = true;
 		mTargetLoction = deadReckoningLocation;
+		//character->SetActorRotation(direction.Rotation());
 	}
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws] distance[%f]"), *inOldMovementLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance), ELogLevel::Error);
+
 
 }
 
@@ -88,7 +94,7 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 	}
 
 	FVector curLocation = pawn->GetActorLocation();
-	float	velocity = 1.0f;
+	float	velocity = 0.2f;
 
 	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
 

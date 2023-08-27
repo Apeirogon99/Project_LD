@@ -30,4 +30,6 @@ private:
 	bool IsCorrection;
 
 	FVector mTargetLoction;
+
+	float mCorrectionVelocity;
 };
