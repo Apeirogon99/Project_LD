@@ -224,6 +224,7 @@ void AAppearanceCharacter::UpdateCharacterMontage(UAnimMontage* inMontageToPlay,
 	meshRoot->GetAnimInstance()->Montage_Play(inMontageToPlay, 1.0f, EMontagePlayReturnType::MontageLength, inStartAtTime);
 
 	int32 maxChild = meshRoot->GetNumChildrenComponents();
+	UE_LOG(LogTemp, Warning, TEXT("UpdateCharacterMontage Child %d"), maxChild);
 	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
 	{
 		USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));

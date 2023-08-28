@@ -107,7 +107,6 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
 
     playerState->InitializeLocalPlayerData();
-    newCharacter->InitSetting();
 
     gameMode->GetClientHUD()->FadeOut();
     return true;
@@ -322,7 +321,6 @@ bool Handle_S2C_DetectChangePlayer(ANetworkController* controller, Protocol::S2C
         playerState->GetCharacterStats().UpdateCurrentStats(StaticCast<ECharacterStatus>(stat.stat_type()), stat.stat_value());
     }
     playerState->UpdateCurrentStatsBar();
-    playerState->CheckBuff();
 
     return true;
 }
@@ -2271,6 +2269,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         {
             return false;
         }
+        Cast<ASkill_Buff>(newActor)->AppearSkill(remoteID, objectID, skillID, location, FRotator(), duration);
         break;
     case 2:
         /* 패링 */
@@ -2280,15 +2279,18 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         {
             return false;
         }
+        Cast<ASkill_Counter>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
     case 3:
         /* 바닥 */
-        animation->PlaySkillMontage(2, duration);
+        animation->PlaySkillMontage(2, 0.f);
+        //animation->PlaySkillMontage(2, duration);
         newActor = gameState->CreateGameObject(ASkill_SlamAttack::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
         {
             return false;
         }
+        Cast<ASkill_SlamAttack>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
     case 4:
         /* 검기 */
@@ -2298,6 +2300,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         {
             return false;
         }
+        Cast<ASkill_SwordSpirit>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
     default:
         UE_LOG(LogTemp, Warning, TEXT("Wrong SkillID"));
@@ -2327,6 +2330,12 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         return false;
     }
 
+    UAI_PlayerCharacter* animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+    if (nullptr == animation)
+    {
+        return false;
+    }
+
     const int64&    remoteID    = pkt.remote_id();
     const int64&    objectID    = pkt.object_id();
     const int32&    skillID     = pkt.skill_id();
@@ -2341,14 +2350,49 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         return true;
     }
 
+    AActor* newActor;
+
+    switch (skillID)
+    {
+    case 1:
+        /*버프*/
+        break;
+    case 2:
+        /* 패링 */
+        newActor = gameState->CreateGameObject(ASkill_Counter::StaticClass(), location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        UE_LOG(LogTemp, Warning, TEXT("Reaction Q Play Anim Server to Client"));
+        Cast<ASkill_Counter>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
+        break;
+    case 3:
+        /* 바닥 */
+        break;
+    case 4:
+        /* 검기 */
+        animation->PlaySkillMontage(4, duration);
+        /*
+        newActor = gameState->CreateGameObject(ASkill_SwordSpirit::StaticClass(), location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        UE_LOG(LogTemp, Warning, TEXT("Reaction R Play Anim Server to Client"));
+        Cast<ASkill_SwordSpirit>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
+        */
+        break;
+    default:
+        UE_LOG(LogTemp, Warning, TEXT("Wrong SkillID"));
+        break;
+    }
+
     //스킬 상속 받은거
     //EX
     //SkillParent* skill = Cast<SkillParent>(actor);
     //bool ret = skill->crossCheack(remoteID, objectID, skillID);
     //skill->ReactionSkill(location, rotation, duration)
-
-    //TODO : 삭제할것
-    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_ReactionSkill"));
 
     return true;
 }

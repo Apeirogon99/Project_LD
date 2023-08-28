@@ -20,14 +20,6 @@ void ANPS_Game::UpdateCurrentStatsBar()
 	UpdateManaBar();
 }
 
-void ANPS_Game::CheckBuff()
-{
-	if (OnCharacterApplyBuff.IsBound())
-	{
-		OnCharacterApplyBuff.Broadcast();
-	}
-}
-
 void ANPS_Game::SetRemotePlayerID(const int64 inRemoteID)
 {
 	mRemoteID = inRemoteID;
@@ -54,8 +46,8 @@ void ANPS_Game::calculationStats()
 
 	//DataTable에서 데이터를 가져와 배열에 저장
 	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	BaseStats.SetStatsBaseData(*Instance->GetBaseData(1));
-	GrowStats.SetStatsGrowData(*Instance->GetGrowthData(1));
+	BaseStats.SetStatsBaseData(*Instance->GetBaseData(1)); //남 전사
+	GrowStats.SetStatsGrowData(*Instance->GetGrowthData(1)); //남 전사
 
 	TArray<float> IBase = BaseStats.FDataToFloat();
 	TArray<float> IGrow = GrowStats.FDataToFloat();

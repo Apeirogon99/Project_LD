@@ -1,9 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameContent/Skill/Skill_SlamAttack.h"
-#include "Niagara/Public/NiagaraComponent.h"
-#include "Niagara/Classes/NiagaraSystem.h"
-#include "NiagaraFunctionLibrary.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "Engine/World.h"
 
 // Sets default values
@@ -12,17 +11,28 @@ ASkill_SlamAttack::ASkill_SlamAttack()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-
-	mParticleFisrt = CreateDefaultSubobject<UNiagaraComponent>(TEXT("FirstNiagaraComponent"));
-
-	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> FIRST_PARTICLE(TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/SlamAttack/NS_JumpAttack_First.NS_JumpAttack_First'"));
-	if (FIRST_PARTICLE.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> MAINPARTICLE(TEXT("ParticleSystem'/Game/GameContent/Animation/Male/Skill/SlamAttack/P_SlamAttack.P_SlamAttack'"));
+	if (MAINPARTICLE.Succeeded())
 	{
-		mParticleFisrt->SetAsset(FIRST_PARTICLE.Object);
+		mMainParticle = MAINPARTICLE.Object;
 	}
+}
 
-	mParticleFisrt->SetRelativeLocation(FVector(0.f, 0.f, 45.f));
+void ASkill_SlamAttack::AppearSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration)
+{
+	Super::AppearSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
+
+	if (mMainParticle)
+	{
+		FVector Location = InLocation;
+		Location.Z = Location.Z - 80.f;
+		mSpawnedParticle = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMainParticle, FTransform(InRotation, Location, FVector(1)), true);
+	}
+}
+
+void ASkill_SlamAttack::ReactionSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration)
+{
+	Super::ReactionSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
 }
 
 // Called when the game starts or when spawned
@@ -30,55 +40,15 @@ void ASkill_SlamAttack::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	FTimerHandle PreHeatTimerHandle;
-	FTimerHandle SecondTimerHandle;
-
-	GetWorldTimerManager().SetTimer(PreHeatTimerHandle, this, &ASkill_SlamAttack::CallPreHeatNiagara, 0.1f, false);
-	GetWorldTimerManager().SetTimer(SecondTimerHandle, this, &ASkill_SlamAttack::CallSecondNiagara, 0.4f, false);
 }
 
 void ASkill_SlamAttack::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	if (mEarthActor != nullptr)
+	if (mSpawnedParticle)
 	{
-		mEarthActor->Destroy();
-	}
-}
-
-void ASkill_SlamAttack::CallSecondNiagara()
-{
-	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/SlamAttack/NS_JumpAttack_Second.NS_JumpAttack_Second'")))
-	{
-		FVector Location = GetActorLocation();
-		Location.Z = Location.Z - 40.f;
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Location);
-	}
-	UBlueprint* BlueprintObj = Cast<UBlueprint>(StaticLoadObject(UBlueprint::StaticClass(), nullptr, TEXT("Blueprint'/Game/GameContent/Animation/Male/Skill/SlamAttack/BP_JumpAttack_Earth.BP_JumpAttack_Earth'")));
-	if (BlueprintObj)
-	{
-		UClass* EarthActorClass = BlueprintObj->GeneratedClass;
-
-		UWorld* world = GetWorld();
-		if (world == nullptr)
-		{
-			return;
-		}
-		FVector Location = GetActorLocation();
-		Location.Z = Location.Z - 40.f;
-
-		mEarthActor = world->SpawnActor<AActor>(EarthActorClass, Location, FRotator(0.f,90.f,0.f));
-	}
-}
-
-void ASkill_SlamAttack::CallPreHeatNiagara()
-{
-	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/SlamAttack/NS_JumpAttack_Preheat.NS_JumpAttack_Preheat'")))
-	{
-		FVector Location = GetActorLocation();
-		Location.Z = Location.Z - 40.f;
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Location);
+		mSpawnedParticle->DestroyComponent();
 	}
 }
 

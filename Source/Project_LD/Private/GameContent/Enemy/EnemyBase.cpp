@@ -58,7 +58,7 @@ AEnemyBase::AEnemyBase()
 	mParticleSystem->SetupAttachment(RootComponent);
 	mSlowParticleSystem->SetupAttachment(RootComponent);
 
-	static ConstructorHelpers::FObjectFinder<UParticleSystem> SLOWPARTICLE(TEXT("ParticleSystem'/Game/Test/P_SlowTest.P_SlowTest'"));
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> SLOWPARTICLE(TEXT("ParticleSystem'/Game/Test/P_Slow.P_Slow'"));
 	if (SLOWPARTICLE.Succeeded())
 	{
 		mSlowParticle = SLOWPARTICLE.Object;
@@ -363,8 +363,8 @@ void AEnemyBase::Interactive(ANC_Game* inPlayer)
 		{
 			return;
 		}
-		//animInstance->PlayClientAttackMontage();
-		//animInstance->SetClientAnimWorking(true);
+		animInstance->PlayClientAttackMontage();
+		animInstance->SetClientAnimWorking(true);
 	}
 	Protocol::C2S_PlayerAutoAttack attackPacket;
 	attackPacket.set_object_id(state->GetObjectID());

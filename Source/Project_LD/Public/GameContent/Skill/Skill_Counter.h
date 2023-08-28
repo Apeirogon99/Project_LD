@@ -3,19 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Skill_Parent.h"
 #include "Skill_Counter.generated.h"
 
+class UNiagaraSystem;
 class UNiagaraComponent;
 
 UCLASS()
-class PROJECT_LD_API ASkill_Counter : public AActor
+class PROJECT_LD_API ASkill_Counter : public ASkill_Parent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
 	ASkill_Counter();
+
+public:
+	virtual void AppearSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration) override;
+	virtual void ReactionSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration) override;
 
 public:
 	// Called every frame
@@ -30,5 +35,8 @@ private:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UNiagaraComponent* mParticle;
+	UNiagaraSystem* mAppearParticle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UNiagaraComponent* mAppearStoreParticle;
 };

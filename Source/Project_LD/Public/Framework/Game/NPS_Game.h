@@ -32,7 +32,6 @@ public:
 
 public:
 	void UpdateCurrentStatsBar(); // stats Update
-	void CheckBuff();
 	void SetRemotePlayerID(const int64 inRemoteID);
 	void SetCharacterData(const FCharacterData& InCharacterDatas);
 	void SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment);

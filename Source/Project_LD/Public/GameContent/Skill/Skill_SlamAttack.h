@@ -3,20 +3,23 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Skill_Parent.h"
 #include "Skill_SlamAttack.generated.h"
 
-class UNiagaraComponent;
 
 
 UCLASS()
-class PROJECT_LD_API ASkill_SlamAttack : public AActor
+class PROJECT_LD_API ASkill_SlamAttack : public ASkill_Parent
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
 	ASkill_SlamAttack();
+
+public:
+	virtual void AppearSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration) override;
+	virtual void ReactionSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration) override;
 
 public:
 	// Called every frame
@@ -29,12 +32,11 @@ protected:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UNiagaraComponent* mParticleFisrt;
+	UParticleSystem* mMainParticle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* mSpawnedParticle;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AActor* mEarthActor;
-	
-private:
-	void CallSecondNiagara();
-	void CallPreHeatNiagara();
 };

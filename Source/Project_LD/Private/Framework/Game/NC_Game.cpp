@@ -12,6 +12,8 @@
 #include <Components/WidgetComponent.h>
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Niagara/Public/NiagaraComponent.h"
+#include "Niagara/Classes/NiagaraSystem.h"
 #include "Particles/ParticleSystemComponent.h"
 
 #include <UObject/ConstructorHelpers.h>
@@ -59,6 +61,18 @@ ANC_Game::ANC_Game()
 
 	mLevelUpParticleSystem->SetTemplate(mLevelUpParticle);
 
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> SHIELD_PARTICLE(TEXT("NiagaraSystem'/Game/sA_Megapack_v1/sA_PickupSet_1/Fx/NiagaraSystems/NS_Shield_2.NS_Shield_2'"));
+	if (SHIELD_PARTICLE.Succeeded())
+	{
+		mApplyBuffParticle = SHIELD_PARTICLE.Object;
+	}
+	mApplyBuffStore = CreateDefaultSubobject<UNiagaraComponent>(TEXT("BuffParticle"));
+	mApplyBuffStore->SetupAttachment(RootComponent);
+	mApplyBuffStore->SetRelativeScale3D(FVector(1.5f));
+	mApplyBuffStore->bAutoActivate = false;
+
+	mApplyBuffStore->SetAsset(mApplyBuffParticle);
+
 	bIsAttack = false;
 	bBuffActive = false;
 }
@@ -88,80 +102,26 @@ void ANC_Game::ShowLevelUpParticle()
 	mLevelUpParticleSystem->Activate();
 }
 
-void ANC_Game::InitSetting()
+void ANC_Game::ActiveBuffParticle()
 {
-	UWorld* world = GetWorld();
-	if (nullptr == world)
-	{
-		return;
-	}
-
-	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
-	if (nullptr == gameState)
-	{
-		return;
-	}
-
-	ANPC_Game* controller = Cast<ANPC_Game>(GetController());
-	if (nullptr == controller)
-	{
-		return;
-	}
-
-	ANPS_Game* playerState = controller->GetPlayerState<ANPS_Game>();
-	if (nullptr == playerState)
-	{
-		return;
-	}
-
-	playerState->OnCharacterApplyBuff.AddUFunction(this, FName(TEXT("ShowBuffParticle")));
+	mApplyBuffStore->SetFloatParameter("LifeTime", 99999.f);
+	mApplyBuffStore->Activate();
 }
 
-void ANC_Game::ShowBuffParticle()
+void ANC_Game::DeActiveBuffParticle()
 {
-	UWorld* world = GetWorld();
-	if (nullptr == world)
-	{
-		return;
-	}
+	mApplyBuffStore->SetFloatParameter("LifeTime", 0.f);
+	mApplyBuffStore->Deactivate();
+}
 
-	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
-	if (nullptr == gameState)
-	{
-		return;
-	}
+void ANC_Game::StopMovement()
+{
+	this->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+}
 
-	ANPC_Game* controller = Cast<ANPC_Game>(GetController());
-	if (nullptr == controller)
-	{
-		return;
-	}
-
-	ANPS_Game* playerState = controller->GetPlayerState<ANPS_Game>();
-	if (nullptr == playerState)
-	{
-		return;
-	}
-
-	float MaxDamage = playerState->GetCharacterStats().GetMaxStats().GetAttackDamage();
-	float CurrentDamage = playerState->GetCharacterStats().GetCurrentStats().GetAttackDamage();
-
-	if (MaxDamage > CurrentDamage)
-	{
-		if (bBuffActive == false)
-		{
-			bBuffActive = true;
-			
-		}
-	}
-	else
-	{
-		if (bBuffActive == true)
-		{
-			bBuffActive = false;
-			
-		}
-	}
+void ANC_Game::ActiveMovement()
+{
+	this->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 }
 
 void ANC_Game::BeginPlay()

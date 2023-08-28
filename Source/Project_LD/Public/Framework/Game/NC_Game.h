@@ -10,6 +10,8 @@
 /**
  * 
  */
+class UNiagaraSystem;
+class UNiagaraComponent;
 
 UCLASS()
 class PROJECT_LD_API ANC_Game : public AAppearanceCharacter
@@ -29,11 +31,13 @@ public:
 public:
 	void ShowWorldChat(const FString& inPlayerName, const FString& inMessage, const float& inDuration);
 	void ShowLevelUpParticle();
-	void InitSetting();
-
+	void ActiveBuffParticle();
+	void DeActiveBuffParticle();
+	void StopMovement();
+	
 public:
-	UFUNCTION()
-	void ShowBuffParticle();
+	UFUNCTION(BlueprintCallable)
+	void ActiveMovement();
 
 protected:
 	virtual void BeginPlay() override;
@@ -48,11 +52,17 @@ protected:
 	UWidgetComponent* mChatWidget;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UNiagaraSystem* mApplyBuffParticle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UNiagaraComponent* mApplyBuffStore;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UParticleSystemComponent* mLevelUpParticleSystem;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* mLevelUpParticle;
 
-private:
+protected:
 	bool bBuffActive;
 };

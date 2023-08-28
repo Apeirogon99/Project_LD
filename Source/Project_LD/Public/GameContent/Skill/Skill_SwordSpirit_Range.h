@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Skill_Parent.h"
 #include "Skill_SwordSpirit_Range.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_SwordSpirit_Range : public AActor
+class PROJECT_LD_API ASkill_SwordSpirit_Range : public ASkill_Parent
 {
 	GENERATED_BODY()
 	

@@ -13,27 +13,46 @@ ASkill_Counter::ASkill_Counter()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	RootComponent		= CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-
-	mParticle = CreateDefaultSubobject<UNiagaraComponent>(TEXT("mFirstParticle"));
-
 	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> PARTICLE(TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/Counter/NS_CounterStart.NS_CounterStart'"));
 	if (PARTICLE.Succeeded())
 	{
-		mParticle->SetAsset(PARTICLE.Object);
+		mAppearParticle = PARTICLE.Object;
 	}
 
-	mParticle->SetupAttachment(RootComponent);
+
+}
+
+void ASkill_Counter::AppearSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration)
+{
+	Super::AppearSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
+
+	if (mAppearParticle)
+	{
+		FTimerHandle NextCallTimer;
+		FVector Location = InLocation;
+		Location.Z = Location.Z - 80.f;
+		mAppearStoreParticle = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), mAppearParticle, Location, InRotation, FVector(1), true);
+
+		GetWorldTimerManager().SetTimer(NextCallTimer, this, &ASkill_Counter::CallEndParticle, 0.14f, false);
+	}
+}
+
+void ASkill_Counter::ReactionSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration)
+{
+	Super::ReactionSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
+
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/Counter/NS_CounterSucc.NS_CounterSucc'")))
+	{
+		FVector Location = GetActorLocation() + GetActorForwardVector() * 200.f;
+		FRotator Rotation = RootComponent->GetRelativeRotation();
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Location, Rotation);
+	}
 }
 
 // Called when the game starts or when spawned
 void ASkill_Counter::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	FTimerHandle NextCallTimer;
-
-	GetWorldTimerManager().SetTimer(NextCallTimer, this, &ASkill_Counter::CallEndParticle, 0.14f, false);
 }
 
 void ASkill_Counter::CallEndParticle()
