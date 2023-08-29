@@ -204,6 +204,7 @@ public:
 	void UpdateCharacterData(const Protocol::SCharacterData& inCharacterData);
 		
 public:
+	void SetID(const int32& inID) { mID = inID; }
 	void SetName(const FString inName)													{ mName = inName; }
 	void SetLevel (const int32 inLevel)														{ mLevel = inLevel; }
 	void SetExp (const int32 inExp)															{ mExp = inExp; }
@@ -212,14 +213,18 @@ public:
 	void SetEquipment(const FCharacterEquipment inEquipment)			{ mEquipment = inEquipment; }
 
 public:
-	FString							GetName() const						{ return mName; }
-	int32								GetLevel() const						{ return mLevel; }
-	int32								GetExp() const						{ return mExp; }
-	ECharacterClass				GetClass() const						{ return mClass; }
-	FCharacterAppearance	GetAppearance() const			{ return mAppearance; }
-	FCharacterEquipment		GetEquipment() const				{ return mEquipment; }
+	int32					GetID() const					{ return mID; }
+	FString					GetName() const					{ return mName; }
+	int32					GetLevel() const				{ return mLevel; }
+	int32					GetExp() const					{ return mExp; }
+	ECharacterClass			GetClass() const				{ return mClass; }
+	FCharacterAppearance&	GetAppearance() 				{ return mAppearance; }
+	FCharacterEquipment&	GetEquipment() 					{ return mEquipment; }
 
 private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	int32					mID;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
 	FString					mName;
 

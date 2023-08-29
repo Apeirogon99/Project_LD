@@ -26,6 +26,7 @@ protected:
 	virtual bool	OnSend(int32 len) override;
 	virtual bool	OnConnect() override;
 	virtual bool	OnDisconnect() override;
+	virtual bool	OnTick() override;
 
 private:
 

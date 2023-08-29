@@ -2,7 +2,13 @@
 
 
 #include "Framework/Identity/IdentityPlayerController.h"
+
 #include <Protobuf/Handler/FClientPacketHandler.h>
+#include <Protobuf/Handler/FCommonPacketHandler.h>
+#include <Network/NetworkUtils.h>
+
+#include <Network/NetworkTimeStamp.h>
+
 #include <Network/RecvBuffer.h>
 #include <Network/NetworkUtils.h>
 
@@ -49,5 +55,24 @@ bool AIdentityPlayerController::OnConnect()
 
 bool AIdentityPlayerController::OnDisconnect()
 {
+	return true;
+}
+
+bool AIdentityPlayerController::OnTick()
+{
+	UNetworkTimeStamp* networkTimeStmap = this->GetTimeStamp();
+	if (nullptr == networkTimeStmap)
+	{
+		return false;
+	}
+
+	const int64 nowUtcTimeStamp = networkTimeStmap->GetUtcTimeStmap();
+	const int64 nowRTT = networkTimeStmap->GetRTT();
+
+	Protocol::C2S_ReplicatedServerTimeStamp timeStampPacket;
+	timeStampPacket.set_utc_time(nowUtcTimeStamp);
+	timeStampPacket.set_rtt(nowRTT);
+	SendBufferPtr pakcetBuffer = FCommonPacketHandler::MakeSendBuffer(this, timeStampPacket);
+	this->Send(pakcetBuffer);
 	return true;
 }

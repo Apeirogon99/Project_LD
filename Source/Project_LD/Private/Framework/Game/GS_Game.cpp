@@ -25,7 +25,7 @@ AGS_Game::~AGS_Game()
 {
 }
 
-AActor* AGS_Game::CreateNPCCharacter(FVector inLocation, FRotator inRotator, const FCharacterData& inCharacterData, const int64 inRemoteID)
+AActor* AGS_Game::CreateNPCCharacter(FVector inLocation, FRotator inRotator, FCharacterData& inCharacterData, const int64 inRemoteID)
 {
     UWorld* world = GetWorld();
     if (nullptr == world)

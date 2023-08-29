@@ -129,15 +129,15 @@ void UW_CustomCharacter::Click_Create()
 			Protocol::SCharacterData* characterData = createCharacterPacket.mutable_character_data();
 			if (mCurrentDummyCharacter)
 			{
-				const FCharacterAppearance& appearance = mCurrentDummyCharacter->GetCharacterAppearance();
-				const FCharacterEquipment& eqipment = mCurrentDummyCharacter->GetCharacterEquipment();
+				FCharacterAppearance& appearance = mCurrentDummyCharacter->GetCharacterAppearance();
+				FCharacterEquipment& eqipment = mCurrentDummyCharacter->GetCharacterEquipment();
 
 				characterData->set_name(name);
 				characterData->set_character_class(static_cast<Protocol::ECharacterClass>(StaticCast<int32>(mCharacterClass)));
 				characterData->mutable_appearance()->CopyFrom(UPacketUtils::ConvertToPAppearance(appearance));
 				characterData->mutable_eqipment()->CopyFrom(UPacketUtils::ConvertToPEqipment(eqipment));
-	
 			}
+			createCharacterPacket.set_time_stamp(controller->GetServerTimeStamp());
 
 			SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, createCharacterPacket);
 			controller->Send(pakcetBuffer);
@@ -285,7 +285,7 @@ void UW_CustomCharacter::UpdateEquipment()
 	if (mOldHairNumber != mHairNumber)
 	{
 		mCurrentDummyCharacter->UpdateCharacterEquipment(mTempCharacterEquipment);
-		mCurrentDummyCharacter->UpdateCharacterPose(ECharacterPose::Idle);
+		mCurrentDummyCharacter->UpdateCharacterPose(ECharacterPose::Idle, true);
 		mOldHairNumber = mHairNumber;
 	}
 }

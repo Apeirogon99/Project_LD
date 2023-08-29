@@ -21,7 +21,7 @@ public:
 	~AGS_Game();
 
 public:
-	AActor*		CreateNPCCharacter(FVector inLocation, FRotator inRotator, const FCharacterData& inCharacterData, const int64 inRemoteID);
+	AActor*		CreateNPCCharacter(FVector inLocation, FRotator inRotator, FCharacterData& inCharacterData, const int64 inRemoteID);
 	AActor*		CreateEnemyCharacter(const int32 inEnemyID, FVector inLocation, FRotator inRotator, const int64 inGameObjectID);
 	AActor*		CreateGameObject(UClass* inUClass, FVector inLocation, FRotator inRotator, const int64 inGameObjectID);
 	AActor*		FindGameObject(const int64 inGameObject);

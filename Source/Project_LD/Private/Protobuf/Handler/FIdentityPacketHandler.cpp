@@ -41,6 +41,8 @@ bool Handle_S2C_EnterIdentityServer(ANetworkController* controller, Protocol::S2
 
 	UNetworkUtils::NetworkConsoleLog("Welcome LD_Project", ELogLevel::Warning);
 
+	networkGameMode->GetClientHUD()->FadeOut();
+
 	return true;
 }
 
@@ -132,21 +134,7 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
 
 	int32 error = pkt.error();
-	if (error != GetDatabaseErrorToInt(EDBErrorType::SUCCESS))
-	{
-		FNotificationDelegate notificationDelegate;
-		notificationDelegate.BindLambda([=]()
-			{
-				clientHUD->CleanWidgetFromName(TEXT("Notification"));
-			});
-
-		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("회원가입 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
-		if (ret == false)
-		{
-			return false;
-		}
-	}
-	else if (error == GetDatabaseErrorToInt(EDBErrorType::TEMP_VERIFY))
+	if (error == GetDatabaseErrorToInt(EDBErrorType::TEMP_VERIFY))
 	{
 		FNotificationDelegate notificationDelegate;
 		notificationDelegate.BindLambda([=]()
@@ -157,6 +145,20 @@ bool Handle_S2C_Singup(ANetworkController* controller, Protocol::S2C_Singup& pkt
 			});
 
 		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("이메일 인증"), TEXT("임시 이메일 인증성공"), TEXT("확인"), notificationDelegate);
+		if (ret == false)
+		{
+			return false;
+		}
+	}
+	else if (error != GetDatabaseErrorToInt(EDBErrorType::SUCCESS))
+	{
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
+			{
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+			});
+
+		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("회원가입 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
 		if (ret == false)
 		{
 			return false;
@@ -351,6 +353,13 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 		return false;
 	}
 
+	AGameModeBase* gameMode = controller->GetWorld()->GetAuthGameMode();
+	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
+	if (nullptr == networkGameMode)
+	{
+		return false;
+	}
+
 	AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
 	if (nullptr == clientHUD)
 	{
@@ -377,6 +386,7 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 		FCharacterData newCharacterData;
 		newCharacterData.UpdateCharacterData(curCharacterData);
 
+		int32 id = curCharacterData.id();
 		FString name = UNetworkUtils::ConvertFString(curCharacterData.name());
 		int32 level = curCharacterData.level();
 		ECharacterClass characterClass = StaticCast<ECharacterClass>(curCharacterData.character_class());
@@ -390,6 +400,7 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 		characterEquipment.UpdateEquipments(eqipment);
 
 		FCharacterData characterData;
+		characterData.SetID(id);
 		characterData.SetName(name);
 		characterData.SetLevel(level);
 		characterData.SetClass(characterClass);
@@ -401,6 +412,8 @@ bool Handle_S2C_LoadCharacters(ANetworkController* controller, Protocol::S2C_Loa
 
 	clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
 	clientHUD->ShowWidgetFromName(TEXT("SelectCharacter"));
+
+	networkGameMode->GetClientHUD()->FadeOut();
 
 	return true;
 }

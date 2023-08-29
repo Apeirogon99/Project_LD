@@ -70,6 +70,7 @@ void UW_Singin::Click_Singin()
 	Protocol::C2S_Singin singinPacket;
 	singinPacket.set_user_id(id);
 	singinPacket.set_user_password(password);
+	singinPacket.set_time_stamp(networkController->GetServerTimeStamp());
 
 	SendBufferPtr sendBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, singinPacket);
 

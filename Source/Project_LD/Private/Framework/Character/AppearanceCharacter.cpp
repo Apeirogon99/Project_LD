@@ -72,7 +72,7 @@ AAppearanceCharacter::~AAppearanceCharacter()
 {
 }
 
-void AAppearanceCharacter::InitCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment)
+void AAppearanceCharacter::InitCharacterVisual(FCharacterAppearance& InCharacterAppearance, FCharacterEquipment& inCharacterEquipment)
 {
 	mCharacterAppearance = InCharacterAppearance;
 	mCharacterEquipment = inCharacterEquipment;
@@ -92,7 +92,7 @@ void AAppearanceCharacter::InitCharacterAnimation()
 	UpdateDefaultAnimation();
 }
 
-void AAppearanceCharacter::UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment)
+void AAppearanceCharacter::UpdateCharacterVisual(FCharacterAppearance& InCharacterAppearance, FCharacterEquipment& inCharacterEquipment)
 {
 	mCharacterAppearance = InCharacterAppearance;
 	mCharacterEquipment = inCharacterEquipment;
@@ -101,7 +101,7 @@ void AAppearanceCharacter::UpdateCharacterVisual(const FCharacterAppearance& InC
 	UpdateCharacterAppearnce(InCharacterAppearance);
 }
 
-void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment)
+void AAppearanceCharacter::UpdateCharacterEquipment(FCharacterEquipment& InCharacterEquipment)
 {
 	ECharacterRace currentRace = mCharacterAppearance.GetRace();
 	if (currentRace == ECharacterRace::None)
@@ -147,7 +147,7 @@ void AAppearanceCharacter::UpdateCharacterEquipment(const FCharacterEquipment& I
 	mCharacterEquipment = InCharacterEquipment;
 }
 
-void AAppearanceCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance)
+void AAppearanceCharacter::UpdateCharacterAppearnce(FCharacterAppearance& InCharacterAppearance)
 {
 	ECharacterRace currentRace = mCharacterAppearance.GetRace();
 	if (currentRace == ECharacterRace::None)
@@ -181,7 +181,7 @@ void AAppearanceCharacter::UpdateCharacterAppearnce(const FCharacterAppearance& 
 
 }
 
-void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterPose)
+void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterPose, const bool inIsLoop)
 {
 	if (mCharacterPoses.Num() == 0)
 	{
@@ -194,16 +194,10 @@ void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterP
 		return;
 	}
 
-	bool isLoop = false;
-	if (ECharacterPose::Default == InCharacterPose || ECharacterPose::Idle == InCharacterPose)
-	{
-		isLoop = true;
-	}
-
 	USkeletalMeshComponent* meshRoot = GetMesh();
 	meshRoot->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 	meshRoot->SetAnimation(animationAsset);
-	meshRoot->PlayAnimation(animationAsset, isLoop);
+	meshRoot->PlayAnimation(animationAsset, inIsLoop);
 
 	int32 maxChild = meshRoot->GetNumChildrenComponents();
 	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
@@ -213,7 +207,7 @@ void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterP
 		{
 			partMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 			partMesh->SetAnimation(animationAsset);
-			partMesh->PlayAnimation(animationAsset, isLoop);
+			partMesh->PlayAnimation(animationAsset, inIsLoop);
 		}
 	}
 }

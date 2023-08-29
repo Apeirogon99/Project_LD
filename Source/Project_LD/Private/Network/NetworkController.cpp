@@ -50,6 +50,9 @@ bool ANetworkController::ConnectToSession(FNetworkSessionPtr session, FPossessCa
 	}
 
 	mPossessCallBack = inPossessCallBack;
+
+	this->OnTick();
+
 	return true;
 }
 

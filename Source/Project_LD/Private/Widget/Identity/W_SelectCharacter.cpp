@@ -46,7 +46,7 @@ void UW_SelectCharacter::NativeConstruct()
 	mCurrentClickMode = EClickMode::None;
 }
 
-void UW_SelectCharacter::CreateCharacter(const FCharacterData& inCharacterData)
+void UW_SelectCharacter::CreateCharacter(FCharacterData& inCharacterData)
 {
 	if (mCharacterButtonWidgets.Num() == 0)
 	{

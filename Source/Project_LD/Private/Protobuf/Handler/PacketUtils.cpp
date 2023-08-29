@@ -24,7 +24,7 @@ const ECharacterRace UPacketUtils::ConvertToURace(const Protocol::ERace& inRace)
 	return StaticCast<ECharacterRace>(inRace);
 }
 
-const Protocol::SCharacterAppearance UPacketUtils::ConvertToPAppearance(const FCharacterAppearance& inAppearance)
+const Protocol::SCharacterAppearance UPacketUtils::ConvertToPAppearance(FCharacterAppearance& inAppearance)
 {
 	Protocol::SCharacterAppearance appearance;
 	appearance.set_race(ConvertToPRace(inAppearance.GetRace()));
@@ -36,7 +36,7 @@ const Protocol::SCharacterAppearance UPacketUtils::ConvertToPAppearance(const FC
 	return appearance;
 }
 
-const Protocol::SCharacterEqipment UPacketUtils::ConvertToPEqipment(const FCharacterEquipment& inEquipment)
+const Protocol::SCharacterEqipment UPacketUtils::ConvertToPEqipment(FCharacterEquipment& inEquipment)
 {
 	Protocol::SCharacterEqipment eqipment;
 	eqipment.set_hair(inEquipment.GetHair());
@@ -52,7 +52,7 @@ const Protocol::SCharacterEqipment UPacketUtils::ConvertToPEqipment(const FChara
 	return eqipment;
 }
 
-const Protocol::SCharacterData UPacketUtils::ConvertToPData(const FCharacterData& inData)
+const Protocol::SCharacterData UPacketUtils::ConvertToPData(FCharacterData& inData)
 {
 	Protocol::SCharacterData data;
 	data.set_name(UNetworkUtils::ConvertString(inData.GetName()));

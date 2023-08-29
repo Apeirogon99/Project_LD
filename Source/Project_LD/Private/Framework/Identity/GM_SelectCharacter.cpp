@@ -49,6 +49,9 @@ void AGM_SelectCharacter::InitNetwork()
 			NetworkGameModeLog(FString(TEXT("failed to requset connect server")));
 		}
 	}
+
+	this->GetNetworkController()->OnTick();
+
 }
 
 void AGM_SelectCharacter::BeginNetwork()
@@ -61,6 +64,8 @@ void AGM_SelectCharacter::BeginNetwork()
 	if (networkController)
 	{
 		Protocol::C2S_LoadCharacters loadCharactersPacket;
+		loadCharactersPacket.set_time_stamp(networkController->GetServerTimeStamp());
+
 		SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, loadCharactersPacket);
 		networkController->Send(pakcetBuffer);
 	}

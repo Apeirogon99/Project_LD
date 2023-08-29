@@ -41,7 +41,7 @@ void UW_ExitButton::Click_Exit()
 	FCancleButtonDelegate cancleDelegate;
 	cancleDelegate.BindUFunction(this, FName("CancleExitGame"));
 
-	bool error = UWidgetUtils::SetReconfirm(clientHUD, TEXT("생성 완료"), TEXT("정말 게임을 종료하시겠습니까?"), TEXT("게임 종료"), TEXT("취소"), confirmDelegate, cancleDelegate);
+	bool error = UWidgetUtils::SetReconfirm(clientHUD, TEXT("게임 종료"), TEXT("정말 게임을 종료하시겠습니까?"), TEXT("게임 종료"), TEXT("취소"), confirmDelegate, cancleDelegate);
 	if (error == false)
 	{
 		return;
@@ -53,6 +53,8 @@ void UW_ExitButton::ExitGame()
 	ANetworkController* controller = Cast<ANetworkController>(GetOwningPlayer());
 
 	Protocol::C2S_LeaveIdentityServer leavePacket;
+	leavePacket.set_time_stamp(controller->GetServerTimeStamp());
+
 	SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(controller, leavePacket);
 	controller->Send(pakcetBuffer);
 }

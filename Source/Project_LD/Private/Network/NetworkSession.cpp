@@ -415,7 +415,7 @@ bool FNetworkSession::CanTick(float inDeltaTime)
 	static float tickTimer = 0.0f;
 	tickTimer += inDeltaTime;
 
-	if (tickTimer >= 1.0f)
+	if (tickTimer >= 0.25f)
 	{
 		tickTimer = 0.0f;
 		return true;

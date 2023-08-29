@@ -41,6 +41,9 @@ void AGM_SelectClass::InitNetwork()
 			NetworkGameModeLog(FString(TEXT("failed to requset connect server")));
 		}
 	}
+
+	this->GetNetworkController()->OnTick();
+
 }
 
 void AGM_SelectClass::BeginNetwork()
@@ -53,4 +56,6 @@ void AGM_SelectClass::BeginNetwork()
 	}
 
 	mClientHUD->ShowWidgetFromName(TEXT("SelectClass"));
+
+	this->mClientHUD->FadeOut();
 }

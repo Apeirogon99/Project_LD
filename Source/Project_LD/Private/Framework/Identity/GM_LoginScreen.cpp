@@ -43,6 +43,9 @@ void AGM_LoginScreen::InitNetwork()
 			NetworkGameModeLog(FString(TEXT("failed to requset connect server")));
 		}
 	}
+
+	this->GetNetworkController()->OnTick();
+
 }
 
 void AGM_LoginScreen::BeginNetwork()

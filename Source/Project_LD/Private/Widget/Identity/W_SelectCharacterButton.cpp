@@ -96,7 +96,7 @@ void UW_SelectCharacterButton::Click_Character()
 
 	if (mCharacter)
 	{
-		mCharacter->UpdateCharacterPose(ECharacterPose::StandUp);
+		mCharacter->UpdateCharacterPose(ECharacterPose::StandUp, false);
 	}
 
 	bool error = UWidgetUtils::SetReconfirm(clientHUD, titleText, reconfirmText, confrimText, cancleText, confirmDelegate, cancleDelegate);
@@ -112,7 +112,7 @@ void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterData& inCharacte
 
 	mCharacterData = inCharacterData;
 
-	FText characterTitle = FText::FromString(FString::Printf(TEXT("%dLv %s"), mCharacterData.GetLevel(), *mCharacterData.GetName()));
+	FText characterTitle = FText::FromString(FString::Printf(TEXT("LV.%d - %s"), mCharacterData.GetLevel(), *mCharacterData.GetName()));
 	mCharacterInfoText->SetText(characterTitle);
 
 	AAppearanceCharacter* NewDummyCharacter = nullptr;
@@ -129,7 +129,7 @@ void UW_SelectCharacterButton::SetCharacterInfo(const FCharacterData& inCharacte
 
 	if (mCharacter)
 	{
-		mCharacter->UpdateCharacterPose(ECharacterPose::Seat);
+		mCharacter->UpdateCharacterPose(ECharacterPose::Seat, false);
 	}
 
 	SetClickMode(EClickMode::Start);
@@ -214,6 +214,7 @@ void UW_SelectCharacterButton::StartCharacter()
 	{
 		return;
 	}
+	const int64& timeStamp = networkController->GetServerTimeStamp();
 
 	ULDGameInstance* gameInstance = Cast<ULDGameInstance>(networkController->GetGameInstance());
 	if (nullptr == gameInstance)
@@ -224,8 +225,8 @@ void UW_SelectCharacterButton::StartCharacter()
 	std::string token = UNetworkUtils::ConvertString(gameInstance->GetToken());
 
 	Protocol::C2S_StartGame startGamePacket;
-	startGamePacket.set_seat(mCharacterButtonNumber);
-	startGamePacket.set_token(token);
+	startGamePacket.set_character_id(mCharacterData.GetID());
+	startGamePacket.set_time_stamp(timeStamp);
 
 	SendBufferPtr pakcetBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, startGamePacket);
 	networkController->Send(pakcetBuffer);
@@ -257,6 +258,14 @@ void UW_SelectCharacterButton::AppearanceCharacter()
 void UW_SelectCharacterButton::DeleteCharacter()
 {
 	APlayerController* playerControll = GetOwningPlayer();
+
+	ANetworkController* networkController = Cast<ANetworkController>(playerControll);
+	if (nullptr == networkController)
+	{
+		return;
+	}
+	const int64& timeStamp = networkController->GetServerTimeStamp();
+
 	AClientHUD* clientHUD = Cast<AClientHUD>(playerControll->GetHUD());
 	clientHUD->CleanWidgetFromName(TEXT("Reconfirm"));
 
@@ -266,6 +275,7 @@ void UW_SelectCharacterButton::DeleteCharacter()
 		Protocol::C2S_DeleteCharacter packet;
 
 		packet.set_name(UNetworkUtils::ConvertString(mCharacterData.GetName()));
+		packet.set_time_stamp(timeStamp);
 
 		clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
 
@@ -287,7 +297,7 @@ void UW_SelectCharacterButton::CancleButton()
 
 	if (mCharacter)
 	{
-		mCharacter->UpdateCharacterPose(ECharacterPose::StandDown);
+		mCharacter->UpdateCharacterPose(ECharacterPose::StandDown, false);
 	}
 
 }

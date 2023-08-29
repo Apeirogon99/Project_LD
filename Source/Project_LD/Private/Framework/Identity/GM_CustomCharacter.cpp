@@ -63,6 +63,9 @@ void AGM_CustomCharacter::BeginNetwork()
 
 	widget->SetClassText(gameinstance->mCharacterData.GetClass());
 	mClientHUD->ShowWidgetFromName(TEXT("CustomCharacter"));
+
+	this->GetNetworkController()->OnTick();
+
 }
 
 void AGM_CustomCharacter::InitNetwork()
@@ -85,6 +88,8 @@ void AGM_CustomCharacter::InitNetwork()
 
 void AGM_CustomCharacter::CreateNewDummyCharacter(const ECharacterRace InRace)
 {
+	this->mClientHUD->FadeIn();
+
 	ULDGameInstance* gameinstance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	if (nullptr == gameinstance)
 	{
@@ -130,4 +135,6 @@ void AGM_CustomCharacter::CreateNewDummyCharacter(const ECharacterRace InRace)
 	}
 
 	widget->SetDummyCharacter(mDummyCharacter);
+
+	this->mClientHUD->FadeOut();
 }

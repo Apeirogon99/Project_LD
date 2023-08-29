@@ -82,7 +82,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
         return false;
     }
     preivewCharacter->UpdateCharacterVisual(newCharacterData.GetAppearance(), newCharacterData.GetEquipment());
-    preivewCharacter->UpdateCharacterPose(ECharacterPose::Idle);
+    preivewCharacter->UpdateCharacterPose(ECharacterPose::Idle, true);
 
     APawn* oldCharacter = controller->GetPawn();
     if (oldCharacter)
@@ -2198,7 +2198,7 @@ bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_Re
         return false;
     }
     preivewCharacter->UpdateCharacterEquipment(updateEquipment);
-    preivewCharacter->UpdateCharacterPose(ECharacterPose::Idle);
+    preivewCharacter->UpdateCharacterPose(ECharacterPose::Idle, true);
 
     return true;
 }

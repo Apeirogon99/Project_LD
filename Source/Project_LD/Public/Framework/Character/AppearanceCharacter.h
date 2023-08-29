@@ -20,16 +20,16 @@ public:
 	virtual ~AAppearanceCharacter();
 
 public:
-	void InitCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment);
+	void InitCharacterVisual(FCharacterAppearance& InCharacterAppearance, FCharacterEquipment& inCharacterEquipment);
 	void InitCharacterAnimation();
-	void UpdateCharacterVisual(const FCharacterAppearance& InCharacterAppearance, const FCharacterEquipment& inCharacterEquipment);
+	void UpdateCharacterVisual(FCharacterAppearance& InCharacterAppearance, FCharacterEquipment& inCharacterEquipment);
 
 	UFUNCTION(BlueprintCallable)
-	void UpdateCharacterEquipment(const FCharacterEquipment& InCharacterEquipment);
+	void UpdateCharacterEquipment(FCharacterEquipment& InCharacterEquipment);
 
-	void UpdateCharacterAppearnce(const FCharacterAppearance& InCharacterAppearance);
+	void UpdateCharacterAppearnce(FCharacterAppearance& InCharacterAppearance);
 
-	void UpdateCharacterPose(const ECharacterPose InCharacterPose);
+	void UpdateCharacterPose(const ECharacterPose InCharacterPose, const bool inIsLoop);
 	void UpdateCharacterMontage(UAnimMontage* inMontageToPlay, const float& inStartAtTime);
 	void UpdateDefaultAnimation();
 
@@ -39,8 +39,8 @@ public:
 
 public:
 	FLinearColor				GetMeshColor(const EAppearance InAppearance);
-	const FCharacterAppearance& GetCharacterAppearance() const { return mCharacterAppearance; }
-	const FCharacterEquipment&	GetCharacterEquipment() const { return mCharacterEquipment; }
+	FCharacterAppearance& GetCharacterAppearance() { return mCharacterAppearance; }
+	FCharacterEquipment&	GetCharacterEquipment() { return mCharacterEquipment; }
 
 protected:
 	FCharacterAppearance	mCharacterAppearance;

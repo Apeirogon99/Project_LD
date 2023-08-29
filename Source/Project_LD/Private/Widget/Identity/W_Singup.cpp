@@ -70,6 +70,7 @@ void UW_Singup::Click_Singup()
 	singupPacket.set_user_id(id);
 	singupPacket.set_user_password(password);
 	singupPacket.set_user_email(email);
+	singupPacket.set_time_stamp(networkController->GetServerTimeStamp());
 
 	SendBufferPtr sendBuffer = FIdentityPacketHandler::MakeSendBuffer(networkController, singupPacket);
 

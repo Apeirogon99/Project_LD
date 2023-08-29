@@ -29,7 +29,7 @@ public:
 
 public:
 	UFUNCTION()
-		void CreateCharacter(const FCharacterData& inCharacterData);
+		void CreateCharacter(FCharacterData& inCharacterData);
 
 protected:
 	UFUNCTION()

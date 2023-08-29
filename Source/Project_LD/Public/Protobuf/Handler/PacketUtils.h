@@ -25,7 +25,7 @@ public:
 	static const Protocol::ERace					ConvertToPRace(const ECharacterRace& inRace);
 	static const ECharacterRace						ConvertToURace(const Protocol::ERace& inRace);
 
-	static const Protocol::SCharacterAppearance		ConvertToPAppearance(const FCharacterAppearance& inAppearance);
-	static const Protocol::SCharacterEqipment		ConvertToPEqipment(const FCharacterEquipment& inEquipment);
-	static const Protocol::SCharacterData			ConvertToPData(const FCharacterData& inData);
+	static const Protocol::SCharacterAppearance		ConvertToPAppearance(FCharacterAppearance& inAppearance);
+	static const Protocol::SCharacterEqipment		ConvertToPEqipment(FCharacterEquipment& inEquipment);
+	static const Protocol::SCharacterData			ConvertToPData(FCharacterData& inData);
 };
