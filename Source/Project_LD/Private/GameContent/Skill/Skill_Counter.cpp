@@ -49,6 +49,16 @@ void ASkill_Counter::ReactionSkill(const int64 InRemoteID, const int64 InObjectI
 	}
 }
 
+void ASkill_Counter::Reaction()
+{
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/Counter/NS_CounterSucc.NS_CounterSucc'")))
+	{
+		FVector Location = GetActorLocation() + GetActorForwardVector() * 200.f;
+		FRotator Rotation = RootComponent->GetRelativeRotation();
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Location, Rotation);
+	}
+}
+
 // Called when the game starts or when spawned
 void ASkill_Counter::BeginPlay()
 {

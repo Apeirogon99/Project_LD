@@ -2283,8 +2283,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 3:
         /* 바닥 */
-        animation->PlaySkillMontage(2, 0.f);
-        //animation->PlaySkillMontage(2, duration);
+        animation->PlaySkillMontage(2, duration);
         newActor = gameState->CreateGameObject(ASkill_SlamAttack::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2373,7 +2372,6 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
     case 4:
         /* 검기 */
         animation->PlaySkillMontage(4, duration);
-        /*
         newActor = gameState->CreateGameObject(ASkill_SwordSpirit::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2381,7 +2379,6 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         }
         UE_LOG(LogTemp, Warning, TEXT("Reaction R Play Anim Server to Client"));
         Cast<ASkill_SwordSpirit>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
-        */
         break;
     default:
         UE_LOG(LogTemp, Warning, TEXT("Wrong SkillID"));

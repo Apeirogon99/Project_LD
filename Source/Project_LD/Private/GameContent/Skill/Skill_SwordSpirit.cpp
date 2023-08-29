@@ -54,6 +54,8 @@ void ASkill_SwordSpirit::ReactionSkill(const int64 InRemoteID, const int64 InObj
 {
 	Super::ReactionSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
 
+	AppearBeforeMangeParticle();
+
 	if (mReactionParticle)
 	{
 		mDuration = InDuration;
@@ -146,6 +148,18 @@ void ASkill_SwordSpirit::SpawnSecondParticle()
 void ASkill_SwordSpirit::SpawnLastParticle()
 {
 	//»öº¯°æ
+}
+
+void ASkill_SwordSpirit::AppearBeforeMangeParticle()
+{
+	if (mAppear1SpawnParticle)
+	{
+		mAppear1SpawnParticle->DestroyComponent();
+	}
+	if (mAppear2SpawnParticle)
+	{
+		mAppear2SpawnParticle->DestroyComponent();
+	}
 }
 
 // Called every frame

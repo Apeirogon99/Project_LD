@@ -42,6 +42,7 @@ private:
 	void ManagedChargeValue();
 	void SpawnSecondParticle();
 	void SpawnLastParticle();
+	void AppearBeforeMangeParticle();
 
 private:
 	UPROPERTY()

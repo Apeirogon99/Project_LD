@@ -132,22 +132,22 @@ void UW_BottomUI::NativeConstruct()
 
 void UW_BottomUI::NativePreConstruct()
 {
-	UTexture2D* T_SKILL_Q = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, TEXT("Texture2D'/Game/Test/T_Icon_Gold_145.T_Icon_Gold_145'")));
+	UTexture2D* T_SKILL_Q = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, TEXT("Texture2D'/Game/GameContent/WidgetAssets/T_Skill_Q.T_Skill_Q'")));
 	if (T_SKILL_Q)
 	{
 		mSkillTextureArray.Add(T_SKILL_Q);
 	}
-	UTexture2D* T_SKILL_W = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, TEXT("Texture2D'/Game/Test/Fantasy_Game_Skills_Icon_2_-_Tornado_Slash_level_2.Fantasy_Game_Skills_Icon_2_-_Tornado_Slash_level_2'")));
+	UTexture2D* T_SKILL_W = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, TEXT("Texture2D'/Game/GameContent/WidgetAssets/T_Skill_W.T_Skill_W'")));
 	if (T_SKILL_W)
 	{
 		mSkillTextureArray.Add(T_SKILL_W);
 	}
-	UTexture2D* T_SKILL_E = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, TEXT("Texture2D'/Game/Test/T_Icon_Gold_147.T_Icon_Gold_147'")));
+	UTexture2D* T_SKILL_E = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, TEXT("Texture2D'/Game/GameContent/WidgetAssets/T_Skill_E.T_Skill_E'")));
 	if (T_SKILL_E)
 	{
 		mSkillTextureArray.Add(T_SKILL_E);
 	}
-	UTexture2D* T_SKILL_R = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, TEXT("Texture2D'/Game/Test/Fantasy_Game_Skills_Icon_2_-_Side_Slash_level_3.Fantasy_Game_Skills_Icon_2_-_Side_Slash_level_3'")));
+	UTexture2D* T_SKILL_R = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, TEXT("Texture2D'/Game/GameContent/WidgetAssets/T_Skill_R.T_Skill_R'")));
 	if (T_SKILL_R)
 	{
 		mSkillTextureArray.Add(T_SKILL_R);
