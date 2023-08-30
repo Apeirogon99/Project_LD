@@ -4,6 +4,8 @@
 #include "GameContent/Skill/Skill_SwordSpirit.h"
 #include "Niagara/Public/NiagaraComponent.h"
 #include "Niagara/Classes/NiagaraSystem.h"
+#include "Kismet/GameplayStatics.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "NiagaraFunctionLibrary.h"
 
 // Sets default values
@@ -18,6 +20,7 @@ ASkill_SwordSpirit::ASkill_SwordSpirit()
 		mReactionParticle = REACTION_PARTICLE.Object;
 	}
 
+	/*
 	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> APPEAR1_PARTICLE(TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/SwordSpirit/NS_Charge1.NS_Charge1'"));
 	if (APPEAR1_PARTICLE.Succeeded())
 	{
@@ -29,6 +32,12 @@ ASkill_SwordSpirit::ASkill_SwordSpirit()
 	{
 		mAppear2Particle = APPEAR2_PARTICLE.Object;
 	}
+	*/
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> LOOP_PARTICLE(TEXT("ParticleSystem'/Game/Test/Particle/P_Skill_ChargeLoop.P_Skill_ChargeLoop'"));
+	if (LOOP_PARTICLE.Succeeded())
+	{
+		mLoopParticle = LOOP_PARTICLE.Object;
+	}
 
 	mCurrentCharge = 0;
 	mCountingScale = 0;
@@ -39,6 +48,7 @@ void ASkill_SwordSpirit::AppearSkill(const int64 InRemoteID, const int64 InObjec
 {
 	Super::AppearSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
 	
+	/*
 	if (mAppear1Particle && mAppear2Particle)
 	{
 		FTimerHandle SecondParticleTimer;
@@ -48,13 +58,14 @@ void ASkill_SwordSpirit::AppearSkill(const int64 InRemoteID, const int64 InObjec
 		GetWorldTimerManager().SetTimer(SecondParticleTimer, this, &ASkill_SwordSpirit::SpawnSecondParticle, 1.0, false);
 		GetWorldTimerManager().SetTimer(LastParticleTimer, this, &ASkill_SwordSpirit::SpawnLastParticle, 2.0, false);
 	}
+	*/
 }
 
 void ASkill_SwordSpirit::ReactionSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration)
 {
 	Super::ReactionSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
 
-	AppearBeforeMangeParticle();
+	AppearBeforeManageParticle();
 
 	if (mReactionParticle)
 	{
@@ -87,6 +98,8 @@ void ASkill_SwordSpirit::ReactionSkill(const int64 InRemoteID, const int64 InObj
 
 void ASkill_SwordSpirit::Reaction()
 {
+	AppearBeforeManageParticle();
+
 	if (mReactionParticle)
 	{
 		mDuration = aa;
@@ -116,6 +129,41 @@ void ASkill_SwordSpirit::Reaction()
 	}
 }
 
+void ASkill_SwordSpirit::Appear2()
+{
+	GetWorldTimerManager().SetTimer(FirstTimer, this, &ASkill_SwordSpirit::SpawnSecondParticle, 1.0, false);
+	GetWorldTimerManager().SetTimer(SecondTimer, this, &ASkill_SwordSpirit::SpawnLastParticle, 2.0, false);
+
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_Skill_Charge1.P_Skill_Charge1'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+	}
+	mLoopSpawnParticle = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mLoopParticle, GetActorLocation(), FRotator(), FVector(0.4f), true);
+}
+
+void ASkill_SwordSpirit::Appear1()
+{
+	GetWorldTimerManager().SetTimer(FirstTimer, this, &ASkill_SwordSpirit::SpawnAppear1, 1.0, true);
+
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_In.P_In'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+	}
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_Out.P_Out'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+	}
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_Skill_Charge2Start.P_Skill_Charge2Start'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+	}
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_Skill_Charge2.P_Skill_Charge2'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+	}
+	mLoopSpawnParticle = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mLoopParticle, GetActorLocation(), FRotator(), FVector(0.4f), true);
+}
+
 // Called when the game starts or when spawned
 void ASkill_SwordSpirit::BeginPlay()
 {
@@ -139,27 +187,58 @@ void ASkill_SwordSpirit::ManagedChargeValue()
 	}
 }
 
+void ASkill_SwordSpirit::SpawnAppear1()
+{
+	if (mCurrentCharge < 2)
+	{
+		if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_In.P_In'")))
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+		}
+		if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_Out.P_Out'")))
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+		}
+		if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_Skill_Charge2Start.P_Skill_Charge2Start'")))
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+		}
+		if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_Skill_Charge2.P_Skill_Charge2'")))
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+		}
+	}
+}
+
 void ASkill_SwordSpirit::SpawnSecondParticle()
 {
-	mAppear2SpawnParticle = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), mAppear2Particle, mLocation, mRotation, FVector(1), true);
-	//색변경
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_Skill_Charge2Start.P_Skill_Charge2Start'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+	}
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_Skill_Charge2.P_Skill_Charge2'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+	}
 }
 
 void ASkill_SwordSpirit::SpawnLastParticle()
 {
-	//색변경
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/Particle/P_Skill_Charge3.P_Skill_Charge3'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, GetActorLocation(), FRotator(), FVector(0.3f), true);
+	}
 }
 
-void ASkill_SwordSpirit::AppearBeforeMangeParticle()
+void ASkill_SwordSpirit::AppearBeforeManageParticle()
 {
-	if (mAppear1SpawnParticle)
+	if (mLoopSpawnParticle)
 	{
-		mAppear1SpawnParticle->DestroyComponent();
+		mLoopSpawnParticle->DestroyComponent();
 	}
-	if (mAppear2SpawnParticle)
-	{
-		mAppear2SpawnParticle->DestroyComponent();
-	}
+
+	GetWorldTimerManager().ClearTimer(FirstTimer);
+	GetWorldTimerManager().ClearTimer(SecondTimer);
 }
 
 // Called every frame
