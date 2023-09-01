@@ -155,17 +155,17 @@ void AC_Game::EndQ()
 	bCanSkillQ = true;
 }
 
-void AC_Game::EndE()
+void AC_Game::EndW()
 {
 	bCanSkillW = true;
 }
 
-void AC_Game::EndR()
+void AC_Game::EndE()
 {
 	bCanSkillE = true;
 }
 
-void AC_Game::EndW()
+void AC_Game::EndR()
 {
 	bCanSkillR = true;
 }
