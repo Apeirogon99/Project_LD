@@ -27,6 +27,7 @@ AMovementController::AMovementController()
 	mIsMoveToMouseCursor	= false;
 	mIsLocationCorrection	= false;
 	mIsRotationCorrection	= false;
+	mTeleport = false;
 	mCorrectionVelocity = 0.0f;
 }
 
@@ -47,6 +48,17 @@ void AMovementController::PlayerTick(float DeltaTime)
 	if (mIsLocationCorrection)
 	{
 		MoveCorrection(DeltaTime);
+	}
+
+	if (mTeleport)
+	{
+		static float tpTime = 0.0f;
+		tpTime += DeltaTime;
+		if (tpTime >= 10.0f)
+		{
+			mTeleport = false;
+		}
+		tpTime = 0.0f;
 	}
 
 	//if (mIsRotationCorrection)
@@ -133,8 +145,17 @@ void AMovementController::MoveToMouseCursor()
 	}
 }
 
+void AMovementController::OnTeleport_Implementation(const FVector& DestLocation)
+{
+	mTeleport = true;
+}
+
 void AMovementController::SetNewMoveDestination(FVector& DestLocation)
 {
+	if (mTeleport)
+	{
+		return;
+	}
 
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, FVector(DestLocation.X, DestLocation.Y, (DestLocation.Z + 1.0f)), FRotator::ZeroRotator, true);
 
@@ -184,6 +205,10 @@ void AMovementController::SetNewMoveDestination(FVector& DestLocation)
 
 void AMovementController::MoveDestination(const FVector& inOldMovementLocation, const FVector& inNewMovementLocation, const int64& inTime)
 {
+	if (mTeleport)
+	{
+		return;
+	}
 
 	ACharacter* character = Cast<ACharacter>(this->GetPawn());
 	if (nullptr == character)
@@ -202,6 +227,8 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	float movedistance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
 	if (movedistance < 1.0f)
 	{
+		character->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 		return;
 	}
 

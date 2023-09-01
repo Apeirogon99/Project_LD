@@ -1602,6 +1602,11 @@ bool Handle_S2C_AppearArrow(ANetworkController* controller, Protocol::S2C_Appear
     return true;
 }
 
+bool Handle_S2C_AppearProtal(ANetworkController* controller, Protocol::S2C_AppearProtal& pkt)
+{
+    return true;
+}
+
 bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C_MovementProjectile& pkt)
 {
     UWorld* world = controller->GetWorld();
@@ -1635,6 +1640,69 @@ bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C
         return false;
     }
     arrow->ArrowSyncMovement(location, rotation, durationTime / 1000.0f);
+
+    return true;
+}
+
+bool Handle_S2C_Teleport(ANetworkController* controller, Protocol::S2C_Teleport& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64     objectID = pkt.object_id();
+    const FVector   location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+
+    AController* remoteController = gameState->FindPlayerController(objectID);
+    if (nullptr == remoteController)
+    {
+        return true;
+    }
+
+    ANPS_Game* playerState = remoteController->GetPlayerState<ANPS_Game>();
+    if (nullptr == playerState)
+    {
+        return true;
+    }
+
+    APawn* pawn = playerState->GetPawn();
+    if (nullptr == pawn)
+    {
+        return true;
+    }
+    
+    if (gameMode->CompareNetworkController(remoteController))
+    {
+        AMovementController* movementController = Cast<AMovementController>(remoteController);
+        if (nullptr == movementController)
+        {
+            return false;
+        }
+        movementController->OnTeleport(location);
+    }
+    else
+    {
+        ANPC_Game* npcController = Cast<ANPC_Game>(remoteController);
+        if (nullptr == npcController)
+        {
+            return false;
+        }
+        //npcController->NPCMoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
+    }
 
     return true;
 }
