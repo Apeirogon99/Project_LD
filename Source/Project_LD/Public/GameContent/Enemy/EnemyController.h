@@ -24,11 +24,19 @@ public:
 protected:
 	virtual void Destroyed() override;
 
+	UFUNCTION(BlueprintNativeEvent)
+		void OnTeleport(const FVector& DestLocation);
+	virtual void OnTeleport_Implementation(const FVector& DestLocation);
+
 public:
 	void MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
 	void MoveCorrection(const float inDeltaTime);
 
 private:
 	bool IsCorrection;
+	bool mTeleport;
+
 	FVector mTargetLoction;
+
+	float mCorrectionVelocity;
 };

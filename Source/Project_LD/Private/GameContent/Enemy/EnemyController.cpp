@@ -13,6 +13,8 @@
 AEnemyController::AEnemyController()
 {
 	IsCorrection = false;
+	mTeleport = false;
+	mCorrectionVelocity = 0.0f;
 }
 
 AEnemyController::~AEnemyController()
@@ -27,14 +29,51 @@ void AEnemyController::Destroyed()
 
 void AEnemyController::Tick(float DeltaTime)
 {
-	if (IsCorrection)
+
+	if (mTeleport)
 	{
-		MoveCorrection(DeltaTime);
+		static float tpTime = 0.0f;
+		tpTime += DeltaTime;
+		if (tpTime >= 1.0f)
+		{
+			mTeleport = false;
+		}
+		tpTime = 0.0f;
 	}
+	else
+	{
+		if (IsCorrection)
+		{
+			MoveCorrection(DeltaTime);
+		}
+	}
+
+}
+
+void AEnemyController::OnTeleport_Implementation(const FVector& DestLocation)
+{
+	APawn* pawn = this->GetPawn();
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
+	mTargetLoction = DestLocation;
+	IsCorrection = false;
+	mTeleport = true;
+
+	pawn->GetMovementComponent()->StopActiveMovement();
+
+	pawn->SetActorLocation(DestLocation, false, nullptr, ETeleportType::ResetPhysics);
 }
 
 void AEnemyController::MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
 {
+	if (mTeleport)
+	{
+		return;
+	}
+
 	APawn* pawn = this->GetPawn();
 	if (nullptr == pawn)
 	{
@@ -52,6 +91,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	float movedistance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
 	if (movedistance < 1.0f)
 	{
+		pawn->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
 		return;
 	}
 
@@ -72,7 +112,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	{
 		IsCorrection = true;
 		mTargetLoction = deadReckoningLocation;
-		//character->SetActorRotation(direction.Rotation());
+		pawn->SetActorRotation(direction.Rotation());
 	}
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws] distance[%f]"), *inOldMovementLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance), ELogLevel::Error);

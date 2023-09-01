@@ -147,6 +147,8 @@ void AMovementController::MoveToMouseCursor()
 
 void AMovementController::OnTeleport_Implementation(const FVector& DestLocation)
 {
+	mTargetLoction = DestLocation;
+	mIsLocationCorrection = false;
 	mTeleport = true;
 }
 
