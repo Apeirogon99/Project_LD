@@ -12,6 +12,11 @@ ULichAnimInstance::~ULichAnimInstance()
 {
 }
 
+void ULichAnimInstance::PlayLichAnimMontage(int32 InSkillID)
+{
+	Montage_Play(mLichSkillMontage[InSkillID]);
+}
+
 void ULichAnimInstance::InitSkillMontage()
 {
 	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL1(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_RiseSkeleton.M_Lich_RiseSkeleton'"));
@@ -34,7 +39,7 @@ void ULichAnimInstance::InitSkillMontage()
 	{
 		mLichSkillMontage.Add(LICH_SKILL4.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL5(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_SoulSpark_Start.M_Lich_SoulSpark_Start'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL5(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_SoulSpark.M_Lich_SoulSpark'"));
 	if (LICH_SKILL5.Succeeded())
 	{
 		mLichSkillMontage.Add(LICH_SKILL5.Object);
@@ -49,7 +54,7 @@ void ULichAnimInstance::InitSkillMontage()
 	{
 		mLichSkillMontage.Add(LICH_SKILL7.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL8(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_MultiCasting_Start.M_Lich_MultiCasting_Start'"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL8(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_MultiCasting.M_Lich_MultiCasting'"));
 	if (LICH_SKILL8.Succeeded())
 	{
 		mLichSkillMontage.Add(LICH_SKILL8.Object);

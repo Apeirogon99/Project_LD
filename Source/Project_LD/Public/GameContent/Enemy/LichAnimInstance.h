@@ -18,6 +18,9 @@ public:
 	ULichAnimInstance();
 	~ULichAnimInstance();
 
+public:
+	void PlayLichAnimMontage(int32 InSkillID);
+	
 private:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Skill | Anim", meta = (AllowPrivateAccess = "true"))
 	TArray<UAnimMontage*> mLichSkillMontage;

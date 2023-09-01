@@ -19,6 +19,8 @@
 #include <GameContent/Enemy/EnemyController.h>
 #include <GameContent/Enemy/EnemyState.h>
 #include <GameContent/Enemy/EnemyBase.h>
+#include <GameContent/Enemy/E_Lich.h>
+#include <GameContent/Enemy/LichAnimInstance.h>
 #include <GameContent/Projectile/ArcherSkeletonArrow.h>
 
 #include <GameContent/Skill/Skill_Buff.h>
@@ -2300,18 +2302,6 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         return false;
     }
 
-    ANC_Game* character = Cast<ANC_Game>(controller->GetCharacter());
-    if (nullptr == character)
-    {
-        return false;
-    }
-
-    UAI_PlayerCharacter* animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-    if (nullptr == animation)
-    {
-        return false;
-    }
-
     const int64& remoteID = pkt.remote_id();
     const int64& objectID = pkt.object_id();
     const int32& skillID    = pkt.skill_id();
@@ -2326,11 +2316,29 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
     }
 
     AActor* newActor;
+    ANC_Game* character;
+    UAI_PlayerCharacter* animation;
+
+    AActor* newLich;
+    AE_Lich* Lich;
+    ULichAnimInstance* LichAnim;
 
     switch (skillID)  
     {
     case 1:
         /* 버프 */
+        character = Cast<ANC_Game>(controller->GetCharacter());
+        if (nullptr == character)
+        {
+            return false;
+        }
+
+        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+        if (nullptr == animation)
+        {
+            return false;
+        }
+
         animation->PlaySkillMontage(0, duration);
         newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
@@ -2341,6 +2349,18 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 2:
         /* 패링 */
+        character = Cast<ANC_Game>(controller->GetCharacter());
+        if (nullptr == character)
+        {
+            return false;
+        }
+
+        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+        if (nullptr == animation)
+        {
+            return false;
+        }
+
         animation->PlaySkillMontage(1, duration);
         newActor = gameState->CreateGameObject(ASkill_Counter::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
@@ -2351,6 +2371,18 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 3:
         /* 바닥 */
+        character = Cast<ANC_Game>(controller->GetCharacter());
+        if (nullptr == character)
+        {
+            return false;
+        }
+
+        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+        if (nullptr == animation)
+        {
+            return false;
+        }
+
         animation->PlaySkillMontage(2, duration);
         newActor = gameState->CreateGameObject(ASkill_SlamAttack::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
@@ -2361,6 +2393,18 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 4:
         /* 검기 */
+        character = Cast<ANC_Game>(controller->GetCharacter());
+        if (nullptr == character)
+        {
+            return false;
+        }
+
+        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+        if (nullptr == animation)
+        {
+            return false;
+        }
+
         animation->PlaySkillMontage(3, duration);
         newActor = gameState->CreateGameObject(ASkill_SwordSpirit::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
@@ -2373,6 +2417,21 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         {
     case 5:
         /* 해골소환 */
+        newLich = gameState->FindGameObject(remoteID);
+        Lich = Cast<AE_Lich>(newLich);
+        if (Lich == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim = Cast<ULichAnimInstance>(Lich->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim->PlayLichAnimMontage(0);
+
         newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2381,6 +2440,21 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 6:
         /* 기사소환 */
+        newLich = gameState->FindGameObject(remoteID);
+        Lich = Cast<AE_Lich>(newLich);
+        if (Lich == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim = Cast<ULichAnimInstance>(Lich->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim->PlayLichAnimMontage(1);
+
         newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2389,6 +2463,21 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 7:
         /* 블링크 어택 */
+        newLich = gameState->FindGameObject(remoteID);
+        Lich = Cast<AE_Lich>(newLich);
+        if (Lich == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim = Cast<ULichAnimInstance>(Lich->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim->PlayLichAnimMontage(2);
+
         newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2397,6 +2486,21 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 8:
         /* 블링크 스턴 */
+        newLich = gameState->FindGameObject(remoteID);
+        Lich = Cast<AE_Lich>(newLich);
+        if (Lich == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim = Cast<ULichAnimInstance>(Lich->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim->PlayLichAnimMontage(3);
+
         newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2405,6 +2509,19 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 9:
         /* 소울 스피어 */
+        newLich = gameState->FindGameObject(remoteID);
+        Lich = Cast<AE_Lich>(newLich);
+        if (Lich == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim = Cast<ULichAnimInstance>(Lich->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
         newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2413,6 +2530,21 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 10:
         /* 빔 */
+        newLich = gameState->FindGameObject(remoteID);
+        Lich = Cast<AE_Lich>(newLich);
+        if (Lich == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim = Cast<ULichAnimInstance>(Lich->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim->PlayLichAnimMontage(4);
+
         newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2421,6 +2553,21 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 11:
         /* 디버프 */
+        newLich = gameState->FindGameObject(remoteID);
+        Lich = Cast<AE_Lich>(newLich);
+        if (Lich == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim = Cast<ULichAnimInstance>(Lich->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim->PlayLichAnimMontage(5);
+
         newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2429,6 +2576,21 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 12:
         /* 구역 폭발 */
+        newLich = gameState->FindGameObject(remoteID);
+        Lich = Cast<AE_Lich>(newLich);
+        if (Lich == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim = Cast<ULichAnimInstance>(Lich->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim->PlayLichAnimMontage(6);
+
         newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2437,6 +2599,21 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 13:
         /* 멀티캐스팅 */
+        newLich = gameState->FindGameObject(remoteID);
+        Lich = Cast<AE_Lich>(newLich);
+        if (Lich == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim = Cast<ULichAnimInstance>(Lich->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        LichAnim->PlayLichAnimMontage(7);
+
         newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
         if (nullptr == newActor)
         {
