@@ -15,6 +15,10 @@ void ASkill_OnslaughtOfShadows::ActiveSkill()
 {
 }
 
+void ASkill_OnslaughtOfShadows::ReactionSkill()
+{
+}
+
 void ASkill_OnslaughtOfShadows::DeactiveSkill()
 {
 }

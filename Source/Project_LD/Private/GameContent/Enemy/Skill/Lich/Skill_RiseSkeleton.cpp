@@ -4,6 +4,7 @@
 #include "Niagara/Public/NiagaraComponent.h"
 #include "Niagara/Classes/NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
+#include <GameContent/Enemy/Skill/Lich/Skill_RiseSkeleton.h>
 
 // Sets default values
 ASkill_RiseSkeleton::ASkill_RiseSkeleton()
@@ -22,6 +23,10 @@ void ASkill_RiseSkeleton::ActiveSkill()
 		FRotator Rotation = RootComponent->GetRelativeRotation();
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Location, Rotation);
 	}
+}
+
+void ASkill_RiseSkeleton::ReactionSkill()
+{
 }
 
 void ASkill_RiseSkeleton::DeactiveSkill()

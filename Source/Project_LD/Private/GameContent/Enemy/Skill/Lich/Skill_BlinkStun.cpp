@@ -15,6 +15,10 @@ void ASkill_BlinkStun::ActiveSkill()
 {
 }
 
+void ASkill_BlinkStun::ReactionSkill()
+{
+}
+
 void ASkill_BlinkStun::DeactiveSkill()
 {
 }

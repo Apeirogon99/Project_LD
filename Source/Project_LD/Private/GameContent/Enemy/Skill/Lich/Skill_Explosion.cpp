@@ -23,6 +23,10 @@ void ASkill_Explosion::ActiveSkill()
 	//}
 }
 
+void ASkill_Explosion::ReactionSkill()
+{
+}
+
 void ASkill_Explosion::DeactiveSkill()
 {
 }

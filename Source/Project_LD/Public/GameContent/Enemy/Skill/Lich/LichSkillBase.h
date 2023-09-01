@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+
+
 #include "UObject/Interface.h"
 #include "LichSkillBase.generated.h"
 
@@ -24,6 +25,7 @@ public:
 
 public:
 	virtual void ActiveSkill() {}
+	virtual void ReactionSkill() {}
 	virtual void DeactiveSkill() {}
 
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

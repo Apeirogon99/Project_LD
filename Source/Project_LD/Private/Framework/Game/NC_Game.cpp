@@ -75,6 +75,17 @@ ANC_Game::ANC_Game()
 
 	bIsAttack = false;
 	bBuffActive = false;
+
+	bCanMove = true;
+	bCanSkillQ = true;
+	bCanSkillW = true;
+	bCanSkillE = true;
+	bCanSkillR = true;
+
+	mQCoolDown = 2.0f;
+	mWCoolDown = 2.0f;
+	mECoolDown = 2.0f;
+	mRCoolDown = 2.0f;
 }
 
 ANC_Game::~ANC_Game()
@@ -172,4 +183,48 @@ void ANC_Game::Destroyed()
 	world->DestroyActor(playerState);
 
 	world->DestroyActor(controller);
+}
+
+void ANC_Game::StartQTimer()
+{
+	bCanMove = true;
+	GetWorldTimerManager().SetTimer(mQTimer, this, &ANC_Game::EndQ, mQCoolDown, false);
+}
+
+void ANC_Game::StartWTimer()
+{
+	bCanMove = true;
+	GetWorldTimerManager().SetTimer(mWTimer, this, &ANC_Game::EndW, mWCoolDown, false);
+}
+
+void ANC_Game::StartETimer()
+{
+	bCanMove = true;
+	GetWorldTimerManager().SetTimer(mETimer, this, &ANC_Game::EndE, mECoolDown, false);
+}
+
+void ANC_Game::StartRTimer()
+{
+	bCanMove = true;
+	GetWorldTimerManager().SetTimer(mRTimer, this, &ANC_Game::EndR, mRCoolDown, false);
+}
+
+void ANC_Game::EndQ()
+{
+	bCanSkillQ = true;
+}
+
+void ANC_Game::EndW()
+{
+	bCanSkillW = true;
+}
+
+void ANC_Game::EndE()
+{
+	bCanSkillE = true;
+}
+
+void ANC_Game::EndR()
+{
+	bCanSkillR = true;
 }

@@ -15,6 +15,10 @@ void ASkill_MultiCasting::ActiveSkill()
 {
 }
 
+void ASkill_MultiCasting::ReactionSkill()
+{
+}
+
 void ASkill_MultiCasting::DeactiveSkill()
 {
 }

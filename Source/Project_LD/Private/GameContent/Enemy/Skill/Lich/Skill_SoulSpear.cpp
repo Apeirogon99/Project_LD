@@ -52,6 +52,10 @@ void ASkill_SoulSpear::ActiveSkill()
 {
 }
 
+void ASkill_SoulSpear::ReactionSkill()
+{
+}
+
 void ASkill_SoulSpear::DeactiveSkill()
 {
 }

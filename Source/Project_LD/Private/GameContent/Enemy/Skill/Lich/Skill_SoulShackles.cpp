@@ -15,6 +15,10 @@ void ASkill_SoulShackles::ActiveSkill()
 {
 }
 
+void ASkill_SoulShackles::ReactionSkill()
+{
+}
+
 void ASkill_SoulShackles::DeactiveSkill()
 {
 }

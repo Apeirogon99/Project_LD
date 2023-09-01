@@ -14,4 +14,17 @@ class PROJECT_LD_API UDarkKnightAnimInstance : public UEnemyAnimInstance
 {
 	GENERATED_BODY()
 	
+public:
+	UDarkKnightAnimInstance();
+	~UDarkKnightAnimInstance();
+
+public:
+	void PlayDarkKnightAnimMontage(int32 InSkillID);
+
+private:
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Skill | Anim", meta = (AllowPrivateAccess = "true"))
+		TArray<UAnimMontage*> mDarkKnightSkillMontage;
+
+private:
+	void InitSkillMontage();
 };

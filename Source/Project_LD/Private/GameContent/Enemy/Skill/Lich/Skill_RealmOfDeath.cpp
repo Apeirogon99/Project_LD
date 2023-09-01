@@ -15,6 +15,10 @@ void ASkill_RealmOfDeath::ActiveSkill()
 {
 }
 
+void ASkill_RealmOfDeath::ReactionSkill()
+{
+}
+
 void ASkill_RealmOfDeath::DeactiveSkill()
 {
 }

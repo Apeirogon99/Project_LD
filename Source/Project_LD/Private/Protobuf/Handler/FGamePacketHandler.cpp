@@ -22,6 +22,8 @@
 #include <GameContent/Enemy/EnemyBase.h>
 #include <GameContent/Enemy/E_Lich.h>
 #include <GameContent/Enemy/LichAnimInstance.h>
+#include <GameContent/Enemy/E_DarkKnight.h>
+#include <GameContent/Enemy/DarkKnightAnimInstance.h>
 #include <GameContent/Enemy/Skill/Lich/LichSkillBase.h>
 #include <GameContent/Projectile/ArcherSkeletonArrow.h>
 
@@ -2325,6 +2327,10 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
     AActor* newLich;
     AE_Lich* Lich;
     ULichAnimInstance* LichAnim;
+    
+    AActor* newDarkKnight;
+    AE_DarkKnight* DarkKnight;
+    UDarkKnightAnimInstance* DarkKnightAnim;
 
     switch (skillID)  
     {
@@ -2665,25 +2671,163 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         }
         {
     case 18:
-        /*  */
+        /* 러닝 */
+        newDarkKnight = gameState->FindGameObject(remoteID);
+        DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
+        if (DarkKnight == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim = Cast<UDarkKnightAnimInstance>(DarkKnight->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim->PlayDarkKnightAnimMontage(0);
+
+        newActor = gameState->CreateDarkKnightSkill(0, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
         break;
     case 19:
-        /*  */
+        /* 차지 콤보 */
+        newDarkKnight = gameState->FindGameObject(remoteID);
+        DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
+        if (DarkKnight == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim = Cast<UDarkKnightAnimInstance>(DarkKnight->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim->PlayDarkKnightAnimMontage(1);
+
+        newActor = gameState->CreateDarkKnightSkill(1, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
         break;
     case 20:
-        /*  */
+        /* 어퍼컷 */
+        newDarkKnight = gameState->FindGameObject(remoteID);
+        DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
+        if (DarkKnight == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim = Cast<UDarkKnightAnimInstance>(DarkKnight->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim->PlayDarkKnightAnimMontage(2);
+
+        newActor = gameState->CreateDarkKnightSkill(2, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
         break;
     case 21:
-        /*  */
+        /* 스윙 */
+        newDarkKnight = gameState->FindGameObject(remoteID);
+        DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
+        if (DarkKnight == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim = Cast<UDarkKnightAnimInstance>(DarkKnight->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim->PlayDarkKnightAnimMontage(3);
+
+        newActor = gameState->CreateDarkKnightSkill(3, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
         break;
     case 22:
-        /*  */
+        /* 스윙, 슬램 */
+        newDarkKnight = gameState->FindGameObject(remoteID);
+        DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
+        if (DarkKnight == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim = Cast<UDarkKnightAnimInstance>(DarkKnight->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim->PlayDarkKnightAnimMontage(4);
+
+        newActor = gameState->CreateDarkKnightSkill(4, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
         break;
     case 23:
-        /*  */
+        /* 핸드소드스왑 */
+        newDarkKnight = gameState->FindGameObject(remoteID);
+        DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
+        if (DarkKnight == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim = Cast<UDarkKnightAnimInstance>(DarkKnight->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim->PlayDarkKnightAnimMontage(5);
+
+        newActor = gameState->CreateDarkKnightSkill(5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
         break;
     case 24:
-        /*  */
+        /* 버서커 */
+        newDarkKnight = gameState->FindGameObject(remoteID);
+        DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
+        if (DarkKnight == nullptr)
+        {
+            return false;
+        }
+
+        DarkKnightAnim = Cast<UDarkKnightAnimInstance>(DarkKnight->GetMesh()->GetAnimInstance());
+        if (LichAnim == nullptr)
+        {
+            return false;
+        }
+
+        newActor = gameState->CreateDarkKnightSkill(6, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
         break;
         }
     default:

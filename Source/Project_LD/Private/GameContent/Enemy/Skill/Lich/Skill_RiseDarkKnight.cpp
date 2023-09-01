@@ -15,6 +15,10 @@ void ASkill_RiseDarkKnight::ActiveSkill()
 {
 }
 
+void ASkill_RiseDarkKnight::ReactionSkill()
+{
+}
+
 void ASkill_RiseDarkKnight::DeactiveSkill()
 {
 }

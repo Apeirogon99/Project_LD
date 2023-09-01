@@ -17,6 +17,7 @@ public:
 
 public:
 	virtual void ActiveSkill() override;
+	virtual void ReactionSkill() override;
 	virtual void DeactiveSkill() override;
 
 protected:

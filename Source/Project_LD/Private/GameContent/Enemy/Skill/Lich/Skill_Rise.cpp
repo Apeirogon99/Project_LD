@@ -11,6 +11,10 @@ void ASkill_Rise::ActiveSkill()
 {
 }
 
+void ASkill_Rise::ReactionSkill()
+{
+}
+
 void ASkill_Rise::DeactiveSkill()
 {
 }

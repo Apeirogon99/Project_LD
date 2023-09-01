@@ -24,9 +24,19 @@ public:
 
 public:
 	void SetIsAttack(const bool& InIsAttack) { bIsAttack = InIsAttack; }
+	void SetCanUseSkillQ(const bool& InCanSkillQ) { bCanSkillQ = InCanSkillQ; }
+	void SetCanUseSkillW(const bool& InCanSkillW) { bCanSkillW = InCanSkillW; }
+	void SetCanUseSkillE(const bool& InCanSkillE) { bCanSkillE = InCanSkillE; }
+	void SetCanUseSkillR(const bool& InCanSkillR) { bCanSkillR = InCanSkillR; }
+	void SetCanMove(const bool& InCanMove) { bCanMove = InCanMove; }
 
 public:
 	FORCEINLINE bool GetIsAttack() const { return bIsAttack; }
+	FORCEINLINE bool GetCanUseSkillQ() const { return bCanSkillQ; }
+	FORCEINLINE bool GetCanUseSkillW() const { return bCanSkillW; }
+	FORCEINLINE bool GetCanUseSkillE() const { return bCanSkillE; }
+	FORCEINLINE bool GetCanUseSkillR() const { return bCanSkillR; }
+	FORCEINLINE bool GetCanMove() const { return bCanMove; }
 
 public:
 	void ShowWorldChat(const FString& inPlayerName, const FString& inMessage, const float& inDuration);
@@ -34,6 +44,15 @@ public:
 	void ActiveBuffParticle();
 	void DeActiveBuffParticle();
 	void StopMovement();
+
+	void StartQTimer();
+	void StartWTimer();
+	void StartETimer();
+	void StartRTimer();
+	void EndQ();
+	void EndW();
+	void EndE();
+	void EndR();
 	
 public:
 	UFUNCTION(BlueprintCallable)
@@ -65,4 +84,30 @@ protected:
 
 protected:
 	bool bBuffActive;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
+		bool bCanSkillQ;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
+		bool bCanSkillW;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
+		bool bCanSkillE;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
+		bool bCanSkillR;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
+		bool bCanMove;
+
+	FTimerHandle mQTimer;
+	FTimerHandle mWTimer;
+	FTimerHandle mETimer;
+	FTimerHandle mRTimer;
+
+	float mQCoolDown;
+	float mWCoolDown;
+	float mECoolDown;
+	float mRCoolDown;
+	
 };

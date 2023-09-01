@@ -15,6 +15,10 @@ void ASkill_LifeVessel::ActiveSkill()
 {
 }
 
+void ASkill_LifeVessel::ReactionSkill()
+{
+}
+
 void ASkill_LifeVessel::DeactiveSkill()
 {
 }

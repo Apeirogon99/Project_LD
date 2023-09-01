@@ -15,6 +15,10 @@ void ASkill_SoulSpark::ActiveSkill()
 {
 }
 
+void ASkill_SoulSpark::ReactionSkill()
+{
+}
+
 void ASkill_SoulSpark::DeactiveSkill()
 {
 }
