@@ -15,6 +15,10 @@ public:
 	// Sets default values for this actor's properties
 	ASkill_RiseDarkKnight();
 
+public:
+	virtual void ActiveSkill() override;
+	virtual void DeactiveSkill() override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

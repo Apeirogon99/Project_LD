@@ -11,6 +11,14 @@ ASkill_RiseDarkKnight::ASkill_RiseDarkKnight()
 
 }
 
+void ASkill_RiseDarkKnight::ActiveSkill()
+{
+}
+
+void ASkill_RiseDarkKnight::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_RiseDarkKnight::BeginPlay()
 {

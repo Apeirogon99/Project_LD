@@ -11,6 +11,14 @@ ASkill_SoulSpark::ASkill_SoulSpark()
 
 }
 
+void ASkill_SoulSpark::ActiveSkill()
+{
+}
+
+void ASkill_SoulSpark::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_SoulSpark::BeginPlay()
 {

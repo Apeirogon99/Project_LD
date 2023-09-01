@@ -24,6 +24,10 @@ void ASkill_RiseSkeleton::ActiveSkill()
 	}
 }
 
+void ASkill_RiseSkeleton::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_RiseSkeleton::BeginPlay()
 {

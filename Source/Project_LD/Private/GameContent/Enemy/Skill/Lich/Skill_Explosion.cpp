@@ -23,6 +23,10 @@ void ASkill_Explosion::ActiveSkill()
 	//}
 }
 
+void ASkill_Explosion::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_Explosion::BeginPlay()
 {

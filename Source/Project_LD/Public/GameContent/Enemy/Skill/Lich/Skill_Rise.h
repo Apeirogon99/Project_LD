@@ -17,6 +17,10 @@ class PROJECT_LD_API ASkill_Rise : public AActor, public ILichSkillBase
 public:
 	ASkill_Rise();
 
+public:
+	virtual void ActiveSkill() override;
+	virtual void DeactiveSkill() override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

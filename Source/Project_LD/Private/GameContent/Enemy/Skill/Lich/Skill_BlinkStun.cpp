@@ -11,6 +11,14 @@ ASkill_BlinkStun::ASkill_BlinkStun()
 
 }
 
+void ASkill_BlinkStun::ActiveSkill()
+{
+}
+
+void ASkill_BlinkStun::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_BlinkStun::BeginPlay()
 {

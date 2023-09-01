@@ -11,6 +11,14 @@ ASkill_LifeVessel::ASkill_LifeVessel()
 
 }
 
+void ASkill_LifeVessel::ActiveSkill()
+{
+}
+
+void ASkill_LifeVessel::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_LifeVessel::BeginPlay()
 {

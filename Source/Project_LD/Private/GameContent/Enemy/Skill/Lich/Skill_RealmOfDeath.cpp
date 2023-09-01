@@ -11,6 +11,14 @@ ASkill_RealmOfDeath::ASkill_RealmOfDeath()
 
 }
 
+void ASkill_RealmOfDeath::ActiveSkill()
+{
+}
+
+void ASkill_RealmOfDeath::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_RealmOfDeath::BeginPlay()
 {

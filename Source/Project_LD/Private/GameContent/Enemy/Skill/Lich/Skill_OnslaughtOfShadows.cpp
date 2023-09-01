@@ -11,6 +11,14 @@ ASkill_OnslaughtOfShadows::ASkill_OnslaughtOfShadows()
 
 }
 
+void ASkill_OnslaughtOfShadows::ActiveSkill()
+{
+}
+
+void ASkill_OnslaughtOfShadows::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_OnslaughtOfShadows::BeginPlay()
 {

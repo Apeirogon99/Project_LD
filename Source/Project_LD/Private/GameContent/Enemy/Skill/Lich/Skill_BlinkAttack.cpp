@@ -11,6 +11,14 @@ ASkill_BlinkAttack::ASkill_BlinkAttack()
 
 }
 
+void ASkill_BlinkAttack::ActiveSkill()
+{
+}
+
+void ASkill_BlinkAttack::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_BlinkAttack::BeginPlay()
 {

@@ -7,6 +7,14 @@ ASkill_Rise::ASkill_Rise()
 {
 }
 
+void ASkill_Rise::ActiveSkill()
+{
+}
+
+void ASkill_Rise::DeactiveSkill()
+{
+}
+
 void ASkill_Rise::BeginPlay()
 {
 }

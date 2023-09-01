@@ -11,6 +11,14 @@ ASkill_MultiCasting::ASkill_MultiCasting()
 
 }
 
+void ASkill_MultiCasting::ActiveSkill()
+{
+}
+
+void ASkill_MultiCasting::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_MultiCasting::BeginPlay()
 {

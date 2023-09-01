@@ -11,6 +11,14 @@ ASkill_SoulShackles::ASkill_SoulShackles()
 
 }
 
+void ASkill_SoulShackles::ActiveSkill()
+{
+}
+
+void ASkill_SoulShackles::DeactiveSkill()
+{
+}
+
 // Called when the game starts or when spawned
 void ASkill_SoulShackles::BeginPlay()
 {
