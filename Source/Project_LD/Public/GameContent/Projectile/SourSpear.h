@@ -5,32 +5,24 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "LineProjectile.h"
-#include "ArcherSkeletonArrow.generated.h"
+#include "SourSpear.generated.h"
 
 class USphereComponent;
 class UNiagaraComponent;
 
 UCLASS()
-class PROJECT_LD_API AArcherSkeletonArrow : public ALineProjectile
+class PROJECT_LD_API ASourSpear : public ALineProjectile
 {
 	GENERATED_BODY()
 	
 public:	
-	AArcherSkeletonArrow();
+	ASourSpear();
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-protected:
-	virtual void OnReady() override;
-	virtual void OnStart() override;
-
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* mMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UNiagaraComponent* mArrowTail;
-
+		UStaticMeshComponent* mMesh;
 };

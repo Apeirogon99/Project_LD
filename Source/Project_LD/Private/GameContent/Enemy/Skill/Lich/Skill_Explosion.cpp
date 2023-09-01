@@ -15,12 +15,12 @@ ASkill_Explosion::ASkill_Explosion()
 
 void ASkill_Explosion::ActiveSkill()
 {
-	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/P_AOE_9.P_AOE_9'")))
-	{
-		FVector Location = GetActorLocation();
-		FRotator Rotation = RootComponent->GetRelativeRotation();
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Location, Rotation,FVector(1.f));
-	}
+	//if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/P_AOE_9.P_AOE_9'")))
+	//{
+	//	FVector Location = GetActorLocation();
+	//	FRotator Rotation = RootComponent->GetRelativeRotation();
+	//	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Location, Rotation,FVector(1.f));
+	//}
 }
 
 // Called when the game starts or when spawned

@@ -195,6 +195,12 @@ AActor* AGS_Game::CreateLichSkill(const int64 inLichSkillID, FVector inLocation,
         UClass* actorClass = mLichSkillClass[inLichSkillID];
         AActor* gameObject = world->SpawnActor<AActor>(actorClass, inLocation, inRotator, spawnParams);
 
+        if (gameObject->GetClass()->ImplementsInterface(ULichSkillBase::StaticClass()))
+        {
+            auto InterfaceVariable = Cast<ILichSkillBase>(gameObject);
+            InterfaceVariable->ActiveSkill();
+        }
+
         mGameObjects.Add(inGameObjectID, gameObject);
 
         return gameObject;

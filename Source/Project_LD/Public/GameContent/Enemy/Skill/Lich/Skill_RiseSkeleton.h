@@ -7,7 +7,7 @@
 #include "Skill_RiseSkeleton.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_RiseSkeleton : public ALichSkillBase
+class PROJECT_LD_API ASkill_RiseSkeleton : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

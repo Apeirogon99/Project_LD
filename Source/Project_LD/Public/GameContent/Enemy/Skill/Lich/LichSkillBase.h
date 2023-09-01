@@ -4,33 +4,31 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "UObject/Interface.h"
 #include "LichSkillBase.generated.h"
 
-UCLASS()
-class PROJECT_LD_API ALichSkillBase : public AActor
+
+UINTERFACE(MinimalAPI)
+class ULichSkillBase : public UInterface
+{
+	GENERATED_BODY()
+};
+
+class PROJECT_LD_API ILichSkillBase
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ALichSkillBase();
+	ILichSkillBase();
 
 public:
-	virtual void ActiveSkill();
-	virtual void DeactiveSkill();
+	virtual void ActiveSkill() {}
+	virtual void DeactiveSkill() {}
 
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//	UParticleSystem* mMainParticle;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		UParticleSystem* mMainParticle;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		UParticleSystemComponent* mSpawnedParticle;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	//	UParticleSystemComponent* mSpawnedParticle;
 };

@@ -7,7 +7,7 @@
 #include "Skill_Explosion.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_Explosion : public ALichSkillBase
+class PROJECT_LD_API ASkill_Explosion : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

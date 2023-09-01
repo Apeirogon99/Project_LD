@@ -7,7 +7,7 @@
 #include "Skill_LifeVessel.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_LifeVessel : public ALichSkillBase
+class PROJECT_LD_API ASkill_LifeVessel : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

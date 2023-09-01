@@ -7,7 +7,7 @@
 #include "Skill_RealmOfDeath.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_RealmOfDeath : public ALichSkillBase
+class PROJECT_LD_API ASkill_RealmOfDeath : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

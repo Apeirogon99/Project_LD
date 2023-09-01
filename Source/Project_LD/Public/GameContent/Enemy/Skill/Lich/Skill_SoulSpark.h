@@ -7,7 +7,7 @@
 #include "Skill_SoulSpark.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_SoulSpark : public ALichSkillBase
+class PROJECT_LD_API ASkill_SoulSpark : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

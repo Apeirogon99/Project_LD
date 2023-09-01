@@ -7,7 +7,7 @@
 #include "Skill_BlinkStun.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_BlinkStun : public ALichSkillBase
+class PROJECT_LD_API ASkill_BlinkStun : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

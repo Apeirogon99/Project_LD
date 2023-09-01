@@ -13,22 +13,6 @@
 AArcherSkeletonArrow::AArcherSkeletonArrow()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-	mIsLocationCorrection = false;
-
-	mSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereRoot"));
-	mSphere->InitSphereRadius(20.f);
-
-	mProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("mProjectileMovementComponent"));
-	mProjectileMovementComponent->SetUpdatedComponent(mSphere);
-	mProjectileMovementComponent->InitialSpeed = 1000.0f;
-	mProjectileMovementComponent->MaxSpeed = 1000.0f;
-	mProjectileMovementComponent->bRotationFollowsVelocity = false;
-	mProjectileMovementComponent->bRotationRemainsVertical = false;
-	mProjectileMovementComponent->bShouldBounce = false;
-	mProjectileMovementComponent->ProjectileGravityScale = 0.0f;
-
-	RootComponent = mSphere;
 
 	mMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ArrowMesh"));
 
@@ -54,8 +38,6 @@ AArcherSkeletonArrow::AArcherSkeletonArrow()
 	mArrowTail->SetupAttachment(mMesh);
 	mArrowTail->SetRelativeLocation(FVector(0.f, -40.f, 0.f));
 	mArrowTail->SetRelativeRotation(FRotator(0.f,0.f,270.f));
-
-	mCorrectionVelocity = 0.0f;
 }
 
 // Called when the game starts or when spawned
@@ -68,52 +50,12 @@ void AArcherSkeletonArrow::BeginPlay()
 void AArcherSkeletonArrow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	ArrowMovementCorrection(DeltaTime);
 }
 
-void AArcherSkeletonArrow::ArrowSyncMovement(const FVector& inLocation, const FRotator& inRotation, const float& inDuration)
+void AArcherSkeletonArrow::OnReady()
 {
-
-	FVector foward = inRotation.Quaternion().GetForwardVector();
-	FVector velocity = foward * 1000.0f;
-
-	FVector deadReckoningLocation = inLocation + (velocity * inDuration);
-
-	FVector curLocation = this->GetActorLocation();
-	float locationDistance = FVector::Dist(curLocation, deadReckoningLocation);
-	if (locationDistance > 1.0f)
-	{
-		mIsLocationCorrection = true;
-		mTargetLoction = deadReckoningLocation;
-		mCorrectionVelocity = 0.2f;
-	}
-
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], new[%ws], dead[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *inLocation.ToString(), *deadReckoningLocation.ToString(), locationDistance, inDuration), ELogLevel::Error);
 }
 
-void AArcherSkeletonArrow::ArrowMovementCorrection(const float inDeltaTime)
+void AArcherSkeletonArrow::OnStart()
 {
-
-	if (false == mIsLocationCorrection)
-	{
-		return;
-	}
-
-	FVector curLocation = this->GetActorLocation();
-
-	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, mCorrectionVelocity);
-
-	float distance = FVector::Dist(curLocation, correctionLocation);
-	if (distance <= 1.0f)
-	{
-		this->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::None);
-		mIsLocationCorrection = false;
-	}
-	else
-	{
-		this->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::None);
-	}
-
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], cor[%ws], distance[%f]"), *curLocation.ToString(), *correctionLocation.ToString(), distance), ELogLevel::Error);
 }

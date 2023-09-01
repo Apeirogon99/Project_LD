@@ -7,6 +7,7 @@
 
 #include <Framework/AnimInstance/AI_PlayerCharacter.h>
 #include <Framework/Controller/MovementController.h>
+#include <GameContent/Projectile/LineProjectile.h>
 
 #include <Game/GM_Game.h>
 #include <Game/C_Game.h>
@@ -1600,7 +1601,8 @@ bool Handle_S2C_AppearArrow(ANetworkController* controller, Protocol::S2C_Appear
     {
         return false;
     }
-    newArrow->ArrowSyncMovement(location, rotation, durationTime / 1000.0f);
+    newArrow->InitProjectile(1000.0f, 1000.0f);
+    newArrow->LineProjectileMovement(location, rotation, durationTime / 1000.0f);
 
     return true;
 }
@@ -1637,12 +1639,12 @@ bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C
         return false;
     }
 
-    AArcherSkeletonArrow* arrow = Cast<AArcherSkeletonArrow>(actor);
-    if (nullptr == arrow)
+    ALineProjectile* lineProjectile = Cast<ALineProjectile>(actor);
+    if (nullptr == lineProjectile)
     {
         return false;
     }
-    arrow->ArrowSyncMovement(location, rotation, durationTime / 1000.0f);
+    lineProjectile->LineProjectileMovement(location, rotation, durationTime / 1000.0f);
 
     return true;
 }
@@ -2453,7 +2455,6 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         {
             return false;
         }
-        Cast<ALichSkillBase>(newActor)->ActiveSkill();
         break;
     case 7:
         /* 기사소환 */
@@ -2613,7 +2614,6 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         {
             return false;
         }
-        Cast<ALichSkillBase>(newActor)->ActiveSkill();
         break;
     case 14:
         /* 멀티캐스팅 */

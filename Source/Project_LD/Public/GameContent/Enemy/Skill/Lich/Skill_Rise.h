@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class PROJECT_LD_API ASkill_Rise : public ALichSkillBase
+class PROJECT_LD_API ASkill_Rise : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

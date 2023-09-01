@@ -7,7 +7,7 @@
 #include "Skill_MultiCasting.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_MultiCasting : public ALichSkillBase
+class PROJECT_LD_API ASkill_MultiCasting : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

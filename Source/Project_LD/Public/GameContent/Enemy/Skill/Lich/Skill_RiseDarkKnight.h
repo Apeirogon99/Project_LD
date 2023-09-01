@@ -7,7 +7,7 @@
 #include "Skill_RiseDarkKnight.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_RiseDarkKnight : public ALichSkillBase
+class PROJECT_LD_API ASkill_RiseDarkKnight : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

@@ -44,7 +44,17 @@ void ANPC_Game::Tick(float DeltaTime)
 
 void ANPC_Game::OnTeleport_Implementation(const FVector& DestLocation)
 {
+	APawn* pawn = this->GetPawn();
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
 	mTeleport = true;
+
+	pawn->GetMovementComponent()->StopActiveMovement();
+
+	pawn->SetActorLocation(DestLocation, false, nullptr, ETeleportType::ResetPhysics);
 }
 
 void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
@@ -72,7 +82,6 @@ void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FV
 	if (movedistance < 1.0f)
 	{
 		pawn->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 		return;
 	}
 

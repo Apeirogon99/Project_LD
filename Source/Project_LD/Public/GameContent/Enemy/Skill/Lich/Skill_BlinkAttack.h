@@ -7,7 +7,7 @@
 #include "Skill_BlinkAttack.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_BlinkAttack : public ALichSkillBase
+class PROJECT_LD_API ASkill_BlinkAttack : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

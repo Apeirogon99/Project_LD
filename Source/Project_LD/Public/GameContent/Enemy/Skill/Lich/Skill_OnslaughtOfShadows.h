@@ -7,7 +7,7 @@
 #include "Skill_OnslaughtOfShadows.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_OnslaughtOfShadows : public ALichSkillBase
+class PROJECT_LD_API ASkill_OnslaughtOfShadows : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	

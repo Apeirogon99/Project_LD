@@ -7,7 +7,7 @@
 #include "Skill_SoulShackles.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_SoulShackles : public ALichSkillBase
+class PROJECT_LD_API ASkill_SoulShackles : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	
