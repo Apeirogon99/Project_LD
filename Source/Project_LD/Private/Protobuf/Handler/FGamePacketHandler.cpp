@@ -2309,10 +2309,10 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
     const FRotator& rotation = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
     const float& duration = pkt.duration() / 1000.0f;
 
-    if (nullptr != gameState->FindGameObject(objectID))
+    if (nullptr != gameState->FindGameObject(objectID) && remoteID != objectID)
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearBuff] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     AActor* newActor;
