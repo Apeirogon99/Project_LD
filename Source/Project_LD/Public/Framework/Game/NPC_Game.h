@@ -22,12 +22,17 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 public:
+	UFUNCTION(BlueprintNativeEvent)
+		void OnTeleport(const FVector& DestLocation);
+	virtual void OnTeleport_Implementation(const FVector& DestLocation);
+
 	void NPCMoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
 	void MoveCorrection(const float inDeltaTime);
 	void StopMovementController(const FVector& inStopLocation);
 
 private:
 	bool IsCorrection;
+	bool mTeleport;
 
 	FVector mTargetLoction;
 

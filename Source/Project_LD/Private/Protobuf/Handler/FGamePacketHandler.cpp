@@ -1703,7 +1703,7 @@ bool Handle_S2C_Teleport(ANetworkController* controller, Protocol::S2C_Teleport&
         {
             return false;
         }
-        //npcController->NPCMoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
+        npcController->OnTeleport(location);
     }
 
     return true;

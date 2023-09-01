@@ -14,6 +14,7 @@
 ANPC_Game::ANPC_Game()
 {
 	IsCorrection = false;
+	mTeleport = false;
 	mCorrectionVelocity = 0.0f;
 }
 
@@ -27,10 +28,32 @@ void ANPC_Game::Tick(float DeltaTime)
 	{
 		MoveCorrection(DeltaTime);
 	}
+
+	if (mTeleport)
+	{
+		static float tpTime = 0.0f;
+		tpTime += DeltaTime;
+		if (tpTime >= 10.0f)
+		{
+			mTeleport = false;
+		}
+		tpTime = 0.0f;
+	}
+
+}
+
+void ANPC_Game::OnTeleport_Implementation(const FVector& DestLocation)
+{
+	mTeleport = true;
 }
 
 void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
 {
+	if (mTeleport)
+	{
+		return;
+	}
+
 	APawn* pawn = this->GetPawn();
 	if (nullptr == pawn)
 	{
@@ -48,6 +71,8 @@ void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FV
 	float movedistance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
 	if (movedistance < 1.0f)
 	{
+		pawn->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 		return;
 	}
 
