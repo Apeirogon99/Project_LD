@@ -44,7 +44,8 @@ bool APC_Game::OnRecvPacket(BYTE* buffer, const uint32 len)
 	result = FClientPacketHandler::HandlePacket(controller, buffer, len);
 	if (false == result)
 	{
-		UNetworkUtils::NetworkConsoleLog("Failed to handle packet", ELogLevel::Error);
+		PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Failed to handle packet [%d]"), header->id), ELogLevel::Error);
 
 		AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
 		if (nullptr == clientHUD)
@@ -60,7 +61,7 @@ bool APC_Game::OnRecvPacket(BYTE* buffer, const uint32 len)
 				FGenericPlatformMisc::RequestExit(false);
 			});
 
-		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("Error"), TEXT("Failed to handle packet"), TEXT("Confirm"), notificationDelegate);
+		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("Error"), FString::Printf(TEXT("Failed to handle packet [%d]"), header->id), TEXT("Confirm"), notificationDelegate);
 		if (ret == false)
 		{
 			return false;

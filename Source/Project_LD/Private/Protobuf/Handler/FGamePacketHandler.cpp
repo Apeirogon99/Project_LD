@@ -1738,7 +1738,7 @@ bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_Appear
     if (nullptr != gameState->FindGameObject(objectID))
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
 
