@@ -18,6 +18,10 @@ public:
 	AE_Lich();
 	~AE_Lich();
 
+public:
+	UFUNCTION(BlueprintCallable)
+		void SetLocRot(FVector Loc, FRotator Rot);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

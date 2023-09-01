@@ -16,6 +16,12 @@ AE_Lich::~AE_Lich()
 {
 }
 
+void AE_Lich::SetLocRot(FVector Loc, FRotator Rot)
+{
+	SetActorLocation(Loc);
+	SetActorRotation(Rot);
+}
+
 void AE_Lich::BeginPlay()
 {
 	Super::BeginPlay();

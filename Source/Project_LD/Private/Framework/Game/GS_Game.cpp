@@ -21,6 +21,7 @@
 #include <GameContent/Enemy/Skill/Lich/Skill_MultiCasting.h>
 #include <GameContent/Enemy/Skill/Lich/Skill_OnslaughtOfShadows.h>
 #include <GameContent/Enemy/Skill/Lich/Skill_RealmOfDeath.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_Rise.h>
 #include <GameContent/Enemy/Skill/Lich/Skill_RiseSkeleton.h>
 #include <GameContent/Enemy/Skill/Lich/Skill_RiseDarkKnight.h>
 #include <GameContent/Enemy/Skill/Lich/Skill_SoulShackles.h>
@@ -32,6 +33,7 @@
 
 AGS_Game::AGS_Game()
 {
+    mLichSkillClass.Add(ASkill_Rise::StaticClass());
     mLichSkillClass.Add(ASkill_RiseSkeleton::StaticClass());
     mLichSkillClass.Add(ASkill_RiseDarkKnight::StaticClass());
     mLichSkillClass.Add(ASkill_BlinkAttack::StaticClass());

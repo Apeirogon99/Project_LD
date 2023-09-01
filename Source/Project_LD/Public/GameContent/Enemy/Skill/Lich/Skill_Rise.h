@@ -3,27 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "LichSkillBase.h"
-#include "Skill_Explosion.generated.h"
+#include "GameContent/Enemy/Skill/Lich/LichSkillBase.h"
+#include "Skill_Rise.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class PROJECT_LD_API ASkill_Explosion : public ALichSkillBase
+class PROJECT_LD_API ASkill_Rise : public ALichSkillBase
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
-	ASkill_Explosion();
-
 public:
-	virtual void ActiveSkill() override;
+	ASkill_Rise();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
 };
