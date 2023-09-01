@@ -38,6 +38,12 @@ float UEnemyAnimInstance::OnRecovery_Implementation(float inStartTime)
 	return inStartTime;
 }
 
+float UEnemyAnimInstance::OnSearch_Implementation(float inStartTime)
+{
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnSearch")), ELogLevel::Warning);
+	return inStartTime;
+}
+
 float UEnemyAnimInstance::OnChase_Implementation(float inStartTime)
 {
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnChase")), ELogLevel::Warning);

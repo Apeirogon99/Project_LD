@@ -39,6 +39,10 @@ public:
 	virtual float OnRecovery_Implementation(float inStartTime);
 
 	UFUNCTION(BlueprintNativeEvent, Category = "State")
+	void OnSearch(float inStartTime);
+	virtual float OnSearch_Implementation(float inStartTime);
+
+	UFUNCTION(BlueprintNativeEvent, Category = "State")
 	void OnChase(float inStartTime);
 	virtual float OnChase_Implementation(float inStartTime);
 

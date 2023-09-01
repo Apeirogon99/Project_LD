@@ -16,6 +16,16 @@ public:
 	ASkill_Parent();
 
 public:
+	void SetRemoteID(const int64& InRemoteID)	{ mRemoteID = InRemoteID; }
+	void SetObjectID(const int64& InObjectID)		{ mObjectID = InObjectID; }
+	void SetSkillID(const int32& InSkillID)			{ mSkillID = InSkillID; }
+
+public:
+	int64 GetRemoteID()const		{ return mRemoteID; }
+	int64 GetObjectID() const		{ return mObjectID; }
+	int32 GetSkillID() const			{ return mSkillID; }
+
+public:
 	virtual void AppearSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration);
 	virtual void ReactionSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration);
 
@@ -26,4 +36,14 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int64 mRemoteID;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int64 mObjectID;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	int32 mSkillID;
 };

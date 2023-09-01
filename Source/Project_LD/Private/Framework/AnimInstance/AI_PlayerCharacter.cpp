@@ -64,7 +64,6 @@ void UAI_PlayerCharacter::PlayClientSkillMontage(const int32 inSkillid)
 
 void UAI_PlayerCharacter::PlaySkillMontage(const int32 inSkillid, const float inTimeStamp)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PlaySkillMontage"));
 	APawn* pawn = this->TryGetPawnOwner();
 	if (nullptr == pawn)
 	{

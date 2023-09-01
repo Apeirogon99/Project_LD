@@ -273,7 +273,6 @@ void AEnemyBase::UpdateHealthBar() const
 
 void AEnemyBase::UpdateMovementSpeed()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Call UpdateMovementSpeed"));
 	UWorld* world = GetWorld();
 	if (nullptr == world)
 	{
@@ -321,7 +320,6 @@ void AEnemyBase::UpdateMovementSpeed()
 
 void AEnemyBase::Interactive(ANC_Game* inPlayer)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Not MAX>Current"));
 	UWorld* world = GetWorld();
 	if (nullptr == world)
 	{

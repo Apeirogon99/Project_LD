@@ -14,11 +14,36 @@
 #include <GameContent/Enemy/EnemyState.h>
 #include <GameContent/Enemy/EnemyBase.h>
 
+#include <GameContent/Enemy/Skill/Lich/Skill_LifeVessel.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_BlinkAttack.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_BlinkStun.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_Explosion.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_MultiCasting.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_OnslaughtOfShadows.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_RealmOfDeath.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_RiseSkeleton.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_RiseDarkKnight.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_SoulShackles.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_SoulSpark.h>
+#include <GameContent/Enemy/Skill/Lich/Skill_SoulSpear.h>
+
 #include <Framework/Gameinstance/LDGameInstance.h>
 #include <Kismet/GameplayStatics.h>
 
 AGS_Game::AGS_Game()
 {
+    mLichSkillClass.Add(ASkill_RiseSkeleton::StaticClass());
+    mLichSkillClass.Add(ASkill_RiseDarkKnight::StaticClass());
+    mLichSkillClass.Add(ASkill_BlinkAttack::StaticClass());
+    mLichSkillClass.Add(ASkill_BlinkStun::StaticClass());
+    mLichSkillClass.Add(ASkill_SoulSpear::StaticClass());
+    mLichSkillClass.Add(ASkill_SoulSpark::StaticClass());
+    mLichSkillClass.Add(ASkill_SoulShackles::StaticClass());
+    mLichSkillClass.Add(ASkill_Explosion::StaticClass());
+    mLichSkillClass.Add(ASkill_MultiCasting::StaticClass());
+    mLichSkillClass.Add(ASkill_RealmOfDeath::StaticClass());
+    mLichSkillClass.Add(ASkill_OnslaughtOfShadows::StaticClass());
+    mLichSkillClass.Add(ASkill_LifeVessel::StaticClass());
 }
 
 AGS_Game::~AGS_Game()
@@ -148,6 +173,30 @@ AActor* AGS_Game::CreateGameObject(UClass* inUClass, FVector inLocation, FRotato
         return gameObject;
     }
 
+    return nullptr;
+}
+
+AActor* AGS_Game::CreateDarkKnightSkill(const int64 inLichSkillID, FVector inLocation, FRotator inRotator, const int64 inGameObjectID)
+{
+    return nullptr;
+}
+
+AActor* AGS_Game::CreateLichSkill(const int64 inLichSkillID, FVector inLocation, FRotator inRotator, const int64 inGameObjectID)
+{
+    UWorld* world = GetWorld();
+    if (world)
+    {
+        FActorSpawnParameters spawnParams;
+        spawnParams.Owner = this;
+        spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+        UClass* actorClass = mLichSkillClass[inLichSkillID];
+        AActor* gameObject = world->SpawnActor<AActor>(actorClass, inLocation, inRotator, spawnParams);
+
+        mGameObjects.Add(inGameObjectID, gameObject);
+
+        return gameObject;
+    }
     return nullptr;
 }
 

@@ -2369,6 +2369,129 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         }
         Cast<ASkill_SwordSpirit>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
+        //리치스킬
+        {
+    case 5:
+        /* 해골소환 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 6:
+        /* 기사소환 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 7:
+        /* 블링크 어택 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 8:
+        /* 블링크 스턴 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 9:
+        /* 소울 스피어 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 10:
+        /* 빔 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 11:
+        /* 디버프 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 12:
+        /* 구역 폭발 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 13:
+        /* 멀티캐스팅 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 14:
+        /* 주변 어두워짐 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 15:
+        /* 맵 가르는 광선 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+    case 16:
+        /* 라이프 배슬 */
+        newActor = gameState->CreateLichSkill(skillID - 5, location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        break;
+        }
+        {
+    case 17:
+        /*  */
+        break;
+    case 18:
+        /*  */
+        break;
+    case 19:
+        /*  */
+        break;
+    case 20:
+        /*  */
+        break;
+    case 21:
+        /*  */
+        break;
+    case 22:
+        /*  */
+        break;
+    case 23:
+        /*  */
+        break;
+
+        }
     default:
         UE_LOG(LogTemp, Warning, TEXT("Wrong SkillID"));
         break;
