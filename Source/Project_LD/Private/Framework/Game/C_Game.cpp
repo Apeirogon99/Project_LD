@@ -53,6 +53,15 @@ AC_Game::AC_Game()
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
 	bIsZoom = false;
+	bCanSkillQ = true;
+	bCanSkillW = true;
+	bCanSkillE = true;
+	bCanSkillR = true;
+
+	mQCoolDown = 2.0f;
+	mWCoolDown = 2.0f;
+	mECoolDown = 2.0f;
+	mRCoolDown = 2.0f;
 }
 
 AC_Game::~AC_Game()
@@ -119,4 +128,44 @@ void AC_Game::OnAttackCameraZoomIn_Implementation()
 
 void AC_Game::OnAttackCameraZoomOut_Implementation()
 {
+}
+
+void AC_Game::StartQTimer()
+{
+	GetWorldTimerManager().SetTimer(mQTimer, this, &AC_Game::EndQ, mQCoolDown, false);
+}
+
+void AC_Game::StartWTimer()
+{
+	GetWorldTimerManager().SetTimer(mWTimer, this, &AC_Game::EndW, mWCoolDown, false);
+}
+
+void AC_Game::StartETimer()
+{
+	GetWorldTimerManager().SetTimer(mETimer, this, &AC_Game::EndE, mECoolDown, false);
+}
+
+void AC_Game::StartRTimer()
+{
+	GetWorldTimerManager().SetTimer(mRTimer, this, &AC_Game::EndR, mRCoolDown, false);
+}
+
+void AC_Game::EndQ()
+{
+	bCanSkillQ = true;
+}
+
+void AC_Game::EndE()
+{
+	bCanSkillW = true;
+}
+
+void AC_Game::EndR()
+{
+	bCanSkillE = true;
+}
+
+void AC_Game::EndW()
+{
+	bCanSkillR = true;
 }
