@@ -14,14 +14,13 @@ ASkill_RiseSkeleton::ASkill_RiseSkeleton()
 
 }
 
-void ASkill_RiseSkeleton::ActiveSkill()
-{
-	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/Test/NS_SpawnSkeleton.NS_SpawnSkeleton'")))
+void ASkill_RiseSkeleton::ActiveSkill(FVector InLocation, FRotator InRotation)
+{	
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/NS_Lich_SpawnSkeleton.NS_Lich_SpawnSkeleton'")))
 	{
-		FVector Location = GetActorLocation();
+		FVector Location = InLocation;
 		Location.Z = Location.Z - 120.f;
-		FRotator Rotation = RootComponent->GetRelativeRotation();
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Location, Rotation);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Location, InRotation);
 	}
 }
 

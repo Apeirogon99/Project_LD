@@ -24,7 +24,7 @@ public:
 	ILichSkillBase();
 
 public:
-	virtual void ActiveSkill() {}
+	virtual void ActiveSkill(FVector InLocation, FRotator InRotation) {}
 	virtual void ReactionSkill() {}
 	virtual void DeactiveSkill() {}
 

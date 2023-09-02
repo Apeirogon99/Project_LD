@@ -13,14 +13,14 @@ ASkill_Explosion::ASkill_Explosion()
 
 }
 
-void ASkill_Explosion::ActiveSkill()
+void ASkill_Explosion::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
-	//if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/Test/P_AOE_9.P_AOE_9'")))
-	//{
-	//	FVector Location = GetActorLocation();
-	//	FRotator Rotation = RootComponent->GetRelativeRotation();
-	//	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Location, Rotation,FVector(1.f));
-	//}
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_Explosion.P_Lich_Explosion'")))
+	{
+		FVector Location = GetActorLocation();
+		FRotator Rotation = RootComponent->GetRelativeRotation();
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Location, Rotation,FVector(1.f));
+	}
 }
 
 void ASkill_Explosion::ReactionSkill()

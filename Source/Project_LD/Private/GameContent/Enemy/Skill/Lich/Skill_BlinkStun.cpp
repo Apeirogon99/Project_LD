@@ -11,7 +11,7 @@ ASkill_BlinkStun::ASkill_BlinkStun()
 
 }
 
-void ASkill_BlinkStun::ActiveSkill()
+void ASkill_BlinkStun::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

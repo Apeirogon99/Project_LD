@@ -11,7 +11,7 @@ ASkill_SoulSpark::ASkill_SoulSpark()
 
 }
 
-void ASkill_SoulSpark::ActiveSkill()
+void ASkill_SoulSpark::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

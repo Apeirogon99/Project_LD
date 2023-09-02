@@ -18,7 +18,7 @@ public:
 	ASkill_Rise();
 
 public:
-	virtual void ActiveSkill() override;
+	virtual void ActiveSkill(FVector InLocation, FRotator InRotation) override;
 	virtual void ReactionSkill() override;
 	virtual void DeactiveSkill() override;
 

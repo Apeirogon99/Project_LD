@@ -11,7 +11,7 @@ ASkill_BlinkAttack::ASkill_BlinkAttack()
 
 }
 
-void ASkill_BlinkAttack::ActiveSkill()
+void ASkill_BlinkAttack::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
