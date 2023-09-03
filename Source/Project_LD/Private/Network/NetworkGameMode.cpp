@@ -378,12 +378,16 @@ void ANetworkGameMode::ProcessOpenLevel(const FString& inLevel)
 	FString currentLevelName;
 	GetWorld()->GetCurrentLevel()->GetName(currentLevelName);
 	
-
-	mClientHUD->FadeIn();
-
-
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Open Level [%s]->[%s]"), *currentLevelName, *inLevel), ELogLevel::Warning);
-	UGameplayStatics::OpenLevel(GetWorld(), FName(*inLevel));
+	if (inLevel.Len() == 0)
+	{
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Failed Open Level [%s]->[nullptr]"), *currentLevelName), ELogLevel::Warning);
+	}
+	else
+	{
+		mClientHUD->FadeIn();
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Open Level [%s]->[%s]"), *currentLevelName, *inLevel), ELogLevel::Warning);
+		UGameplayStatics::OpenLevel(GetWorld(), FName(*inLevel));
+	}
 }
 
 void ANetworkGameMode::ShowNetworkNotification(const FString& inNotification)

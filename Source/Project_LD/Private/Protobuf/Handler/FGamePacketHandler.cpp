@@ -1802,8 +1802,8 @@ bool Handle_S2C_DetectChangeEnemy(ANetworkController* controller, Protocol::S2C_
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
     {
-        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_DetectChangeEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return true;
     }
 
     AEnemyBase* enemy = Cast<AEnemyBase>(actor);
@@ -2615,11 +2615,11 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
         LichAnim->PlayLichAnimMontage(6);
 
-        newActor = gameState->CreateLichSkill(8, location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
+        //newActor = gameState->CreateLichSkill(8, location, rotation, objectID);
+        //if (nullptr == newActor)
+        //{
+        //    return false;
+        //}
         break;
     case 14:
         /* 멀티캐스팅 */
@@ -2687,11 +2687,11 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
         DarkKnightAnim->PlayDarkKnightAnimMontage(0);
 
-        newActor = gameState->CreateDarkKnightSkill(0, location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
+        //newActor = gameState->CreateDarkKnightSkill(0, location, rotation, objectID);
+        //if (nullptr == newActor)
+        //{
+        //    return false;
+        //}
         break;
     case 19:
         /* 차지 콤보 */
@@ -2710,11 +2710,11 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
         DarkKnightAnim->PlayDarkKnightAnimMontage(1);
 
-        newActor = gameState->CreateDarkKnightSkill(1, location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
+        //newActor = gameState->CreateDarkKnightSkill(1, location, rotation, objectID);
+        //if (nullptr == newActor)
+        //{
+        //    return false;
+        //}
         break;
     case 20:
         /* 어퍼컷 */
@@ -2733,11 +2733,11 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
         DarkKnightAnim->PlayDarkKnightAnimMontage(2);
 
-        newActor = gameState->CreateDarkKnightSkill(2, location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
+        //newActor = gameState->CreateDarkKnightSkill(2, location, rotation, objectID);
+        //if (nullptr == newActor)
+        //{
+        //    return false;
+        //}
         break;
     case 21:
         /* 스윙 */
@@ -2756,11 +2756,11 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
         DarkKnightAnim->PlayDarkKnightAnimMontage(3);
 
-        newActor = gameState->CreateDarkKnightSkill(3, location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
+        //newActor = gameState->CreateDarkKnightSkill(3, location, rotation, objectID);
+        //if (nullptr == newActor)
+        //{
+        //    return false;
+        //}
         break;
     case 22:
         /* 스윙, 슬램 */
@@ -2779,11 +2779,11 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
         DarkKnightAnim->PlayDarkKnightAnimMontage(4);
 
-        newActor = gameState->CreateDarkKnightSkill(4, location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
+        //newActor = gameState->CreateDarkKnightSkill(4, location, rotation, objectID);
+        //if (nullptr == newActor)
+        //{
+        //    return false;
+        //}
         break;
     case 23:
         /* 핸드소드스왑 */
@@ -2802,11 +2802,11 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
         DarkKnightAnim->PlayDarkKnightAnimMontage(5);
 
-        newActor = gameState->CreateDarkKnightSkill(5, location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
+        //newActor = gameState->CreateDarkKnightSkill(5, location, rotation, objectID);
+        //if (nullptr == newActor)
+        //{
+        //    return false;
+        //}
         break;
     case 24:
         /* 버서커 */
@@ -2823,11 +2823,11 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
 
-        newActor = gameState->CreateDarkKnightSkill(6, location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
+        //newActor = gameState->CreateDarkKnightSkill(6, location, rotation, objectID);
+        //if (nullptr == newActor)
+        //{
+        //    return false;
+        //}
         break;
         }
     default:

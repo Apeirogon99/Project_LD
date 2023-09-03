@@ -5,6 +5,7 @@
 
 UDarkKnightAnimInstance::UDarkKnightAnimInstance()
 {
+	InitSkillMontage();
 }
 
 UDarkKnightAnimInstance::~UDarkKnightAnimInstance()
