@@ -34,6 +34,7 @@ void ALineProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	InitProjectile(1000.0f, 1000.0f);
 }
 
 // Called every frame

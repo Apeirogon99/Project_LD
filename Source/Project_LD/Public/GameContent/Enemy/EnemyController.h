@@ -31,12 +31,15 @@ protected:
 public:
 	void MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
 	void MoveCorrection(const float inDeltaTime);
+	void RotationCorrection(const float inDeltaTime);
 
 private:
 	bool IsCorrection;
+	bool IsRotationCorrection;
 	bool mTeleport;
 
 	FVector mTargetLoction;
+	FRotator mTargetRotation;
 
 	float mCorrectionVelocity;
 };

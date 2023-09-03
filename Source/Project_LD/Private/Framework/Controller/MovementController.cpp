@@ -50,6 +50,11 @@ void AMovementController::PlayerTick(float DeltaTime)
 		MoveCorrection(DeltaTime);
 	}
 
+	if (mIsRotationCorrection)
+	{
+		RotationCorrection(DeltaTime);
+	}
+
 	if (mTeleport)
 	{
 		static float tpTime = 0.0f;
@@ -60,11 +65,6 @@ void AMovementController::PlayerTick(float DeltaTime)
 		}
 		tpTime = 0.0f;
 	}
-
-	//if (mIsRotationCorrection)
-	//{
-	//	RotationCorrection(DeltaTime);
-	//}
 }
 
 void AMovementController::SetupInputComponent()
@@ -250,9 +250,11 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	{
 		mIsLocationCorrection = true;
 		mTargetLoction = deadReckoningLocation;
-		mCorrectionVelocity = 0.2f;
-		//character->SetActorRotation(direction.Rotation());
+		mCorrectionVelocity = 0.1f;
 	}
+
+	mIsRotationCorrection = true;
+	mTargetRotation = rotation;
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance, duration), ELogLevel::Error);
 
@@ -305,13 +307,12 @@ void AMovementController::RotationCorrection(const float inDeltaTime)
 		return;
 	}
 
-	FRotator	curRotation = pawn->GetActorRotation();
-	float		interpSpeed = 3.0f;
+	FRotator curRotation = pawn->GetActorRotation();
+	float	velocity = 1.0f;
 
-	FRotator correctionRotation = FMath::RInterpTo(curRotation, mTargetRotation, inDeltaTime, interpSpeed);
+	FRotator correctionRotation = FMath::Lerp(curRotation, mTargetRotation, velocity * inDeltaTime);
 
-	float rotationDelta = correctionRotation.Pitch - curRotation.Pitch;
-	if (rotationDelta <= 1.0f)
+	if (correctionRotation.Equals(mTargetRotation, 0.1f))
 	{
 		pawn->SetActorRotation(mTargetRotation, ETeleportType::ResetPhysics);
 		mIsRotationCorrection = false;

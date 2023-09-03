@@ -9,10 +9,12 @@
 
 #include <GameFramework/PawnMovementComponent.h>
 #include <Blueprint/AIBlueprintHelperLibrary.h>
+#include <Kismet/KismetMathLibrary.h>
 
 AEnemyController::AEnemyController()
 {
 	IsCorrection = false;
+	IsRotationCorrection = false;
 	mTeleport = false;
 	mCorrectionVelocity = 0.0f;
 }
@@ -45,6 +47,11 @@ void AEnemyController::Tick(float DeltaTime)
 		if (IsCorrection)
 		{
 			MoveCorrection(DeltaTime);
+		}
+
+		if (IsRotationCorrection)
+		{
+			RotationCorrection(DeltaTime);
 		}
 	}
 
@@ -112,8 +119,10 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	{
 		IsCorrection = true;
 		mTargetLoction = deadReckoningLocation;
-		pawn->SetActorRotation(direction.Rotation());
 	}
+
+	IsRotationCorrection = true;
+	mTargetRotation = direction.Rotation();
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws] distance[%f]"), *inOldMovementLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance), ELogLevel::Error);
 
@@ -149,4 +158,33 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 		pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
 	}
 
+}
+
+void AEnemyController::RotationCorrection(const float inDeltaTime)
+{
+	APawn* pawn = this->GetPawn();
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
+	if (false == IsRotationCorrection)
+	{
+		return;
+	}
+
+	FRotator curRotation = pawn->GetActorRotation();
+	float	velocity = 1.0f;
+
+	FRotator correctionRotation = FMath::Lerp(curRotation, mTargetRotation, velocity * inDeltaTime);
+
+	if (correctionRotation.Equals(mTargetRotation, 0.1f))
+	{
+		pawn->SetActorRotation(mTargetRotation, ETeleportType::ResetPhysics);
+		IsRotationCorrection = false;
+	}
+	else
+	{
+		pawn->SetActorRotation(correctionRotation, ETeleportType::ResetPhysics);
+	}
 }

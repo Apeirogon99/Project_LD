@@ -43,11 +43,6 @@ void ASkill_SoulSpear::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ASkill_SoulSpear::Tick(float DeltaTime)
-{
-	Super::BeginPlay();
-}
-
 void ASkill_SoulSpear::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
