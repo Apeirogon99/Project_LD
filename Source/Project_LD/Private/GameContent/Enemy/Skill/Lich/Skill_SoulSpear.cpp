@@ -83,13 +83,10 @@ void ASkill_SoulSpear::ReactionSkill(FVector Location, FRotator Rotation)
 		return;
 	}
 
-	FVector InLocation = this->GetActorLocation();
-	FRotator InRotation = this->GetActorRotation();
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(world, mAttack, Location, Rotation);
 
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(world, mAttack, InLocation, InRotation);
-
-	mNiagaraComponent->SetAsset(mProjectile);
-	mNiagaraComponent->Activate();
+	//mNiagaraComponent->SetAsset(mProjectile);
+	//mNiagaraComponent->Activate();
 
 }
 

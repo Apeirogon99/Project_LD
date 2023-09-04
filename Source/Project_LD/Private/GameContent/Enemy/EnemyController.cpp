@@ -15,7 +15,8 @@
 
 AEnemyController::AEnemyController()
 {
-	IsCorrection = false;
+	IsMoveCorrection = false;
+	IsLocationCorrection = false;
 	IsRotationCorrection = false;
 	mTeleport = false;
 	mCorrectionVelocity = 0.0f;
@@ -46,7 +47,7 @@ void AEnemyController::Tick(float DeltaTime)
 	}
 	else
 	{
-		if (IsCorrection)
+		if (IsMoveCorrection || IsLocationCorrection)
 		{
 			MoveCorrection(DeltaTime);
 		}
@@ -68,7 +69,7 @@ void AEnemyController::OnTeleport_Implementation(const FVector& DestLocation)
 	}
 
 	mTargetLoction = DestLocation;
-	IsCorrection = false;
+	IsMoveCorrection = false;
 	mTeleport = true;
 
 	pawn->GetMovementComponent()->StopActiveMovement();
@@ -127,7 +128,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
 	if (locationDistance > 1.0f)
 	{
-		IsCorrection = true;
+		IsMoveCorrection = true;
 		mTargetLoction = deadReckoningLocation;
 		mCorrectionVelocity = 0.2f;
 	}
@@ -171,15 +172,16 @@ void AEnemyController::AnimationMoveDestination(const FVector inStartLocation, c
 	FVector deadReckoningLocation = inStartLocation + (velocity * timeDuration);
 	//character->SetActorLocation(deadReckoningLocation);
 
-	IsCorrection = true;
+	IsLocationCorrection= true;
 	mStartLocation = deadReckoningLocation;
 	mTargetLoction = inEndLocation;
 	mCorrectionVelocity = speed;
-	mStartTime = timeDuration - moveDuration;
+	mStartTime = moveDuration - timeDuration;
 	mTimeElapsed = 0.0f;
 
-	IsRotationCorrection = true;
-	mTargetRotation = direction;
+	//character->SetActorRotation(direction);
+	//IsRotationCorrection = true;
+	//mTargetRotation = direction;
 }
 
 void AEnemyController::MoveCorrection(const float inDeltaTime)
@@ -190,12 +192,12 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 		return;
 	}
 
-	if (false == IsCorrection)
+	if (false == IsLocationCorrection && false == IsMoveCorrection)
 	{
 		return;
 	}
 
-	if (mCorrectionVelocity <= 1.0f)
+	if (IsMoveCorrection)
 	{
 		FVector curLocation = pawn->GetActorLocation();
 		FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, mCorrectionVelocity);
@@ -204,14 +206,14 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 		if (distance <= 1.0f)
 		{
 			pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);
-			IsCorrection = false;
+			IsMoveCorrection = false;
 		}
 		else
 		{
 			pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
 		}
 	}
-	else
+	else if(IsLocationCorrection)
 	{
 		mTimeElapsed += inDeltaTime;
 		FVector correctionLocation = FMath::VInterpConstantTo(mStartLocation, mTargetLoction, mTimeElapsed, mCorrectionVelocity);
@@ -219,7 +221,7 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 		if (mTimeElapsed > mStartTime)
 		{
 			pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);
-			IsCorrection = false;
+			IsLocationCorrection = false;
 		}
 		else
 		{

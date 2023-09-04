@@ -35,7 +35,8 @@ public:
 	void RotationCorrection(const float inDeltaTime);
 
 private:
-	bool IsCorrection;
+	bool IsMoveCorrection;
+	bool IsLocationCorrection;
 	bool IsRotationCorrection;
 	bool mTeleport;
 
