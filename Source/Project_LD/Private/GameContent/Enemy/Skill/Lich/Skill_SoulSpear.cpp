@@ -75,7 +75,7 @@ void ASkill_SoulSpear::ActiveSkill(FVector InLocation, FRotator InRotation)
 
 }
 
-void ASkill_SoulSpear::ReactionSkill()
+void ASkill_SoulSpear::ReactionSkill(FVector Location, FRotator Rotation)
 {
 	UWorld* world = GetWorld();
 	if (nullptr == world)

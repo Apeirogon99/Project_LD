@@ -22,7 +22,7 @@ void ASkill_BlinkAttack::ActiveSkill(FVector InLocation, FRotator InRotation)
 	//}
 }
 
-void ASkill_BlinkAttack::ReactionSkill()
+void ASkill_BlinkAttack::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

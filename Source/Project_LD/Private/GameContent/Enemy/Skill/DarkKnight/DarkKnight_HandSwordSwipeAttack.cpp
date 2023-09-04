@@ -11,11 +11,11 @@ ADarkKnight_HandSwordSwipeAttack::ADarkKnight_HandSwordSwipeAttack()
 
 }
 
-void ADarkKnight_HandSwordSwipeAttack::ActiveSkill()
+void ADarkKnight_HandSwordSwipeAttack::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ADarkKnight_HandSwordSwipeAttack::ReactionSkill()
+void ADarkKnight_HandSwordSwipeAttack::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

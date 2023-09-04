@@ -11,11 +11,11 @@ ADarkKnight_RunningAttack::ADarkKnight_RunningAttack()
 
 }
 
-void ADarkKnight_RunningAttack::ActiveSkill()
+void ADarkKnight_RunningAttack::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ADarkKnight_RunningAttack::ReactionSkill()
+void ADarkKnight_RunningAttack::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

@@ -15,7 +15,7 @@ void ASkill_SoulShackles::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ASkill_SoulShackles::ReactionSkill()
+void ASkill_SoulShackles::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

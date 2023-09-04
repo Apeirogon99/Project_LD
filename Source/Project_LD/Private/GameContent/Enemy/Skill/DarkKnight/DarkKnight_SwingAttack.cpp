@@ -11,11 +11,11 @@ ADarkKnight_SwingAttack::ADarkKnight_SwingAttack()
 
 }
 
-void ADarkKnight_SwingAttack::ActiveSkill()
+void ADarkKnight_SwingAttack::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ADarkKnight_SwingAttack::ReactionSkill()
+void ADarkKnight_SwingAttack::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

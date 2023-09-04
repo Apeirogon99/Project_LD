@@ -11,7 +11,7 @@ void ASkill_Rise::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ASkill_Rise::ReactionSkill()
+void ASkill_Rise::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

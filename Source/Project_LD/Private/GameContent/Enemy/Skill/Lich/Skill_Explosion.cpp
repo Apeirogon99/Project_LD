@@ -21,7 +21,7 @@ void ASkill_Explosion::ActiveSkill(FVector InLocation, FRotator InRotation)
 	}
 }
 
-void ASkill_Explosion::ReactionSkill()
+void ASkill_Explosion::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

@@ -25,7 +25,7 @@ public:
 
 public:
 	virtual void ActiveSkill(FVector InLocation, FRotator InRotation) {}
-	virtual void ReactionSkill() {}
+	virtual void ReactionSkill(FVector InLocation, FRotator InRotation) {}
 	virtual void DeactiveSkill() {}
 
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

@@ -2,6 +2,8 @@
 
 
 #include "GameContent/Enemy/Skill/Lich/Skill_SoulSpark.h"
+#include "NiagaraFunctionLibrary.h"
+#include "Niagara/Classes/NiagaraSystem.h"
 
 // Sets default values
 ASkill_SoulSpark::ASkill_SoulSpark()
@@ -15,8 +17,12 @@ void ASkill_SoulSpark::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ASkill_SoulSpark::ReactionSkill()
+void ASkill_SoulSpark::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/NS_SoulSpark.NS_SoulSpark'")))
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, InLocation, InRotation, FVector(1), true);
+	}
 }
 
 void ASkill_SoulSpark::DeactiveSkill()

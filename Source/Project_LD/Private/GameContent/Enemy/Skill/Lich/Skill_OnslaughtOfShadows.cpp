@@ -15,7 +15,7 @@ void ASkill_OnslaughtOfShadows::ActiveSkill(FVector InLocation, FRotator InRotat
 {
 }
 
-void ASkill_OnslaughtOfShadows::ReactionSkill()
+void ASkill_OnslaughtOfShadows::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

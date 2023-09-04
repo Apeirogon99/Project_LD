@@ -15,7 +15,7 @@ void ASkill_LifeVessel::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ASkill_LifeVessel::ReactionSkill()
+void ASkill_LifeVessel::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

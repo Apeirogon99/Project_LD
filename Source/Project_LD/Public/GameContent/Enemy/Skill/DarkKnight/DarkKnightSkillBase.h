@@ -26,7 +26,7 @@ public:
 	IDarkKnightSkillBase();
 
 public:
-	virtual void ActiveSkill() {}
-	virtual void ReactionSkill() {}
+	virtual void ActiveSkill(FVector InLocation, FRotator InRotation) {}
+	virtual void ReactionSkill(FVector InLocation, FRotator InRotation) {}
 	virtual void DeactiveSkill() {}
 };

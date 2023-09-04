@@ -11,11 +11,11 @@ ADarkKnight_Berserk::ADarkKnight_Berserk()
 
 }
 
-void ADarkKnight_Berserk::ActiveSkill()
+void ADarkKnight_Berserk::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ADarkKnight_Berserk::ReactionSkill()
+void ADarkKnight_Berserk::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

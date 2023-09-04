@@ -15,7 +15,7 @@ void ASkill_RiseDarkKnight::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ASkill_RiseDarkKnight::ReactionSkill()
+void ASkill_RiseDarkKnight::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

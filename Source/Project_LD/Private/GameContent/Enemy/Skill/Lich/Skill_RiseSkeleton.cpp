@@ -24,7 +24,7 @@ void ASkill_RiseSkeleton::ActiveSkill(FVector InLocation, FRotator InRotation)
 	}
 }
 
-void ASkill_RiseSkeleton::ReactionSkill()
+void ASkill_RiseSkeleton::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

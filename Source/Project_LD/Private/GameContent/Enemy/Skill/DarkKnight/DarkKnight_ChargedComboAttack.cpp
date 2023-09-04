@@ -11,11 +11,11 @@ ADarkKnight_ChargedComboAttack::ADarkKnight_ChargedComboAttack()
 
 }
 
-void ADarkKnight_ChargedComboAttack::ActiveSkill()
+void ADarkKnight_ChargedComboAttack::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ADarkKnight_ChargedComboAttack::ReactionSkill()
+void ADarkKnight_ChargedComboAttack::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

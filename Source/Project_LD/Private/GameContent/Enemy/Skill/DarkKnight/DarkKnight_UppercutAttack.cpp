@@ -11,11 +11,11 @@ ADarkKnight_UppercutAttack::ADarkKnight_UppercutAttack()
 
 }
 
-void ADarkKnight_UppercutAttack::ActiveSkill()
+void ADarkKnight_UppercutAttack::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ADarkKnight_UppercutAttack::ReactionSkill()
+void ADarkKnight_UppercutAttack::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

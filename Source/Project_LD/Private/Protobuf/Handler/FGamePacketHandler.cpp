@@ -2852,17 +2852,6 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         return false;
     }
 
-    ANC_Game* character = Cast<ANC_Game>(controller->GetCharacter());
-    if (nullptr == character)
-    {
-        return false;
-    }
-
-    UAI_PlayerCharacter* animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-    if (nullptr == animation)
-    {
-        return false;
-    }
 
     const int64&    remoteID    = pkt.remote_id();
     const int64&    objectID    = pkt.object_id();
@@ -2879,6 +2868,10 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
     }
 
     AActor* newActor;
+    ANC_Game* character;
+    UAI_PlayerCharacter* animation;
+
+    UE_LOG(LogTemp, Warning, TEXT("Skill ID %d"), skillID);
 
     switch (skillID)
     {
@@ -2887,6 +2880,17 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         break;
     case 2:
         /* 패링 */
+        character = Cast<ANC_Game>(controller->GetCharacter());
+        if (nullptr == character)
+        {
+            return false;
+        }
+
+        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+        if (nullptr == animation)
+        {
+            return false;
+        }
         newActor = gameState->CreateGameObject(ASkill_Counter::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2900,6 +2904,17 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         break;
     case 4:
         /* 검기 */
+        character = Cast<ANC_Game>(controller->GetCharacter());
+        if (nullptr == character)
+        {
+            return false;
+        }
+
+        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+        if (nullptr == animation)
+        {
+            return false;
+        }
         animation->PlaySkillMontage(4, duration);
         newActor = gameState->CreateGameObject(ASkill_SwordSpirit::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
@@ -2909,46 +2924,83 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         UE_LOG(LogTemp, Warning, TEXT("Reaction R Play Anim Server to Client"));
         Cast<ASkill_SwordSpirit>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
+        //리치스킬
+        {
     case 5:
+        /* rise */
         break;
     case 6:
+        /* 해골소환 */
         break;
     case 7:
+        /* 기사소환 */
         break;
     case 8:
+        /* 블링크 어택 */
         break;
-    case 9:
+    case  9:
+        /* 블링크 스턴 */
         break;
     case 10:
+        /* 소울 스피어 */
+        newActor = gameState->FindGameObject(objectID);
+        if (newActor->GetClass()->ImplementsInterface(ULichSkillBase::StaticClass()))
+        {
+            auto Interface = Cast<ILichSkillBase>(newActor);
+            Interface->ReactionSkill(location,rotation);
+        }
         break;
     case 11:
+        /* 빔 */
+        newActor = gameState->FindGameObject(objectID);
+        if (newActor->GetClass()->ImplementsInterface(ULichSkillBase::StaticClass()))
+        {
+            auto Interface = Cast<ILichSkillBase>(newActor);
+            Interface->ReactionSkill(location, rotation);
+        }
         break;
     case 12:
+        /* 디버프 */
         break;
     case 13:
+        /* 구역 폭발 */
         break;
     case 14:
+        /* 멀티캐스팅 */
         break;
     case 15:
+        /* 주변 어두워짐 */
         break;
     case 16:
-        break;
+        /* 맵 가르는 광선 */
+         break;
     case 17:
+        /* 라이프 배슬 */
         break;
+        }
+        {
     case 18:
+        /* 러닝 */
         break;
     case 19:
+        /* 차지 콤보 */
         break;
     case 20:
+        /* 어퍼컷 */
         break;
     case 21:
+        /* 스윙 */
         break;
     case 22:
+        /* 스윙, 슬램 */
         break;
     case 23:
+        /* 핸드소드스왑 */
         break;
     case 24:
+        /* 버서커 */
         break;
+        }
     default:
         UE_LOG(LogTemp, Warning, TEXT("Wrong SkillID"));
         break;
