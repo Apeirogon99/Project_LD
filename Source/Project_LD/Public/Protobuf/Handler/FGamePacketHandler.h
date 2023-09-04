@@ -58,32 +58,33 @@ enum class EPakcetID: uint16
 	S2C_AppearEnemy = 2048,
 	S2C_DetectChangeEnemy = 2049,
 	S2C_MovementEnemy = 2050,
-	S2C_EnemyAutoAttack = 2051,
-	S2C_HitEnemy = 2052,
-	S2C_DeathEnemy = 2053,
-	S2C_DisAppearGameObject = 2054,
-	C2S_LoadInventory = 2055,
-	S2C_LoadInventory = 2056,
-	C2S_InsertInventory = 2057,
-	S2C_InsertInventory = 2058,
-	C2S_UpdateInventory = 2059,
-	S2C_UpdateInventory = 2060,
-	C2S_DeleteInventory = 2061,
-	S2C_DeleteInventory = 2062,
-	S2C_RollbackInventory = 2063,
-	C2S_ReplaceEqipment = 2064,
-	S2C_ReplaceEqipment = 2065,
-	S2C_LoadSkillTree = 2066,
-	C2S_UpdateSkillTree = 2067,
-	S2C_UpdateSkillTree = 2068,
-	C2S_SetUseKeyAction = 2069,
-	S2C_SetUseKeyAction = 2070,
-	C2S_PressedUseKeyAction = 2071,
-	C2S_ReleaseUseKeyAction = 2072,
-	S2C_AppearSkill = 2073,
-	S2C_ReactionSkill = 2074,
-	S2C_DebugBox = 2075,
-	S2C_DebugCircle = 2076,
+	S2C_AnimationMovementEnemy = 2051,
+	S2C_EnemyAutoAttack = 2052,
+	S2C_HitEnemy = 2053,
+	S2C_DeathEnemy = 2054,
+	S2C_DisAppearGameObject = 2055,
+	C2S_LoadInventory = 2056,
+	S2C_LoadInventory = 2057,
+	C2S_InsertInventory = 2058,
+	S2C_InsertInventory = 2059,
+	C2S_UpdateInventory = 2060,
+	S2C_UpdateInventory = 2061,
+	C2S_DeleteInventory = 2062,
+	S2C_DeleteInventory = 2063,
+	S2C_RollbackInventory = 2064,
+	C2S_ReplaceEqipment = 2065,
+	S2C_ReplaceEqipment = 2066,
+	S2C_LoadSkillTree = 2067,
+	C2S_UpdateSkillTree = 2068,
+	S2C_UpdateSkillTree = 2069,
+	C2S_SetUseKeyAction = 2070,
+	S2C_SetUseKeyAction = 2071,
+	C2S_PressedUseKeyAction = 2072,
+	C2S_ReleaseUseKeyAction = 2073,
+	S2C_AppearSkill = 2074,
+	S2C_ReactionSkill = 2075,
+	S2C_DebugBox = 2076,
+	S2C_DebugCircle = 2077,
 };
 */
 
@@ -123,6 +124,7 @@ bool Handle_S2C_Teleport(ANetworkController* controller, Protocol::S2C_Teleport&
 bool Handle_S2C_AppearEnemy(ANetworkController* controller, Protocol::S2C_AppearEnemy& pkt);
 bool Handle_S2C_DetectChangeEnemy(ANetworkController* controller, Protocol::S2C_DetectChangeEnemy& pkt);
 bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_MovementEnemy& pkt);
+bool Handle_S2C_AnimationMovementEnemy(ANetworkController* controller, Protocol::S2C_AnimationMovementEnemy& pkt);
 bool Handle_S2C_EnemyAutoAttack(ANetworkController* controller, Protocol::S2C_EnemyAutoAttack& pkt);
 bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy& pkt);
 bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEnemy& pkt);
@@ -181,6 +183,7 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AppearEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AppearEnemy>(Handle_S2C_AppearEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DetectChangeEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DetectChangeEnemy>(Handle_S2C_DetectChangeEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_MovementEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_MovementEnemy>(Handle_S2C_MovementEnemy, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_AnimationMovementEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_AnimationMovementEnemy>(Handle_S2C_AnimationMovementEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_EnemyAutoAttack)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_EnemyAutoAttack>(Handle_S2C_EnemyAutoAttack, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_HitEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_HitEnemy>(Handle_S2C_HitEnemy, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DeathEnemy)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DeathEnemy>(Handle_S2C_DeathEnemy, controller, buffer, len); };

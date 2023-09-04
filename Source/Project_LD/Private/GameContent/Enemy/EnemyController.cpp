@@ -8,6 +8,8 @@
 #include <Network/NetworkUtils.h>
 
 #include <GameFramework/PawnMovementComponent.h>
+#include <GameFramework/CharacterMovementComponent.h>
+
 #include <Blueprint/AIBlueprintHelperLibrary.h>
 #include <Kismet/KismetMathLibrary.h>
 
@@ -87,11 +89,19 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 		return;
 	}
 
+	ACharacter* character = Cast<ACharacter>(pawn);
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
 	AEnemyState* enemyState = GetPlayerState<AEnemyState>();
 	if (nullptr == enemyState)
 	{
 		return;
 	}
+	const float speed = enemyState->GetEnemyStats().GetMovementSpeed();
+	character->GetCharacterMovement()->MaxWalkSpeed = speed;
 
 	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 
@@ -106,19 +116,20 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	FRotator rotation = direction.Rotation();
 	FVector foward = rotation.Quaternion().GetForwardVector();
 
-	const float speed = enemyState->GetEnemyStats().GetMovementSpeed();
-	FVector velocity = foward * speed;
+	//FVector velocity = foward * speed;
+	FVector velocity = character->GetVelocity();
 	float	duration = inTime / 1000.0f;
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
 
 	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
-	FVector curLocation = pawn->GetActorLocation();
+	FVector curLocation = character->GetActorLocation();
 	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
 	if (locationDistance > 1.0f)
 	{
 		IsCorrection = true;
 		mTargetLoction = deadReckoningLocation;
+		mCorrectionVelocity = 0.2f;
 	}
 
 	IsRotationCorrection = true;
@@ -127,6 +138,48 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws] distance[%f]"), *inOldMovementLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance), ELogLevel::Error);
 
 
+}
+
+void AEnemyController::AnimationMoveDestination(const FVector inStartLocation, const FVector inEndLocation, const int64 inMoveDuration, const int64 inTimeDuration)
+{
+	APawn* pawn = this->GetPawn();
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
+	ACharacter* character = Cast<ACharacter>(pawn);
+	if (nullptr == pawn)
+	{
+		return;
+	}
+
+	FRotator	direction = (inEndLocation - inStartLocation).Rotation();
+	FVector		foward = direction.Quaternion().GetForwardVector();
+
+	float		moveDuration = inMoveDuration / 1000.0f;
+	float		timeDuration = inTimeDuration / 1000.0f;
+
+	float		speed = (FVector::Distance(inStartLocation, inEndLocation)) / moveDuration;
+
+	FVector velocity = foward * speed;
+
+	//아마 이거하면 뒤 돌아버릴듯
+	character->GetCharacterMovement()->MaxWalkSpeed = speed;
+	//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inEndLocation);
+
+	FVector deadReckoningLocation = inStartLocation + (velocity * timeDuration);
+	//character->SetActorLocation(deadReckoningLocation);
+
+	IsCorrection = true;
+	mStartLocation = deadReckoningLocation;
+	mTargetLoction = inEndLocation;
+	mCorrectionVelocity = speed;
+	mStartTime = timeDuration - moveDuration;
+	mTimeElapsed = 0.0f;
+
+	IsRotationCorrection = true;
+	mTargetRotation = direction;
 }
 
 void AEnemyController::MoveCorrection(const float inDeltaTime)
@@ -142,20 +195,36 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 		return;
 	}
 
-	FVector curLocation = pawn->GetActorLocation();
-	float	velocity = 0.2f;
-
-	FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, velocity);
-
-	float distance = FVector::Dist2D(curLocation, correctionLocation);
-	if (distance <= 1.0f)
+	if (mCorrectionVelocity <= 1.0f)
 	{
-		pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);
-		IsCorrection = false;
+		FVector curLocation = pawn->GetActorLocation();
+		FVector correctionLocation = FMath::VInterpTo(curLocation, mTargetLoction, inDeltaTime, mCorrectionVelocity);
+
+		float distance = FVector::Dist2D(curLocation, correctionLocation);
+		if (distance <= 1.0f)
+		{
+			pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);
+			IsCorrection = false;
+		}
+		else
+		{
+			pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
+		}
 	}
 	else
 	{
-		pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
+		mTimeElapsed += inDeltaTime;
+		FVector correctionLocation = FMath::VInterpConstantTo(mStartLocation, mTargetLoction, mTimeElapsed, mCorrectionVelocity);
+
+		if (mTimeElapsed > mStartTime)
+		{
+			pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);
+			IsCorrection = false;
+		}
+		else
+		{
+			pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
+		}
 	}
 
 }

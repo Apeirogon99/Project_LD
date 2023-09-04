@@ -30,6 +30,7 @@ protected:
 
 public:
 	void MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
+	void AnimationMoveDestination(const FVector inStartLocation, const FVector inEndLocation, const int64 inMoveDuration, const int64 inTimeDuration);
 	void MoveCorrection(const float inDeltaTime);
 	void RotationCorrection(const float inDeltaTime);
 
@@ -38,8 +39,12 @@ private:
 	bool IsRotationCorrection;
 	bool mTeleport;
 
+	FVector mStartLocation;
 	FVector mTargetLoction;
 	FRotator mTargetRotation;
+
+	float mStartTime;
+	float mTimeElapsed;
 
 	float mCorrectionVelocity;
 };

@@ -1868,6 +1868,52 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
     return true;
 }
 
+bool Handle_S2C_AnimationMovementEnemy(ANetworkController* controller, Protocol::S2C_AnimationMovementEnemy& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    //Packet
+    const int64     objectID = pkt.object_id();
+    FVector         startLocation = FVector(pkt.start_location().x(), pkt.start_location().y(), pkt.start_location().z());
+    FVector         endLocation = FVector(pkt.end_location().x(), pkt.end_location().y(), pkt.end_location().z());
+    const int64     moveDuration = pkt.duration();
+    const int64     timestamp = pkt.timestamp();
+    const int64     durationTime = controller->GetServerTimeStamp() - timestamp;
+
+
+    AActor* actor = gameState->FindGameObject(objectID);
+    if (nullptr == actor)
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AnimationMovementEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AEnemyBase* enemy = Cast<AEnemyBase>(actor);
+    if (nullptr == enemy)
+    {
+        return false;
+    }
+
+    AEnemyController* enemyController = Cast<AEnemyController>(enemy->GetController());
+    if (nullptr == enemyController)
+    {
+        return false;
+    }
+    enemyController->AnimationMoveDestination(startLocation, endLocation, moveDuration, durationTime);
+
+    return true;
+}
+
 bool Handle_S2C_EnemyAutoAttack(ANetworkController* controller, Protocol::S2C_EnemyAutoAttack& pkt)
 {
     UWorld* world = controller->GetWorld();
