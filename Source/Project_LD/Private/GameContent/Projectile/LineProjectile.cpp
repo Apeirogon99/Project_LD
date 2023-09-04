@@ -19,8 +19,8 @@ ALineProjectile::ALineProjectile()
 
 	mProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("mProjectileMovementComponent"));
 	mProjectileMovementComponent->SetUpdatedComponent(mSphere);
-	mProjectileMovementComponent->InitialSpeed = 0.0f;
-	mProjectileMovementComponent->MaxSpeed = 0.0f;
+	mProjectileMovementComponent->InitialSpeed = 1000.0f;
+	mProjectileMovementComponent->MaxSpeed = 1000.0f;
 	mProjectileMovementComponent->bRotationFollowsVelocity = false;
 	mProjectileMovementComponent->bRotationRemainsVertical = false;
 	mProjectileMovementComponent->bShouldBounce = false;
@@ -34,7 +34,8 @@ void ALineProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	InitProjectile(1000.0f, 1000.0f);
+	//InitProjectile(1000.0f, 1000.0f);
+	//Start();
 }
 
 // Called every frame
@@ -91,20 +92,5 @@ void ALineProjectile::MovementCorrection(const float inDeltaTime)
 	{
 		this->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::None);
 	}
-}
-
-void ALineProjectile::Ready()
-{
-
-	OnReady();
-}
-
-void ALineProjectile::Start()
-{
-
-	mProjectileMovementComponent->InitialSpeed	= mSpeed;
-	mProjectileMovementComponent->MaxSpeed		= mMaxSpeed;
-
-	OnStart();
 }
 

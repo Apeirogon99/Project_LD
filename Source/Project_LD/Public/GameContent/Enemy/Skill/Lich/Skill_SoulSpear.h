@@ -7,6 +7,9 @@
 #include "GameContent/Projectile/LineProjectile.h"
 #include "Skill_SoulSpear.generated.h"
 
+class UStaticMeshComponent;
+class UNiagaraComponent;
+class UNiagaraSystem;
 /**
  * 
  */
@@ -26,15 +29,26 @@ public:
 	virtual void ReactionSkill() override;
 	virtual void DeactiveSkill() override;
 
-protected:
-	virtual void OnReady() override;
-	virtual void OnStart() override;
+	UFUNCTION()
+		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		UStaticMeshComponent* mMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		UNiagaraComponent* mTail;
+		UNiagaraComponent* mNiagaraComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		UNiagaraSystem* mAttack;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		UNiagaraSystem* mCasting;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		UNiagaraSystem* mHit;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		UNiagaraSystem* mProjectile;
 };
 

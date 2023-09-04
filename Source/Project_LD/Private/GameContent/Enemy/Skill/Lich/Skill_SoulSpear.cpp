@@ -7,6 +7,8 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Particles/ParticleSystem.h"
 #include "Particles/ParticleSystemComponent.h"
+
+#include <Niagara/Public/NiagaraFunctionLibrary.h>
 #include <Niagara/Classes/NiagaraSystem.h>
 #include <NiagaraComponent.h>
 
@@ -14,28 +16,46 @@ ASkill_SoulSpear::ASkill_SoulSpear()
 {
 	mMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_Arrow(TEXT("StaticMesh'/Game/UndeadPack/SkeletonEnemy/Mesh/Weapon/Bow/Arrow/SM_Arrow.SM_Arrow'"));
-	if (SM_Arrow.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SM_SourSpear(TEXT("StaticMesh'/Game/sA_StylizedWizardSet/Models/SM_Projectile_Sphere.SM_Projectile_Sphere'"));
+	if (SM_SourSpear.Succeeded())
 	{
-		mMesh->SetStaticMesh(SM_Arrow.Object);
+		mMesh->SetStaticMesh(SM_SourSpear.Object);
 	}
-
 	mMesh->SetupAttachment(RootComponent);
-	mMesh->SetRelativeRotation(FRotator(270.f, 0.f, 270.f));
-	mMesh->SetRelativeLocation(FVector(-40.f, 0.f, 0.f));
-	mMesh->SetRelativeScale3D(FVector(2.f, 1.f, 2.f));
 	mMesh->SetCollisionProfileName(FName(TEXT("NoCollision")));
+	//mMesh->SetHiddenInGame(true);
 
-	mTail = CreateDefaultSubobject<UNiagaraComponent>(TEXT("Tail"));
+	mNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("mNiagaraComponent"));
+	mNiagaraComponent->SetupAttachment(RootComponent);
 
-	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NS_ArrowTail(TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Skeleton/Effect/NS_ArrowTail.NS_ArrowTail'"));
-	if (NS_ArrowTail.Succeeded())
+	mSphere->OnComponentBeginOverlap.AddUniqueDynamic(this, &ASkill_SoulSpear::OnOverlapBegin);
+
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NS_SoulSpearAttack(TEXT("NiagaraSystem'/Game/GameContent/Particle/Lich/SoulSpear/NS_SoulSpearAttack.NS_SoulSpearAttack'"));
+	if (NS_SoulSpearAttack.Succeeded())
 	{
-		mTail->SetAsset(NS_ArrowTail.Object);
+		mAttack = NS_SoulSpearAttack.Object;
 	}
-	mTail->SetupAttachment(mMesh);
-	mTail->SetRelativeLocation(FVector(0.f, -40.f, 0.f));
-	mTail->SetRelativeRotation(FRotator(0.f, 0.f, 270.f));
+
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NS_SoulSpearCastring(TEXT("NiagaraSystem'/Game/GameContent/Particle/Lich/SoulSpear/NS_SoulSpearCasting.NS_SoulSpearCasting'"));
+	if (NS_SoulSpearCastring.Succeeded())
+	{
+		mCasting = NS_SoulSpearCastring.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NS_SoulSpearHit(TEXT("NiagaraSystem'/Game/GameContent/Particle/Lich/SoulSpear/NS_SoulSpearHit.NS_SoulSpearHit'"));
+	if (NS_SoulSpearHit.Succeeded())
+	{
+		mHit = NS_SoulSpearHit.Object;
+	}
+
+	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> NS_SoulSpearProjectile(TEXT("NiagaraSystem'/Game/GameContent/Particle/Lich/SoulSpear/NS_SoulSpearProjectile.NS_SoulSpearProjectile'"));
+	if (NS_SoulSpearProjectile.Succeeded())
+	{
+		mProjectile = NS_SoulSpearProjectile.Object;
+	}
+
+	mProjectileMovementComponent->InitialSpeed = 500.0f;
+	mProjectileMovementComponent->MaxSpeed = 500.0f;
 }
 
 void ASkill_SoulSpear::BeginPlay()
@@ -45,20 +65,43 @@ void ASkill_SoulSpear::BeginPlay()
 
 void ASkill_SoulSpear::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(world, mCasting, InLocation, InRotation);
+
 }
 
 void ASkill_SoulSpear::ReactionSkill()
 {
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	FVector InLocation = this->GetActorLocation();
+	FRotator InRotation = this->GetActorRotation();
+
+	UNiagaraFunctionLibrary::SpawnSystemAtLocation(world, mAttack, InLocation, InRotation);
+
+	mNiagaraComponent->SetAsset(mProjectile);
+	mNiagaraComponent->Activate();
+
 }
 
 void ASkill_SoulSpear::DeactiveSkill()
 {
 }
 
-void ASkill_SoulSpear::OnReady()
+void ASkill_SoulSpear::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-}
-
-void ASkill_SoulSpear::OnStart()
-{
+	if (OtherActor && (OtherActor != this) && OtherComp)
+	{
+		mNiagaraComponent->SetAsset(mHit);
+		mNiagaraComponent->Activate();
+	}
 }

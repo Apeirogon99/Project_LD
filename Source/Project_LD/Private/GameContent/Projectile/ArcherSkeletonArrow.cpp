@@ -51,11 +51,3 @@ void AArcherSkeletonArrow::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-
-void AArcherSkeletonArrow::OnReady()
-{
-}
-
-void AArcherSkeletonArrow::OnStart()
-{
-}

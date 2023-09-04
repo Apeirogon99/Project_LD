@@ -27,14 +27,7 @@ public:
 	void LineProjectileMovement(const FVector& inLocation, const FRotator& inRotation, const float& inDuration);
 	void MovementCorrection(const float inDeltaTime);
 
-	void Ready();
-	void Start();
-
 protected:
-	virtual void OnReady() {}
-	virtual void OnStart() {}
-
-private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	USphereComponent* mSphere;
 

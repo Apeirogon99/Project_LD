@@ -2638,11 +2638,11 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
         LichAnim->PlayLichAnimMontage(7);
 
-        newActor = gameState->CreateLichSkill(9, location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
+        //newActor = gameState->CreateLichSkill(9, location, rotation, objectID);
+        //if (nullptr == newActor)
+        //{
+        //    return false;
+        //}
         break;
     case 15:
         /* 주변 어두워짐 */
