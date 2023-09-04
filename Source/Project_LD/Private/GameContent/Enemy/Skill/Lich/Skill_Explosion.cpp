@@ -17,9 +17,7 @@ void ASkill_Explosion::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
 	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_Explosion.P_Lich_Explosion'")))
 	{
-		FVector Location = GetActorLocation();
-		FRotator Rotation = RootComponent->GetRelativeRotation();
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Location, Rotation,FVector(1.f));
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, InLocation, InRotation,FVector(1.f));
 	}
 }
 

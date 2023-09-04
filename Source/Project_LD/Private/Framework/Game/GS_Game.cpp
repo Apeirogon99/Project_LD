@@ -233,7 +233,7 @@ AActor* AGS_Game::CreateLichSkill(const int64 inLichSkillID, FVector inLocation,
 
         UClass* actorClass = mLichSkillClass[inLichSkillID];
         AActor* gameObject = world->SpawnActor<AActor>(actorClass, inLocation, inRotator, spawnParams);
-        UE_LOG(LogTemp, Warning, TEXT("Lich Skill Location %f %f %f"), inLocation.X, inLocation.Y, inLocation.Z);
+        UE_LOG(LogTemp, Warning, TEXT("Lich %f %f %f"), inLocation.X, inLocation.Y, inLocation.Z);
         if (gameObject->GetClass()->ImplementsInterface(ULichSkillBase::StaticClass()))
         {
             auto InterfaceVariable = Cast<ILichSkillBase>(gameObject);
