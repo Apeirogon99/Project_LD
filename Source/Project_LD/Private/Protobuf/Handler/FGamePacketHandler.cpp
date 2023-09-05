@@ -2579,19 +2579,6 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
     case 10:
         /* 소울 스피어 */
-        newLich = gameState->FindGameObject(remoteID);
-        Lich = Cast<AE_Lich>(newLich);
-        if (Lich == nullptr)
-        {
-            return false;
-        }
-
-        LichAnim = Cast<ULichAnimInstance>(Lich->GetMesh()->GetAnimInstance());
-        if (LichAnim == nullptr)
-        {
-            return false;
-        }
-
         newActor = gameState->CreateLichSkill(5, location, rotation, objectID);
         if (nullptr == newActor)
         {
@@ -2917,8 +2904,6 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
     ANC_Game* character;
     UAI_PlayerCharacter* animation;
 
-    UE_LOG(LogTemp, Warning, TEXT("Skill ID %d"), skillID);
-
     switch (skillID)
     {
     case 1:
@@ -2942,7 +2927,6 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         {
             return false;
         }
-        UE_LOG(LogTemp, Warning, TEXT("Reaction Q Play Anim Server to Client"));
         Cast<ASkill_Counter>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
     case 3:
@@ -2967,37 +2951,22 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         {
             return false;
         }
-        UE_LOG(LogTemp, Warning, TEXT("Reaction R Play Anim Server to Client"));
         Cast<ASkill_SwordSpirit>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
-        //리치스킬
-        {
-    case 5:
-        /* rise */
-        break;
-    case 6:
-        /* 해골소환 */
-        break;
-    case 7:
-        /* 기사소환 */
-        break;
-    case 8:
-        /* 블링크 어택 */
-        break;
-    case  9:
-        /* 블링크 스턴 */
-        break;
-    case 10:
-        /* 소울 스피어 */
-        newActor = gameState->FindGameObject(objectID);
-        if (newActor->GetClass()->ImplementsInterface(ULichSkillBase::StaticClass()))
-        {
-            auto Interface = Cast<ILichSkillBase>(newActor);
-            Interface->ReactionSkill(location,rotation);
-        }
-        break;
-    case 11:
-        /* 빔 */
+                // 리치스킬
+    case 5:     // rise
+    case 6:     // 해골소환
+    case 7:     // 기사소환
+    case 8:     // 블링크 어택
+    case 9:     // 블링크 스턴
+    case 10:    // 소울 스피어
+    case 11:    // 빔
+    case 12:    // 디버프
+    case 13:    // 구역 폭발
+    case 14:    // 멀티캐스팅
+    case 15:    // 주변 어두워짐
+    case 16:    // 맵 가르는 광선
+    case 17:    // 라이프 배슬
         newActor = gameState->FindGameObject(objectID);
         if (newActor->GetClass()->ImplementsInterface(ULichSkillBase::StaticClass()))
         {
@@ -3005,59 +2974,18 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
             Interface->ReactionSkill(location, rotation);
         }
         break;
-    case 12:
-        /* 디버프 */
+    case 18:    /* 러닝 */
+    case 19:    /* 차지 콤보 */
+    case 20:    /* 어퍼컷 */
+    case 21:    /* 스윙 */
+    case 22:    /* 스윙, 슬램 */
+    case 23:    /* 핸드소드스왑 */
+    case 24:    /* 버서커 */
         break;
-    case 13:
-        /* 구역 폭발 */
-        break;
-    case 14:
-        /* 멀티캐스팅 */
-        break;
-    case 15:
-        /* 주변 어두워짐 */
-        break;
-    case 16:
-        /* 맵 가르는 광선 */
-         break;
-    case 17:
-        /* 라이프 배슬 */
-        break;
-        }
-        {
-    case 18:
-        /* 러닝 */
-        break;
-    case 19:
-        /* 차지 콤보 */
-        break;
-    case 20:
-        /* 어퍼컷 */
-        break;
-    case 21:
-        /* 스윙 */
-        break;
-    case 22:
-        /* 스윙, 슬램 */
-        break;
-    case 23:
-        /* 핸드소드스왑 */
-        break;
-    case 24:
-        /* 버서커 */
-        break;
-        }
     default:
         UE_LOG(LogTemp, Warning, TEXT("Wrong SkillID"));
         break;
     }
-
-    //스킬 상속 받은거
-    //EX
-    //SkillParent* skill = Cast<SkillParent>(actor);
-    //bool ret = skill->crossCheack(remoteID, objectID, skillID);
-    //skill->ReactionSkill(location, rotation, duration)
-
     return true;
 }
 

@@ -23,7 +23,7 @@ ASkill_SoulSpear::ASkill_SoulSpear()
 	}
 	mMesh->SetupAttachment(RootComponent);
 	mMesh->SetCollisionProfileName(FName(TEXT("NoCollision")));
-	//mMesh->SetHiddenInGame(true);
+	mMesh->SetHiddenInGame(true);
 
 	mNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("mNiagaraComponent"));
 	mNiagaraComponent->SetupAttachment(RootComponent);
@@ -53,9 +53,6 @@ ASkill_SoulSpear::ASkill_SoulSpear()
 	{
 		mProjectile = NS_SoulSpearProjectile.Object;
 	}
-
-	mProjectileMovementComponent->InitialSpeed = 500.0f;
-	mProjectileMovementComponent->MaxSpeed = 500.0f;
 }
 
 void ASkill_SoulSpear::BeginPlay()
@@ -73,6 +70,8 @@ void ASkill_SoulSpear::ActiveSkill(FVector InLocation, FRotator InRotation)
 
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(world, mCasting, InLocation, InRotation);
 
+	mNiagaraComponent->SetAsset(mProjectile);
+	mNiagaraComponent->Activate();
 }
 
 void ASkill_SoulSpear::ReactionSkill(FVector Location, FRotator Rotation)
@@ -85,9 +84,13 @@ void ASkill_SoulSpear::ReactionSkill(FVector Location, FRotator Rotation)
 
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(world, mAttack, Location, Rotation);
 
-	//mNiagaraComponent->SetAsset(mProjectile);
-	//mNiagaraComponent->Activate();
+	FVector foward =  Rotation.Quaternion().GetForwardVector();
+	this->InitProjectile(1000.0f, 1000.0f);
 
+	FVector velocity = foward * this->mMaxSpeed;
+	mProjectileMovementComponent->Velocity = velocity;
+
+	this->ActiveProjectile();
 }
 
 void ASkill_SoulSpear::DeactiveSkill()
@@ -96,9 +99,14 @@ void ASkill_SoulSpear::DeactiveSkill()
 
 void ASkill_SoulSpear::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
-		mNiagaraComponent->SetAsset(mHit);
-		mNiagaraComponent->Activate();
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(world, mHit, SweepResult.ImpactPoint, this->GetActorRotation());
 	}
 }

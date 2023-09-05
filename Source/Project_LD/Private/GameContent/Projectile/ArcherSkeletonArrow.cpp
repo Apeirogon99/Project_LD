@@ -45,6 +45,19 @@ void AArcherSkeletonArrow::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	FVector foward = this->GetActorRotation().Quaternion().GetForwardVector();
+	this->InitProjectile(1000.0f, 1000.0f);
+
+	FVector velocity = foward * this->mMaxSpeed;
+	mProjectileMovementComponent->Velocity = velocity;
+
+	this->ActiveProjectile();
 }
 
 void AArcherSkeletonArrow::Tick(float DeltaTime)
