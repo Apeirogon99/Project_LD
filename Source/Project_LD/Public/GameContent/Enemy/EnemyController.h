@@ -47,5 +47,6 @@ private:
 	float mStartTime;
 	float mTimeElapsed;
 
+	float mTeleportCool;
 	float mCorrectionVelocity;
 };

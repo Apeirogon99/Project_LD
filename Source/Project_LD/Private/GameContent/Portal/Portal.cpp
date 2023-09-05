@@ -12,6 +12,13 @@ APortal::APortal()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	mSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereRoot"));
+	mSphere->InitSphereRadius(20.f);
+
+	RootComponent = mSphere;
+
+	mSphere->OnComponentBeginOverlap.AddUniqueDynamic(this, &APortal::OnOverlapBegin);
+
 	mNiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("mNiagaraComponent"));
 	mNiagaraComponent->SetupAttachment(RootComponent);
 
@@ -28,11 +35,6 @@ APortal::APortal()
 	{
 		mBurst = NS_Burst.Object;
 	}
-
-	mSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereRoot"));
-	mSphere->InitSphereRadius(20.f);
-
-	mSphere->OnComponentBeginOverlap.AddUniqueDynamic(this, &APortal::OnOverlapBegin);
 }
 
 void APortal::BeginPlay()

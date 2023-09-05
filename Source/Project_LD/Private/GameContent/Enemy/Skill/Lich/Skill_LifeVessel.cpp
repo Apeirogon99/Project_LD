@@ -2,12 +2,16 @@
 
 
 #include "GameContent/Enemy/Skill/Lich/Skill_LifeVessel.h"
+#include "GameContent/Enemy/EnemyController.h"
+#include "GameContent/Enemy/EnemyState.h"
+#include <Framework/Game/GS_Game.h>
+
+#include <Network/NetworkUtils.h>
 
 // Sets default values
 ASkill_LifeVessel::ASkill_LifeVessel()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
@@ -28,6 +32,48 @@ void ASkill_LifeVessel::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ASkill_LifeVessel::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+}
+
+void ASkill_LifeVessel::Destroyed()
+{
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+
+	AEnemyController* controller = Cast<AEnemyController>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	AEnemyState* playerState = controller->GetPlayerState<AEnemyState>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	controller->UnPossess();
+
+	gameState->RemovePlayerState(playerState);
+
+	playerState->Destroy();
+
+	world->DestroyActor(playerState);
+
+	world->DestroyActor(controller);
 }
 
 // Called every frame

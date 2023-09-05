@@ -59,4 +59,5 @@ private:
 	float		mCorrectionVelocity;
 
 	bool		mTeleport;
+	float		mTeleportCool;
 };

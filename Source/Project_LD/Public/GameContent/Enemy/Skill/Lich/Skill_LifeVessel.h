@@ -4,15 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "LichSkillBase.h"
+#include "GameContent/Enemy/EnemyBase.h"
 #include "Skill_LifeVessel.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_LifeVessel : public AActor, public ILichSkillBase
+class PROJECT_LD_API ASkill_LifeVessel : public AEnemyBase, public ILichSkillBase
 {
 	GENERATED_BODY()
 	
 public:	
-	// Sets default values for this actor's properties
 	ASkill_LifeVessel();
 
 public:
@@ -21,8 +21,9 @@ public:
 	virtual void DeactiveSkill() override;
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void Destroyed() override;
 
 public:	
 	// Called every frame

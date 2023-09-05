@@ -19,6 +19,8 @@ AEnemyController::AEnemyController()
 	IsLocationCorrection = false;
 	IsRotationCorrection = false;
 	mTeleport = false;
+
+	mTeleportCool = 0.0f;
 	mCorrectionVelocity = 0.0f;
 }
 
@@ -35,17 +37,7 @@ void AEnemyController::Destroyed()
 void AEnemyController::Tick(float DeltaTime)
 {
 
-	if (mTeleport)
-	{
-		static float tpTime = 0.0f;
-		tpTime += DeltaTime;
-		if (tpTime >= 1.0f)
-		{
-			mTeleport = false;
-		}
-		tpTime = 0.0f;
-	}
-	else
+	if (false == mTeleport)
 	{
 		if (IsMoveCorrection || IsLocationCorrection)
 		{
@@ -55,6 +47,15 @@ void AEnemyController::Tick(float DeltaTime)
 		if (IsRotationCorrection)
 		{
 			RotationCorrection(DeltaTime);
+		}
+	}
+	else
+	{
+		mTeleportCool += DeltaTime;
+		if (mTeleportCool >= 1.0f)
+		{
+			mTeleport = true;
+			mTeleportCool = 0.0f;
 		}
 	}
 
@@ -71,19 +72,10 @@ void AEnemyController::OnTeleport_Implementation(const FVector& DestLocation)
 	mTargetLoction = DestLocation;
 	IsMoveCorrection = false;
 	mTeleport = true;
-
-	pawn->GetMovementComponent()->StopActiveMovement();
-
-	pawn->SetActorLocation(DestLocation, false, nullptr, ETeleportType::ResetPhysics);
 }
 
 void AEnemyController::MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
 {
-	if (mTeleport)
-	{
-		return;
-	}
-
 	APawn* pawn = this->GetPawn();
 	if (nullptr == pawn)
 	{
@@ -104,15 +96,6 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	const float speed = enemyState->GetEnemyStats().GetMovementSpeed();
 	character->GetCharacterMovement()->MaxWalkSpeed = speed;
 
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
-
-	float movedistance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
-	if (movedistance < 1.0f)
-	{
-		pawn->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
-		return;
-	}
-
 	FVector	direction = inNewMovementLocation - inOldMovementLocation;
 	FRotator rotation = direction.Rotation();
 	FVector foward = rotation.Quaternion().GetForwardVector();
@@ -123,14 +106,25 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
 
-	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
 	FVector curLocation = character->GetActorLocation();
-	float locationDistance = FVector::Dist2D(curLocation, deadReckoningLocation);
-	if (locationDistance > 1.0f)
+	float distance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
+	if (distance <= 1.0f)
 	{
-		IsMoveCorrection = true;
-		mTargetLoction = deadReckoningLocation;
-		mCorrectionVelocity = 0.2f;
+		IsMoveCorrection = false;
+		mTargetLoction = inNewMovementLocation;
+		character->SetActorLocation(inNewMovementLocation);
+		this->StopMovement();
+	}
+	else
+	{
+		distance = FVector::Dist(curLocation, deadReckoningLocation);
+		if (distance > 1.0f)
+		{
+			IsMoveCorrection = true;
+			mTargetLoction = deadReckoningLocation;
+			mCorrectionVelocity = 0.1f;
+			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
+		}
 	}
 
 	IsRotationCorrection = true;
