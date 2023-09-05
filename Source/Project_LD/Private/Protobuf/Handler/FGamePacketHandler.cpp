@@ -17,6 +17,7 @@
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
 
+#include <GameContent/Portal/Portal.h>
 #include <GameContent/Enemy/EnemyController.h>
 #include <GameContent/Enemy/EnemyState.h>
 #include <GameContent/Enemy/EnemyBase.h>
@@ -1611,6 +1612,34 @@ bool Handle_S2C_AppearArrow(ANetworkController* controller, Protocol::S2C_Appear
 
 bool Handle_S2C_AppearProtal(ANetworkController* controller, Protocol::S2C_AppearProtal& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64     objectID = pkt.object_id();
+    const FVector   location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    const FRotator  rotation = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
+
+    if (nullptr != gameState->FindGameObject(objectID))
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearProtal] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AActor* newActor = gameState->CreateGameObject(APortal::StaticClass(), location, rotation, objectID);
+    if (nullptr == newActor)
+    {
+        return false;
+    }
+
     return true;
 }
 
