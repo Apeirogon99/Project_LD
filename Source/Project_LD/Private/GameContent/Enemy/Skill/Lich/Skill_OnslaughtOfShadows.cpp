@@ -13,6 +13,7 @@ ASkill_OnslaughtOfShadows::ASkill_OnslaughtOfShadows()
 
 void ASkill_OnslaughtOfShadows::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
+	UE_LOG(LogTemp, Warning, TEXT("ASkill_OnslaughtOfShadows"));
 }
 
 void ASkill_OnslaughtOfShadows::ReactionSkill(FVector InLocation, FRotator InRotation)

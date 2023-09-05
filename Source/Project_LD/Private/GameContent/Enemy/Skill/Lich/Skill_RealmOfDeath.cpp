@@ -2,6 +2,8 @@
 
 
 #include "GameContent/Enemy/Skill/Lich/Skill_RealmOfDeath.h"
+#include <Kismet/GameplayStatics.h>
+#include "Particles/ParticleSystem.h"
 
 // Sets default values
 ASkill_RealmOfDeath::ASkill_RealmOfDeath()
@@ -13,6 +15,11 @@ ASkill_RealmOfDeath::ASkill_RealmOfDeath()
 
 void ASkill_RealmOfDeath::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/VFX_AoE_ShockWave/Particles/P_AOE_10.P_AOE_10'")))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Location %f %f %f"), InLocation.X, InLocation.Y, InLocation.Z);
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, InLocation, InRotation, FVector(1.f));
+	}
 }
 
 void ASkill_RealmOfDeath::ReactionSkill(FVector InLocation, FRotator InRotation)

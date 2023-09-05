@@ -2538,6 +2538,10 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         }
         break;
     case 7:
+        /* 해골소환 */
+
+        break;
+    case 8:
         /* 기사소환 */
         newLich = gameState->FindGameObject(remoteID);
         Lich = Cast<AE_Lich>(newLich);
@@ -2560,7 +2564,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
         break;
-    case 8:
+    case 9:
         /* 블링크 어택 */
         newLich = gameState->FindGameObject(remoteID);
         Lich = Cast<AE_Lich>(newLich);
@@ -2583,7 +2587,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
         break;
-    case  9:
+    case  10:
         /* 블링크 스턴 */
         newLich = gameState->FindGameObject(remoteID);
         Lich = Cast<AE_Lich>(newLich);
@@ -2606,7 +2610,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
         break;
-    case 10:
+    case 11:
         /* 소울 스피어 */
         newActor = gameState->CreateLichSkill(5, location, rotation, objectID);
         if (nullptr == newActor)
@@ -2614,7 +2618,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
         break;
-    case 11:
+    case 12:
         /* 빔 */
         newLich = gameState->FindGameObject(remoteID);
         Lich = Cast<AE_Lich>(newLich);
@@ -2637,7 +2641,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
         break;
-    case 12:
+    case 13:
         /* 디버프 */
         newLich = gameState->FindGameObject(remoteID);
         Lich = Cast<AE_Lich>(newLich);
@@ -2660,7 +2664,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
         break;
-    case 13:
+    case 14:
         /* 구역 폭발 */
         newLich = gameState->FindGameObject(remoteID);
         Lich = Cast<AE_Lich>(newLich);
@@ -2683,7 +2687,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         //    return false;
         //}
         break;
-    case 14:
+    case 15:
         /* 멀티캐스팅 */
         newLich = gameState->FindGameObject(remoteID);
         Lich = Cast<AE_Lich>(newLich);
@@ -2706,7 +2710,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         //    return false;
         //}
         break;
-    case 15:
+    case 16:
         /* 주변 어두워짐 */
         newActor = gameState->CreateLichSkill(10, location, rotation, objectID);
         if (nullptr == newActor)
@@ -2714,7 +2718,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
         break;
-    case 16:
+    case 17:
         /* 맵 가르는 광선 */
         newActor = gameState->CreateLichSkill(11, location, rotation, objectID);
         if (nullptr == newActor)
@@ -2722,7 +2726,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
         break;
-    case 17:
+    case 18:
         /* 라이프 배슬 */
         newActor = gameState->CreateLichSkill(12, location, rotation, objectID);
         if (nullptr == newActor)
@@ -2732,7 +2736,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         break;
         }
         {
-    case 18:
+    case 19:
         /* 러닝 */
         newDarkKnight = gameState->FindGameObject(remoteID);
         DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
@@ -2755,7 +2759,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         //    return false;
         //}
         break;
-    case 19:
+    case 20:
         /* 차지 콤보 */
         newDarkKnight = gameState->FindGameObject(remoteID);
         DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
@@ -2778,7 +2782,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         //    return false;
         //}
         break;
-    case 20:
+    case 21:
         /* 어퍼컷 */
         newDarkKnight = gameState->FindGameObject(remoteID);
         DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
@@ -2801,7 +2805,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         //    return false;
         //}
         break;
-    case 21:
+    case 22:
         /* 스윙 */
         newDarkKnight = gameState->FindGameObject(remoteID);
         DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
@@ -2824,7 +2828,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         //    return false;
         //}
         break;
-    case 22:
+    case 23:
         /* 스윙, 슬램 */
         newDarkKnight = gameState->FindGameObject(remoteID);
         DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
@@ -2847,7 +2851,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         //    return false;
         //}
         break;
-    case 23:
+    case 24:
         /* 핸드소드스왑 */
         newDarkKnight = gameState->FindGameObject(remoteID);
         DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);
@@ -2870,7 +2874,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         //    return false;
         //}
         break;
-    case 24:
+    case 25:
         /* 버서커 */
         newDarkKnight = gameState->FindGameObject(remoteID);
         DarkKnight = Cast<AE_DarkKnight>(newDarkKnight);

@@ -49,6 +49,7 @@ AGS_Game::AGS_Game()
         mLichSkillClass.Add(ASkill_BlinkStun::StaticClass());
         mLichSkillClass.Add(ASkill_SoulSpear::StaticClass());
         mLichSkillClass.Add(ASkill_SoulSpark::StaticClass());
+        mLichSkillClass.Add(ASkill_SoulSpark::StaticClass());
         mLichSkillClass.Add(ASkill_SoulShackles::StaticClass());
         mLichSkillClass.Add(ASkill_Explosion::StaticClass());
         mLichSkillClass.Add(ASkill_MultiCasting::StaticClass());

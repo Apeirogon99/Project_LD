@@ -21,7 +21,8 @@ void ASkill_SoulSpark::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/NS_SoulSpark.NS_SoulSpark'")))
 	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, InLocation, InRotation, FVector(1), true);
+		FVector Loc = InLocation + InRotation.Quaternion().GetForwardVector() * 100.f;
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Loc, InRotation, FVector(1), true);
 	}
 }
 

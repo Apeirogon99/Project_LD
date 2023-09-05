@@ -2,6 +2,8 @@
 
 
 #include "GameContent/Enemy/Skill/Lich/Skill_SoulShackles.h"
+#include <Kismet/GameplayStatics.h>
+#include "Particles/ParticleSystem.h"
 
 // Sets default values
 ASkill_SoulShackles::ASkill_SoulShackles()
@@ -13,6 +15,10 @@ ASkill_SoulShackles::ASkill_SoulShackles()
 
 void ASkill_SoulShackles::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_Shackles.P_Lich_Shackles'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, InLocation, InRotation, FVector(1.f));
+	}
 }
 
 void ASkill_SoulShackles::ReactionSkill(FVector InLocation, FRotator InRotation)
