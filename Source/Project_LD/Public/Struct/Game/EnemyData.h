@@ -17,7 +17,7 @@ enum class EEnemyStateType : uint8
 	State_Idle			UMETA(DisplayName = "Idle"),
 	State_Round			UMETA(DisplayName = "Round"),
 	State_Recovery		UMETA(DisplayName = "Recovery"),
-	State_Search			UMETA(DisplayName = "Search"),
+	State_Search		UMETA(DisplayName = "Search"),
 	State_Chase			UMETA(DisplayName = "Chase"),
 	State_Attack		UMETA(DisplayName = "Attack"),
 	State_Hit			UMETA(DisplayName = "Hit"),

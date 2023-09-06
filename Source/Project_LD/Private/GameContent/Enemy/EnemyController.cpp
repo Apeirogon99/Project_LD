@@ -111,6 +111,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	if (distance <= 1.0f)
 	{
 		IsMoveCorrection = false;
+		IsLocationCorrection = false;
 		mTargetLoction = inNewMovementLocation;
 		character->SetActorLocation(inNewMovementLocation);
 		this->StopMovement();
@@ -121,6 +122,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 		if (distance > 1.0f)
 		{
 			IsMoveCorrection = true;
+			IsLocationCorrection = false;
 			mTargetLoction = deadReckoningLocation;
 			mCorrectionVelocity = 0.1f;
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
@@ -159,23 +161,17 @@ void AEnemyController::AnimationMoveDestination(const FVector inStartLocation, c
 
 	FVector velocity = foward * speed;
 
-	//아마 이거하면 뒤 돌아버릴듯
 	character->GetCharacterMovement()->MaxWalkSpeed = speed;
-	//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inEndLocation);
-
 	FVector deadReckoningLocation = inStartLocation + (velocity * timeDuration);
-	//character->SetActorLocation(deadReckoningLocation);
 
+	IsMoveCorrection = false;
 	IsLocationCorrection= true;
+
 	mStartLocation = deadReckoningLocation;
 	mTargetLoction = inEndLocation;
 	mCorrectionVelocity = speed;
 	mStartTime = moveDuration - timeDuration;
 	mTimeElapsed = 0.0f;
-
-	//character->SetActorRotation(direction);
-	//IsRotationCorrection = true;
-	//mTargetRotation = direction;
 }
 
 void AEnemyController::MoveCorrection(const float inDeltaTime)

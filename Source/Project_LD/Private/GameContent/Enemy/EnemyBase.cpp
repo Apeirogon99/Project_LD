@@ -21,6 +21,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/ProgressBar.h"
+#include <NetworkUtils.h>
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -213,6 +214,9 @@ void AEnemyBase::ChangeState(const EEnemyStateType inStateType, float inStartTim
 	case EEnemyStateType::State_Recovery:
 		enemyAnimationInstance->OnRecovery(inStartTime);
 		break;
+	case EEnemyStateType::State_Search:
+		enemyAnimationInstance->OnSearch(inStartTime);
+		break;
 	case EEnemyStateType::State_Chase:
 		enemyAnimationInstance->OnChase(inStartTime);
 		break;
@@ -229,6 +233,7 @@ void AEnemyBase::ChangeState(const EEnemyStateType inStateType, float inStartTim
 		enemyAnimationInstance->OnDeath(inStartTime);
 		break;
 	default:
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("INVALID Enemy State")), ELogLevel::Error);
 		break;
 	}
 }
