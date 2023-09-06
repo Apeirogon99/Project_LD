@@ -44,11 +44,11 @@ AGS_Game::AGS_Game()
     {
         mLichSkillClass.Add(ASkill_Rise::StaticClass());
         mLichSkillClass.Add(ASkill_RiseSkeleton::StaticClass());
+        mLichSkillClass.Add(ASkill_RiseSkeleton::StaticClass());
         mLichSkillClass.Add(ASkill_RiseDarkKnight::StaticClass());
         mLichSkillClass.Add(ASkill_BlinkAttack::StaticClass());
         mLichSkillClass.Add(ASkill_BlinkStun::StaticClass());
         mLichSkillClass.Add(ASkill_SoulSpear::StaticClass());
-        mLichSkillClass.Add(ASkill_SoulSpark::StaticClass());
         mLichSkillClass.Add(ASkill_SoulSpark::StaticClass());
         mLichSkillClass.Add(ASkill_SoulShackles::StaticClass());
         mLichSkillClass.Add(ASkill_Explosion::StaticClass());

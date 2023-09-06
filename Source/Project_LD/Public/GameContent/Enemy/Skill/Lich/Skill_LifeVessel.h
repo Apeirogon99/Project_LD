@@ -8,7 +8,7 @@
 #include "Skill_LifeVessel.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_LifeVessel : public AEnemyBase, public ILichSkillBase
+class PROJECT_LD_API ASkill_LifeVessel : public AActor, public ILichSkillBase
 {
 	GENERATED_BODY()
 	
@@ -22,8 +22,6 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void Destroyed() override;
 
 public:	
 	// Called every frame

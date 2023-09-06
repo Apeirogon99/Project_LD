@@ -34,48 +34,6 @@ void ASkill_LifeVessel::BeginPlay()
 	
 }
 
-void ASkill_LifeVessel::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	Super::EndPlay(EndPlayReason);
-}
-
-void ASkill_LifeVessel::Destroyed()
-{
-	UWorld* world = GetWorld();
-	if (nullptr == world)
-	{
-		return;
-	}
-
-	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
-	if (nullptr == gameState)
-	{
-		return;
-	}
-
-	AEnemyController* controller = Cast<AEnemyController>(GetController());
-	if (nullptr == controller)
-	{
-		return;
-	}
-
-	AEnemyState* playerState = controller->GetPlayerState<AEnemyState>();
-	if (nullptr == playerState)
-	{
-		return;
-	}
-
-	controller->UnPossess();
-
-	gameState->RemovePlayerState(playerState);
-
-	playerState->Destroy();
-
-	world->DestroyActor(playerState);
-
-	world->DestroyActor(controller);
-}
-
 // Called every frame
 void ASkill_LifeVessel::Tick(float DeltaTime)
 {
