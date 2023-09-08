@@ -42,6 +42,10 @@ void AE_Lich::ActiveMultiCastParticle()
 	}
 }
 
+void AE_Lich::OnDisappear_Implementation()
+{
+}
+
 void AE_Lich::BeginPlay()
 {
 	Super::BeginPlay();
@@ -87,6 +91,10 @@ void AE_Lich::Destroyed()
 	world->DestroyActor(playerState);
 
 	world->DestroyActor(controller);
+}
+
+void AE_Lich::OnAppear_Implementation()
+{
 }
 
 void AE_Lich::Tick(float DeltaTime)

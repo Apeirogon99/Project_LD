@@ -32,5 +32,5 @@ public:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		UNiagaraComponent* mActiveNiagara;
+	UNiagaraComponent* mActiveNiagara;
 };

@@ -22,6 +22,14 @@ public:
 	void PlayLichAnim(int32 Index);
 	void ActiveMultiCastParticle();
 
+	UFUNCTION(BlueprintNativeEvent)
+	void OnDisappear();
+	virtual void OnDisappear_Implementation();
+	
+	UFUNCTION(BlueprintNativeEvent)
+	void OnAppear();
+	virtual void OnAppear_Implementation();
+
 public:
 	virtual void Tick(float DeltaTime) override;
 

@@ -18,7 +18,7 @@ void ASkill_Explosion::ActiveSkill(FVector InLocation, FRotator InRotation)
 	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_Explosion.P_Lich_Explosion'")))
 	{
 		FVector Location = InLocation;
-		Location.Z = Location.Z + 20.0f;
+		Location.Z = Location.Z + 1.0f;
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, Location, InRotation,FVector(1.f));
 	}
 }
