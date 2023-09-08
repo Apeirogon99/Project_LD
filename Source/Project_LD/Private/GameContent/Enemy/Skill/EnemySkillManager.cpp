@@ -209,7 +209,7 @@ void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor
         case 8:
         case 11:
         case 12:
-            object = gameState->CreateGameObject(SkillClass, InLocation, InRotator, InobjectID);
+            object = gameState->FindGameObject(InobjectID);
             if (object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
             {
                 auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
