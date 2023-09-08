@@ -93,7 +93,7 @@ void ASkill_SoulSpear::ReactionSkill(FVector Location, FRotator Rotation)
 	this->ActiveProjectile();
 }
 
-void ASkill_SoulSpear::DeactiveSkill()
+void ASkill_SoulSpear::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

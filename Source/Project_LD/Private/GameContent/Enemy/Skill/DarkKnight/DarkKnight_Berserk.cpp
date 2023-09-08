@@ -19,7 +19,7 @@ void ADarkKnight_Berserk::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ADarkKnight_Berserk::DeactiveSkill()
+void ADarkKnight_Berserk::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

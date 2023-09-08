@@ -18,8 +18,6 @@ ASkill_Counter::ASkill_Counter()
 	{
 		mAppearParticle = PARTICLE.Object;
 	}
-
-
 }
 
 void ASkill_Counter::AppearSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration)

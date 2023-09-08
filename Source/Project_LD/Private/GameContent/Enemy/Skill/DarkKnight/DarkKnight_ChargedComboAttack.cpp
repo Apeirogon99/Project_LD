@@ -19,7 +19,7 @@ void ADarkKnight_ChargedComboAttack::ReactionSkill(FVector InLocation, FRotator 
 {
 }
 
-void ADarkKnight_ChargedComboAttack::DeactiveSkill()
+void ADarkKnight_ChargedComboAttack::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

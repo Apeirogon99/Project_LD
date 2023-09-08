@@ -23,7 +23,7 @@ void ASkill_LifeVessel::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ASkill_LifeVessel::DeactiveSkill()
+void ASkill_LifeVessel::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

@@ -27,7 +27,7 @@ void ASkill_RealmOfDeath::ReactionSkill(FVector InLocation, FRotator InRotation)
 	}
 }
 
-void ASkill_RealmOfDeath::DeactiveSkill()
+void ASkill_RealmOfDeath::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

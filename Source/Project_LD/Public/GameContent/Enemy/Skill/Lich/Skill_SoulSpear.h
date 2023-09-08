@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameContent/Enemy/Skill/Lich/LichSkillBase.h"
+#include <GameContent/Enemy/Skill/EnemySkillInterface.h>
 #include "GameContent/Projectile/LineProjectile.h"
 #include "Skill_SoulSpear.generated.h"
 
@@ -14,7 +14,7 @@ class UNiagaraSystem;
  * 
  */
 UCLASS()
-class PROJECT_LD_API ASkill_SoulSpear : public ALineProjectile, public ILichSkillBase
+class PROJECT_LD_API ASkill_SoulSpear : public ALineProjectile, public IEnemySkillInterface
 {
 	GENERATED_BODY()
 
@@ -27,7 +27,7 @@ protected:
 public:
 	virtual void ActiveSkill(FVector InLocation, FRotator InRotation) override;
 	virtual void ReactionSkill(FVector InLocation, FRotator InRotation) override;
-	virtual void DeactiveSkill() override;
+	virtual void DeactiveSkill(FVector InLocation, FRotator InRotation) override;
 
 	UFUNCTION()
 		void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

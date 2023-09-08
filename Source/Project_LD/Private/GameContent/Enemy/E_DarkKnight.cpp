@@ -5,6 +5,7 @@
 #include "GameContent/Enemy/EnemyController.h"
 #include "GameContent/Enemy/EnemyState.h"
 #include <Framework/Game/GS_Game.h>
+#include <GameContent/Enemy/DarkKnightAnimInstance.h>
 
 #include <Network/NetworkUtils.h>
 
@@ -14,6 +15,16 @@ AE_DarkKnight::AE_DarkKnight()
 
 AE_DarkKnight::~AE_DarkKnight()
 {
+}
+
+void AE_DarkKnight::PlayDarkKnightAnim(int32 Index)
+{
+	UDarkKnightAnimInstance* animInstance = Cast<UDarkKnightAnimInstance>(GetMesh()->GetAnimInstance());
+	if (animInstance == nullptr)
+	{
+		return;
+	}
+	animInstance->PlayDarkKnightAnimMontage(Index);
 }
 
 void AE_DarkKnight::BeginPlay()

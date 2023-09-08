@@ -24,11 +24,9 @@ public:
 	AActor*		CreateNPCCharacter(FVector inLocation, FRotator inRotator, FCharacterData& inCharacterData, const int64 inRemoteID);
 	AActor*		CreateEnemyCharacter(const int32 inEnemyID, FVector inLocation, FRotator inRotator, const int64 inGameObjectID);
 	AActor*		CreateGameObject(UClass* inUClass, FVector inLocation, FRotator inRotator, const int64 inGameObjectID);
-	AActor*		CreateDarkKnightSkill(const int64 inDarkKnightSkillID, FVector inLocation, FRotator inRotator, const int64 inGameObjectID);
-	AActor*		CreateLichSkill(const int64 inLichSkillID, FVector inLocation, FRotator inRotator, const int64 inGameObjectID);
 	AActor*		FindGameObject(const int64 inGameObject);
 	bool				RemoveGameObject(const int64 inGameObjectID);
-
+		
 	UFUNCTION(BlueprintCallable, Category = "NetworkGameState")
 	AController*			FindPlayerController(const int64 inRemoteID);
 
@@ -37,10 +35,4 @@ public:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GameState", meta = (AllowPrivateAccess = "true"))
 	TMap<int64, AActor*> mGameObjects;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LichSkillClass", meta = (AllowPrivateAccess = "true"))
-	TArray<UClass*> mLichSkillClass;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LichSkillClass", meta = (AllowPrivateAccess = "true"))
-	TArray<UClass*> mDarkKnightSkillClass;
 };

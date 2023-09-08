@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "LichSkillBase.h"
+#include <GameContent/Enemy/Skill/EnemySkillInterface.h>
 #include "Skill_RiseDarkKnight.generated.h"
 
 UCLASS()
-class PROJECT_LD_API ASkill_RiseDarkKnight : public AActor, public ILichSkillBase
+class PROJECT_LD_API ASkill_RiseDarkKnight : public AActor, public IEnemySkillInterface
 {
 	GENERATED_BODY()
 	
@@ -18,7 +18,7 @@ public:
 public:
 	virtual void ActiveSkill(FVector InLocation, FRotator InRotation) override;
 	virtual void ReactionSkill(FVector InLocation, FRotator InRotation) override;
-	virtual void DeactiveSkill() override;
+	virtual void DeactiveSkill(FVector InLocation, FRotator InRotation) override;
 
 protected:
 	// Called when the game starts or when spawned

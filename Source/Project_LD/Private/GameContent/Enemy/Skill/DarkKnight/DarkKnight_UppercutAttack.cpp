@@ -19,7 +19,7 @@ void ADarkKnight_UppercutAttack::ReactionSkill(FVector InLocation, FRotator InRo
 {
 }
 
-void ADarkKnight_UppercutAttack::DeactiveSkill()
+void ADarkKnight_UppercutAttack::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

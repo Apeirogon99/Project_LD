@@ -18,6 +18,8 @@ public:
 	AE_DarkKnight();
 	~AE_DarkKnight();
 
+	void PlayDarkKnightAnim(int32 Index);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

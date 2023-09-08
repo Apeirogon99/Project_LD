@@ -18,11 +18,22 @@ public:
 	AE_Lich();
 	~AE_Lich();
 
+public:
+	void PlayLichAnim(int32 Index);
+	void ActiveMultiCastParticle();
+
+public:
+	virtual void Tick(float DeltaTime) override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Destroyed() override;
 
-public:
-	virtual void Tick(float DeltaTime) override;
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* mRightMultiCastParticle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* mLeftMultiCastParticle;
 };

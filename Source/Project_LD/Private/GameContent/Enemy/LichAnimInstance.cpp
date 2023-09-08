@@ -12,51 +12,46 @@ ULichAnimInstance::~ULichAnimInstance()
 {
 }
 
-void ULichAnimInstance::PlayLichAnimMontage(int32 InSkillID)
+void ULichAnimInstance::PlayLichAnimMontage(int32 Index)
 {
-	Montage_Play(mLichSkillMontage[InSkillID]);
+	Montage_Play(mLichSkillMontage[Index]);
 }
 
 void ULichAnimInstance::InitSkillMontage()
 {
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL1(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_RiseSkeleton.M_Lich_RiseSkeleton'"));
-	if (LICH_SKILL1.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> RISEHAND(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_RasieHand.M_Lich_RasieHand'"));
+	if (RISEHAND.Succeeded())
 	{
-		mLichSkillMontage.Add(LICH_SKILL1.Object);
+		mLichSkillMontage.Add(RISEHAND.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL2(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_RiseDarkKnight.M_Lich_RiseDarkKnight'"));
-	if (LICH_SKILL2.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> BLINKATTACK_ACTIVE(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_BlinkAttack_Active.M_Lich_BlinkAttack_Active'"));
+	if (BLINKATTACK_ACTIVE.Succeeded())
 	{
-		mLichSkillMontage.Add(LICH_SKILL2.Object);
+		mLichSkillMontage.Add(BLINKATTACK_ACTIVE.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL3(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_BlinkAttack.M_Lich_BlinkAttack'"));
-	if (LICH_SKILL3.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> BLINKATTACK_REACTION(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_BlinkAttack_Reaction.M_Lich_BlinkAttack_Reaction'"));
+	if (BLINKATTACK_REACTION.Succeeded())
 	{
-		mLichSkillMontage.Add(LICH_SKILL3.Object);
+		mLichSkillMontage.Add(BLINKATTACK_REACTION.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL4(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_BlinkStun.M_Lich_BlinkStun'"));
-	if (LICH_SKILL4.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> BLINKSTUN_ACTIVE(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_BlinkStun_Active.M_Lich_BlinkStun_Active'"));
+	if (BLINKSTUN_ACTIVE.Succeeded())
 	{
-		mLichSkillMontage.Add(LICH_SKILL4.Object);
+		mLichSkillMontage.Add(BLINKSTUN_ACTIVE.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL5(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_SoulSpark.M_Lich_SoulSpark'"));
-	if (LICH_SKILL5.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> BLINKSTUN_REACTION(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_BlinkStun_Reaction.M_Lich_BlinkStun_Reaction'"));
+	if (BLINKSTUN_REACTION.Succeeded())
 	{
-		mLichSkillMontage.Add(LICH_SKILL5.Object);
+		mLichSkillMontage.Add(BLINKSTUN_REACTION.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL6(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_SoulShackles.M_Lich_SoulShackles'"));
-	if (LICH_SKILL6.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SOULSPARK_ACTIVE(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_SoulSpark_Active.M_Lich_SoulSpark_Active'"));
+	if (SOULSPARK_ACTIVE.Succeeded())
 	{
-		mLichSkillMontage.Add(LICH_SKILL6.Object);
+		mLichSkillMontage.Add(SOULSPARK_ACTIVE.Object);
 	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL7(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_Explosion.M_Lich_Explosion'"));
-	if (LICH_SKILL7.Succeeded())
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SOULSPARK_REACTION(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_SoulSpark_Reaction.M_Lich_SoulSpark_Reaction'"));
+	if (SOULSPARK_REACTION.Succeeded())
 	{
-		mLichSkillMontage.Add(LICH_SKILL7.Object);
-	}
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> LICH_SKILL8(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/Lich/AnimAsset/M_Lich_MultiCasting.M_Lich_MultiCasting'"));
-	if (LICH_SKILL8.Succeeded())
-	{
-		mLichSkillMontage.Add(LICH_SKILL8.Object);
+		mLichSkillMontage.Add(SOULSPARK_REACTION.Object);
 	}
 }

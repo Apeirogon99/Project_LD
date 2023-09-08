@@ -19,7 +19,7 @@ void ADarkKnight_RunningAttack::ReactionSkill(FVector InLocation, FRotator InRot
 {
 }
 
-void ADarkKnight_RunningAttack::DeactiveSkill()
+void ADarkKnight_RunningAttack::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

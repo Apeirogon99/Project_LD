@@ -19,7 +19,7 @@ void ASkill_MultiCasting::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ASkill_MultiCasting::DeactiveSkill()
+void ASkill_MultiCasting::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

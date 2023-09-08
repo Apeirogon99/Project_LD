@@ -15,7 +15,7 @@ ASkill_SoulShackles::ASkill_SoulShackles()
 
 void ASkill_SoulShackles::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
-	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_Shackles.P_Lich_Shackles'")))
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_SoulShackles_Appear.P_Lich_SoulShackles_Appear'")))
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, InLocation, InRotation, FVector(1.f));
 	}
@@ -23,9 +23,13 @@ void ASkill_SoulShackles::ActiveSkill(FVector InLocation, FRotator InRotation)
 
 void ASkill_SoulShackles::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_SoulShackles_Reaction.P_Lich_SoulShackles_Reaction'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, InLocation, InRotation, FVector(1.f));
+	}
 }
 
-void ASkill_SoulShackles::DeactiveSkill()
+void ASkill_SoulShackles::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

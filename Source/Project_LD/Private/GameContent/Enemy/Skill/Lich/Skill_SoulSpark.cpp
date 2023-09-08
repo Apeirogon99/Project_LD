@@ -26,7 +26,7 @@ void ASkill_SoulSpark::ReactionSkill(FVector InLocation, FRotator InRotation)
 	}
 }
 
-void ASkill_SoulSpark::DeactiveSkill()
+void ASkill_SoulSpark::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

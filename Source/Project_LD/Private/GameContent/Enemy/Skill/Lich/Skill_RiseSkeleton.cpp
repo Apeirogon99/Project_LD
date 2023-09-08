@@ -1,15 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameContent/Enemy/Skill/Lich/Skill_RiseSkeleton.h"
-#include "Niagara/Public/NiagaraComponent.h"
 #include "Niagara/Classes/NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
-#include <GameContent/Enemy/Skill/Lich/Skill_RiseSkeleton.h>
 
 // Sets default values
 ASkill_RiseSkeleton::ASkill_RiseSkeleton()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improvse performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 }
@@ -28,7 +26,7 @@ void ASkill_RiseSkeleton::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ASkill_RiseSkeleton::DeactiveSkill()
+void ASkill_RiseSkeleton::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

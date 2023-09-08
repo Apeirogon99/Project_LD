@@ -4,16 +4,42 @@
 #include "GameContent/Enemy/E_Lich.h"
 #include "GameContent/Enemy/EnemyController.h"
 #include "GameContent/Enemy/EnemyState.h"
+#include <GameContent/Enemy/LichAnimInstance.h>
 #include <Framework/Game/GS_Game.h>
+
+#include "Particles/ParticleSystemComponent.h"
 
 #include <Network/NetworkUtils.h>
 
 AE_Lich::AE_Lich()
 {
+	mRightMultiCastParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("RightMultiCastParticle"));
+	mLeftMultiCastParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("LeftMultiCastParticle"));
+	mRightMultiCastParticle->SetupAttachment(RootComponent);
+	mLeftMultiCastParticle->SetupAttachment(RootComponent);
 }
 
 AE_Lich::~AE_Lich()
 {
+}
+
+void AE_Lich::PlayLichAnim(int32 Index)
+{
+	ULichAnimInstance* animInstance = Cast<ULichAnimInstance>(GetMesh()->GetAnimInstance());
+	if (animInstance == nullptr)
+	{
+		return;
+	}
+	animInstance->PlayLichAnimMontage(Index);
+}
+
+void AE_Lich::ActiveMultiCastParticle()
+{
+	if (mRightMultiCastParticle && mLeftMultiCastParticle)
+	{
+		mRightMultiCastParticle->Activate();
+		mLeftMultiCastParticle->Activate();
+	}
 }
 
 void AE_Lich::BeginPlay()

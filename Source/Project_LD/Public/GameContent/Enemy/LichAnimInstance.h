@@ -19,7 +19,7 @@ public:
 	~ULichAnimInstance();
 
 public:
-	void PlayLichAnimMontage(int32 InSkillID);
+	void PlayLichAnimMontage(int32 Index);
 	
 private:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Skill | Anim", meta = (AllowPrivateAccess = "true"))

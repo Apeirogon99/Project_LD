@@ -19,7 +19,7 @@ void ADarkKnight_SwingAndSlamAttack::ReactionSkill(FVector InLocation, FRotator 
 {
 }
 
-void ADarkKnight_SwingAndSlamAttack::DeactiveSkill()
+void ADarkKnight_SwingAndSlamAttack::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

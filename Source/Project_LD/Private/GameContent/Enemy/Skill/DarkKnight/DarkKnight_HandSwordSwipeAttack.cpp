@@ -19,7 +19,7 @@ void ADarkKnight_HandSwordSwipeAttack::ReactionSkill(FVector InLocation, FRotato
 {
 }
 
-void ADarkKnight_HandSwordSwipeAttack::DeactiveSkill()
+void ADarkKnight_HandSwordSwipeAttack::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

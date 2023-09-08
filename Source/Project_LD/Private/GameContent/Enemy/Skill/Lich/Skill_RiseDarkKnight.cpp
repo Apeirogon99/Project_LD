@@ -2,6 +2,8 @@
 
 
 #include "GameContent/Enemy/Skill/Lich/Skill_RiseDarkKnight.h"
+#include "Niagara/Classes/NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 ASkill_RiseDarkKnight::ASkill_RiseDarkKnight()
@@ -13,13 +15,17 @@ ASkill_RiseDarkKnight::ASkill_RiseDarkKnight()
 
 void ASkill_RiseDarkKnight::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/DarkKnight/Particle/NS_DarkKnight_Spawn.NS_DarkKnight_Spawn'")))
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, InLocation, InRotation);
+	}
 }
 
 void ASkill_RiseDarkKnight::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
-void ASkill_RiseDarkKnight::DeactiveSkill()
+void ASkill_RiseDarkKnight::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 

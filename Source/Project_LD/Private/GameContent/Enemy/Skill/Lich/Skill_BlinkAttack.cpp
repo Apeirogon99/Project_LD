@@ -2,6 +2,8 @@
 
 
 #include "GameContent/Enemy/Skill/Lich/Skill_BlinkAttack.h"
+#include "Niagara/Classes/NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
 #include <Kismet/GameplayStatics.h>
 #include "Particles/ParticleSystem.h"
 
@@ -15,18 +17,21 @@ ASkill_BlinkAttack::ASkill_BlinkAttack()
 
 void ASkill_BlinkAttack::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
-	//if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_Blink.P_Lich_Blink'")))
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("Location %f %f %f"), InLocation.X, InLocation.Y, InLocation.Z);
-	//	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, InLocation, InRotation, FVector(1.f));
-	//}
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/NS_Lich_Blink.NS_Lich_Blink'")))
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, InLocation, InRotation);
+	}
 }
 
 void ASkill_BlinkAttack::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_Blink.P_Lich_Blink'")))
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, InLocation, InRotation, FVector(1.f));
+	}
 }
 
-void ASkill_BlinkAttack::DeactiveSkill()
+void ASkill_BlinkAttack::DeactiveSkill(FVector InLocation, FRotator InRotation)
 {
 }
 
