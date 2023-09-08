@@ -76,6 +76,8 @@ void AEnemyController::OnTeleport_Implementation(const FVector& DestLocation)
 
 void AEnemyController::MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
 {
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MoveDestination")), ELogLevel::Warning);
+
 	APawn* pawn = this->GetPawn();
 	if (nullptr == pawn)
 	{
@@ -132,13 +134,15 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	IsRotationCorrection = true;
 	mTargetRotation = direction.Rotation();
 
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], new[%ws] distance[%f]"), *inOldMovementLocation.ToString(), *deadReckoningLocation.ToString(), *inNewMovementLocation.ToString(), locationDistance), ELogLevel::Error);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws] distance[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance), ELogLevel::Error);
 
 
 }
 
 void AEnemyController::AnimationMoveDestination(const FVector inStartLocation, const FVector inEndLocation, const int64 inMoveDuration, const int64 inTimeDuration)
 {
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("AnimationMoveDestination")), ELogLevel::Warning);
+
 	APawn* pawn = this->GetPawn();
 	if (nullptr == pawn)
 	{
@@ -217,6 +221,8 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 		{
 			pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
 		}
+
+		//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("mStartTime[%f], TimeElapsed [%f], DeltaTime [%f]"), mStartTime, mTimeElapsed, inDeltaTime), ELogLevel::Error);
 	}
 
 }
