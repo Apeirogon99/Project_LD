@@ -28,4 +28,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	void ActiveParticle();
+
+private:
+	FVector mLocation;
+	FRotator mRotator;
 };

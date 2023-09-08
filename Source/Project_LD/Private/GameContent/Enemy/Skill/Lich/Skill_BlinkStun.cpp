@@ -6,6 +6,8 @@
 #include "NiagaraFunctionLibrary.h"
 #include <Kismet/GameplayStatics.h>
 #include "Particles/ParticleSystem.h"
+#include <GS_Game.h>
+#include <GameContent/Enemy/E_Lich.h>
 
 // Sets default values
 ASkill_BlinkStun::ASkill_BlinkStun()
@@ -17,14 +19,51 @@ ASkill_BlinkStun::ASkill_BlinkStun()
 
 void ASkill_BlinkStun::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
-	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/NS_Lich_Blink.NS_Lich_Blink'")))
+	AGS_Game* gameState = Cast<AGS_Game>(GetWorld()->GetGameState());
+	if (nullptr == gameState)
 	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, InLocation, InRotation);
+		return;
 	}
+	AActor* actor = gameState->FindGameObject(mRemoteID);
+	if (actor == nullptr)
+	{
+		return;
+	}
+	AE_Lich* lich = Cast<AE_Lich>(actor);
+	if (lich == nullptr)
+	{
+		return;
+	}
+
+	FTimerHandle ActiveParticleTimer;
+
+	mLocation = InLocation;
+	mRotator = InRotation;
+	lich->OnDisappear();
+
+	GetWorldTimerManager().SetTimer(ActiveParticleTimer, this, &ASkill_BlinkStun::ActiveParticle, 0.5f, false);
 }
 
 void ASkill_BlinkStun::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
+	AGS_Game* gameState = Cast<AGS_Game>(GetWorld()->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+	AActor* actor = gameState->FindGameObject(mRemoteID);
+	if (actor == nullptr)
+	{
+		return;
+	}
+	AE_Lich* lich = Cast<AE_Lich>(actor);
+	if (lich == nullptr)
+	{
+		return;
+	}
+
+	lich->OnAppear();
+
 	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_Blink.P_Lich_Blink'")))
 	{
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, InLocation, InRotation, FVector(1.f));
@@ -47,5 +86,13 @@ void ASkill_BlinkStun::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ASkill_BlinkStun::ActiveParticle()
+{
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/NS_Lich_Blink.NS_Lich_Blink'")))
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, mLocation, mRotator);
+	}
 }
 
