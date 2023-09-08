@@ -2498,7 +2498,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
     default:
         manager->Init();
         newActor = gameState->FindGameObject(remoteID);
-        manager->InputActiveSkillData(world, newActor, skillID, location, rotation, objectID);
+        manager->InputActiveSkillData(world, newActor, skillID, location, rotation, objectID, remoteID);
         break;
     }
 
@@ -2634,7 +2634,7 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
     default:
         manager->Init();
         newActor = gameState->FindGameObject(remoteID);
-        manager->InputReactionSkillData(world, newActor, skillID, location, rotation, objectID);
+        manager->InputReactionSkillData(world, newActor, skillID, location, rotation, objectID, remoteID);
         break;
     }
   

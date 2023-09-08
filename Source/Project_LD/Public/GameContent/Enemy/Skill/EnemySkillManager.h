@@ -20,9 +20,9 @@ public:
 
 public:
 	void Init();
-	void InputActiveSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID);
-	void InputReactionSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID);
-	void InputDeactiveSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID);
+	void InputActiveSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID, const int64 InremoteID);
+	void InputReactionSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID, const int64 InremoteID);
+	void InputDeactiveSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID, const int64 InremoteID);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LichSkillClass", meta = (AllowPrivateAccess = "true"))

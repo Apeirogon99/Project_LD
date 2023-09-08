@@ -72,7 +72,7 @@ void UEnemySkillManager::Init()
     }
 }
 
-void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID)
+void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID, const int64 InremoteID)
 {
     AGS_Game* gameState = Cast<AGS_Game>(InWorld->GetGameState());
     if (nullptr == gameState)
@@ -131,6 +131,7 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
             if (object && (object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass())))
             {
                 auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
+                InterfaceVariable->mRemoteID = InremoteID;
                 InterfaceVariable->ActiveSkill(InLocation, InRotator);
             }
             break;
@@ -165,7 +166,7 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
     }
 }
 
-void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID)
+void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID, const int64 InremoteID)
 {
     AGS_Game* gameState = Cast<AGS_Game>(InWorld->GetGameState());
     if (nullptr == gameState)
@@ -213,6 +214,7 @@ void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor
             if (object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
             {
                 auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
+                InterfaceVariable->mRemoteID = InremoteID;
                 InterfaceVariable->ReactionSkill(InLocation, InRotator);
             }
             break;
@@ -245,7 +247,7 @@ void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor
     }
 }
 
-void UEnemySkillManager::InputDeactiveSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID)
+void UEnemySkillManager::InputDeactiveSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID, const int64 InremoteID)
 {
     AGS_Game* gameState = Cast<AGS_Game>(InWorld->GetGameState());
     if (nullptr == gameState)
@@ -273,7 +275,8 @@ void UEnemySkillManager::InputDeactiveSkillData(UWorld* InWorld, AActor* InActor
             if (object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
             {
                 auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
-                InterfaceVariable->ReactionSkill(InLocation, InRotator);
+                InterfaceVariable->mRemoteID = InremoteID;
+                InterfaceVariable->DeactiveSkill(InLocation, InRotator);
             }
             break;
         }

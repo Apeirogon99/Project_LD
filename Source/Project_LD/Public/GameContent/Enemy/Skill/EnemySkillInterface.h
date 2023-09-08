@@ -23,6 +23,9 @@ class PROJECT_LD_API IEnemySkillInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	int64 mRemoteID;
+
+public:
 	virtual void ActiveSkill(FVector InLocation, FRotator InRotation) {}
 	virtual void ReactionSkill(FVector InLocation, FRotator InRotation) {}
 	virtual void DeactiveSkill(FVector InLocation, FRotator InRotation) {}

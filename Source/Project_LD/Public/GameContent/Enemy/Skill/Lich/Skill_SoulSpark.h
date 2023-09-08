@@ -6,6 +6,8 @@
 #include <GameContent/Enemy/Skill/EnemySkillInterface.h>
 #include "Skill_SoulSpark.generated.h"
 
+class UNiagaraComponent;
+
 UCLASS()
 class PROJECT_LD_API ASkill_SoulSpark : public AActor, public IEnemySkillInterface
 {
@@ -28,4 +30,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		UNiagaraComponent* mActiveNiagara;
 };
