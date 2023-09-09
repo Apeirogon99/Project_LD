@@ -35,23 +35,31 @@ void AGM_SelectCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void AGM_SelectCharacter::InitNetwork()
 {
+	FString ip;
+	int32 port;
+#if NETWORK_LOCAL
+	ip = FString(TEXT("116.41.116.247"));
+	port = 9000;
+#else
+	//ip = FString(TEXT("125.180.66.59"));
+	ip = FString(TEXT("127.0.0.1"));
+	port = 9000;
+#endif // Local
+
 	if (true == IsConnectedServer())
 	{
-		if (false == RequestKeepConnectServer(TEXT("116.41.116.247"), 9000))
+		if (false == RequestKeepConnectServer(ip, port))
 		{
 			NetworkGameModeLog(FString(TEXT("failed to requset keep connect server")));
 		}
 	}
 	else
 	{
-		if (false == RequestConnectServer(TEXT("116.41.116.247"), 9000))
+		if (false == RequestConnectServer(ip, port))
 		{
 			NetworkGameModeLog(FString(TEXT("failed to requset connect server")));
 		}
 	}
-
-	this->GetNetworkController()->OnTick();
-
 }
 
 void AGM_SelectCharacter::BeginNetwork()

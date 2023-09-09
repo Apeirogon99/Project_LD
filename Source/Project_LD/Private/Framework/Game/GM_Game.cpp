@@ -19,8 +19,6 @@
 
 #include <UObject/ConstructorHelpers.h>
 
-#define NETWORK_LOCAL 0
-
 AGM_Game::AGM_Game()
 {
 
