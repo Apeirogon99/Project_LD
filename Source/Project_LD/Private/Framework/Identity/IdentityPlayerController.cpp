@@ -6,8 +6,10 @@
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FCommonPacketHandler.h>
 #include <Network/NetworkUtils.h>
-
+#include <Widget/Handler/ClientHUD.h>
 #include <Network/NetworkTimeStamp.h>
+#include <Widget/Game/Main/W_MainGame.h>
+#include <Widget/WidgetUtils.h>
 
 #include <Network/RecvBuffer.h>
 #include <Network/NetworkUtils.h>
@@ -36,7 +38,29 @@ bool AIdentityPlayerController::OnRecvPacket(BYTE* buffer, const uint32 len)
 	result = FClientPacketHandler::HandlePacket(controller, buffer, len);
 	if (false == result)
 	{
-		UNetworkUtils::NetworkConsoleLog("Failed to handle packet", ELogLevel::Error);
+		PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Failed to handle packet [%d]"), header->id), ELogLevel::Error);
+
+		AClientHUD* clientHUD = Cast<AClientHUD>(controller->GetHUD());
+		if (nullptr == clientHUD)
+		{
+			UNetworkUtils::NetworkConsoleLog("Invalid client hud", ELogLevel::Error);
+			return false;
+		}
+
+		FNotificationDelegate notificationDelegate;
+		notificationDelegate.BindLambda([=]()
+			{
+				clientHUD->CleanWidgetFromName(TEXT("Notification"));
+				FGenericPlatformMisc::RequestExit(false);
+			});
+
+		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("Error"), FString::Printf(TEXT("Failed to handle packet [%d]"), header->id), TEXT("Confirm"), notificationDelegate);
+		if (ret == false)
+		{
+			return false;
+		}
+
 		return false;
 	}
 
@@ -45,16 +69,19 @@ bool AIdentityPlayerController::OnRecvPacket(BYTE* buffer, const uint32 len)
 
 bool AIdentityPlayerController::OnSend(int32 len)
 {
+	UNetworkUtils::NetworkConsoleLog("OnSend", ELogLevel::Error);
 	return true;
 }
 
 bool AIdentityPlayerController::OnConnect()
 {
+	UNetworkUtils::NetworkConsoleLog("OnConnect", ELogLevel::Error);
 	return true;
 }
 
 bool AIdentityPlayerController::OnDisconnect()
 {
+	UNetworkUtils::NetworkConsoleLog("OnDisconnect", ELogLevel::Error);
 	return true;
 }
 

@@ -12,6 +12,7 @@
 #include <IdentityPacket.pb.h>
 #include <CommonPacket.pb.h>
 #include <GamePacket.pb.h>
+#include <DungeonPacket.pb.h>
 
 class ANetworkController;
 
@@ -122,6 +123,9 @@ enum class EPakcetID : uint16
 	S2C_DebugBox = 2076,
 	S2C_DebugCircle = 2077,
 
+	C2S_EnterDungeon = 5000,
+	S2C_EnterDungeon = 5001,
+
 	C2S_ReplicatedServerTimeStamp = 9000,
 	S2C_ReplicatedServerTimeStamp = 9001,
 	C2S_TravelLevel = 9002,
@@ -172,6 +176,7 @@ private:
 	friend class FIdentityPacketHandler;
 	friend class FCommonPacketHandler;
 	friend class FGamePacketHandler;
+	friend class FDungeonPacketHandler;
 
 public:
 	static PacketFunc PacketHandler[UINT16_MAX];
