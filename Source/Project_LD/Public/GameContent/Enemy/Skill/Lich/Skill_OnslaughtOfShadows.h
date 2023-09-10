@@ -6,6 +6,8 @@
 #include <GameContent/Enemy/Skill/EnemySkillInterface.h>
 #include "Skill_OnslaughtOfShadows.generated.h"
 
+class UParticleSystemComponent;
+
 UCLASS()
 class PROJECT_LD_API ASkill_OnslaughtOfShadows : public AActor, public IEnemySkillInterface
 {
@@ -23,6 +25,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void Destroyed() override;
 
 public:	
 	// Called every frame
@@ -34,4 +37,7 @@ private:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	AActor* mActiveLine;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* mSmokeParticle;
 };

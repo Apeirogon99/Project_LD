@@ -17,7 +17,7 @@ void ASkill_RiseSkeleton::ActiveSkill(FVector InLocation, FRotator InRotation)
 	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/NS_Lich_SpawnSkeleton.NS_Lich_SpawnSkeleton'")))
 	{
 		FVector Location = InLocation;
-		Location.Z = Location.Z - 120.f;
+		Location.Z = Location.Z - 100.f;
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Location, InRotation);
 	}
 }

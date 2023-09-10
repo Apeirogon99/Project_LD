@@ -112,6 +112,9 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
             actor->PlayLichAnim(0);
             actor->ActiveMultiCastParticle();
             break;
+        case 12:
+            actor->PlayLichAnim(7);
+            break;
         }
 
         switch (InSkillID - MINLICHSKILLCODE)
@@ -148,17 +151,40 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
         UClass* SkillClass = mDarkKnightSkillClass[InSkillID - MINDARKKNIGHTSKILLCODE];
 
         AActor* object = nullptr;
-            //gameState->CreateGameObject(SkillClass, InLocation, InRotator, InobjectID);
 
-        actor->PlayDarkKnightAnim(InSkillID - MINDARKKNIGHTSKILLCODE);
-
-        /*
-        if (object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
+        //animation
+        switch (InSkillID - MINDARKKNIGHTSKILLCODE)
         {
-            auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
-            InterfaceVariable->ActiveSkill(InLocation, InRotator);
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+            actor->PlayDarkKnightAnim(InSkillID - MINDARKKNIGHTSKILLCODE);
+            break;
         }
-        */
+
+        //active 
+        switch (InSkillID - MINDARKKNIGHTSKILLCODE)
+        {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+            object = gameState->CreateGameObject(SkillClass, InLocation, InRotator, InobjectID);
+            if (object && object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
+            {
+                auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
+                InterfaceVariable->mRemoteID = InremoteID;
+                InterfaceVariable->ActiveSkill(InLocation, InRotator);
+            }
+            break;
+        }
+        
     }
     else
     {
@@ -211,7 +237,7 @@ void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor
         case 11:
         case 12:
             object = gameState->FindGameObject(InobjectID);
-            if (object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
+            if (object && object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
             {
                 auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
                 InterfaceVariable->mRemoteID = InremoteID;
@@ -230,16 +256,13 @@ void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor
 
         UClass* SkillClass = mDarkKnightSkillClass[InSkillID - MINDARKKNIGHTSKILLCODE];
 
-        AActor* object = nullptr;
-            //gameState->CreateGameObject(SkillClass, InLocation, InRotator, InobjectID);
-
-        /*
-        if (object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
+        AActor* object = gameState->FindGameObject(InobjectID);
+        if (object && object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
         {
             auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
+            InterfaceVariable->mRemoteID = InremoteID;
             InterfaceVariable->ReactionSkill(InLocation, InRotator);
         }
-        */
     }
     else
     {
@@ -271,8 +294,8 @@ void UEnemySkillManager::InputDeactiveSkillData(UWorld* InWorld, AActor* InActor
         switch (InSkillID - MINLICHSKILLCODE)
         {
         case 12:
-            object = gameState->CreateGameObject(SkillClass, InLocation, InRotator, InobjectID);
-            if (object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
+            object = gameState->FindGameObject(InobjectID);
+            if (object && object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
             {
                 auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
                 InterfaceVariable->mRemoteID = InremoteID;
@@ -292,15 +315,15 @@ void UEnemySkillManager::InputDeactiveSkillData(UWorld* InWorld, AActor* InActor
         UClass* SkillClass = mDarkKnightSkillClass[InSkillID - MINDARKKNIGHTSKILLCODE];
 
         AActor* object = nullptr;
-        //gameState->CreateGameObject(SkillClass, InLocation, InRotator, InobjectID);
 
-    /*
-    if (object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
-    {
-        auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
-        InterfaceVariable->ReactionSkill(InLocation, InRotator);
-    }
-    */
+        object = gameState->CreateGameObject(SkillClass, InLocation, InRotator, InobjectID);
+
+        if (object && object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
+        {
+            auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
+            InterfaceVariable->mRemoteID = InremoteID;
+            InterfaceVariable->DeactiveSkill(InLocation, InRotator);
+        }
     }
     else
     {

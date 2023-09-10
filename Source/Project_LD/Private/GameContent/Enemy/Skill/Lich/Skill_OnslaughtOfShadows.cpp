@@ -4,6 +4,11 @@
 #include "GameContent/Enemy/Skill/Lich/Skill_OnslaughtOfShadows.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Niagara/Classes/NiagaraSystem.h"
+#include "Particles/ParticleSystem.h"
+#include "Particles/ParticleSystemComponent.h"
+#include <Kismet/GameplayStatics.h>
+#include <GS_Game.h>
+#include <Enemy/E_Lich.h>
 
 // Sets default values
 ASkill_OnslaughtOfShadows::ASkill_OnslaughtOfShadows()
@@ -29,20 +34,34 @@ void ASkill_OnslaughtOfShadows::ActiveSkill(FVector InLocation, FRotator InRotat
 		{
 			FTimerHandle DestroyHandle;
 			FVector Location = InLocation;
-			Location.Z = Location.Z + 10.0f;
+			Location.Z = Location.Z - 199.0f;
 			mActiveLine = world->SpawnActor<AActor>(bpClass, Location, InRotation, SpawnParameters);
-
-			GetWorldTimerManager().SetTimer(DestroyHandle, this, &ASkill_OnslaughtOfShadows::DeleteActor, 3.f, false);
 		}
+	}
+	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_Dash.P_Lich_Dash'")))
+	{
+		AGS_Game* gameState = Cast<AGS_Game>(GetWorld()->GetGameState());
+		if (nullptr == gameState)
+		{
+			return;
+		}
+		AActor* actor = gameState->FindGameObject(mRemoteID);
+		if (actor == nullptr)
+		{
+			return;
+		}
+		AE_Lich* lich = Cast<AE_Lich>(actor);
+		if (lich == nullptr)
+		{
+			return;
+		}
+		mSmokeParticle = UGameplayStatics::SpawnEmitterAttached(Particle, lich->GetMesh(), TEXT("None"), FVector(0.f,0.f,30.f), FRotator(0), EAttachLocation::SnapToTarget, false);
 	}
 }
 
 void ASkill_OnslaughtOfShadows::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
-	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/sA_Megapack_v1/sA_Rayvfx/Fx/NiagaraSystems/NS_Ray_3.NS_Ray_3'")))
-	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, InLocation, InRotation, FVector(1.f));
-	}
+
 }
 
 void ASkill_OnslaughtOfShadows::DeactiveSkill(FVector InLocation, FRotator InRotation)
@@ -54,6 +73,37 @@ void ASkill_OnslaughtOfShadows::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ASkill_OnslaughtOfShadows::Destroyed()
+{
+	Super::Destroyed();
+
+	AGS_Game* gameState = Cast<AGS_Game>(GetWorld()->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+	AActor* actor = gameState->FindGameObject(mRemoteID);
+	if (actor == nullptr)
+	{
+		return;
+	}
+	AE_Lich* lich = Cast<AE_Lich>(actor);
+	if (lich == nullptr)
+	{
+		return;
+	}
+
+	lich->PlayLichAnim(8);
+
+	DeleteActor();
+
+	if (mSmokeParticle)
+	{
+		mSmokeParticle->DeactivateSystem();
+		mSmokeParticle->DestroyComponent();
+	}
 }
 
 // Called every frame

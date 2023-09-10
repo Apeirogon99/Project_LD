@@ -5,8 +5,6 @@
 #include <Network/NetworkUtils.h>
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "Particles/ParticleSystem.h"
-#include "Particles/ParticleSystemComponent.h"
 
 #include <Niagara/Public/NiagaraFunctionLibrary.h>
 #include <Niagara/Classes/NiagaraSystem.h>
