@@ -2372,6 +2372,9 @@ bool Handle_S2C_SetUseKeyAction(ANetworkController* controller, Protocol::S2C_Se
 
 bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_AppearSkill& pkt)
 {
+    UE_LOG(LogTemp, Warning, TEXT("AppearSkill Data |||| Remote ID : %d, ||||| Object ID : %d, |||| Skill ID : %d")
+        , pkt.remote_id(), pkt.object_id(), pkt.skill_id());
+
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2504,6 +2507,8 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
 bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_ReactionSkill& pkt)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Reaction Data |||| Remote ID : %d, ||||| Object ID : %d, |||| Skill ID : %d ||||||||| duration %f")
+        , pkt.remote_id(), pkt.object_id(), pkt.skill_id(),pkt.duration()/1000.f);
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2538,26 +2543,6 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
     switch (skillID)
     {
     case 1:
-        /* 버프 */
-        character = Cast<ANC_Game>(controller->GetCharacter());
-        if (nullptr == character)
-        {
-            return false;
-        }
-
-        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-        if (nullptr == animation)
-        {
-            return false;
-        }
-
-        animation->PlaySkillMontage(0, duration);
-        newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
-        Cast<ASkill_Buff>(newActor)->AppearSkill(remoteID, objectID, skillID, location, FRotator(), duration);
         break;
     case 2:
         /* 패링 */
@@ -2574,34 +2559,14 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         }
 
         animation->PlaySkillMontage(1, duration);
-        newActor = gameState->CreateGameObject(ASkill_Counter::StaticClass(), location, rotation, objectID);
+        newActor = gameState->FindGameObject(objectID);
         if (nullptr == newActor)
         {
             return false;
         }
-        Cast<ASkill_Counter>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
+        Cast<ASkill_Counter>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
     case 3:
-        /* 바닥 */
-        character = Cast<ANC_Game>(controller->GetCharacter());
-        if (nullptr == character)
-        {
-            return false;
-        }
-
-        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-        if (nullptr == animation)
-        {
-            return false;
-        }
-
-        animation->PlaySkillMontage(2, duration);
-        newActor = gameState->CreateGameObject(ASkill_SlamAttack::StaticClass(), location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
-        Cast<ASkill_SlamAttack>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
     case 4:
         /* 검기 */
@@ -2617,13 +2582,13 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
             return false;
         }
 
-        animation->PlaySkillMontage(3, duration);
-        newActor = gameState->CreateGameObject(ASkill_SwordSpirit::StaticClass(), location, rotation, objectID);
+        animation->PlaySkillMontage(4, duration);
+        newActor = gameState->FindGameObject(objectID);
         if (nullptr == newActor)
         {
             return false;
         }
-        Cast<ASkill_SwordSpirit>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
+        Cast<ASkill_SwordSpirit>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
     default:
         manager->Init();

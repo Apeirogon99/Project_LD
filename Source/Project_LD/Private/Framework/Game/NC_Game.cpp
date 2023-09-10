@@ -187,25 +187,21 @@ void ANC_Game::Destroyed()
 
 void ANC_Game::StartQTimer()
 {
-	bCanMove = true;
 	GetWorldTimerManager().SetTimer(mQTimer, this, &ANC_Game::EndQ, mQCoolDown, false);
 }
 
 void ANC_Game::StartWTimer()
 {
-	bCanMove = true;
 	GetWorldTimerManager().SetTimer(mWTimer, this, &ANC_Game::EndW, mWCoolDown, false);
 }
 
 void ANC_Game::StartETimer()
 {
-	bCanMove = true;
 	GetWorldTimerManager().SetTimer(mETimer, this, &ANC_Game::EndE, mECoolDown, false);
 }
 
 void ANC_Game::StartRTimer()
 {
-	bCanMove = true;
 	GetWorldTimerManager().SetTimer(mRTimer, this, &ANC_Game::EndR, mRCoolDown, false);
 }
 
