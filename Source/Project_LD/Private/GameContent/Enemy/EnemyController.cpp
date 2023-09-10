@@ -69,8 +69,19 @@ void AEnemyController::OnTeleport_Implementation(const FVector& DestLocation)
 		return;
 	}
 
+	ACharacter* character = Cast<ACharacter>(pawn);
+	if (nullptr == pawn)
+	{
+		return;
+	}
+	character->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
+
+	character->TeleportTo(DestLocation, character->GetActorRotation(), false, false);
+	this->StopMovement();
+
 	mTargetLoction = DestLocation;
 	IsMoveCorrection = false;
+	IsLocationCorrection = false;
 	mTeleport = true;
 }
 
@@ -176,6 +187,8 @@ void AEnemyController::AnimationMoveDestination(const FVector inStartLocation, c
 	mCorrectionVelocity = speed;
 	mStartTime = moveDuration - timeDuration;
 	mTimeElapsed = 0.0f;
+
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("start[%ws], end[%ws], dead[%ws], speed[%f], move[%f], time[%f]"), *inStartLocation.ToString(), *inEndLocation.ToString(), *deadReckoningLocation.ToString(), speed, moveDuration, timeDuration), ELogLevel::Error);
 }
 
 void AEnemyController::MoveCorrection(const float inDeltaTime)
@@ -222,7 +235,7 @@ void AEnemyController::MoveCorrection(const float inDeltaTime)
 			pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
 		}
 
-		//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("mStartTime[%f], TimeElapsed [%f], DeltaTime [%f]"), mStartTime, mTimeElapsed, inDeltaTime), ELogLevel::Error);
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("mStartTime[%f], TimeElapsed [%f], DeltaTime [%f]"), mStartTime, mTimeElapsed, inDeltaTime), ELogLevel::Error);
 	}
 
 }
