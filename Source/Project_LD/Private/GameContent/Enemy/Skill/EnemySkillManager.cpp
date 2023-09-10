@@ -90,8 +90,6 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
 
         UClass* SkillClass = mLichSkillClass[InSkillID - MINLICHSKILLCODE];
            
-        UE_LOG(LogTemp, Warning, TEXT("Active Skill Skill ID : %d //// Skill Class %s ///// "),InSkillID,*SkillClass->GetName());
-
         AActor* object = nullptr;
 
         switch (InSkillID - MINLICHSKILLCODE)
@@ -166,6 +164,7 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
         }
 
         //active 
+        /*
         switch (InSkillID - MINDARKKNIGHTSKILLCODE)
         {
         case 0:
@@ -184,6 +183,7 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
             }
             break;
         }
+        */
         
     }
     else
@@ -209,8 +209,6 @@ void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor
         }
 
         UClass* SkillClass = mLichSkillClass[InSkillID - MINLICHSKILLCODE];
-
-        UE_LOG(LogTemp, Warning, TEXT("Reaction Skill Skill ID : %d //// Skill Class %s ///// "), InSkillID, *SkillClass->GetName());
 
         AActor* object = nullptr;
 
@@ -248,6 +246,7 @@ void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor
     }
     else if ((MINDARKKNIGHTSKILLCODE <= InSkillID) && (InSkillID <= MAXDARKKNIGHTSKILLCODE))
     {
+        /*
         AE_DarkKnight* actor = Cast<AE_DarkKnight>(InActor);
         if (actor == nullptr)
         {
@@ -263,6 +262,7 @@ void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor
             InterfaceVariable->mRemoteID = InremoteID;
             InterfaceVariable->ReactionSkill(InLocation, InRotator);
         }
+        */
     }
     else
     {
@@ -288,8 +288,6 @@ void UEnemySkillManager::InputDeactiveSkillData(UWorld* InWorld, AActor* InActor
 
         UClass* SkillClass = mLichSkillClass[InSkillID - MINLICHSKILLCODE];
 
-        UE_LOG(LogTemp, Warning, TEXT("Reaction Skill Skill ID : %d //// Skill Class %s ///// "), InSkillID, *SkillClass->GetName());
-
         AActor* object = nullptr;
         switch (InSkillID - MINLICHSKILLCODE)
         {
@@ -306,6 +304,7 @@ void UEnemySkillManager::InputDeactiveSkillData(UWorld* InWorld, AActor* InActor
     }
     else if ((MINDARKKNIGHTSKILLCODE <= InSkillID) && (InSkillID <= MAXDARKKNIGHTSKILLCODE))
     {
+        /*
         AE_DarkKnight* actor = Cast<AE_DarkKnight>(InActor);
         if (actor == nullptr)
         {
@@ -324,6 +323,7 @@ void UEnemySkillManager::InputDeactiveSkillData(UWorld* InWorld, AActor* InActor
             InterfaceVariable->mRemoteID = InremoteID;
             InterfaceVariable->DeactiveSkill(InLocation, InRotator);
         }
+        */
     }
     else
     {

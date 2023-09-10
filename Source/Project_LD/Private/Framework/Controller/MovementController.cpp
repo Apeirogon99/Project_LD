@@ -128,7 +128,7 @@ void AMovementController::MoveToMouseCursor()
 		}
 		else
 		{
-			if (character->GetIsAttack() == false)
+			if ((character->GetCanMove() == true) && (character->GetIsAttack() == false))
 			{
 				if (actortag == FName("Ground"))
 				{

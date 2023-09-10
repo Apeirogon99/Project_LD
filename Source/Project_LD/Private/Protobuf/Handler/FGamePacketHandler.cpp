@@ -2372,7 +2372,6 @@ bool Handle_S2C_SetUseKeyAction(ANetworkController* controller, Protocol::S2C_Se
 
 bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_AppearSkill& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Appear//////////SkillID %d"), pkt.skill_id());
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2402,8 +2401,6 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
     ANC_Game* character;
     UAI_PlayerCharacter* animation;
     UEnemySkillManager* manager = NewObject<UEnemySkillManager>();
-
-    UE_LOG(LogTemp, Warning, TEXT("AppearSkill S2C remote ID %d //// object ID %d //// Skill ID %d"), remoteID, objectID, skillID);
 
     switch (skillID)
     {
@@ -2507,7 +2504,6 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
 bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_ReactionSkill& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Reaction//////////SkillID %d"), pkt.skill_id());
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2538,8 +2534,6 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
     ANC_Game* character;
     UAI_PlayerCharacter* animation;
     UEnemySkillManager* manager = NewObject<UEnemySkillManager>();
-
-    UE_LOG(LogTemp, Warning, TEXT("ReactionSkill S2C remote ID %d //// object ID %d //// Skill ID %d"), remoteID, objectID,skillID);
 
     switch (skillID)
     {
