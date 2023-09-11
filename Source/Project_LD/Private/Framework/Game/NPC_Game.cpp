@@ -149,6 +149,9 @@ void ANPC_Game::StopMovementController(const FVector& inStopLocation)
 
 	IsCorrection = false;
 	mTargetLoction = inStopLocation;
+	character->SetActorLocation(inStopLocation);
 
-	character->SetActorLocation(FVector(inStopLocation.X, inStopLocation.Y, character->GetActorLocation().Z), false, nullptr, ETeleportType::ResetPhysics);
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inStopLocation);
+
+	this->StopMovement();
 }

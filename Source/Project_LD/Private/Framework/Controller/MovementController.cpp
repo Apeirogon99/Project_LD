@@ -341,8 +341,9 @@ void AMovementController::StopMovementController(const FVector& inStopLocation)
 		return;
 	}
 
-	mIsLocationCorrection	= false;
-	mTargetLoction			= inStopLocation;
+	mIsLocationCorrection = false;
+	mTargetLoction = inStopLocation;
+	character->SetActorLocation(inStopLocation);
 
-	character->SetActorLocation(FVector(inStopLocation.X, inStopLocation.Y, character->GetActorLocation().Z), false, nullptr, ETeleportType::ResetPhysics);
+	this->StopMovement();
 }
