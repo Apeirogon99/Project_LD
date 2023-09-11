@@ -18,19 +18,6 @@ public:
 	virtual void AppearSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration) override;
 	virtual void ReactionSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration) override;
 
-public:
-	UFUNCTION(BlueprintCallable)
-		void Reaction();
-
-	UFUNCTION(BlueprintCallable)
-		void Appear2();
-
-	UFUNCTION(BlueprintCallable)
-		void Appear1();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float aa = 0.0f;
-
 public:	
 	// Sets default values for this actor's properties
 	ASkill_SwordSpirit();
@@ -47,9 +34,6 @@ protected:
 
 private:
 	void ManagedChargeValue();
-	void SpawnAppear1();
-	void SpawnSecondParticle();
-	void SpawnLastParticle();
 	void AppearBeforeManageParticle();
 
 private:
@@ -64,20 +48,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int32 mCurrentCharge;
-
-	/*
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UNiagaraSystem* mAppear1Particle;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UNiagaraComponent* mAppear1SpawnParticle;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UNiagaraSystem* mAppear2Particle;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	UNiagaraComponent* mAppear2SpawnParticle;
-	*/
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* mLoopParticle;

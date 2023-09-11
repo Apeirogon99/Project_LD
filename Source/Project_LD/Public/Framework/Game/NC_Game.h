@@ -28,6 +28,8 @@ public:
 	void SetCanUseSkillW(const bool& InCanSkillW) { bCanSkillW = InCanSkillW; }
 	void SetCanUseSkillE(const bool& InCanSkillE) { bCanSkillE = InCanSkillE; }
 	void SetCanUseSkillR(const bool& InCanSkillR) { bCanSkillR = InCanSkillR; }
+	
+	UFUNCTION(BlueprintCallable)
 	void SetCanMove(const bool& InCanMove) { bCanMove = InCanMove; }
 
 public:

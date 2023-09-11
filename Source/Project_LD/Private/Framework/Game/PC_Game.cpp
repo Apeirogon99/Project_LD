@@ -411,7 +411,6 @@ void APC_Game::UseSkill_E_Released()
 	}
 
 	character->StartETimer();
-	character->SetCanMove(false);
 
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(69);
@@ -431,6 +430,7 @@ void APC_Game::UseSkill_R_Pressed()
 	if (character->GetCanUseSkillR())
 	{
 		character->SetCanUseSkillR(false);
+		character->SetCanMove(false);
 
 		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
 		if (playerAnim == nullptr)

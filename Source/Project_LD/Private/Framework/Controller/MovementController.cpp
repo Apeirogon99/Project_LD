@@ -67,7 +67,6 @@ void AMovementController::PlayerTick(float DeltaTime)
 			mTeleportCool = 0.0f;
 		}
 	}
-
 }
 
 void AMovementController::SetupInputComponent()
