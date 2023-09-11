@@ -28,17 +28,23 @@ public:
 	void SetCanUseSkillW(const bool& InCanSkillW) { bCanSkillW = InCanSkillW; }
 	void SetCanUseSkillE(const bool& InCanSkillE) { bCanSkillE = InCanSkillE; }
 	void SetCanUseSkillR(const bool& InCanSkillR) { bCanSkillR = InCanSkillR; }
-	
+	void SetCanUseDash(const bool& InCanSkillDash) { bCanDash = InCanSkillDash; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetUsingSkill(const bool& InUsingSkill) { bUsingSkill = InUsingSkill; }
+
 	UFUNCTION(BlueprintCallable)
 	void SetCanMove(const bool& InCanMove) { bCanMove = InCanMove; }
 
 public:
-	FORCEINLINE bool GetIsAttack() const { return bIsAttack; }
-	FORCEINLINE bool GetCanUseSkillQ() const { return bCanSkillQ; }
-	FORCEINLINE bool GetCanUseSkillW() const { return bCanSkillW; }
-	FORCEINLINE bool GetCanUseSkillE() const { return bCanSkillE; }
-	FORCEINLINE bool GetCanUseSkillR() const { return bCanSkillR; }
-	FORCEINLINE bool GetCanMove() const { return bCanMove; }
+	FORCEINLINE bool GetIsAttack()				const { return bIsAttack; }
+	FORCEINLINE bool GetUsingSkill()			const { return bUsingSkill; }
+	FORCEINLINE bool GetCanUseSkillQ()	const { return bCanSkillQ; }
+	FORCEINLINE bool GetCanUseSkillW()	const { return bCanSkillW; }
+	FORCEINLINE bool GetCanUseSkillE()	const { return bCanSkillE; }
+	FORCEINLINE bool GetCanUseSkillR()	const { return bCanSkillR; }
+	FORCEINLINE bool GetCanUseDash()		const { return bCanDash; }
+	FORCEINLINE bool GetCanMove()			const { return bCanMove; }
 
 public:
 	void ShowWorldChat(const FString& inPlayerName, const FString& inMessage, const float& inDuration);
@@ -51,10 +57,13 @@ public:
 	void StartWTimer();
 	void StartETimer();
 	void StartRTimer();
+	void StartDashTimer();
+
 	void EndQ();
 	void EndW();
 	void EndE();
 	void EndR();
+	void EndDash();
 	
 public:
 	UFUNCTION(BlueprintCallable)
@@ -88,28 +97,35 @@ protected:
 	bool bBuffActive;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
-		bool bCanSkillQ;
+	bool bUsingSkill;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
-		bool bCanSkillW;
+	bool bCanSkillQ;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
-		bool bCanSkillE;
+	bool bCanSkillW;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
-		bool bCanSkillR;
+	bool bCanSkillE;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
-		bool bCanMove;
+	bool bCanSkillR;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
+	bool bCanDash;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
+	bool bCanMove;
 
 	FTimerHandle mQTimer;
 	FTimerHandle mWTimer;
 	FTimerHandle mETimer;
 	FTimerHandle mRTimer;
+	FTimerHandle mDashTimer;
 
 	float mQCoolDown;
 	float mWCoolDown;
 	float mECoolDown;
 	float mRCoolDown;
-	
+	float mDashCoolDown;
 };

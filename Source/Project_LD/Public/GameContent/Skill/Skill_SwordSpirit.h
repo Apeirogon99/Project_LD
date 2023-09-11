@@ -22,6 +22,8 @@ public:
 	// Sets default values for this actor's properties
 	ASkill_SwordSpirit();
 
+public:
+	FORCEINLINE float GetActiveTime() const { return mAppearActiveTime; }
 
 public:
 	// Called every frame
@@ -39,12 +41,6 @@ private:
 private:
 	UPROPERTY()
 	FTimerHandle ChargeTimer;
-
-	UPROPERTY()
-	FTimerHandle FirstTimer;
-
-	UPROPERTY()
-	FTimerHandle SecondTimer;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	int32 mCurrentCharge;
@@ -68,6 +64,9 @@ private:
 	FRotator mRotation;
 
 	bool bIsSpawn;
+	bool bAppearActive;
+
 	float mCountingScale;
 	float mDuration; 
+	float mAppearActiveTime;
 };

@@ -117,6 +117,11 @@ void AMovementController::MoveToMouseCursor()
 			return;
 		}
 
+		if (character->GetCanMove() == false)
+		{
+			return;
+		}
+
 		FName actortag = Hit.Actor.Get()->Tags[0];
 		if (actortag == FName("Enemy"))
 		{
@@ -127,7 +132,7 @@ void AMovementController::MoveToMouseCursor()
 		}
 		else
 		{
-			if ((character->GetCanMove() == true) && (character->GetIsAttack() == false))
+			if (character->GetIsAttack() == false)
 			{
 				if (actortag == FName("Ground"))
 				{

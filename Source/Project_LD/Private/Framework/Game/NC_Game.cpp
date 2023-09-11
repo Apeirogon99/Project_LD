@@ -77,15 +77,18 @@ ANC_Game::ANC_Game()
 	bBuffActive = false;
 
 	bCanMove = true;
+	bUsingSkill = false;
 	bCanSkillQ = true;
 	bCanSkillW = true;
 	bCanSkillE = true;
 	bCanSkillR = true;
+	bCanDash = true;
 
 	mQCoolDown = 2.0f;
 	mWCoolDown = 2.0f;
 	mECoolDown = 2.0f;
 	mRCoolDown = 2.0f;
+	mDashCoolDown = 2.0f;
 }
 
 ANC_Game::~ANC_Game()
@@ -121,7 +124,7 @@ void ANC_Game::ActiveBuffParticle()
 
 void ANC_Game::DeActiveBuffParticle()
 {
-	mApplyBuffStore->SetFloatParameter("LifeTime", 0.f);
+	mApplyBuffStore->SetFloatParameter("LifeTime", 0.1f);
 	mApplyBuffStore->Deactivate();
 }
 
@@ -205,6 +208,11 @@ void ANC_Game::StartRTimer()
 	GetWorldTimerManager().SetTimer(mRTimer, this, &ANC_Game::EndR, mRCoolDown, false);
 }
 
+void ANC_Game::StartDashTimer()
+{
+	GetWorldTimerManager().SetTimer(mRTimer, this, &ANC_Game::EndDash, mDashCoolDown, false);
+}
+
 void ANC_Game::EndQ()
 {
 	bCanSkillQ = true;
@@ -223,4 +231,9 @@ void ANC_Game::EndE()
 void ANC_Game::EndR()
 {
 	bCanSkillR = true;
+}
+
+void ANC_Game::EndDash()
+{
+	bCanDash = true;
 }

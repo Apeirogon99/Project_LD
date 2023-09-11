@@ -2543,6 +2543,7 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         return true;
     }
 
+    float ClientDuration;
     AActor* newActor;
     ANC_Game* character;
     UAI_PlayerCharacter* animation;
@@ -2596,6 +2597,14 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         {
             return false;
         }
+
+        ClientDuration = Cast<ASkill_SwordSpirit>(newActor)->GetActiveTime();
+        if (ClientDuration >= duration)
+        {
+            ClientDuration = duration;
+        }
+        animation->PlaySkillMontage(4, duration - ClientDuration);
+
         Cast<ASkill_SwordSpirit>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
     case 5:

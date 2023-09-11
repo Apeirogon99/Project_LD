@@ -270,9 +270,10 @@ void APC_Game::UseSkill_Q_Pressed()
 		return;
 	}
 
-	if (character->GetCanUseSkillQ())
+	if ((character->GetCanUseSkillQ()) && (!character->GetUsingSkill()))
 	{
 		character->SetCanUseSkillQ(false);
+		character->SetUsingSkill(true);
 		character->SetCanMove(false);
 
 		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
@@ -300,12 +301,6 @@ void APC_Game::UseSkill_Q_Released()
 		return;
 	}
 
-	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-	if (playerAnim == nullptr)
-	{
-		return;
-	}
-
 	character->StartQTimer();
 
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
@@ -323,9 +318,10 @@ void APC_Game::UseSkill_W_Pressed()
 		return;
 	}
 
-	if (character->GetCanUseSkillW())
+	if ((character->GetCanUseSkillW()) && (!character->GetUsingSkill()))
 	{
 		character->SetCanUseSkillW(false);
+		character->SetUsingSkill(true);
 		character->SetCanMove(false);
 
 		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
@@ -353,12 +349,6 @@ void APC_Game::UseSkill_W_Released()
 		return;
 	}
 
-	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-	if (playerAnim == nullptr)
-	{
-		return;
-	}
-
 	character->StartWTimer();
 
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
@@ -376,9 +366,10 @@ void APC_Game::UseSkill_E_Pressed()
 		return;
 	}
 
-	if (character->GetCanUseSkillE())
+	if ((character->GetCanUseSkillE()) && (!character->GetUsingSkill()))
 	{
 		character->SetCanUseSkillE(false);
+		character->SetUsingSkill(true);
 		character->SetCanMove(false);
 
 		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
@@ -406,12 +397,6 @@ void APC_Game::UseSkill_E_Released()
 		return;
 	}
 
-	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-	if (playerAnim == nullptr)
-	{
-		return;
-	}
-
 	character->StartETimer();
 
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
@@ -429,9 +414,10 @@ void APC_Game::UseSkill_R_Pressed()
 		return;
 	}
 
-	if (character->GetCanUseSkillR())
+	if ((character->GetCanUseSkillR()) && (!character->GetUsingSkill()))
 	{
 		character->SetCanUseSkillR(false);
+		character->SetUsingSkill(true);
 		character->SetCanMove(false);
 
 		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
@@ -482,10 +468,17 @@ void APC_Game::UseSkill_Dash_Pressed()
 		return;
 	}
 
-	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-	if (playerAnim == nullptr)
+	if ((character->GetCanUseDash()) && (!character->GetUsingSkill()))
 	{
-		return;
+		character->SetCanUseDash(false);
+		character->SetUsingSkill(true);
+		character->SetCanMove(false);
+
+		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+		if (playerAnim == nullptr)
+		{
+			return;
+		}
 	}
 
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;
@@ -504,11 +497,7 @@ void APC_Game::UseSkill_Dash_Released()
 		return;
 	}
 
-	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-	if (playerAnim == nullptr)
-	{
-		return;
-	}
+	character->StartDashTimer();
 
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(0xA2);

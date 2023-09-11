@@ -29,6 +29,8 @@ ASkill_SwordSpirit::ASkill_SwordSpirit()
 
 	mCurrentCharge = 0;
 	mCountingScale = 0;
+	mAppearActiveTime = 0;
+	bAppearActive = false;
 	bIsSpawn = false;
 }
 
@@ -36,6 +38,7 @@ void ASkill_SwordSpirit::AppearSkill(const int64 InRemoteID, const int64 InObjec
 {
 	Super::AppearSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
 	
+	bAppearActive = true;
 	mLoopSpawnParticle = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mLoopParticle, InLocation, InRotation, FVector(0.3f), false);
 	GetWorld()->GetTimerManager().SetTimer(ChargeTimer, this, &ASkill_SwordSpirit::ManagedChargeValue, 1.f, true);
 }
@@ -44,6 +47,7 @@ void ASkill_SwordSpirit::ReactionSkill(const int64 InRemoteID, const int64 InObj
 {
 	Super::ReactionSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
 
+	bAppearActive = false;
 	AppearBeforeManageParticle();
 
 	if (mReactionParticle)
@@ -87,8 +91,6 @@ void ASkill_SwordSpirit::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 
 	GetWorld()->GetTimerManager().ClearTimer(ChargeTimer);
-	GetWorld()->GetTimerManager().ClearTimer(FirstTimer);
-	GetWorld()->GetTimerManager().ClearTimer(SecondTimer);
 
 	if (mLoopSpawnParticle)
 	{
@@ -120,14 +122,18 @@ void ASkill_SwordSpirit::AppearBeforeManageParticle()
 		mLoopSpawnParticle->DestroyComponent();
 	}
 
-	GetWorldTimerManager().ClearTimer(FirstTimer);
-	GetWorldTimerManager().ClearTimer(SecondTimer);
+	GetWorldTimerManager().ClearTimer(ChargeTimer);
 }
 
 // Called every frame
 void ASkill_SwordSpirit::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (bAppearActive)
+	{
+		mAppearActiveTime += DeltaTime;
+	}
 
 	if (bIsSpawn)
 	{
