@@ -76,7 +76,7 @@ void UAI_PlayerCharacter::PlaySkillMontage(const int32 inSkillid, const float in
 		return;
 	}
 	mMainCharacter->UpdateCharacterMontage(mSkillFullMontage[inSkillid], inTimeStamp);
-	bClientAnimWorking = false;
+	//bClientAnimWorking = false;
 }
 
 void UAI_PlayerCharacter::JumpAttackMontageSection(const int32 inAttackCount, const float inTimeStamp)

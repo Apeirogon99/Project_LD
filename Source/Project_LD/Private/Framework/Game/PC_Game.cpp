@@ -129,11 +129,13 @@ void APC_Game::SetupInputComponent()
 	InputComponent->BindAction("SkillW", IE_Pressed, this, &APC_Game::UseSkill_W_Pressed);
 	InputComponent->BindAction("SkillE", IE_Pressed, this, &APC_Game::UseSkill_E_Pressed);
 	InputComponent->BindAction("SkillR", IE_Pressed, this, &APC_Game::UseSkill_R_Pressed);
+	InputComponent->BindAction("Dash", IE_Pressed, this, &APC_Game::UseSkill_Dash_Pressed);
 
 	InputComponent->BindAction("SkillQ", IE_Released, this, &APC_Game::UseSkill_Q_Released);
 	InputComponent->BindAction("SkillW", IE_Released, this, &APC_Game::UseSkill_W_Released);
 	InputComponent->BindAction("SkillE", IE_Released, this, &APC_Game::UseSkill_E_Released);
 	InputComponent->BindAction("SkillR", IE_Released, this, &APC_Game::UseSkill_R_Released);
+	InputComponent->BindAction("Dash", IE_Released, this, &APC_Game::UseSkill_Dash_Released);
 }
 
 void APC_Game::SwitchUIMode()
@@ -467,6 +469,49 @@ void APC_Game::UseSkill_R_Released()
 
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(82);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
+}
+
+void APC_Game::UseSkill_Dash_Pressed()
+{
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	Protocol::C2S_PressedUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(0xA2);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
+	
+}
+
+void APC_Game::UseSkill_Dash_Released()
+{
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(0xA2);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
 	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
 	this->Send(pakcetBuffer);

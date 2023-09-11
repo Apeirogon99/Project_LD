@@ -2495,6 +2495,14 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         }
         Cast<ASkill_SwordSpirit>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
+    case 5:
+        /* 대시 */
+        character = Cast<ANC_Game>(controller->GetCharacter());
+        if (nullptr == character)
+        {
+            return false;
+        }
+        break;
     default:
         manager->Init();
         newActor = gameState->FindGameObject(remoteID);
@@ -2589,6 +2597,14 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
             return false;
         }
         Cast<ASkill_SwordSpirit>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
+        break;
+    case 5:
+        /* 대시 */
+        character = Cast<ANC_Game>(controller->GetCharacter());
+        if (nullptr == character)
+        {
+            return false;
+        }
         break;
     default:
         manager->Init();

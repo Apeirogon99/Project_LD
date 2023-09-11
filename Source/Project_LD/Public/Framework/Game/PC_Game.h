@@ -34,6 +34,8 @@ public:
 	void UseSkill_E_Released();
 	void UseSkill_R_Pressed();
 	void UseSkill_R_Released();
+	void UseSkill_Dash_Pressed();
+	void UseSkill_Dash_Released();
 
 public:
 	virtual void BeginPlay() override;
