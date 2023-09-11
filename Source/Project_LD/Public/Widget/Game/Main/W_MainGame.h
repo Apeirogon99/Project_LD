@@ -13,6 +13,7 @@
  * 
  */
 class UButton;
+class UBorder;
 
 UCLASS()
 class PROJECT_LD_API UW_MainGame : public UUserWidget
@@ -25,6 +26,9 @@ public:
 
 	UPROPERTY()
 	UWidget* mMainPlayerInfo;
+
+public:
+	UBorder* GetPlayerSightBorder() const { return PlayerSightBorder; }
 
 public:
 	UFUNCTION()
@@ -82,24 +86,27 @@ private:
 	bool misPartyOpen;
 
 private:
-	UPROPERTY(meta = (BindWidget))
-		UButton* Btn_Chat;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
+	UBorder* PlayerSightBorder;
 
 	UPROPERTY(meta = (BindWidget))
-		UButton* Btn_Inventory;
+	UButton* Btn_Chat;
 
 	UPROPERTY(meta = (BindWidget))
-		UButton* Btn_Friend;
+	UButton* Btn_Inventory;
 
 	UPROPERTY(meta = (BindWidget))
-		UButton* Btn_Party;
+	UButton* Btn_Friend;
 
 	UPROPERTY(meta = (BindWidget))
-		UWidget* mNotifyFriend;
+	UButton* Btn_Party;
 
 	UPROPERTY(meta = (BindWidget))
-		UWidget* mNotifyParty;
+	UWidget* mNotifyFriend;
+
+	UPROPERTY(meta = (BindWidget))
+	UWidget* mNotifyParty;
 	
 	UPROPERTY(meta = (BindWidget))
-		UWidget* mPartyPlayerInfoList;
+	UWidget* mPartyPlayerInfoList;
 };

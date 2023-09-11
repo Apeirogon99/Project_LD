@@ -33,6 +33,7 @@ public:
 
 private:
 	void DeleteActor();
+	void ActiveCollider();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))

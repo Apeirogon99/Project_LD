@@ -20,8 +20,10 @@
 #include "GameContent/Enemy/E_ArcherSkeleton.h"
 #include "GameContent/Enemy/E_WarriorSkeleton.h"
 
+#include "Components/Border.h"
 #include "Framework/Interface/InteractiveInterface.h"
 #include <UObject/ConstructorHelpers.h>
+
 
 AC_Game::AC_Game()
 {
@@ -119,4 +121,50 @@ void AC_Game::OnAttackCameraZoomIn_Implementation()
 
 void AC_Game::OnAttackCameraZoomOut_Implementation()
 {
+}
+
+void AC_Game::PlayerLoseEyesight()
+{
+	FTimerHandle recoveryTimer;
+	APC_Game* controller = Cast<APC_Game>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+	AClientHUD* clientHud = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHud)
+	{
+		return;
+	}
+	UUserWidget* Widget = clientHud->GetWidgetFromName(TEXT("MainGame"));
+	if (nullptr == Widget)
+	{
+		return;
+	}
+	UW_MainGame* maingame = Cast<UW_MainGame>(Widget);
+	UBorder* borderwidget = maingame->GetPlayerSightBorder();
+	borderwidget->SetVisibility(ESlateVisibility::Visible);
+	GetWorldTimerManager().SetTimer(recoveryTimer, this, &AC_Game::PlayerRecoveryEyesight, 3.f, false);
+}
+
+void AC_Game::PlayerRecoveryEyesight()
+{
+	APC_Game* controller = Cast<APC_Game>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+	AClientHUD* clientHud = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHud)
+	{
+		return;
+	}
+	UUserWidget* Widget = clientHud->GetWidgetFromName(TEXT("MainGame"));
+	if (nullptr == Widget)
+	{
+		return;
+	}
+	UW_MainGame* maingame = Cast<UW_MainGame>(Widget);
+	UBorder* borderwidget = maingame->GetPlayerSightBorder();
+	borderwidget->SetVisibility(ESlateVisibility::Hidden);
 }

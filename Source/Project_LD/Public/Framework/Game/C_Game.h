@@ -44,6 +44,10 @@ public:
 	virtual void OnAttackCameraZoomOut_Implementation();
 
 public:
+	void PlayerLoseEyesight();
+	void PlayerRecoveryEyesight();
+
+public:
 	UCameraComponent* GetCameraComponent() { return mGameCameraComponent; }
 
 protected:

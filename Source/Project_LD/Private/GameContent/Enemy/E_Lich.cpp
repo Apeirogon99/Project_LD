@@ -6,7 +6,7 @@
 #include "GameContent/Enemy/EnemyState.h"
 #include <GameContent/Enemy/LichAnimInstance.h>
 #include <Framework/Game/GS_Game.h>
-
+#include "Components/BoxComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 
 #include <Network/NetworkUtils.h>
@@ -17,6 +17,14 @@ AE_Lich::AE_Lich()
 	mLeftMultiCastParticle = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("LeftMultiCastParticle"));
 	mRightMultiCastParticle->SetupAttachment(RootComponent);
 	mLeftMultiCastParticle->SetupAttachment(RootComponent);
+
+	mLichCheckCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("CheckCollider"));
+	mLichCheckCollider->SetupAttachment(GetMesh());
+	mLichCheckCollider->SetCollisionProfileName(TEXT("NoCollision"));
+	mLichCheckCollider->SetRelativeLocation(FVector(0.f, 0.f, 130.f));
+	mLichCheckCollider->SetBoxExtent(FVector(70.f, 60.f, 90.f));
+	mLichCheckCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	mLichCheckCollider->OnComponentBeginOverlap.AddDynamic(this, &AE_Lich::OnOverlapBegin);
 }
 
 AE_Lich::~AE_Lich()
@@ -91,6 +99,15 @@ void AE_Lich::Destroyed()
 	world->DestroyActor(playerState);
 
 	world->DestroyActor(controller);
+}
+
+void AE_Lich::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (Cast<AC_Game>(OtherActor) != nullptr)
+	{
+		AC_Game* localplayer = Cast<AC_Game>(OtherActor);
+		localplayer->PlayerLoseEyesight();
+	}
 }
 
 void AE_Lich::OnAppear_Implementation()

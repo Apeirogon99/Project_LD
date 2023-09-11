@@ -9,6 +9,7 @@
 #include <Kismet/GameplayStatics.h>
 #include <GS_Game.h>
 #include <Enemy/E_Lich.h>
+#include "Components/BoxComponent.h"
 
 // Sets default values
 ASkill_OnslaughtOfShadows::ASkill_OnslaughtOfShadows()
@@ -20,6 +21,7 @@ ASkill_OnslaughtOfShadows::ASkill_OnslaughtOfShadows()
 
 void ASkill_OnslaughtOfShadows::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
+	/*
 	if (UBlueprint* bpActor = LoadObject<UBlueprint>(nullptr, TEXT("Blueprint'/Game/GameContent/Actor/EmitterLine/BP_Lich_shadows_Line.BP_Lich_shadows_Line'")))
 	{
 		UClass* bpClass = bpActor->GeneratedClass;
@@ -38,8 +40,10 @@ void ASkill_OnslaughtOfShadows::ActiveSkill(FVector InLocation, FRotator InRotat
 			mActiveLine = world->SpawnActor<AActor>(bpClass, Location, InRotation, SpawnParameters);
 		}
 	}
+	*/
 	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/P_Lich_Dash.P_Lich_Dash'")))
 	{
+		FTimerHandle Active;
 		AGS_Game* gameState = Cast<AGS_Game>(GetWorld()->GetGameState());
 		if (nullptr == gameState)
 		{
@@ -56,6 +60,8 @@ void ASkill_OnslaughtOfShadows::ActiveSkill(FVector InLocation, FRotator InRotat
 			return;
 		}
 		mSmokeParticle = UGameplayStatics::SpawnEmitterAttached(Particle, lich->GetMesh(), TEXT("None"), FVector(0.f,0.f,30.f), FRotator(0), EAttachLocation::SnapToTarget, false);
+
+		GetWorldTimerManager().SetTimer(Active, this, &ASkill_OnslaughtOfShadows::ActiveCollider, 0.1f, false);
 	}
 }
 
@@ -96,6 +102,7 @@ void ASkill_OnslaughtOfShadows::Destroyed()
 	}
 
 	lich->PlayLichAnim(8);
+	lich->GetLichCheckCollider()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	DeleteActor();
 
@@ -119,5 +126,25 @@ void ASkill_OnslaughtOfShadows::DeleteActor()
 	{
 		mActiveLine->Destroy();
 	}
+}
+
+void ASkill_OnslaughtOfShadows::ActiveCollider()
+{
+	AGS_Game* gameState = Cast<AGS_Game>(GetWorld()->GetGameState());
+	if (nullptr == gameState)
+	{
+		return;
+	}
+	AActor* actor = gameState->FindGameObject(mRemoteID);
+	if (actor == nullptr)
+	{
+		return;
+	}
+	AE_Lich* lich = Cast<AE_Lich>(actor);
+	if (lich == nullptr)
+	{
+		return;
+	}
+	lich->GetLichCheckCollider()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
 

@@ -16,6 +16,7 @@
 #include <Widget/Game/Party/W_PartyPlayerInfoList.h>
 #include <Widget/Game/Party/W_PartyMain.h>
 
+#include "Components/Border.h"
 #include "Components/Button.h"
 #include "Blueprint/WidgetTree.h"
 
@@ -28,6 +29,12 @@
 void UW_MainGame::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	PlayerSightBorder = Cast<UBorder>(GetWidgetFromName(TEXT("PlayerSightBorder")));
+	if (PlayerSightBorder == nullptr)
+	{
+		return;
+	}
 
 	Btn_Inventory = Cast<UButton>(GetWidgetFromName(TEXT("Btn_Inventory")));
 	if (Btn_Inventory != nullptr)
@@ -247,7 +254,6 @@ void UW_MainGame::PartyOpenRequest()
 	{
 		return;
 	}
-
 
 	if (misPartyOpen)
 	{
