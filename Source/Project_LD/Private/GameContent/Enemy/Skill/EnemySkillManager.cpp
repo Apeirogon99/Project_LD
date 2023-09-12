@@ -30,10 +30,10 @@
 #include <GameContent/Enemy/Skill/DarkKnight/DarkKnight_UppercutAttack.h>
 #include <GS_Game.h>
 
-#define MINLICHSKILLCODE 5
-#define MAXLICHSKILLCODE 18
-#define MINDARKKNIGHTSKILLCODE 19
-#define MAXDARKKNIGHTSKILLCODE 25
+#define MINLICHSKILLCODE 6
+#define MAXLICHSKILLCODE 19
+#define MINDARKKNIGHTSKILLCODE 20
+#define MAXDARKKNIGHTSKILLCODE 26
 
 UEnemySkillManager::UEnemySkillManager()
 {
@@ -299,7 +299,7 @@ void UEnemySkillManager::InputDeactiveSkillData(UWorld* InWorld, AActor* InActor
                 InterfaceVariable->mRemoteID = InremoteID;
                 InterfaceVariable->DeactiveSkill(InLocation, InRotator);
             }
-            break;
+            break;  
         }
     }
     else if ((MINDARKKNIGHTSKILLCODE <= InSkillID) && (InSkillID <= MAXDARKKNIGHTSKILLCODE))
