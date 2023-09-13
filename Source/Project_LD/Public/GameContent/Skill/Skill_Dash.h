@@ -3,15 +3,30 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameContent/Skill/Skill_Parent.h"
+#include <GameContent/Enemy/Skill/EnemySkillInterface.h>
 #include "Skill_Dash.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT_LD_API ASkill_Dash : public ASkill_Parent
+class PROJECT_LD_API ASkill_Dash : public AActor, public IEnemySkillInterface
 {
 	GENERATED_BODY()
 	
+	ASkill_Dash();
+
+public:
+	virtual void ActiveSkill(FVector InLocation, FRotator InRotation) override;
+	virtual void ReactionSkill(FVector InLocation, FRotator InRotation) override;
+	virtual void DeactiveSkill(FVector InLocation, FRotator InRotation) override;
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+	virtual void Destroyed() override;
+
+public:
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 };

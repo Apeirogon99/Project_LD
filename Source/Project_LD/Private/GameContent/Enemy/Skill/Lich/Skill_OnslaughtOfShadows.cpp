@@ -59,7 +59,7 @@ void ASkill_OnslaughtOfShadows::ActiveSkill(FVector InLocation, FRotator InRotat
 		{
 			return;
 		}
-		mSmokeParticle = UGameplayStatics::SpawnEmitterAttached(Particle, lich->GetMesh(), TEXT("None"), FVector(0.f,0.f,30.f), FRotator(0), EAttachLocation::SnapToTarget, false);
+		mSmokeParticle = UGameplayStatics::SpawnEmitterAttached(Particle, lich->GetMesh(), TEXT("None"), FVector(0.f,0.f,80.f), FRotator(0), EAttachLocation::SnapToTarget, false);
 
 		GetWorldTimerManager().SetTimer(Active, this, &ASkill_OnslaughtOfShadows::ActiveCollider, 0.1f, false);
 	}

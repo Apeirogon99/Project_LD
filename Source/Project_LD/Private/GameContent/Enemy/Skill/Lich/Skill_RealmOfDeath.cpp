@@ -15,16 +15,25 @@ ASkill_RealmOfDeath::ASkill_RealmOfDeath()
 
 void ASkill_RealmOfDeath::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASkill_RealmOfDeath ActiveSkill"));
-	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/NS_RelamOfDeath.NS_RelamOfDeath'")))
+	UBlueprint* BlueprintObj = Cast<UBlueprint>(StaticLoadObject(UBlueprint::StaticClass(), nullptr, TEXT("Blueprint'/Game/GameContent/Actor/Smoke/BA_Smoke.BA_Smoke'")));
+	if (BlueprintObj)
 	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, InLocation, InRotation, FVector(1.5f));
+		UClass* SmokeActorClass = BlueprintObj->GeneratedClass;
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		UWorld* world = GetWorld();
+		UE_LOG(LogTemp, Warning, TEXT("Realm Spawn"));
+		if (world == nullptr)
+		{
+			return;
+		}
+		UE_LOG(LogTemp, Warning, TEXT("Realm world"));
+		GetWorld()->SpawnActor<AActor>(SmokeActorClass, InLocation, InRotation, SpawnParams);
 	}
 }
 
 void ASkill_RealmOfDeath::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ASkill_RealmOfDeath ReactionSkill"));
 	/*
 	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/VFX_AoE_ShockWave/Particles/P_AOE_10.P_AOE_10'")))
 	{
