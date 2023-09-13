@@ -139,11 +139,11 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 			mTargetLoction = deadReckoningLocation;
 			mCorrectionVelocity = 0.1f;
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
+
+			IsRotationCorrection = true;
+			mTargetRotation = direction.Rotation();
 		}
 	}
-
-	IsRotationCorrection = true;
-	mTargetRotation = direction.Rotation();
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws] distance[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance), ELogLevel::Error);
 
