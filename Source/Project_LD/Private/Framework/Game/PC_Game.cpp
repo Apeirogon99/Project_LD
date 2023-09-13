@@ -479,6 +479,7 @@ void APC_Game::UseSkill_Dash_Pressed()
 		{
 			return;
 		}
+		playerAnim->PlayClientSkillMontage(5);
 	}
 
 	Protocol::C2S_PressedUseKeyAction keyActionPacket;

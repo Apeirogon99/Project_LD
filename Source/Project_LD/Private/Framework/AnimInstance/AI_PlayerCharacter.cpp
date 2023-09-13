@@ -16,8 +16,6 @@ UAI_PlayerCharacter::UAI_PlayerCharacter()
 
 	bIsAttack = false;
 	bSaveAttack = false;
-	bAttackLoop = false;
-	bClientAnimWorking = false;
 	mAttackCount = 0;
 }
 
@@ -31,19 +29,14 @@ void UAI_PlayerCharacter::PlayClientAttackMontage()
 	{
 		if (mAttackCount < 3)
 		{
-			if (bClientAnimWorking == false)
+			if (bIsAttack)
 			{
-				bClientAnimWorking = true;
-
-				if (bIsAttack)
-				{
-					bSaveAttack = true;
-				}
-				else
-				{
-					bIsAttack = true;
-					mMainCharacter->UpdateCharacterMontage(mAttackClientMontage[mAttackCount], 0.f);
-				}
+				bSaveAttack = true;
+			}
+			else
+			{
+				bIsAttack = true;
+				mMainCharacter->UpdateCharacterMontage(mAttackClientMontage[mAttackCount], 0.f);
 			}
 		}
 	}
@@ -53,12 +46,7 @@ void UAI_PlayerCharacter::PlayClientSkillMontage(const int32 inSkillid)
 {
 	if (mMainCharacter != nullptr)
 	{
-		if (bClientAnimWorking == false)
-		{
-			bClientAnimWorking = true;
-
-			mMainCharacter->UpdateCharacterMontage(mSkillClientMontage[inSkillid], 0.f);
-		}
+		mMainCharacter->UpdateCharacterMontage(mSkillClientMontage[inSkillid], 0.f);
 	}
 }
 
@@ -76,7 +64,6 @@ void UAI_PlayerCharacter::PlaySkillMontage(const int32 inSkillid, const float in
 		return;
 	}
 	mMainCharacter->UpdateCharacterMontage(mSkillFullMontage[inSkillid], inTimeStamp);
-	//bClientAnimWorking = false;
 }
 
 void UAI_PlayerCharacter::JumpAttackMontageSection(const int32 inAttackCount, const float inTimeStamp)
@@ -94,7 +81,6 @@ void UAI_PlayerCharacter::JumpAttackMontageSection(const int32 inAttackCount, co
 	}
 	character->UpdateCharacterMontage(mAttackFullMontage[inAttackCount], inTimeStamp);
 	mAttackCount = inAttackCount + 1;
-	bClientAnimWorking = false;
 }
 
 // Protected //
@@ -144,13 +130,10 @@ void UAI_PlayerCharacter::AnimNotify_ResetCombo()
 {
 	bIsAttack = false;
 	bSaveAttack = false;
-	bAttackLoop = false;
 	mAttackCount = 0;
 
 	if (mMainCharacter)
 	{
-		mMainCharacter->SetIsAttack(false);
-
 		auto movement = Cast<UCharacterMovementComponent>(mMainCharacter->GetMovementComponent());
 		movement->MovementMode = EMovementMode::MOVE_Walking;
 	}
@@ -160,8 +143,6 @@ void UAI_PlayerCharacter::AnimNotify_AttackServerCheck()
 {
 	if (mMainCharacter)
 	{
-		mMainCharacter->SetIsAttack(true);
-
 		auto movement = Cast<UCharacterMovementComponent>(mMainCharacter->GetMovementComponent());
 		movement->MovementMode = EMovementMode::MOVE_None;
 	}
@@ -196,10 +177,11 @@ void UAI_PlayerCharacter::InitAttackMontage()
 	if (ATTACK_MONTAGE3.Succeeded())
 	{
 		mAttackFullMontage.Add(ATTACK_MONTAGE3.Object);
-	}	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE1Client(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Attack/M_ComboAttack1_Client_Hu_M.M_ComboAttack1_Client_Hu_M'"));
+	}	
 
 	// Client //
 
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> ATTACK_MONTAGE1Client(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Attack/M_ComboAttack1_Client_Hu_M.M_ComboAttack1_Client_Hu_M'"));
 	if (ATTACK_MONTAGE1.Succeeded())
 	{
 		mAttackClientMontage.Add(ATTACK_MONTAGE1Client.Object);
@@ -244,10 +226,14 @@ void UAI_PlayerCharacter::InitSkillMontage()
 	{
 		mSkillFullMontage.Add(SKILL_R_Attack_MONTAGE.Object);
 	}
-
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_DASH_MONTAGE(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Dash/M_Dash_Full_Hu_M.M_Dash_Full_Hu_M'"));
+	if(SKILL_DASH_MONTAGE.Succeeded())
+	{
+		mSkillFullMontage.Add(SKILL_DASH_MONTAGE.Object);
+	}
 	// Client //
 
-	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_E_MONTAGEClient(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Buff/M_Buff_Client_Hu_M.M_Buff_Client_Hu_M'	"));
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_E_MONTAGEClient(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Buff/M_Buff_Client_Hu_M.M_Buff_Client_Hu_M'"));
 	if (SKILL_E_MONTAGEClient.Succeeded())
 	{
 		mSkillClientMontage.Add(SKILL_E_MONTAGEClient.Object);
@@ -271,5 +257,10 @@ void UAI_PlayerCharacter::InitSkillMontage()
 	if (SKILL_R_Attack_MONTAGEClient.Succeeded())
 	{
 		mSkillClientMontage.Add(SKILL_R_Attack_MONTAGEClient.Object);
+	}
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> SKILL_DASH_MONTAGEClient(TEXT("AnimMontage'/Game/GameContent/Animation/Male/Skill/Dash/M_Dash_Client_Hu_M.M_Dash_Client_Hu_M'"));
+	if (SKILL_DASH_MONTAGEClient.Succeeded())
+	{
+		mSkillClientMontage.Add(SKILL_DASH_MONTAGEClient.Object);
 	}
 }

@@ -210,7 +210,7 @@ void ANC_Game::StartRTimer()
 
 void ANC_Game::StartDashTimer()
 {
-	GetWorldTimerManager().SetTimer(mRTimer, this, &ANC_Game::EndDash, mDashCoolDown, false);
+	GetWorldTimerManager().SetTimer(mDashTimer, this, &ANC_Game::EndDash, mDashCoolDown, false);
 }
 
 void ANC_Game::EndQ()

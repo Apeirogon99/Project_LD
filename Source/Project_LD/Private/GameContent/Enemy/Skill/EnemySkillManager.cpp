@@ -46,20 +46,20 @@ UEnemySkillManager::~UEnemySkillManager()
 void UEnemySkillManager::Init()
 {
     {
-        mLichSkillClass.Add(ASkill_Rise::StaticClass());                               //0 애니메이션
+        mLichSkillClass.Add(ASkill_Rise::StaticClass());                        //0 애니메이션
         mLichSkillClass.Add(ASkill_RiseSkeleton::StaticClass());                //1 애니메이션 rise 스폰 (스폰 파티클 active)
-        mLichSkillClass.Add(ASkill_RiseDarkSkeleton::StaticClass());        //2 애니메이션 rise 스폰 (스폰 파티클 active)
-        mLichSkillClass.Add(ASkill_RiseDarkKnight::StaticClass());           //3 애니메이션 rise 스폰 (스폰 파티클이 있다면 active)
+        mLichSkillClass.Add(ASkill_RiseDarkSkeleton::StaticClass());            //2 애니메이션 rise 스폰 (스폰 파티클 active)
+        mLichSkillClass.Add(ASkill_RiseDarkKnight::StaticClass());              //3 애니메이션 rise 스폰 (스폰 파티클이 있다면 active)
         mLichSkillClass.Add(ASkill_BlinkAttack::StaticClass());                 //4 애니메이션, 스폰 active 처음 reaction 캐릭터 뒤
-        mLichSkillClass.Add(ASkill_BlinkStun::StaticClass());                     //5 애니메이션, 스폰 active 처음 reaction 캐릭터 뒤
-        mLichSkillClass.Add(ASkill_SoulSpear::StaticClass());                     //6 스폰 (관호가 함)
-        mLichSkillClass.Add(ASkill_SoulSpark::StaticClass());                     //7 스폰(active 애니메이션(기모으기), reaction 애니메이션(발사), 파티클 스폰)
+        mLichSkillClass.Add(ASkill_BlinkStun::StaticClass());                   //5 애니메이션, 스폰 active 처음 reaction 캐릭터 뒤
+        mLichSkillClass.Add(ASkill_SoulSpear::StaticClass());                   //6 스폰 (관호가 함)
+        mLichSkillClass.Add(ASkill_SoulSpark::StaticClass());                   //7 스폰(active 애니메이션(기모으기), reaction 애니메이션(발사), 파티클 스폰)
         mLichSkillClass.Add(ASkill_SoulShackles::StaticClass());                //8 스폰(active 파티클 2초 , reaction 파티클 5초)(애니메이션 rise)
-        mLichSkillClass.Add(ASkill_Explosion::StaticClass());                      //9 스폰(애니메이션은 rise) active 파티클소환
-        mLichSkillClass.Add(ASkill_MultiCasting::StaticClass());                 //10 애니메이션 remote->rich->particle active
-        mLichSkillClass.Add(ASkill_RealmOfDeath::StaticClass());              //11 스폰 (reaction 안개, deactive 안개 제거) 
-        mLichSkillClass.Add(ASkill_OnslaughtOfShadows::StaticClass());   //12 애니메이션 rise 스폰(appear 바닥3초, reaction 광선발사) 
-        mLichSkillClass.Add(ASkill_LifeVessel::StaticClass());                    //13 애니메이션 rise 스폰(appear 스폰 파티클)
+        mLichSkillClass.Add(ASkill_Explosion::StaticClass());                   //9 스폰(애니메이션은 rise) active 파티클소환
+        mLichSkillClass.Add(ASkill_MultiCasting::StaticClass());                //10 애니메이션 remote->rich->particle active
+        mLichSkillClass.Add(ASkill_RealmOfDeath::StaticClass());                //11 스폰 (reaction 안개, deactive 안개 제거) 
+        mLichSkillClass.Add(ASkill_OnslaughtOfShadows::StaticClass());          //12 애니메이션 rise 스폰(appear 바닥3초, reaction 광선발사) 
+        mLichSkillClass.Add(ASkill_LifeVessel::StaticClass());                  //13 애니메이션 rise 스폰(appear 스폰 파티클)
     }
     {
         mDarkKnightSkillClass.Add(ADarkKnight_RunningAttack::StaticClass());

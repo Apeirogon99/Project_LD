@@ -336,6 +336,7 @@ bool Handle_S2C_DetectChangePlayer(ANetworkController* controller, Protocol::S2C
 
 bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_PlayerAutoAttack& pkt)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_PlayerAutoAttack combo %d "), pkt.combo());
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2502,6 +2503,14 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         {
             return false;
         }
+        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+        if (nullptr == animation)
+        {
+            return false;
+        }
+
+        animation->PlaySkillMontage(5, duration);
+
         break;
     default:
         manager->Init();

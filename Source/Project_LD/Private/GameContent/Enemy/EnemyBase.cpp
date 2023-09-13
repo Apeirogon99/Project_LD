@@ -354,20 +354,21 @@ void AEnemyBase::Interactive(ANC_Game* inPlayer)
 		return;
 	}
 
+	UAI_PlayerCharacter* animInstance = Cast<UAI_PlayerCharacter>(inPlayer->GetMesh()->GetAnimInstance());
+	if (nullptr == animInstance)
+	{
+		return;
+	}
+
 	FVector direction = this->GetActorLocation() - inPlayer->GetActorLocation();
 	inPlayer->SetActorRotation(FRotator(0.0f, direction.Rotation().Yaw, 0.0f));
-	
+
 	float distance = FVector::Dist2D(inPlayer->GetActorLocation(), this->GetActorLocation());
-	float range = 175.0f; 
+	float range = 175.0f;
+
 	if (distance <= range)
 	{
-		UAI_PlayerCharacter* animInstance = Cast<UAI_PlayerCharacter>(inPlayer->GetMesh()->GetAnimInstance());
-		if (nullptr == animInstance)
-		{
-			return;
-		}
 		animInstance->PlayClientAttackMontage();
-		animInstance->SetClientAnimWorking(true);
 	}
 	Protocol::C2S_PlayerAutoAttack attackPacket;
 	attackPacket.set_object_id(state->GetObjectID());

@@ -29,11 +29,8 @@ public:
 	void JumpAttackMontageSection(const int32 inAttackCount, const float inTimeStamp);
 
 public:
-	void SetClientAnimWorking(bool InClientAnimWorking) { bClientAnimWorking = InClientAnimWorking; }
-
-public:
-	int32 GetAttackCount() const { return mAttackCount; }
-	bool GetClientAnimWorking() const { return bClientAnimWorking; }
+	int32 GetAttackCount() const			{ return mAttackCount; }
+	bool GetSaveAttack() const				{ return bSaveAttack; }
 
 protected:
 	virtual void NativeInitializeAnimation() override;
@@ -65,12 +62,6 @@ private:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", meta = (AllowPrivateAccess = "true"))
 	bool bSaveAttack;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", meta = (AllowPrivateAccess = "true"))
-	bool bAttackLoop;
-
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Client", meta = (AllowPrivateAccess = "true"))
-	bool bClientAnimWorking;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Int", meta = (AllowPrivateAccess = "true"))
 	int32 mAttackCount;
