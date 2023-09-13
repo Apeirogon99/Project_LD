@@ -2,8 +2,8 @@
 
 
 #include "GameContent/Enemy/Skill/Lich/Skill_RealmOfDeath.h"
-#include <Kismet/GameplayStatics.h>
-#include "Particles/ParticleSystem.h"
+#include "Niagara/Classes/NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
 
 // Sets default values
 ASkill_RealmOfDeath::ASkill_RealmOfDeath()
@@ -15,16 +15,23 @@ ASkill_RealmOfDeath::ASkill_RealmOfDeath()
 
 void ASkill_RealmOfDeath::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("ASkill_RealmOfDeath ActiveSkill"));
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/Lich/Particle/NS_RelamOfDeath.NS_RelamOfDeath'")))
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, InLocation, InRotation, FVector(1.5f));
+	}
 }
 
 void ASkill_RealmOfDeath::ReactionSkill(FVector InLocation, FRotator InRotation)
 {
+	UE_LOG(LogTemp, Warning, TEXT("ASkill_RealmOfDeath ReactionSkill"));
+	/*
 	if (UParticleSystem* Particle = LoadObject<UParticleSystem>(nullptr, TEXT("ParticleSystem'/Game/VFX_AoE_ShockWave/Particles/P_AOE_10.P_AOE_10'")))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Location %f %f %f"), InLocation.X, InLocation.Y, InLocation.Z);
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Particle, InLocation, InRotation, FVector(1.f));
 	}
+	*/
 }
 
 void ASkill_RealmOfDeath::DeactiveSkill(FVector InLocation, FRotator InRotation)

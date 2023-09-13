@@ -126,6 +126,7 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
         case 7:
         case 8:
         case 9:
+        case 11:
         case 12:
         case 13:
             object = gameState->CreateGameObject(SkillClass, InLocation, InRotator, InobjectID);
