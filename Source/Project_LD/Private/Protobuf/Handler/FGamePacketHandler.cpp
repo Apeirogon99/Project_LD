@@ -34,7 +34,7 @@
 #include <GameContent/Skill/Skill_Counter.h>
 #include <GameContent/Skill/Skill_SlamAttack.h>
 #include <GameContent/Skill/Skill_SwordSpirit.h>
-#include <GameContent/Skill/Skill_SwordSpirit_Range.h>
+#include <GameContent/Skill/Skill_Dash.h>
 
 #include <GameContent/Item/ItemParent.h>
 #include <Widget/Handler/ClientHUD.h>
@@ -2510,7 +2510,12 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         }
 
         animation->PlaySkillMontage(5, duration);
-
+        newActor = gameState->CreateGameObject(ASkill_Dash::StaticClass(), location, rotation, objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        Cast<ASkill_Dash>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
     default:
         manager->Init();

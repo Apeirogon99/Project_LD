@@ -22,13 +22,13 @@ void ASkill_RealmOfDeath::ActiveSkill(FVector InLocation, FRotator InRotation)
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
 		UWorld* world = GetWorld();
-		UE_LOG(LogTemp, Warning, TEXT("Realm Spawn"));
 		if (world == nullptr)
 		{
 			return;
 		}
-		UE_LOG(LogTemp, Warning, TEXT("Realm world"));
-		GetWorld()->SpawnActor<AActor>(SmokeActorClass, InLocation, InRotation, SpawnParams);
+		FVector Loc = InLocation;
+		Loc.Z += 70.f;
+		mSmoke = GetWorld()->SpawnActor<AActor>(SmokeActorClass, Loc, InRotation, SpawnParams);
 	}
 }
 
@@ -52,6 +52,16 @@ void ASkill_RealmOfDeath::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ASkill_RealmOfDeath::Destroyed()
+{
+	Super::Destroyed();
+
+	if (mSmoke)
+	{
+		mSmoke->Destroy();
+	}
 }
 
 // Called every frame
