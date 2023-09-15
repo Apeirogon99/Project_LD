@@ -36,37 +36,32 @@ AMovementController::~AMovementController()
 {
 }
 
+bool AMovementController::OnTick()
+{
+	Super::OnTick();
+
+	if (mIsMoveToMouseCursor == true)
+	{
+		MoveToMouseCursor();
+	}
+
+	return true;
+}
+
 void AMovementController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	if (false == mTeleport)
+	if (mIsLocationCorrection)
 	{
-		if (mIsMoveToMouseCursor)
-		{
-			mIsMoveToMouseCursor = false;
-			MoveToMouseCursor();
-		}
-
-		if (mIsLocationCorrection)
-		{
-			MoveCorrection(DeltaTime);
-		}
-
-		if (mIsRotationCorrection)
-		{
-			RotationCorrection(DeltaTime);
-		}
+		MoveCorrection(DeltaTime);
 	}
-	else
+
+	if (mIsRotationCorrection)
 	{
-		mTeleportCool += DeltaTime;
-		if (mTeleportCool >= 1.0f)
-		{
-			mTeleport = true;
-			mTeleportCool = 0.0f;
-		}
+		RotationCorrection(DeltaTime);
 	}
+	
 }
 
 void AMovementController::SetupInputComponent()
@@ -81,11 +76,15 @@ void AMovementController::SetupInputComponent()
 void AMovementController::OnSetDestinationPressed()
 {
 	mIsMoveToMouseCursor = true;
+
+	MoveToMouseCursor();
 }
 
 void AMovementController::OnSetDestinationReleased()
 {
 	mIsMoveToMouseCursor = false;
+
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, FVector(mDestLocation.X, mDestLocation.Y, (mDestLocation.Z + 1.0f)), FRotator::ZeroRotator, true);
 }
 
 void AMovementController::OnSetCameraZoomAxis(const float inValue)
@@ -172,8 +171,6 @@ void AMovementController::OnTeleport_Implementation(const FVector& DestLocation)
 void AMovementController::SetNewMoveDestination(FVector& DestLocation)
 {
 
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, FVector(DestLocation.X, DestLocation.Y, (DestLocation.Z + 1.0f)), FRotator::ZeroRotator, true);
-
 	//TODO: 서버에게 보낼 값
 	ANetworkController* controller = Cast<ANetworkController>(this);
 	if (nullptr == controller)
@@ -186,20 +183,13 @@ void AMovementController::SetNewMoveDestination(FVector& DestLocation)
 	{
 		return;
 	}
+	const float halfHeight	= character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 
-	const float halfHeight	= character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight() + 2.0f;
-	DestLocation.Z += halfHeight;
+	mDestLocation = FVector(DestLocation.X, DestLocation.Y, DestLocation.Z + halfHeight);
+	mCurLocation = character->GetActorLocation();
 
-	FVector		direction = DestLocation - character->GetActorLocation();
-	FRotator	rotation = direction.Rotation();
-	FVector		foward = UKismetMathLibrary::GetForwardVector(rotation);
-
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
-
-	
 	Protocol::C2S_MovementCharacter movementPacket;
-	const int64 serverTimeStamp = controller->GetServerTimeStamp();
-	movementPacket.set_timestamp(serverTimeStamp);
+	movementPacket.set_timestamp(controller->GetServerTimeStamp());
 
 	FVector pawnLocation = character->GetActorLocation();
 	Protocol::SVector* oldMovementLocation = movementPacket.mutable_cur_location();
@@ -208,13 +198,47 @@ void AMovementController::SetNewMoveDestination(FVector& DestLocation)
 	oldMovementLocation->set_z(pawnLocation.Z);
 
 	Protocol::SVector* newMovementLocation = movementPacket.mutable_move_location();
-	newMovementLocation->set_x(DestLocation.X);
-	newMovementLocation->set_y(DestLocation.Y);
-	newMovementLocation->set_z(DestLocation.Z);
+	newMovementLocation->set_x(mDestLocation.X);
+	newMovementLocation->set_y(mDestLocation.Y);
+	newMovementLocation->set_z(mDestLocation.Z);
 
 	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(controller, movementPacket);
 	controller->Send(pakcetBuffer);
-	
+
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
+
+}
+
+void AMovementController::SendMove()
+{
+	ANetworkController* controller = Cast<ANetworkController>(this);
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	ACharacter* character = Cast<ACharacter>(this->GetPawn());
+	if (nullptr == character)
+	{
+		return;
+	}
+
+	Protocol::C2S_MovementCharacter movementPacket;
+	movementPacket.set_timestamp(controller->GetServerTimeStamp());
+
+	FVector pawnLocation = character->GetActorLocation();
+	Protocol::SVector* oldMovementLocation = movementPacket.mutable_cur_location();
+	oldMovementLocation->set_x(pawnLocation.X);
+	oldMovementLocation->set_y(pawnLocation.Y);
+	oldMovementLocation->set_z(pawnLocation.Z);
+
+	Protocol::SVector* newMovementLocation = movementPacket.mutable_move_location();
+	newMovementLocation->set_x(mDestLocation.X);
+	newMovementLocation->set_y(mDestLocation.Y);
+	newMovementLocation->set_z(mDestLocation.Z);
+
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(controller, movementPacket);
+	controller->Send(pakcetBuffer);
 
 }
 
@@ -242,7 +266,7 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	FVector foward = rotation.Quaternion().GetForwardVector();
 
 	FVector velocity = foward * speed;
-	float	duration = inTime / 1000.0f;
+	float	duration = fabs(inTime / 1000.0f);
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
 
@@ -262,7 +286,7 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 		{
 			mIsLocationCorrection = true;
 			mTargetLoction = deadReckoningLocation;
-			mCorrectionVelocity = 0.1f;
+			mCorrectionVelocity = 0.01f;
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 		}
 	}
@@ -270,7 +294,7 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	//mIsRotationCorrection = true;
 	//mTargetRotation = rotation;
 
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance, duration), ELogLevel::Error);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance, duration), ELogLevel::Error);
 
 }
 

@@ -93,6 +93,9 @@ bool APC_Game::OnDisconnect()
 
 bool APC_Game::OnTick()
 {
+
+	Super::OnTick();
+
 	UNetworkTimeStamp* networkTimeStmap = this->GetTimeStamp();
 	if (nullptr == networkTimeStmap)
 	{

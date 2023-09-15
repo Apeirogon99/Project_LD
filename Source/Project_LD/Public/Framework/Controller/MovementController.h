@@ -17,6 +17,9 @@ class PROJECT_LD_API AMovementController : public ANetworkController
 public:
 	AMovementController();
 	~AMovementController();
+
+public:
+	virtual bool OnTick() override;
 	
 public:
 	void PlayerTick(float DeltaTime) override;
@@ -37,6 +40,7 @@ public:
 
 
 	void SetNewMoveDestination(FVector& DestLocation);
+	void SendMove();
 	void MoveDestination(const FVector& inOldMovementLocation, const FVector& inNewMovementLocation, const int64& inTime);
 	void MoveCorrection(const float inDeltaTime);
 	void RotationDestination(const FRotator& inNewRotation, const int64& inTime);
@@ -52,6 +56,10 @@ private:
 	bool		mIsMoveToMouseCursor;
 	bool		mIsLocationCorrection;
 	bool		mIsRotationCorrection;
+
+	FVector		mCurLocation;
+	FVector		mDestLocation;
+	int64		mCurTime;
 
 	FVector		mTargetLoction;
 	FRotator	mTargetRotation;
