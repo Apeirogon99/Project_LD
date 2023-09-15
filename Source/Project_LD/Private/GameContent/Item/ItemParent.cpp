@@ -95,7 +95,7 @@ AItemParent::AItemParent()
 
 	mPlayer = nullptr;
 
-	Tags.Add(FName("Item"));
+	Tags.Add(FName("PickUp"));
 }
 
 // Called when the game starts or when spawned

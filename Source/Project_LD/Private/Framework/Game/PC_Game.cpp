@@ -9,6 +9,7 @@
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Main/W_MainGame.h>
 #include <Widget/WidgetUtils.h>
+#include <Interface/InteractiveInterface.h>
 
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FCommonPacketHandler.h>
@@ -22,7 +23,11 @@
 
 APC_Game::APC_Game()
 {
-	
+	mRightMouseActions.Add(FName("Ground"), &APC_Game::MoveToMouseCursor);
+	mRightMouseActions.Add(FName("PickUp"), &APC_Game::PickUp);
+	mRightMouseActions.Add(FName("Interative"), &APC_Game::Interative);
+
+	mLeftMouseActions.Add(FName("Enemy"), &APC_Game::Enemy);
 }
 
 APC_Game::~APC_Game()
@@ -35,6 +40,29 @@ void APC_Game::BeginPlay()
 
 	SwitchMovementMode();
 	SwitchUIMode();
+}
+
+void APC_Game::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+
+	if (mIsLeftMouse || mIsRightMouse)
+	{
+		mMouseTick += DeltaTime;
+		if (mMouseTick >= 0.25f)
+		{
+			if (mIsLeftMouse)
+			{
+				CheackMouseTrace(mLeftMouseActions);
+			}
+			else if(mIsRightMouse)
+			{
+				CheackMouseTrace(mRightMouseActions);
+			}
+
+			mMouseTick = 0.0f;
+		}
+	}
 }
 
 bool APC_Game::OnRecvPacket(BYTE* buffer, const uint32 len)
@@ -110,6 +138,7 @@ bool APC_Game::OnTick()
 	timeStampPacket.set_rtt(nowRTT);
 	SendBufferPtr pakcetBuffer = FCommonPacketHandler::MakeSendBuffer(this, timeStampPacket);
 	this->Send(pakcetBuffer);
+
 	return true;
 }
 
@@ -139,6 +168,96 @@ void APC_Game::SetupInputComponent()
 	InputComponent->BindAction("SkillE", IE_Released, this, &APC_Game::UseSkill_E_Released);
 	InputComponent->BindAction("SkillR", IE_Released, this, &APC_Game::UseSkill_R_Released);
 	InputComponent->BindAction("Dash", IE_Released, this, &APC_Game::UseSkill_Dash_Released);
+
+	InputComponent->BindAction("LeftMouseAction(Player)", IE_Pressed, this, &APC_Game::PressedLeftMouse);
+	InputComponent->BindAction("LeftMouseAction(Player)", IE_Released, this, &APC_Game::ReleasedLeftMouse);
+
+	InputComponent->BindAction("RightMouseAction(Player)", IE_Pressed, this, &APC_Game::PressedRightMouse);
+	InputComponent->BindAction("RightMouseAction(Player)", IE_Released, this, &APC_Game::ReleasedRightMouse);
+}
+
+void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, FHitResult)>> inMouseActions)
+{
+	FHitResult hitResult;
+	GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
+
+	if (false == hitResult.bBlockingHit)
+	{
+		return;
+	}
+
+	AActor* hitActor = hitResult.Actor.Get();
+	if (nullptr == hitActor)
+	{
+		return;
+	}
+
+	TArray<FName> tags = hitActor->Tags;
+	if (0 == tags.Num())
+	{
+		return;
+	}
+
+	int32 findTargetTag = INDEX_NONE;
+	for (auto targetTag : inMouseActions)
+	{
+		int32 tempCompareTag = tags.Find(targetTag.Key);
+		if (INDEX_NONE != tempCompareTag)
+		{
+			TFunction<void(APC_Game&, AActor*, FHitResult)> actionFunction = *inMouseActions.Find(targetTag.Key);
+			actionFunction(*this, hitActor, hitResult);
+			return;
+		}
+	}
+
+	if (INDEX_NONE == findTargetTag)
+	{
+		return;
+	}
+
+}
+
+void APC_Game::PickUp(AActor* inHitActor, FHitResult inHitResult)
+{
+	ANC_Game* character = Cast<ANC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	if (inHitActor->GetClass()->ImplementsInterface(UInteractiveInterface::StaticClass()))
+	{
+		Cast<IInteractiveInterface>(inHitActor)->Interactive(character);
+	}
+}
+
+void APC_Game::Interative(AActor* inHitActor, FHitResult inHitResult)
+{
+	ANC_Game* character = Cast<ANC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	if (inHitActor->GetClass()->ImplementsInterface(UInteractiveInterface::StaticClass()))
+	{
+		Cast<IInteractiveInterface>(inHitActor)->Interactive(character);
+	}
+}
+
+void APC_Game::Enemy(AActor* inHitActor, FHitResult inHitResult)
+{
+	ANC_Game* character = Cast<ANC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	if (inHitActor->GetClass()->ImplementsInterface(UInteractiveInterface::StaticClass()))
+	{
+		Cast<IInteractiveInterface>(inHitActor)->Interactive(character);
+	}
+
 }
 
 void APC_Game::SwitchUIMode()
@@ -263,6 +382,32 @@ void APC_Game::SwitchParty()
 	}
 
 	mainGame->PartyOpenRequest();
+}
+
+void APC_Game::PressedLeftMouse()
+{
+	CheackMouseTrace(mLeftMouseActions);
+
+	mIsLeftMouse = true;
+	mMouseTick = 0.0f;
+}
+
+void APC_Game::ReleasedLeftMouse()
+{
+	mIsLeftMouse = false;
+}
+
+void APC_Game::PressedRightMouse()
+{
+	CheackMouseTrace(mRightMouseActions);
+
+	mIsRightMouse = true;
+	mMouseTick = 0.0f;
+}
+
+void APC_Game::ReleasedRightMouse()
+{
+	mIsRightMouse = false;
 }
 
 void APC_Game::UseSkill_Q_Pressed()

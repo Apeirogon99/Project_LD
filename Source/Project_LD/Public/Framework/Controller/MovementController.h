@@ -19,28 +19,20 @@ public:
 	~AMovementController();
 
 public:
-	virtual bool OnTick() override;
-	
-public:
 	void PlayerTick(float DeltaTime) override;
 	void SetupInputComponent() override;
 
-	void OnSetDestinationPressed();
-	void OnSetDestinationReleased();
 	void OnSetCameraZoomAxis(const float inValue);
 
 public:
 	void SwitchMovementMode();
-	void MoveToMouseCursor();
+	void MoveToMouseCursor(AActor* inHitActor, FHitResult inHitResult);
 
 public:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnTeleport(const FVector& DestLocation);
 	virtual void OnTeleport_Implementation(const FVector& DestLocation);
 
-
-	void SetNewMoveDestination(FVector& DestLocation);
-	void SendMove();
 	void MoveDestination(const FVector& inOldMovementLocation, const FVector& inNewMovementLocation, const int64& inTime);
 	void MoveCorrection(const float inDeltaTime);
 	void RotationDestination(const FRotator& inNewRotation, const int64& inTime);

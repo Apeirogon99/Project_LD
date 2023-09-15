@@ -26,6 +26,12 @@ public:
 	void SwitchFriend();
 	void SwitchParty();
 
+	void PressedLeftMouse();
+	void ReleasedLeftMouse();
+
+	void PressedRightMouse();
+	void ReleasedRightMouse();
+
 	void UseSkill_Q_Pressed();
 	void UseSkill_Q_Released();
 	void UseSkill_W_Pressed();
@@ -39,7 +45,8 @@ public:
 
 public:
 	virtual void BeginPlay() override;
-	
+	void PlayerTick(float DeltaTime) override;
+
 public:
 	virtual bool	OnRecvPacket(BYTE* buffer, const uint32 len) override;
 	virtual bool	OnSend(int32 len) override;
@@ -52,5 +59,19 @@ public:
 
 protected:
 	virtual void SetupInputComponent() override;
+
+public:
+	void CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, FHitResult)>> inMouseActions);
+	void PickUp(AActor* inHitActor, FHitResult inHitResult);
+	void Interative(AActor* inHitActor, FHitResult inHitResult);
+	void Enemy(AActor* inHitActor, FHitResult inHitResult);
+
+public:
+	TMap<FName, TFunction<void(APC_Game&, AActor*, FHitResult)>> mLeftMouseActions;
+	TMap<FName, TFunction<void(APC_Game&, AActor*, FHitResult)>> mRightMouseActions;
+
+	float mMouseTick;
+	bool mIsLeftMouse;
+	bool mIsRightMouse;
 };
 	

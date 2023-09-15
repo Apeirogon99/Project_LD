@@ -36,18 +36,6 @@ AMovementController::~AMovementController()
 {
 }
 
-bool AMovementController::OnTick()
-{
-	Super::OnTick();
-
-	if (mIsMoveToMouseCursor == true)
-	{
-		MoveToMouseCursor();
-	}
-
-	return true;
-}
-
 void AMovementController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
@@ -68,23 +56,7 @@ void AMovementController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	InputComponent->BindAction("SetDestination(Player)", IE_Pressed, this, &AMovementController::OnSetDestinationPressed);
-	InputComponent->BindAction("SetDestination(Player)", IE_Released, this, &AMovementController::OnSetDestinationReleased);
 	InputComponent->BindAxis("CameraZoom(Player)", this, &AMovementController::OnSetCameraZoomAxis);
-}
-
-void AMovementController::OnSetDestinationPressed()
-{
-	mIsMoveToMouseCursor = true;
-
-	MoveToMouseCursor();
-}
-
-void AMovementController::OnSetDestinationReleased()
-{
-	mIsMoveToMouseCursor = false;
-
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, FVector(mDestLocation.X, mDestLocation.Y, (mDestLocation.Z + 1.0f)), FRotator::ZeroRotator, true);
 }
 
 void AMovementController::OnSetCameraZoomAxis(const float inValue)
@@ -98,57 +70,45 @@ void AMovementController::SwitchMovementMode()
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
 }
 
-void AMovementController::MoveToMouseCursor()
+void AMovementController::MoveToMouseCursor(AActor* inHitActor, FHitResult inHitResult)
 {
-	FHitResult Hit;
-	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-
-	if (false == Hit.bBlockingHit)
+	//TODO: 서버에게 보낼 값
+	ANetworkController* controller = Cast<ANetworkController>(this);
+	if (nullptr == controller)
 	{
 		return;
 	}
 
-	if (Hit.Actor.Get()->Tags.Num() > 0)
+	ACharacter* character = Cast<ACharacter>(this->GetPawn());
+	if (nullptr == character)
 	{
-		ANC_Game* character = Cast<ANC_Game>(GetCharacter());
-		if (character == nullptr)
-		{
-			return;
-		}
-
-		if (character->GetCanMove() == false)
-		{
-			return;
-		}
-
-		FName actortag = Hit.Actor.Get()->Tags[0];
-		if (actortag == FName("Enemy"))
-		{
-			if (Hit.Actor->GetClass()->ImplementsInterface(UInteractiveInterface::StaticClass()))
-			{
-				Cast<IInteractiveInterface>(Hit.Actor)->Interactive(character);
-			}
-		}
-		else
-		{
-			if (character->GetIsAttack() == false)
-			{
-				if (actortag == FName("Ground"))
-				{
-					//Ground
-					SetNewMoveDestination(Hit.ImpactPoint);
-				}
-				else
-				{
-					if (Hit.Actor->GetClass()->ImplementsInterface(UInteractiveInterface::StaticClass()))
-					{
-						//Interactive Things
-						Cast<IInteractiveInterface>(Hit.Actor)->Interactive(character);
-					}
-				}
-			}
-		}
+		return;
 	}
+	const float halfHeight = character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+
+	mDestLocation = inHitResult.ImpactPoint;
+	mCurLocation = character->GetActorLocation();
+
+	Protocol::C2S_MovementCharacter movementPacket;
+	movementPacket.set_timestamp(controller->GetServerTimeStamp());
+
+	FVector pawnLocation = character->GetActorLocation();
+	Protocol::SVector* oldMovementLocation = movementPacket.mutable_cur_location();
+	oldMovementLocation->set_x(pawnLocation.X);
+	oldMovementLocation->set_y(pawnLocation.Y);
+	oldMovementLocation->set_z(pawnLocation.Z);
+
+	Protocol::SVector* newMovementLocation = movementPacket.mutable_move_location();
+	newMovementLocation->set_x(mDestLocation.X);
+	newMovementLocation->set_y(mDestLocation.Y);
+	newMovementLocation->set_z(mDestLocation.Z + halfHeight);
+
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(controller, movementPacket);
+	controller->Send(pakcetBuffer);
+
+	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, mDestLocation);
+
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, FVector(mDestLocation.X, mDestLocation.Y, (mDestLocation.Z + 1.0f)), FRotator::ZeroRotator, true);
 }
 
 void AMovementController::OnTeleport_Implementation(const FVector& DestLocation)
@@ -166,80 +126,6 @@ void AMovementController::OnTeleport_Implementation(const FVector& DestLocation)
 	const FRotator& rotation = character->GetActorRotation();
 
 	character->TeleportTo(DestLocation, rotation, false, false);
-}
-
-void AMovementController::SetNewMoveDestination(FVector& DestLocation)
-{
-
-	//TODO: 서버에게 보낼 값
-	ANetworkController* controller = Cast<ANetworkController>(this);
-	if (nullptr == controller)
-	{
-		return;
-	}
-
-	ACharacter* character = Cast<ACharacter>(this->GetPawn());
-	if (nullptr == character)
-	{
-		return;
-	}
-	const float halfHeight	= character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-
-	mDestLocation = FVector(DestLocation.X, DestLocation.Y, DestLocation.Z + halfHeight);
-	mCurLocation = character->GetActorLocation();
-
-	Protocol::C2S_MovementCharacter movementPacket;
-	movementPacket.set_timestamp(controller->GetServerTimeStamp());
-
-	FVector pawnLocation = character->GetActorLocation();
-	Protocol::SVector* oldMovementLocation = movementPacket.mutable_cur_location();
-	oldMovementLocation->set_x(pawnLocation.X);
-	oldMovementLocation->set_y(pawnLocation.Y);
-	oldMovementLocation->set_z(pawnLocation.Z);
-
-	Protocol::SVector* newMovementLocation = movementPacket.mutable_move_location();
-	newMovementLocation->set_x(mDestLocation.X);
-	newMovementLocation->set_y(mDestLocation.Y);
-	newMovementLocation->set_z(mDestLocation.Z);
-
-	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(controller, movementPacket);
-	controller->Send(pakcetBuffer);
-
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
-
-}
-
-void AMovementController::SendMove()
-{
-	ANetworkController* controller = Cast<ANetworkController>(this);
-	if (nullptr == controller)
-	{
-		return;
-	}
-
-	ACharacter* character = Cast<ACharacter>(this->GetPawn());
-	if (nullptr == character)
-	{
-		return;
-	}
-
-	Protocol::C2S_MovementCharacter movementPacket;
-	movementPacket.set_timestamp(controller->GetServerTimeStamp());
-
-	FVector pawnLocation = character->GetActorLocation();
-	Protocol::SVector* oldMovementLocation = movementPacket.mutable_cur_location();
-	oldMovementLocation->set_x(pawnLocation.X);
-	oldMovementLocation->set_y(pawnLocation.Y);
-	oldMovementLocation->set_z(pawnLocation.Z);
-
-	Protocol::SVector* newMovementLocation = movementPacket.mutable_move_location();
-	newMovementLocation->set_x(mDestLocation.X);
-	newMovementLocation->set_y(mDestLocation.Y);
-	newMovementLocation->set_z(mDestLocation.Z);
-
-	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(controller, movementPacket);
-	controller->Send(pakcetBuffer);
-
 }
 
 void AMovementController::MoveDestination(const FVector& inOldMovementLocation, const FVector& inNewMovementLocation, const int64& inTime)
