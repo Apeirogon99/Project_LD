@@ -2672,12 +2672,29 @@ bool Handle_S2C_DebugCircle(ANetworkController* controller, Protocol::S2C_DebugC
     if (BlueprintObj)
     {
         UClass* DebugActorClass = BlueprintObj->GeneratedClass;
+        if (nullptr == DebugActorClass)
+        {
+            return true;
+        }
+
         UWorld* world = controller->GetWorld();
         if (world == nullptr)
         {
             return false;
         }
-        Cast<ADebug_Circle>(world->SpawnActor<AActor>(DebugActorClass, FVector(), FRotator()))->DebugInit(radius, location, duration);
+
+        AActor* newActor = world->SpawnActor<AActor>(DebugActorClass, FVector(), FRotator());
+        if (nullptr == newActor)
+        {
+            return true;
+        }
+
+        ADebug_Circle* newDebugCircle = Cast<ADebug_Circle>(newActor);
+        if (nullptr == newDebugCircle)
+        {
+            return true;
+        }
+        newDebugCircle->DebugInit(radius, location, duration);
     }
 
     return true;
