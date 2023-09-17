@@ -1646,6 +1646,11 @@ bool Handle_S2C_AppearProtal(ANetworkController* controller, Protocol::S2C_Appea
     return true;
 }
 
+bool Handle_S2C_AppearObstruction(ANetworkController* controller, Protocol::S2C_AppearObstruction& pkt)
+{
+    return true;
+}
+
 bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C_MovementProjectile& pkt)
 {
     UWorld* world = controller->GetWorld();
@@ -2696,6 +2701,86 @@ bool Handle_S2C_DebugCircle(ANetworkController* controller, Protocol::S2C_DebugC
         }
         newDebugCircle->DebugInit(radius, location, duration);
     }
+
+    return true;
+}
+
+bool Handle_S2C_RequestEnterDungeon(ANetworkController* controller, Protocol::S2C_RequestEnterDungeon& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    int32 error = pkt.error();
+    if (error != GetDatabaseErrorToInt(EDCommonErrorType::SUCCESS))
+    {
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("레이드 입장 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+    }
+
+    clientHUD->ShowWidgetFromName(TEXT("LoadingLevel"));
+    return true;
+}
+
+bool Handle_S2C_ResponseEnterDungeon(ANetworkController* controller, Protocol::S2C_ResponseEnterDungeon& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    APS_Game* playerState = Cast<APS_Game>(controller->PlayerState);
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingLevel"));
+
 
     return true;
 }

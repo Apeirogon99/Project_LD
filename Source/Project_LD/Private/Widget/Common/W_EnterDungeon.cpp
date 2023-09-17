@@ -64,12 +64,19 @@ void UW_EnterDungeon::Click_EnterButton()
 		return;
 	}
 
-	//Protocol::C2S_Chat chatPacket;
-	//chatPacket.set_message(message);
-	//chatPacket.set_timestamp(timeStamp);
+	AClientHUD* clientHUD = Cast<AClientHUD>(networkController->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
 
-	//SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(nullptr, chatPacket);
-	//networkController->Send(sendBuffer);
+	clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
+
+	Protocol::C2S_RequestEnterDungeon enterPacket;
+	enterPacket.set_dungeon_id(mDungeonID);
+
+	SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(nullptr, enterPacket);
+	networkController->Send(sendBuffer);
 }
 
 void UW_EnterDungeon::Click_CancleButton()
