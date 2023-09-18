@@ -73,7 +73,7 @@ void UW_EnterDungeon::Click_EnterButton()
 	clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
 
 	Protocol::C2S_RequestEnterDungeon enterPacket;
-	enterPacket.set_dungeon_id(mDungeonID);
+	enterPacket.set_dungeon_type(mDungeonID);
 
 	SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(nullptr, enterPacket);
 	networkController->Send(sendBuffer);

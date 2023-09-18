@@ -38,7 +38,7 @@ void UW_MainPlayerInfo::Init()
 		return;
 	}
 
-	AGM_Game* gamemode = Cast<AGM_Game>(world->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -71,7 +71,7 @@ void UW_MainPlayerInfo::UpdateExpBar()
 		return;
 	}
 
-	AGM_Game* gamemode = Cast<AGM_Game>(world->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;

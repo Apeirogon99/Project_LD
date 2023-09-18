@@ -106,7 +106,7 @@ void UW_MainGame::Init()
 
 void UW_MainGame::ChatOpen()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -137,7 +137,7 @@ void UW_MainGame::ChatOpen()
 
 void UW_MainGame::FocusChat()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -175,7 +175,7 @@ void UW_MainGame::FocusChat()
 
 void UW_MainGame::FriendOpenRequest()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -212,7 +212,7 @@ void UW_MainGame::FriendOpenRequest()
 
 void UW_MainGame::FriendOpenResponse(const google::protobuf::RepeatedPtrField<Protocol::SFriend>& inFriends, const int32& inListType)
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -237,7 +237,7 @@ void UW_MainGame::FriendOpenResponse(const google::protobuf::RepeatedPtrField<Pr
 
 void UW_MainGame::PartyOpenRequest()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -322,7 +322,7 @@ void UW_MainGame::PartyNotifyGame(const FString& inPlayerName, const int32& inAc
 
 void UW_MainGame::InventoryOpenRequest()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -357,7 +357,7 @@ void UW_MainGame::InventoryOpenRequest()
 
 void UW_MainGame::InventoryOpenResponse()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -383,7 +383,7 @@ void UW_MainGame::InventoryOpenResponse()
 
 void UW_MainGame::SkillTreeOpenRequest()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;

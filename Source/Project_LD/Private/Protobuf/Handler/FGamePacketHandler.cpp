@@ -17,6 +17,8 @@
 #include <Game/PS_Game.h>
 #include <Game/GS_Game.h>
 
+#include <Dungeon/GM_Dungeon.h>
+
 #include <GameContent/Enemy/Skill/EnemySkillManager.h>
 #include <GameContent/Enemy/Skill/EnemySkillInterface.h>
 
@@ -56,7 +58,7 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -77,7 +79,11 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     const int64     newRemoteID = pkt.remote_id();
     FCharacterData  newCharacterData = pkt.character_data();
 
-    AC_Game* newCharacter = Cast<AC_Game>(gameMode->SpawnCharacter(location, rotator));
+    FActorSpawnParameters spawnParams;
+    spawnParams.Owner = gameMode;
+    spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+    AC_Game* newCharacter = world->SpawnActor<AC_Game>(gameMode->DefaultPawnClass, location, rotator, spawnParams);
     if (nullptr == newCharacter)
     {
         return false;
@@ -129,7 +135,7 @@ bool Handle_S2C_LeaveGameServer(ANetworkController* controller, Protocol::S2C_Le
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -153,7 +159,7 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
         return false;
     }
     
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if(nullptr == gameMode)
     {
         return false;
@@ -232,7 +238,7 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -298,7 +304,7 @@ bool Handle_S2C_DetectChangePlayer(ANetworkController* controller, Protocol::S2C
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -343,7 +349,7 @@ bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_P
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -416,7 +422,7 @@ bool Handle_S2C_UpdateExperience(ANetworkController* controller, Protocol::S2C_U
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -460,7 +466,7 @@ bool Handle_S2C_LevelUp(ANetworkController* controller, Protocol::S2C_LevelUp& p
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -567,7 +573,7 @@ bool Handle_S2C_LoadFriendList(ANetworkController* controller, Protocol::S2C_Loa
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -701,7 +707,7 @@ bool Handle_S2C_ConnectFriend(ANetworkController* controller, Protocol::S2C_Conn
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -738,7 +744,7 @@ bool Handle_S2C_DisConnectFriend(ANetworkController* controller, Protocol::S2C_D
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -775,7 +781,7 @@ bool Handle_S2C_CreateParty(ANetworkController* controller, Protocol::S2C_Create
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -863,7 +869,7 @@ bool Handle_S2C_RequestEnterParty(ANetworkController* controller, Protocol::S2C_
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -927,7 +933,7 @@ bool Handle_S2C_RequestParty(ANetworkController* controller, Protocol::S2C_Reque
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -985,7 +991,7 @@ bool Handle_S2C_RequestLeaveParty(ANetworkController* controller, Protocol::S2C_
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -1109,7 +1115,7 @@ bool Handle_S2C_RequestLeaderParty(ANetworkController* controller, Protocol::S2C
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -1171,7 +1177,7 @@ bool Handle_S2C_ResponeParty(ANetworkController* controller, Protocol::S2C_Respo
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -1264,7 +1270,7 @@ bool Handle_S2C_LoadParty(ANetworkController* controller, Protocol::S2C_LoadPart
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -1357,7 +1363,7 @@ bool Handle_S2C_NotifyParty(ANetworkController* controller, Protocol::S2C_Notify
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -1394,7 +1400,7 @@ bool Handle_S2C_EnterPartyPlayer(ANetworkController* controller, Protocol::S2C_E
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -1473,7 +1479,7 @@ bool Handle_S2C_LeavePartyPlayer(ANetworkController* controller, Protocol::S2C_L
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -1696,7 +1702,7 @@ bool Handle_S2C_Teleport(ANetworkController* controller, Protocol::S2C_Teleport&
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -2124,7 +2130,7 @@ bool Handle_S2C_LoadInventory(ANetworkController* controller, Protocol::S2C_Load
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -2713,7 +2719,7 @@ bool Handle_S2C_RequestEnterDungeon(ANetworkController* controller, Protocol::S2
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -2742,7 +2748,7 @@ bool Handle_S2C_RequestEnterDungeon(ANetworkController* controller, Protocol::S2
                 clientHUD->CleanWidgetFromName(TEXT("Notification"));
             });
 
-        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("레이드 입장 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("던전 입장 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
         if (ret == false)
         {
             return false;
@@ -2761,7 +2767,7 @@ bool Handle_S2C_ResponseEnterDungeon(ANetworkController* controller, Protocol::S
         return false;
     }
 
-    AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
     if (nullptr == gameMode)
     {
         return false;
@@ -2779,8 +2785,86 @@ bool Handle_S2C_ResponseEnterDungeon(ANetworkController* controller, Protocol::S
         return false;
     }
 
+    int32 error = pkt.error();
+    if (error != GetDatabaseErrorToInt(EDCommonErrorType::SUCCESS))
+    {
+        FNotificationDelegate notificationDelegate;
+        notificationDelegate.BindLambda([=]()
+            {
+                clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            });
+
+        bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("던전 입장 실패"), UNetworkUtils::GetNetworkErrorToString(error), TEXT("확인"), notificationDelegate);
+        if (ret == false)
+        {
+            return false;
+        }
+    }
+
+    FString level = UNetworkUtils::ConvertFString(pkt.level());
+    gameMode->RequestTravelLevel(level);
+
     clientHUD->CleanWidgetFromName(TEXT("LoadingLevel"));
 
+    clientHUD->FadeIn();
+
+    return true;
+}
+
+bool Handle_S2C_WaitingLoadDungeon(ANetworkController* controller, Protocol::S2C_WaitingLoadDungeon& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    bool ret = UWidgetUtils::SetLoadingPlayer(clientHUD, pkt.max_number(), pkt.least_number());
+    if (ret == false)
+    {
+        return false;
+    }
+
+    clientHUD->FadeOut();
+
+    return true;
+}
+
+bool Handle_S2C_CompleteLoadDungeon(ANetworkController* controller, Protocol::S2C_CompleteLoadDungeon& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+    
+    clientHUD->CleanWidgetFromName(TEXT("LoadingPlayer"));
+    clientHUD->ShowWidgetFromName(FString(TEXT("MainGame")));
+    clientHUD->FadeOut();
 
     return true;
 }

@@ -351,7 +351,7 @@ void ANetworkGameMode::PossessNetwork(bool inIsPossess)
 {
 	mIsPossess = inIsPossess;
 
-	if (false == mIsConnect)
+	if (false == mIsPossess)
 	{
 		ShowNetworkNotification(TEXT("플레이어 동기화 연결에 실패하였습니다"));
 		return;

@@ -76,7 +76,8 @@ void UW_FriendMain::NativeDestruct()
 
 void UW_FriendMain::Click_FriendTab()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -101,7 +102,7 @@ void UW_FriendMain::Click_FriendTab()
 
 void UW_FriendMain::Click_RequestTab()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -126,7 +127,7 @@ void UW_FriendMain::Click_RequestTab()
 
 void UW_FriendMain::Click_BlockTab()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;

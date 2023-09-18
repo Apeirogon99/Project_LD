@@ -126,6 +126,9 @@ enum class EPakcetID : uint16
 	C2S_RequestEnterDungeon = 2079,
 	S2C_RequestEnterDungeon = 2080,
 	S2C_ResponseEnterDungeon = 2081,
+	C2S_CompleteLoadDungeon = 2082,
+	S2C_WaitingLoadDungeon = 2083,
+	S2C_CompleteLoadDungeon = 2084,
 
 	C2S_EnterDungeon = 5000,
 	S2C_EnterDungeon = 5001,
@@ -136,6 +139,8 @@ enum class EPakcetID : uint16
 	S2C_TravelLevel = 9003,
 	C2S_TravelServer = 9004,
 	S2C_TravelServer = 9005,
+	C2S_StateServer = 9006,
+	S2C_StateServer = 9007,
 };
 
 bool Handle_INVALID(ANetworkController* controller, BYTE* buffer, int32 len);

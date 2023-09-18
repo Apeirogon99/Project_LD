@@ -98,3 +98,23 @@ bool UWidgetUtils::SetChatWidget(AClientHUD* inHUD, const FString& inPlayerName,
     //inHUD->ShowWidgetFromName(TEXT("BW_Chatting"));
     return true;
 }
+
+bool UWidgetUtils::SetLoadingPlayer(AClientHUD* inHUD, const int32& inMax, const int32& inLeast)
+{
+    UW_LoadingPlayer* loadingPlayer = nullptr;
+    UUserWidget* outWidget = inHUD->GetWidgetFromName(TEXT("LoadingPlayer"));
+    if (outWidget == nullptr)
+    {
+        return false;
+    }
+
+    loadingPlayer = Cast<UW_LoadingPlayer>(outWidget);
+    if (loadingPlayer == nullptr)
+    {
+        return false;
+    }
+    loadingPlayer->UpdateLoadingPlayer(FString::FromInt(inMax), FString::FromInt(inLeast));
+
+    inHUD->ShowWidgetFromName(TEXT("LoadingPlayer"));
+    return true;
+}

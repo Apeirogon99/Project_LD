@@ -13,6 +13,8 @@ enum class EPakcetID: uint16
 	S2C_TravelLevel = 9003,
 	C2S_TravelServer = 9004,
 	S2C_TravelServer = 9005,
+	C2S_StateServer = 9006,
+	S2C_StateServer = 9007,
 };
 */
 
@@ -20,6 +22,7 @@ enum class EPakcetID: uint16
 bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protocol::S2C_ReplicatedServerTimeStamp& pkt);
 bool Handle_S2C_TravelLevel(ANetworkController* controller, Protocol::S2C_TravelLevel& pkt);
 bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_TravelServer& pkt);
+bool Handle_S2C_StateServer(ANetworkController* controller, Protocol::S2C_StateServer& pkt);
 
 class FCommonPacketHandler
 {
@@ -29,9 +32,11 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_ReplicatedServerTimeStamp)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_ReplicatedServerTimeStamp>(Handle_S2C_ReplicatedServerTimeStamp, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_TravelLevel)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_TravelLevel>(Handle_S2C_TravelLevel, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_TravelServer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_TravelServer>(Handle_S2C_TravelServer, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_StateServer)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_StateServer>(Handle_S2C_StateServer, controller, buffer, len); };
 	}
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_ReplicatedServerTimeStamp& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_ReplicatedServerTimeStamp)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_TravelLevel& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_TravelLevel)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_TravelServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_TravelServer)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_StateServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_StateServer)); }
 
 };

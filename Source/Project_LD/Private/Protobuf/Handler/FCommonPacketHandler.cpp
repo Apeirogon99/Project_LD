@@ -49,5 +49,10 @@ bool Handle_S2C_TravelLevel(ANetworkController* controller, Protocol::S2C_Travel
 
 bool Handle_S2C_TravelServer(ANetworkController* controller, Protocol::S2C_TravelServer& pkt)
 {
-	return false;
+	return true;
+}
+
+bool Handle_S2C_StateServer(ANetworkController* controller, Protocol::S2C_StateServer& pkt)
+{
+	return true;
 }

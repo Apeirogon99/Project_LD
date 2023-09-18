@@ -410,7 +410,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		}
 	}
 
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;
@@ -431,7 +431,7 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 
 void UUWInventory::CloseInventory()
 {
-	AGM_Game* gamemode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gamemode)
 	{
 		return;

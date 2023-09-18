@@ -34,7 +34,7 @@ void APS_Game::UpdateExpValue(int InExp)
 void APS_Game::InitializeLocalPlayerState()
 {
 
-	AGM_Game* gameMode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gameMode)
 	{
 		return;
@@ -96,7 +96,7 @@ void APS_Game::InitializeLocalPlayerState()
 
 void APS_Game::InitializeLocalPlayerData()
 {
-	AGM_Game* gameMode = Cast<AGM_Game>(GetWorld()->GetAuthGameMode());
+	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(GetWorld()->GetAuthGameMode());
 	if (nullptr == gameMode)
 	{
 		return;

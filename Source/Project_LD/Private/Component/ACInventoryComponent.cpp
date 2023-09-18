@@ -315,7 +315,7 @@ void UACInventoryComponent::ReplacePacket(UItemObjectData* InvenObjectData, UIte
 	{
 		return;
 	}
-	AGM_Game* gamemode = Cast<AGM_Game>(world->GetAuthGameMode());
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
 	if (gamemode == nullptr)
 	{
 		return;
