@@ -79,6 +79,7 @@ void AGM_Dungeon::InitNetwork()
 
 	if (true == IsConnectedServer())
 	{
+		//this->RequestKeepConnectServer(ip, port);
 		this->ProcessConnect(true);
 	}
 	else

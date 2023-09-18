@@ -2754,8 +2754,11 @@ bool Handle_S2C_RequestEnterDungeon(ANetworkController* controller, Protocol::S2
             return false;
         }
     }
+    else
+    {
+        clientHUD->ShowWidgetFromName(TEXT("LoadingLevel"));
+    }
 
-    clientHUD->ShowWidgetFromName(TEXT("LoadingLevel"));
     return true;
 }
 
