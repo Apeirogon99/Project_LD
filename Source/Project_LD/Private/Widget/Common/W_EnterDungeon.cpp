@@ -77,6 +77,9 @@ void UW_EnterDungeon::Click_EnterButton()
 
 	SendBufferPtr sendBuffer = FGamePacketHandler::MakeSendBuffer(nullptr, enterPacket);
 	networkController->Send(sendBuffer);
+
+	clientHUD->CleanWidgetFromName(TEXT("EnterDungeon"));
+
 }
 
 void UW_EnterDungeon::Click_CancleButton()

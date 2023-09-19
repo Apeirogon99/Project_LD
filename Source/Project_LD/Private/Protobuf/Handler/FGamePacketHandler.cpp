@@ -2911,3 +2911,60 @@ bool Handle_S2C_CompleteLoadDungeon(ANetworkController* controller, Protocol::S2
 
     return true;
 }
+
+bool Handle_S2C_EnterPortal(ANetworkController* controller, Protocol::S2C_EnterPortal& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    FString title = UNetworkUtils::ConvertFString(pkt.title());
+    int64 time = pkt.time();
+
+    bool ret = UWidgetUtils::SetWaiting(clientHUD, title, time);
+    if (ret == false)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Handle_S2C_LeavePortal(ANetworkController* controller, Protocol::S2C_LeavePortal& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    clientHUD->CleanWidgetFromName(TEXT("Waiting"));
+
+    return true;
+}

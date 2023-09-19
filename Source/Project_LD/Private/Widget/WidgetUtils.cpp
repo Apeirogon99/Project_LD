@@ -118,3 +118,24 @@ bool UWidgetUtils::SetLoadingPlayer(AClientHUD* inHUD, const int32& inMax, const
     inHUD->ShowWidgetFromName(TEXT("LoadingPlayer"));
     return true;
 }
+
+bool UWidgetUtils::SetWaiting(AClientHUD* inHUD, const FString& inTitle, const int64& inTime)
+{
+    UW_Waiting* waiting = nullptr;
+    UUserWidget* outWidget = inHUD->GetWidgetFromName(TEXT("Waiting"));
+    if (outWidget == nullptr)
+    {
+        return false;
+    }
+
+    waiting = Cast<UW_Waiting>(outWidget);
+    if (waiting == nullptr)
+    {
+        return false;
+    }
+    waiting->SetTitle(inTitle);
+    waiting->SetTime(StaticCast<int32>(inTime));
+
+    inHUD->ShowWidgetFromName(TEXT("Waiting"));
+    return true;
+}

@@ -11,6 +11,7 @@
 #include <Widget/Common/W_Reconfirm.h>
 #include <Widget/Game/Chat/W_Chat.h>
 #include <Widget/Common/W_LoadingPlayer.h>
+#include <Widget/Common/W_Waiting.h>
 #include "WidgetUtils.generated.h"
 
 /**
@@ -27,4 +28,5 @@ public:
 	static bool SetReconfirm(AClientHUD* inHUD, const FString& inTitle, const FString& inText, const FString& inConfirm, const FString& inCancle, const FConfirmButtonDelegate& inConfirmDelegate, const FCancleButtonDelegate& inCancleDelegate);
 	static bool SetChatWidget(AClientHUD* inHUD, const FString& inPlayerName, const FString& inMessage, const int32& inChatType);
 	static bool SetLoadingPlayer(AClientHUD* inHUD, const int32& inMax, const int32& inLeast);
+	static bool SetWaiting(AClientHUD* inHUD, const FString& inTitle, const int64& inTime);
 };
