@@ -46,6 +46,8 @@
 #include "CommonErrorTypes.h"
 #include <GameErrorTypes.h>
 
+#include <GameContent/Obstruction/ObstructionBase.h>
+
 #include <Framework/Debug/Debug_Box.h>
 #include <Framework/Debug/Debug_Circle.h>
 
@@ -1654,6 +1656,44 @@ bool Handle_S2C_AppearProtal(ANetworkController* controller, Protocol::S2C_Appea
 
 bool Handle_S2C_AppearObstruction(ANetworkController* controller, Protocol::S2C_AppearObstruction& pkt)
 {
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64     objectID    = pkt.object_id();
+    const int32     type        = pkt.type();
+    const FVector   location    = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    const FRotator  rotation    = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
+    const FVector   extent      = FVector(pkt.extent().x(), pkt.extent().y(), pkt.extent().z());
+
+    if (nullptr != gameState->FindGameObject(objectID))
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearObstruction] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AActor* newActor = gameState->CreateGameObject(AObstructionBase::StaticClass(), location, rotation, objectID);
+    if (nullptr == newActor)
+    {
+        return false;
+    }
+
+    AObstructionBase* newObstruction = Cast<AObstructionBase>(newActor);
+    if (nullptr == newObstruction)
+    {
+        return false;
+    }
+    newObstruction->SetObstructioType(type);
+    newObstruction->SetBlockingExtent(extent);
+
     return true;
 }
 

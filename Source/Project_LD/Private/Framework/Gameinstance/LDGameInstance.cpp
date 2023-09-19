@@ -30,6 +30,11 @@ void ULDGameInstance::SetToken(const FString& inToken)
 	mToken = inToken;
 }
 
+void ULDGameInstance::SetDungeonID(const int32& inDungeonID)
+{
+	mDungeonID = inDungeonID;
+}
+
 void ULDGameInstance::SetServerData(const int32 inServerID, const FString& inServerName, const FString& inServerIP, const int32 inServerPort)
 {
 	if (nullptr == mServerData)
@@ -76,6 +81,11 @@ FEnemyStatData* ULDGameInstance::GetEnemyStatData(int32 inCode)
 FLevelDataTable* ULDGameInstance::GetLevelDataTable(int32 inLevel)
 {
 	return mLevelDataTable->FindRow<FLevelDataTable>(*FString::FromInt(inLevel), TEXT(""));
+}
+
+FObstructionData* ULDGameInstance::GetObstructionData(int32 inObstructionType)
+{
+	return mObstructionTable->FindRow<FObstructionData>(*FString::FromInt(inObstructionType), TEXT(""));
 }
 
 FString ULDGameInstance::GetToken()

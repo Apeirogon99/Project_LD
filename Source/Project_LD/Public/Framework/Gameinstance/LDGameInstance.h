@@ -8,6 +8,7 @@
 #include <Struct/Game/CharacterStatusData.h>
 #include <Struct/Game/EnemyData.h>
 #include <Struct/Game/LevelDataTablle.h>
+#include <Struct/Game/ObstructionData.h>
 #include "LDGameInstance.generated.h"
 
 class UDataTable;
@@ -32,6 +33,7 @@ public:
 
 public:
 	void SetToken(const FString& inToken);
+	void SetDungeonID(const int32& inDungeonID);
 	void SetServerData(const int32 inServerID, const FString& inServerName, const FString& inServerIP, const int32 inServerPort);
 
 public:
@@ -42,6 +44,7 @@ public:
 	FEnemyData*						GetEnemyData(int32 inCode);
 	FEnemyStatData*					GetEnemyStatData(int32 inCode);
 	FLevelDataTable*				GetLevelDataTable(int32 inLevel);
+	FObstructionData*				GetObstructionData(int32 inObstructionType);
 	FString							GetToken();
 	UServerData*					GetServerData();
 
@@ -67,9 +70,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UDataTable* mLevelDataTable;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UDataTable* mObstructionTable;
+
 private:
 	UPROPERTY()
 	FString mToken;
+
+	UPROPERTY()
+	int32 mDungeonID;
 
 	UPROPERTY()
 	UServerData* mServerData;
