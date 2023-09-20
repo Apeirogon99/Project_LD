@@ -27,6 +27,10 @@ void AE_DarkKnight::PlayDarkKnightAnim(int32 Index)
 	animInstance->PlayDarkKnightAnimMontage(Index);
 }
 
+void AE_DarkKnight::DarkKnightBladeParticleToggle_Implementation()
+{
+}
+
 void AE_DarkKnight::BeginPlay()
 {
 	Super::BeginPlay();

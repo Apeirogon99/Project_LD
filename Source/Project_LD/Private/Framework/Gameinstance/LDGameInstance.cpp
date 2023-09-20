@@ -83,6 +83,11 @@ FLevelDataTable* ULDGameInstance::GetLevelDataTable(int32 inLevel)
 	return mLevelDataTable->FindRow<FLevelDataTable>(*FString::FromInt(inLevel), TEXT(""));
 }
 
+FBuffData* ULDGameInstance::GetBuffData(int32 inCode)
+{
+	return mBuffidDataTable->FindRow<FBuffData>(*FString::FromInt(inCode), TEXT(""));
+}
+
 FObstructionData* ULDGameInstance::GetObstructionData(int32 inObstructionType)
 {
 	return mObstructionTable->FindRow<FObstructionData>(*FString::FromInt(inObstructionType), TEXT(""));

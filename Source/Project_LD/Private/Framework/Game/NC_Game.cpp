@@ -73,7 +73,6 @@ ANC_Game::ANC_Game()
 
 	mApplyBuffStore->SetAsset(mApplyBuffParticle);
 
-	bIsAttack = false;
 	bBuffActive = false;
 
 	bCanMove = true;

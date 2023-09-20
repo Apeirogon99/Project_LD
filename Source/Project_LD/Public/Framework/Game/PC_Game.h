@@ -43,6 +43,9 @@ public:
 	void UseSkill_Dash_Pressed();
 	void UseSkill_Dash_Released();
 
+	void CameraZoomIn();
+	void CameraZoomOut();
+
 public:
 	virtual void BeginPlay() override;
 	void PlayerTick(float DeltaTime) override;

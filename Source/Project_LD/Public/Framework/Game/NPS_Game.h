@@ -14,7 +14,7 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnCharacterHealthChanged)
 DECLARE_MULTICAST_DELEGATE(FOnCharacterManaChanged)
-DECLARE_MULTICAST_DELEGATE(FOnCharacterApplyBuff)
+DECLARE_MULTICAST_DELEGATE(FOnApplyBuffOrDeBuff)
 
 UCLASS()
 class PROJECT_LD_API ANPS_Game : public ANetworkPlayerState
@@ -26,9 +26,9 @@ public:
 	~ANPS_Game();
 
 public:
-	FOnCharacterHealthChanged			OnCharacterHealthChanged;
+	FOnCharacterHealthChanged		OnCharacterHealthChanged;
 	FOnCharacterManaChanged			OnCharacterManaChanged;
-	FOnCharacterApplyBuff					OnCharacterApplyBuff;
+	FOnApplyBuffOrDeBuff			OnApplyBuffOrDeBuff;
 
 public:
 	void UpdateCurrentStatsBar(); // stats Update
@@ -38,9 +38,9 @@ public:
 	void calculationStats();
 
 public:
-	const int64				GetRemoteID() const { return mRemoteID; }
-	FCharacterData&	GetCharacterData()	 { return mCharacterData; }
-	FCharacterStats&	GetCharacterStats() { return mCharacterStats; }
+	const int64			GetRemoteID() const		{ return mRemoteID; }
+	FCharacterData&		GetCharacterData()		{ return mCharacterData; }
+	FCharacterStats&	GetCharacterStats()		{ return mCharacterStats; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState")
@@ -51,7 +51,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Status")
 	FCharacterStats	mCharacterStats;
+
 protected:
 	virtual void UpdateHealthBar();
 	virtual void UpdateManaBar();
+	virtual void UpdateBuffCheck();
 };

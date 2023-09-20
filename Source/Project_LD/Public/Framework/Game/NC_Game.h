@@ -23,7 +23,6 @@ public:
 	~ANC_Game();
 
 public:
-	void SetIsAttack(const bool& InIsAttack) { bIsAttack = InIsAttack; }
 	void SetCanUseSkillQ(const bool& InCanSkillQ) { bCanSkillQ = InCanSkillQ; }
 	void SetCanUseSkillW(const bool& InCanSkillW) { bCanSkillW = InCanSkillW; }
 	void SetCanUseSkillE(const bool& InCanSkillE) { bCanSkillE = InCanSkillE; }
@@ -37,7 +36,6 @@ public:
 	void SetCanMove(const bool& InCanMove) { bCanMove = InCanMove; }
 
 public:
-	FORCEINLINE bool GetIsAttack()				const { return bIsAttack; }
 	FORCEINLINE bool GetUsingSkill()			const { return bUsingSkill; }
 	FORCEINLINE bool GetCanUseSkillQ()	const { return bCanSkillQ; }
 	FORCEINLINE bool GetCanUseSkillW()	const { return bCanSkillW; }
@@ -75,9 +73,6 @@ protected:
 	virtual void Destroyed() override;
 
 protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AnimationStats", meta = (AllowPrivateAccess = "true"))
-	bool bIsAttack;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget", meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* mChatWidget;
 

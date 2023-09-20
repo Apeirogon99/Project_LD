@@ -31,6 +31,7 @@ public:
 public:
 	int32 GetAttackCount() const			{ return mAttackCount; }
 	bool GetSaveAttack() const				{ return bSaveAttack; }
+	bool GetIsAttack() const				{ return bIsAttack; }
 
 protected:
 	virtual void NativeInitializeAnimation() override;

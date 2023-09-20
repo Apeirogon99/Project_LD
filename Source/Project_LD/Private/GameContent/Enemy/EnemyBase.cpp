@@ -325,6 +325,11 @@ void AEnemyBase::UpdateMovementSpeed()
 
 void AEnemyBase::Interactive(ANC_Game* inPlayer)
 {
+	if (inPlayer->GetUsingSkill())
+	{
+		return;
+	}
+
 	UWorld* world = GetWorld();
 	if (nullptr == world)
 	{

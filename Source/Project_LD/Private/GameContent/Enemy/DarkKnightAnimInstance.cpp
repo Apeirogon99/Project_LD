@@ -49,4 +49,10 @@ void UDarkKnightAnimInstance::InitSkillMontage()
 	{
 		mDarkKnightSkillMontage.Add(DARKKNIGHT_SKILL6.Object);
 	}
+
+	static ConstructorHelpers::FObjectFinder<UAnimMontage> DARKKNIHGT_PARRIED(TEXT("AnimMontage'/Game/GameContent/Animation/Enemy/DarkKnight/AnimAsset/M_DarkKnight_Parried.M_DarkKnight_Parried'"));
+	if (DARKKNIHGT_PARRIED.Succeeded())
+	{
+		mDarkKnightSkillMontage.Add(DARKKNIHGT_PARRIED.Object);
+	}
 }

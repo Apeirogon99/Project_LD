@@ -96,7 +96,6 @@ void ASkill_Buff::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	if (Cast<ANC_Game>(OtherActor) != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Play In"));
 		Cast<ANC_Game>(OtherActor)->ActiveBuffParticle();
 	}
 }
@@ -105,7 +104,6 @@ void ASkill_Buff::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Othe
 {
 	if (Cast<ANC_Game>(OtherActor) != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Play Out"));
 		Cast<ANC_Game>(OtherActor)->DeActiveBuffParticle();
 	}
 }

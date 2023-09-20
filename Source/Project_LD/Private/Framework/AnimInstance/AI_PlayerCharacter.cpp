@@ -143,21 +143,10 @@ void UAI_PlayerCharacter::AnimNotify_AttackServerCheck()
 {
 	if (mMainCharacter)
 	{
+		bIsAttack = true;
 		auto movement = Cast<UCharacterMovementComponent>(mMainCharacter->GetMovementComponent());
 		movement->MovementMode = EMovementMode::MOVE_None;
 	}
-	//if (mMainCharacter->GetIsZoom() == false)
-	//{
-	//	mMainCharacter->SetIsZoom(true);
-	//	mMainCharacter->OnAttackCameraZoomIn();
-	//}
-	//if (bAttackLoop && bIsAttack)
-	//{
-	//	bAttackLoop = false;
-	//	Montage_JumpToSection(FName(TEXT("Combo4")), mAttackMontage);
-	//	mMainCharacter->SetIsZoom(false);
-	//	mMainCharacter->OnAttackCameraZoomOut();
-	//}
 }
 
 void UAI_PlayerCharacter::InitAttackMontage()

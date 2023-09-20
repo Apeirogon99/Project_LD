@@ -115,11 +115,11 @@ void AC_Game::Destroyed()
 {
 }
 
-void AC_Game::OnAttackCameraZoomIn_Implementation()
+void AC_Game::OnCameraZoomIn_Implementation()
 {
 }
 
-void AC_Game::OnAttackCameraZoomOut_Implementation()
+void AC_Game::OnCameraZoomOut_Implementation()
 {
 }
 

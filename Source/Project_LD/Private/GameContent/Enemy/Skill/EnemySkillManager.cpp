@@ -141,6 +141,7 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
     }
     else if ((MINDARKKNIGHTSKILLCODE <= InSkillID) && (InSkillID <= MAXDARKKNIGHTSKILLCODE))
     {
+        UE_LOG(LogTemp, Warning, TEXT("DarkKnight ActivSkill"));
         AE_DarkKnight* actor = Cast<AE_DarkKnight>(InActor);
         if (actor == nullptr)
         {
@@ -160,9 +161,12 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
         case 3:
         case 4:
         case 5:
+            actor->DarkKnightBladeParticleToggle();
             actor->PlayDarkKnightAnim(InSkillID - MINDARKKNIGHTSKILLCODE);
             break;
         }
+
+        UE_LOG(LogTemp,Warning,TEXT("DarkKnight Skill %s"), *mDarkKnightSkillClass[InSkillID - MINDARKKNIGHTSKILLCODE]->GetName());
 
         //active 
         /*

@@ -20,6 +20,11 @@ public:
 
 	void PlayDarkKnightAnim(int32 Index);
 
+public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void DarkKnightBladeParticleToggle();
+	virtual void DarkKnightBladeParticleToggle_Implementation();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

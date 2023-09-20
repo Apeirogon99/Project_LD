@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include <Struct/Game/GameDatas.h>
 #include <Struct/Game/CharacterDatas.h>
 #include <Struct/Game/CharacterStatusData.h>
 #include <Struct/Game/EnemyData.h>
@@ -44,6 +45,7 @@ public:
 	FEnemyData*						GetEnemyData(int32 inCode);
 	FEnemyStatData*					GetEnemyStatData(int32 inCode);
 	FLevelDataTable*				GetLevelDataTable(int32 inLevel);
+	FBuffData*						GetBuffData(int32 inCode);
 	FObstructionData*				GetObstructionData(int32 inObstructionType);
 	FString							GetToken();
 	UServerData*					GetServerData();
@@ -66,6 +68,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UDataTable* mEnemyStatDataTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UDataTable* mBuffidDataTable;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UDataTable* mLevelDataTable;

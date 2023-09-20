@@ -18,6 +18,25 @@ enum class EItemObjectType
 	Equipment
 };
 
+USTRUCT(Atomic, BlueprintType)
+struct FBuffData : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FBuffData() : name(TEXT("")), image(nullptr) {}
+
+public:
+	UTexture2D* GetImage() { return image; }
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	FString name;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	UTexture2D* image;
+};
+
 USTRUCT(BlueprintType)
 struct FItemData : public FTableRowBase
 {

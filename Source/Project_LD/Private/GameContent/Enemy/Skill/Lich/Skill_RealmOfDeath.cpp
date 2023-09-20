@@ -29,6 +29,7 @@ void ASkill_RealmOfDeath::ActiveSkill(FVector InLocation, FRotator InRotation)
 		FVector Loc = InLocation;
 		Loc.Z += 70.f;
 		mSmoke = GetWorld()->SpawnActor<AActor>(SmokeActorClass, Loc, InRotation, SpawnParams);
+		mSmoke->SetActorRelativeScale3D(FVector(1.7f, 1.7f, 1.0f));
 	}
 }
 

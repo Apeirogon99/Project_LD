@@ -2,9 +2,11 @@
 
 
 #include "Widget/Game/Party/W_PlayerBuffInfo.h"
+#include <Components/Image.h>
 
 void UW_PlayerBuffInfo::NativeConstruct()
 {
+	mBuffImage = Cast<UImage>(GetWidgetFromName(TEXT("mBuffImage")));
 }
 
 void UW_PlayerBuffInfo::NativeDestruct()

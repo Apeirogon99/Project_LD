@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "W_PlayerBuffInfo.generated.h"
 
+class UImage;
 /**
  * 
  */
@@ -21,4 +22,7 @@ public:
 	virtual void NativeDestruct() override;
 	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime);
 
+public:
+	UPROPERTY(Meta = (BindWidget))
+	UImage* mBuffImage;
 };

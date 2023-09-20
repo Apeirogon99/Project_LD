@@ -169,6 +169,9 @@ void APC_Game::SetupInputComponent()
 	InputComponent->BindAction("SkillR", IE_Released, this, &APC_Game::UseSkill_R_Released);
 	InputComponent->BindAction("Dash", IE_Released, this, &APC_Game::UseSkill_Dash_Released);
 
+	InputComponent->BindAction("ZoomIn", IE_Pressed, this, &APC_Game::CameraZoomIn);
+	InputComponent->BindAction("ZoomOut", IE_Pressed, this, &APC_Game::CameraZoomOut);
+
 	InputComponent->BindAction("LeftMouseAction(Player)", IE_Pressed, this, &APC_Game::PressedLeftMouse);
 	InputComponent->BindAction("LeftMouseAction(Player)", IE_Released, this, &APC_Game::ReleasedLeftMouse);
 
@@ -418,18 +421,17 @@ void APC_Game::UseSkill_Q_Pressed()
 		return;
 	}
 
-	if ((character->GetCanUseSkillQ()) && (!character->GetUsingSkill()))
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	if ((character->GetCanUseSkillQ()) && (!character->GetUsingSkill()) && (!playerAnim->GetIsAttack()))
 	{
 		character->SetCanUseSkillQ(false);
 		character->SetUsingSkill(true);
 		character->SetCanMove(false);
-
-		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-		if (playerAnim == nullptr)
-		{
-			return;
-		}
-
 		character->StopMovement();
 		playerAnim->PlayClientSkillMontage(1);
 
@@ -445,6 +447,11 @@ void APC_Game::UseSkill_Q_Released()
 {
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
+	{
+		return;
+	}
+
+	if (character->GetCanUseSkillQ() == true)
 	{
 		return;
 	}
@@ -466,18 +473,17 @@ void APC_Game::UseSkill_W_Pressed()
 		return;
 	}
 
-	if ((character->GetCanUseSkillW()) && (!character->GetUsingSkill()))
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	if ((character->GetCanUseSkillW()) && (!character->GetUsingSkill()) && (!playerAnim->GetIsAttack()))
 	{
 		character->SetCanUseSkillW(false);
 		character->SetUsingSkill(true);
 		character->SetCanMove(false);
-
-		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-		if (playerAnim == nullptr)
-		{
-			return;
-		}
-
 		character->StopMovement();
 		playerAnim->PlayClientSkillMontage(2);
 
@@ -493,6 +499,11 @@ void APC_Game::UseSkill_W_Released()
 {
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
+	{
+		return;
+	}
+
+	if (character->GetCanUseSkillW() == true)
 	{
 		return;
 	}
@@ -514,18 +525,17 @@ void APC_Game::UseSkill_E_Pressed()
 		return;
 	}
 
-	if ((character->GetCanUseSkillE()) && (!character->GetUsingSkill()))
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	if ((character->GetCanUseSkillE()) && (!character->GetUsingSkill()) && (!playerAnim->GetIsAttack()))
 	{
 		character->SetCanUseSkillE(false);
 		character->SetUsingSkill(true);
 		character->SetCanMove(false);
-
-		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-		if (playerAnim == nullptr)
-		{
-			return;
-		}
-
 		character->StopMovement();
 		playerAnim->PlayClientSkillMontage(0);
 
@@ -541,6 +551,11 @@ void APC_Game::UseSkill_E_Released()
 {
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
+	{
+		return;
+	}
+
+	if (character->GetCanUseSkillE() == true)
 	{
 		return;
 	}
@@ -562,18 +577,17 @@ void APC_Game::UseSkill_R_Pressed()
 		return;
 	}
 
-	if ((character->GetCanUseSkillR()) && (!character->GetUsingSkill()))
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	if ((character->GetCanUseSkillR()) && (!character->GetUsingSkill()) && (!playerAnim->GetIsAttack()))
 	{
 		character->SetCanUseSkillR(false);
 		character->SetUsingSkill(true);
 		character->SetCanMove(false);
-
-		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-		if (playerAnim == nullptr)
-		{
-			return;
-		}
-
 		character->StopMovement();
 		playerAnim->PlayClientSkillMontage(3);
 
@@ -588,6 +602,11 @@ void APC_Game::UseSkill_R_Released()
 {
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
+	{
+		return;
+	}
+
+	if (character->GetCanUseSkillR() == true)
 	{
 		return;
 	}
@@ -616,32 +635,36 @@ void APC_Game::UseSkill_Dash_Pressed()
 		return;
 	}
 
-	if ((character->GetCanUseDash()) && (!character->GetUsingSkill()))
+	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+	if (playerAnim == nullptr)
+	{
+		return;
+	}
+
+	if ((character->GetCanUseDash()) && (!character->GetUsingSkill()) && (!playerAnim->GetIsAttack()))
 	{
 		character->SetCanUseDash(false);
 		character->SetUsingSkill(true);
 		character->SetCanMove(false);
-
-		UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-		if (playerAnim == nullptr)
-		{
-			return;
-		}
 		playerAnim->PlayClientSkillMontage(5);
-	}
 
-	Protocol::C2S_PressedUseKeyAction keyActionPacket;
-	keyActionPacket.set_key_id(0xA2);
-	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
-	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
-	this->Send(pakcetBuffer);
-	
+		Protocol::C2S_PressedUseKeyAction keyActionPacket;
+		keyActionPacket.set_key_id(0xA2);
+		keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+		SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+		this->Send(pakcetBuffer);
+	}
 }
 
 void APC_Game::UseSkill_Dash_Released()
 {
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
+	{
+		return;
+	}
+
+	if (character->GetCanUseDash() == true)
 	{
 		return;
 	}
@@ -653,4 +676,24 @@ void APC_Game::UseSkill_Dash_Released()
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
 	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
 	this->Send(pakcetBuffer);
+}
+
+void APC_Game::CameraZoomIn()
+{
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+	character->OnCameraZoomIn();
+}
+
+void APC_Game::CameraZoomOut()
+{
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+	character->OnCameraZoomOut();
 }

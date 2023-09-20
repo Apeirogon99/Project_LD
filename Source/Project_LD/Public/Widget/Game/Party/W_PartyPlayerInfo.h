@@ -8,6 +8,8 @@
 
 class UTextBlock;
 class UImage;
+class UProgressBar;
+class UScrollBox;
 /**
  * 
  */
@@ -25,16 +27,25 @@ public:
 
 public:
 	UPROPERTY(Meta = (BindWidget))
-		UImage* mClassImage;
+	UImage* mClassImage;
 
 	UPROPERTY(Meta = (BindWidget))
-		UImage* mLeaderImage;
+	UImage* mLeaderImage;
 
 	UPROPERTY(Meta = (BindWidget))
-		UTextBlock* mLevel;
+	UTextBlock* mLevel;
 
 	UPROPERTY(Meta = (BindWidget))
-		UTextBlock* mName;
+	UTextBlock* mName;
+
+	UPROPERTY(Meta = (BindWidget))
+	UProgressBar* mHP;
+
+	UPROPERTY(Meta = (BindWidget))
+	UProgressBar* mMP;
+
+	UPROPERTY(Meta = (BindWidget))
+	UScrollBox* BuffList;
 
 public:
 	UFUNCTION()
@@ -46,6 +57,15 @@ public:
 	//UFUNCTION()
 	//	void ReleaseBuff(const int32& inSkillID);
 
+	UFUNCTION()
+	void UpdateHealthBar();
+
+	UFUNCTION()
+	void UpdateManaBar();
+
+	UFUNCTION()
+	void UpdateBuffInfo();
+
 public:
 	const int64& GetRemoteID();
 
@@ -55,6 +75,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Widget")
 		UTexture2D* mWizardClassTexture;
+
+	int buffArr[3];
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))

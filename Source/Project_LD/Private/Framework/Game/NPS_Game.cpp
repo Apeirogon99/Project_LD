@@ -19,6 +19,7 @@ void ANPS_Game::UpdateCurrentStatsBar()
 {
 	UpdateHealthBar();
 	UpdateManaBar();
+	UpdateBuffCheck();
 }
 
 void ANPS_Game::SetRemotePlayerID(const int64 inRemoteID)
@@ -56,23 +57,23 @@ void ANPS_Game::calculationStats()
 	TArray<float> EquipmentIndex;
 	EquipmentIndex = mCharacterData.GetEquipment().GetAllItemIndex();
 
-	/*
+	
 	TArray<TArray<float>> IEquipment;
 	for (int i = 0; i < EquipmentIndex.Num(); i++)
 	{
-		EquipStatus.mEquipmentStatus = *Instance->GetEquipmentItemData(EquipmentIndex[i]);
-		IEquipment.Add(EquipStatus.FDataToFloat());
+		EquipStats.SetStatsData(*Instance->GetEquipmentItemData(EquipmentIndex[i]));
+		IEquipment.Add(EquipStats.FDataToFloat());
 	}
-	*/
+	
 	//해당하는 전체 스텟값 저장
 	for (int i = 0; i < IBase.Num(); i++)
 	{
 		int32 PartData = 0;
-		/*
+		
 		for (int j = 0; j < EquipmentIndex.Num(); j++)
 		{
 			PartData += IEquipment[j][i];
-		}*/
+		}
 
 		IGrow[i] *= mCharacterData.GetLevel();
 		Total[i] = IBase[i] + IGrow[i] + PartData;
@@ -94,5 +95,13 @@ void ANPS_Game::UpdateManaBar()
 	if (OnCharacterManaChanged.IsBound())
 	{
 		OnCharacterManaChanged.Broadcast();
+	}
+}
+
+void ANPS_Game::UpdateBuffCheck()
+{
+	if (OnApplyBuffOrDeBuff.IsBound())
+	{
+		//OnApplyBuffOrDeBuff.Broadcast();
 	}
 }

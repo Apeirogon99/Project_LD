@@ -24,6 +24,7 @@ void ASkill_Counter::AppearSkill(const int64 InRemoteID, const int64 InObjectID,
 {
 	Super::AppearSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
 
+	UE_LOG(LogTemp, Warning, TEXT("Counter Use"));
 	if (mAppearParticle)
 	{
 		FTimerHandle NextCallTimer;
@@ -38,6 +39,7 @@ void ASkill_Counter::AppearSkill(const int64 InRemoteID, const int64 InObjectID,
 void ASkill_Counter::ReactionSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration)
 {
 	Super::ReactionSkill(InRemoteID, InObjectID, InSkillID, InLocation, InRotation, InDuration);
+	UE_LOG(LogTemp, Warning, TEXT("Counter Succ"));
 
 	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/Counter/NS_CounterSucc.NS_CounterSucc'")))
 	{

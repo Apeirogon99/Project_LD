@@ -36,12 +36,12 @@ public:
 
 public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Camera Control")
-	void OnAttackCameraZoomIn();
-	virtual void OnAttackCameraZoomIn_Implementation();
+	void OnCameraZoomIn();
+	virtual void OnCameraZoomIn_Implementation();
 
 	UFUNCTION(BlueprintNativeEvent, Category = "Camera Control")
-	void OnAttackCameraZoomOut();
-	virtual void OnAttackCameraZoomOut_Implementation();
+	void OnCameraZoomOut();
+	virtual void OnCameraZoomOut_Implementation();
 
 public:
 	void PlayerLoseEyesight();
