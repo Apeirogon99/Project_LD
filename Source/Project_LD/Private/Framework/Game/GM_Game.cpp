@@ -81,10 +81,7 @@ void AGM_Game::InitNetwork()
 
 	if (true == IsConnectedServer())
 	{
-		if (false == RequestKeepConnectServer(ip, port))
-		{
-			NetworkGameModeLog(FString(TEXT("failed to requset keep connect server")));
-		}
+		this->ProcessConnect(true);
 	}
 	else
 	{

@@ -13,6 +13,15 @@ UNetworkTimeStamp::~UNetworkTimeStamp()
 {
 }
 
+void UNetworkTimeStamp::ResetTimeStamp()
+{
+	mServerTimeStamp = 0;
+	mOldUtcTimeStamp = 0;
+	mRtt = 0;
+	mSumRtt = 0;
+	mNumRtt = 1;
+}
+
 void UNetworkTimeStamp::UpdateTimeStamp(const int64 inServerTimeStamp, const int64 inUtcTimeStmap, const int64 inRtt)
 {
 

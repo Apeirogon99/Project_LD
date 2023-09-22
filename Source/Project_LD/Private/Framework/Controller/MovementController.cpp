@@ -152,7 +152,11 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	FVector foward = rotation.Quaternion().GetForwardVector();
 
 	FVector velocity = foward * speed;
-	float	duration = fabs(inTime / 1000.0f);
+	float	duration = inTime / 1000.0f;
+	if (duration <= 0.0f)
+	{
+		return;
+	}
 
 	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
 
@@ -172,7 +176,7 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 		{
 			mIsLocationCorrection = true;
 			mTargetLoction = deadReckoningLocation;
-			mCorrectionVelocity = 0.01f;
+			mCorrectionVelocity = 0.1f;
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 		}
 	}
@@ -180,7 +184,7 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	//mIsRotationCorrection = true;
 	//mTargetRotation = rotation;
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance, duration), ELogLevel::Error);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance, duration), ELogLevel::Error);
 
 }
 
@@ -206,6 +210,8 @@ void AMovementController::MoveCorrection(const float inDeltaTime)
 	{
 		pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);
 		mIsLocationCorrection = false;
+
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Complete MoveCorrection")), ELogLevel::Error);
 	}
 	else
 	{

@@ -20,6 +20,7 @@ public:
 	virtual ~UNetworkTimeStamp();
 
 public:
+	void		ResetTimeStamp();
 	void		UpdateTimeStamp(const int64 inServerTimeStamp, const int64 inUtcTimeStmap, const int64 inRtt);
 
 public:

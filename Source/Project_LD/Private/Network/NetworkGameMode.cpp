@@ -11,6 +11,7 @@
 #include <Network/NetworkUtils.h>
 #include <Framework/Gameinstance/LDGameInstance.h>
 #include <Kismet/GameplayStatics.h>
+#include "Network/NetworkTimeStamp.h"
 
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/WidgetUtils.h>
@@ -156,6 +157,13 @@ bool ANetworkGameMode::RequestPossessController()
 	{
 		return false;
 	}
+
+	UNetworkTimeStamp* networkTimeStamp = networkSession->GetTimeStamp();
+	if (nullptr == networkTimeStamp)
+	{
+		return false;
+	}
+	networkTimeStamp->ResetTimeStamp();
 
 	APlayerController* firstPlayerController = GetWorld()->GetFirstPlayerController();
 	ANetworkController* networkPlayerController = Cast<ANetworkController>(firstPlayerController);

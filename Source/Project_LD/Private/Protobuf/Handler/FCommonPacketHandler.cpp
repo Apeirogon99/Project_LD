@@ -36,6 +36,7 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 
 	timeStamp->UpdateTimeStamp(serverTimeStamp, clinetUtcTime, rtt);
 
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[SUTC::%lld] [CUTC::%lld]"), serverUtcTime, clinetUtcTime), ELogLevel::Warning);
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[RTT::%lld] [HRTT::%lld] [CRTT::%lld]"), timeStamp->GetRTT(), timeStamp->GetRTT() / 2, rtt), ELogLevel::Warning);
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Server : %lld] - [Client : %lld] = [Diff : %lld]"), serverTimeStamp, predict, predict - serverTimeStamp), ELogLevel::Warning);
 
@@ -44,6 +45,26 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 
 bool Handle_S2C_TravelLevel(ANetworkController* controller, Protocol::S2C_TravelLevel& pkt)
 {
+	UWorld* world = controller->GetWorld();
+	if (nullptr == world)
+	{
+		return false;
+	}
+
+	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+	if (nullptr == gameMode)
+	{
+		return false;
+	}
+	FString level = UNetworkUtils::ConvertFString(pkt.level());
+	gameMode->RequestTravelLevel(level);
+
+	UNetworkTimeStamp* timeStamp = controller->GetTimeStamp();
+	if (timeStamp == nullptr)
+	{
+		return true;
+	}
+
 	return true;
 }
 
