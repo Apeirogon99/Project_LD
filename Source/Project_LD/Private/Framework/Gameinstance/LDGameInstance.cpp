@@ -102,3 +102,8 @@ UServerData* ULDGameInstance::GetServerData()
 {
 	return mServerData;
 }
+
+const int32& ULDGameInstance::GetDungeonID()
+{
+	return mDungeonID;
+}

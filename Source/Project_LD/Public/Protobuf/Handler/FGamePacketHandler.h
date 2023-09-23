@@ -94,6 +94,10 @@ enum class EPakcetID: uint16
 	S2C_CompleteLoadDungeon = 2084,
 	S2C_EnterPortal = 2085,
 	S2C_LeavePortal = 2086,
+	S2C_PlaySequence = 2087,
+	C2S_SkipSequence = 2088,
+	S2C_SkipSequence = 2089,
+	S2C_EndSequence = 2090,
 };
 */
 
@@ -158,6 +162,9 @@ bool Handle_S2C_WaitingLoadDungeon(ANetworkController* controller, Protocol::S2C
 bool Handle_S2C_CompleteLoadDungeon(ANetworkController* controller, Protocol::S2C_CompleteLoadDungeon& pkt);
 bool Handle_S2C_EnterPortal(ANetworkController* controller, Protocol::S2C_EnterPortal& pkt);
 bool Handle_S2C_LeavePortal(ANetworkController* controller, Protocol::S2C_LeavePortal& pkt);
+bool Handle_S2C_PlaySequence(ANetworkController* controller, Protocol::S2C_PlaySequence& pkt);
+bool Handle_S2C_SkipSequence(ANetworkController* controller, Protocol::S2C_SkipSequence& pkt);
+bool Handle_S2C_EndSequence(ANetworkController* controller, Protocol::S2C_EndSequence& pkt);
 
 class FGamePacketHandler
 {
@@ -224,6 +231,9 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_CompleteLoadDungeon)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_CompleteLoadDungeon>(Handle_S2C_CompleteLoadDungeon, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_EnterPortal)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_EnterPortal>(Handle_S2C_EnterPortal, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_LeavePortal)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_LeavePortal>(Handle_S2C_LeavePortal, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_PlaySequence)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_PlaySequence>(Handle_S2C_PlaySequence, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_SkipSequence)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_SkipSequence>(Handle_S2C_SkipSequence, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_EndSequence)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_EndSequence>(Handle_S2C_EndSequence, controller, buffer, len); };
 	}
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_EnterGameServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_EnterGameServer)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LeaveGameServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LeaveGameServer)); }
@@ -252,5 +262,6 @@ public:
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_ReleaseUseKeyAction& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_ReleaseUseKeyAction)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_RequestEnterDungeon& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_RequestEnterDungeon)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_CompleteLoadDungeon& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_CompleteLoadDungeon)); }
+	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_SkipSequence& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_SkipSequence)); }
 
 };

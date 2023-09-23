@@ -51,6 +51,9 @@ public:
 	UServerData*					GetServerData();
 
 public:
+	const int32& GetDungeonID();
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UDataTable* mGameItemDataTable;
 

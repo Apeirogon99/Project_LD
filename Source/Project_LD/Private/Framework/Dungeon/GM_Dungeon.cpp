@@ -108,6 +108,8 @@ void AGM_Dungeon::BeginNetwork()
 	}
 
 	Protocol::C2S_CompleteLoadDungeon loadDungeon;
+	loadDungeon.set_dungeon_id(instance->GetDungeonID());
+
 	controller->Send(FGamePacketHandler::MakeSendBuffer(controller, loadDungeon));
 
 }

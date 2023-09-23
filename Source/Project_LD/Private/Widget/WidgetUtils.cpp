@@ -139,3 +139,23 @@ bool UWidgetUtils::SetWaiting(AClientHUD* inHUD, const FString& inTitle, const i
     inHUD->ShowWidgetFromName(TEXT("Waiting"));
     return true;
 }
+
+bool UWidgetUtils::SetSkipSequence(AClientHUD* inHUD, const int32& inMax, const int32& inLeast)
+{
+    UW_SkipSequence* skipSequence = nullptr;
+    UUserWidget* outWidget = inHUD->GetWidgetFromName(TEXT("SkipSequence"));
+    if (outWidget == nullptr)
+    {
+        return false;
+    }
+
+    skipSequence = Cast<UW_SkipSequence>(outWidget);
+    if (skipSequence == nullptr)
+    {
+        return false;
+    }
+    skipSequence->UpdateSkipSequence(FString::FromInt(inMax), FString::FromInt(inLeast));
+
+    inHUD->ShowWidgetFromName(TEXT("SkipSequence"));
+    return true;
+}

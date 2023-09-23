@@ -2835,6 +2835,13 @@ bool Handle_S2C_ResponseEnterDungeon(ANetworkController* controller, Protocol::S
         }
     }
 
+    ULDGameInstance* instance = Cast<ULDGameInstance>(world->GetGameInstance());
+    if (nullptr == instance)
+    {
+        return false;
+    }
+    instance->SetDungeonID(pkt.dungeon_id());
+
     FString level = UNetworkUtils::ConvertFString(pkt.level());
     gameMode->RequestTravelLevel(level);
 
@@ -2957,5 +2964,99 @@ bool Handle_S2C_LeavePortal(ANetworkController* controller, Protocol::S2C_LeaveP
 
     clientHUD->CleanWidgetFromName(TEXT("Waiting"));
 
+    return true;
+}
+
+bool Handle_S2C_PlaySequence(ANetworkController* controller, Protocol::S2C_PlaySequence& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+    clientHUD->CleanWidgetFromName(TEXT("MainGame"));
+
+    //TODO play sequence
+    int32 sequence = pkt.sequence();
+    int32 max = pkt.max_number();
+
+    bool ret = UWidgetUtils::SetSkipSequence(clientHUD, max, 0);
+    if (ret == false)
+    {
+        return false;
+    }
+
+
+    return true;
+}
+
+bool Handle_S2C_SkipSequence(ANetworkController* controller, Protocol::S2C_SkipSequence& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    bool ret = UWidgetUtils::SetSkipSequence(clientHUD, pkt.max_number(), pkt.least_number());
+    if (ret == false)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Handle_S2C_EndSequence(ANetworkController* controller, Protocol::S2C_EndSequence& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    clientHUD->CleanWidgetFromName(TEXT("SkipSequence"));
+
+    clientHUD->ShowWidgetFromName(TEXT("MainGame"));
+
+    //TODO end sequence
+
+    clientHUD->FadeOut();
     return true;
 }
