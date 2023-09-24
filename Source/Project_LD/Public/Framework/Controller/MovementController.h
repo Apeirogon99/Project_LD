@@ -29,9 +29,7 @@ public:
 	void MoveToMouseCursor(AActor* inHitActor, FHitResult inHitResult);
 
 public:
-	UFUNCTION(BlueprintNativeEvent)
 	void OnTeleport(const FVector& DestLocation);
-	virtual void OnTeleport_Implementation(const FVector& DestLocation);
 
 	void MoveDestination(const FVector& inOldMovementLocation, const FVector& inNewMovementLocation, const int64& inTime);
 	void MoveCorrection(const float inDeltaTime);

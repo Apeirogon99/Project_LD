@@ -111,7 +111,7 @@ void AMovementController::MoveToMouseCursor(AActor* inHitActor, FHitResult inHit
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mMouseCursorParticle, FVector(mDestLocation.X, mDestLocation.Y, (mDestLocation.Z + 1.0f)), FRotator::ZeroRotator, true);
 }
 
-void AMovementController::OnTeleport_Implementation(const FVector& DestLocation)
+void AMovementController::OnTeleport(const FVector& DestLocation)
 {
 	ACharacter* character = Cast<ACharacter>(this->GetPawn());
 	if (nullptr == character)
@@ -119,13 +119,12 @@ void AMovementController::OnTeleport_Implementation(const FVector& DestLocation)
 		return;
 	}
 
-	mTargetLoction = DestLocation;
 	mIsLocationCorrection = false;
-	mTeleport = true;
+	mTargetLoction = DestLocation;
+	character->SetActorLocation(DestLocation, false, nullptr, ETeleportType::ResetPhysics);
+	this->StopMovement();
 
-	const FRotator& rotation = character->GetActorRotation();
-
-	character->TeleportTo(DestLocation, rotation, false, false);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("OnTeleport")), ELogLevel::Error);
 }
 
 void AMovementController::MoveDestination(const FVector& inOldMovementLocation, const FVector& inNewMovementLocation, const int64& inTime)
@@ -213,8 +212,6 @@ void AMovementController::MoveCorrection(const float inDeltaTime)
 	{
 		pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);
 		mIsLocationCorrection = false;
-
-		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Complete MoveCorrection")), ELogLevel::Error);
 	}
 	else
 	{

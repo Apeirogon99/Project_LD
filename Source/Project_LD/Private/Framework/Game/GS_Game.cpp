@@ -213,7 +213,8 @@ AController* AGS_Game::FindPlayerController(const int64 inRemoteID)
             ANPS_Game* playerState = Cast<ANPS_Game>(curPlayerState);
             if (playerState)
             {
-                if (playerState->GetRemoteID() == inRemoteID)
+                const int64& remoteID = playerState->GetRemoteID();
+                if (remoteID == inRemoteID)
                 {
                     AController* findController = playerState->GetPawn()->GetController();
                     return findController;
