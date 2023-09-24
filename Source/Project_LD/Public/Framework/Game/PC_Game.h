@@ -68,6 +68,7 @@ public:
 	void PickUp(AActor* inHitActor, FHitResult inHitResult);
 	void Interative(AActor* inHitActor, FHitResult inHitResult);
 	void Enemy(AActor* inHitActor, FHitResult inHitResult);
+	void NPC(AActor* inHitActor, FHitResult inHitResult);
 
 public:
 	TMap<FName, TFunction<void(APC_Game&, AActor*, FHitResult)>> mLeftMouseActions;

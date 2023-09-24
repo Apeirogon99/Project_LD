@@ -208,13 +208,16 @@ AController* AGS_Game::FindPlayerController(const int64 inRemoteID)
     bool result = false;
     for (APlayerState* curPlayerState : PlayerArray)
     {
-        ANPS_Game* playerState = Cast<ANPS_Game>(curPlayerState);
-        if (playerState)
+        if (curPlayerState)
         {
-            if (playerState->GetRemoteID() == inRemoteID)
+            ANPS_Game* playerState = Cast<ANPS_Game>(curPlayerState);
+            if (playerState)
             {
-                AController* findController = playerState->GetPawn()->GetController();
-                return findController;
+                if (playerState->GetRemoteID() == inRemoteID)
+                {
+                    AController* findController = playerState->GetPawn()->GetController();
+                    return findController;
+                }
             }
         }
     }

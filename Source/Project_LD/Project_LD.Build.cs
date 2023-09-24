@@ -55,7 +55,9 @@ public class Project_LD : ModuleRules
                             "AIModule",
                             "ProtobufLibrary",
                             "CommonLibrary",
-                            "Niagara"
+                            "Niagara",
+                            "LevelSequence",
+                            "MovieScene"
                 }
             );
 

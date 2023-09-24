@@ -26,6 +26,7 @@ APC_Game::APC_Game()
 	mRightMouseActions.Add(FName("Ground"), &APC_Game::MoveToMouseCursor);
 	mRightMouseActions.Add(FName("PickUp"), &APC_Game::PickUp);
 	mRightMouseActions.Add(FName("Interative"), &APC_Game::Interative);
+	mRightMouseActions.Add(FName("NPC"), &APC_Game::NPC);
 
 	mLeftMouseActions.Add(FName("Enemy"), &APC_Game::Enemy);
 }
@@ -260,7 +261,20 @@ void APC_Game::Enemy(AActor* inHitActor, FHitResult inHitResult)
 	{
 		Cast<IInteractiveInterface>(inHitActor)->Interactive(character);
 	}
+}
 
+void APC_Game::NPC(AActor* inHitActor, FHitResult inHitResult)
+{
+	ANC_Game* character = Cast<ANC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+
+	if (inHitActor->GetClass()->ImplementsInterface(UInteractiveInterface::StaticClass()))
+	{
+		Cast<IInteractiveInterface>(inHitActor)->Interactive(character);
+	}
 }
 
 void APC_Game::SwitchUIMode()
