@@ -152,8 +152,8 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	FVector foward = rotation.Quaternion().GetForwardVector();
 
 	FVector velocity = foward * speed;
-	float	duration = inTime / 1000.0f;
-	if (duration <= 0.0f)
+	float duration = inTime / 1000.0f;
+	if (duration <= 0.2f)
 	{
 		return;
 	}
@@ -184,7 +184,7 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	//mIsRotationCorrection = true;
 	//mTargetRotation = rotation;
 
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance, duration), ELogLevel::Error);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance, duration), ELogLevel::Error);
 
 }
 
