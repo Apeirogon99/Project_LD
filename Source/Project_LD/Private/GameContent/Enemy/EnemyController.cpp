@@ -138,6 +138,7 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 			IsLocationCorrection = false;
 			mTargetLoction = deadReckoningLocation;
 			mCorrectionVelocity = 0.1f;
+
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 		}
 

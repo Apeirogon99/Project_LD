@@ -179,8 +179,9 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 			mIsLocationCorrection = true;
 			mTargetLoction = deadReckoningLocation;
 			mCorrectionVelocity = 0.1f;
-			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 		}
+
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 	}
 
 	//mIsRotationCorrection = true;
