@@ -2384,8 +2384,10 @@ bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_Re
     {
         return false;
     }
+    FCharacterEquipment oldDatas = playerState->GetCharacterData().GetEquipment();
     playerState->SetCharacterEqipment(updateEquipment);
     playerState->calculationStats();
+    playerState->DetectChangeCurrentStats(oldDatas, updateEquipment);
 
     AC_Game* character = Cast<AC_Game>(remoteController->GetPawn());
     if (nullptr == character)

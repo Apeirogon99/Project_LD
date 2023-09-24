@@ -2,6 +2,7 @@
 
 
 #include "Struct/Game/StatsManager.h"
+#include <CharacterStatusData.h>
 
 // Sets default values
 AStatsManager::AStatsManager()
@@ -286,4 +287,56 @@ void FCharacterStats::UpdateCurrentStats(ECharacterStatus InStats, float Invalue
 	default:
 		break;
 	}
+}
+
+void FCharacterStats::PutOnEquipment(FEquipmentItemData InData)
+{
+	mCurrentStats.SetArmorPenetration(mCurrentStats.GetArmorPenetration() + InData.armor_penteration);
+	mCurrentStats.SetAttackDamage(mCurrentStats.GetAttackDamage() + InData.attack_damage);
+	mCurrentStats.SetAttackSpeed(mCurrentStats.GetAttackSpeed() + InData.attack_speed);
+	mCurrentStats.SetCriticalStrikeChance(mCurrentStats.GetCriticalStrikeChance() + InData.critical_strike_chance);
+	mCurrentStats.SetCriticalStrikeDamage(mCurrentStats.GetCriticalStrikeDamage() + InData.cirtical_strike_damage);
+	mCurrentStats.SetLifeSteal(mCurrentStats.GetLifeSteal() + InData.life_steal);
+	mCurrentStats.SetAbilityPower(mCurrentStats.GetAbilityPower() + InData.ability_power);
+	mCurrentStats.SetMagePenetration(mCurrentStats.GetMagePenetration() + InData.mage_penetration);
+	mCurrentStats.SetOmniVamp(mCurrentStats.GetOmniVamp() + InData.omnivamp);
+	mCurrentStats.SetPhysicalVamp(mCurrentStats.GetPhysicalVamp() + InData.physical_vamp);
+	mCurrentStats.SetArmor(mCurrentStats.GetArmor() + InData.armor);
+	mCurrentStats.SetHealAndShieldPower(mCurrentStats.GetHealAndShieldPower() + InData.heal_and_shield_power);
+	mCurrentStats.SetHealth(mCurrentStats.GetHealth() + InData.health);
+	mCurrentStats.SetHealthRegeneration(mCurrentStats.GetHealthRegeneration() + InData.health_regeneration);
+	mCurrentStats.SetMagicResistance(mCurrentStats.GetMagicResistance() + InData.magic_resistance);
+	mCurrentStats.SetTenacity(mCurrentStats.GetTenacity() + InData.tenacity);
+	mCurrentStats.SetSlowResist(mCurrentStats.GetSlowResist() + InData.slow_resist);
+	mCurrentStats.SetAbilityHaste(mCurrentStats.GetAbilityHaste() + InData.ability_haste);
+	mCurrentStats.SetMana(mCurrentStats.GetMana() + InData.mana);
+	mCurrentStats.SetManaRegeneration(mCurrentStats.GetManaRegeneration() + InData.mana_regeneration);
+	mCurrentStats.SetMovementSpeed(mCurrentStats.GetMovementSpeed() + InData.movement_speed);
+	mCurrentStats.SetRange(mCurrentStats.GetRange() + InData.range);
+}
+
+void FCharacterStats::TakeOffEquipment(FEquipmentItemData InData)
+{
+	mCurrentStats.SetArmorPenetration(mCurrentStats.GetArmorPenetration() - InData.armor_penteration);
+	mCurrentStats.SetAttackDamage(mCurrentStats.GetAttackDamage() - InData.attack_damage);
+	mCurrentStats.SetAttackSpeed(mCurrentStats.GetAttackSpeed() - InData.attack_speed);
+	mCurrentStats.SetCriticalStrikeChance(mCurrentStats.GetCriticalStrikeChance() - InData.critical_strike_chance);
+	mCurrentStats.SetCriticalStrikeDamage(mCurrentStats.GetCriticalStrikeDamage() - InData.cirtical_strike_damage);
+	mCurrentStats.SetLifeSteal(mCurrentStats.GetLifeSteal() - InData.life_steal);
+	mCurrentStats.SetAbilityPower(mCurrentStats.GetAbilityPower() - InData.ability_power);
+	mCurrentStats.SetMagePenetration(mCurrentStats.GetMagePenetration() - InData.mage_penetration);
+	mCurrentStats.SetOmniVamp(mCurrentStats.GetOmniVamp() - InData.omnivamp);
+	mCurrentStats.SetPhysicalVamp(mCurrentStats.GetPhysicalVamp() - InData.physical_vamp);
+	mCurrentStats.SetArmor(mCurrentStats.GetArmor() - InData.armor);
+	mCurrentStats.SetHealAndShieldPower(mCurrentStats.GetHealAndShieldPower() - InData.heal_and_shield_power);
+	mCurrentStats.SetHealth(mCurrentStats.GetHealth() - InData.health);
+	mCurrentStats.SetHealthRegeneration(mCurrentStats.GetHealthRegeneration() - InData.health_regeneration);
+	mCurrentStats.SetMagicResistance(mCurrentStats.GetMagicResistance() - InData.magic_resistance);
+	mCurrentStats.SetTenacity(mCurrentStats.GetTenacity() - InData.tenacity);
+	mCurrentStats.SetSlowResist(mCurrentStats.GetSlowResist() - InData.slow_resist);
+	mCurrentStats.SetAbilityHaste(mCurrentStats.GetAbilityHaste() - InData.ability_haste);
+	mCurrentStats.SetMana(mCurrentStats.GetMana() - InData.mana);
+	mCurrentStats.SetManaRegeneration(mCurrentStats.GetManaRegeneration() - InData.mana_regeneration);
+	mCurrentStats.SetMovementSpeed(mCurrentStats.GetMovementSpeed() - InData.movement_speed);
+	mCurrentStats.SetRange(mCurrentStats.GetRange() - InData.range);
 }

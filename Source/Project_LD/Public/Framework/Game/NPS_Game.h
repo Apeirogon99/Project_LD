@@ -36,6 +36,9 @@ public:
 	void SetCharacterData(const FCharacterData& InCharacterDatas);
 	void SetCharacterEqipment(const FCharacterEquipment& inCharacterEquipment);
 	void calculationStats();
+	void DetectChangeCurrentStats(FCharacterEquipment oldData, FCharacterEquipment newData);
+	void PutOnEquipment(const int32 InIndex);
+	void TakeOffEquipment(const int32 InIndex);
 
 public:
 	const int64			GetRemoteID() const		{ return mRemoteID; }

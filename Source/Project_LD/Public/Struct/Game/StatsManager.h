@@ -184,6 +184,8 @@ private:
 		float range;
 };
 
+struct FEquipmentItemData;
+
 USTRUCT(Atomic, BlueprintType)
 struct FCharacterStats
 {
@@ -212,6 +214,8 @@ public:
 
 	void UpdateMaxStats(ECharacterStatus InStats, float Invalue);
 	void UpdateCurrentStats(ECharacterStatus InStats, float Invalue);
+	void PutOnEquipment(FEquipmentItemData InData);
+	void TakeOffEquipment(FEquipmentItemData InData);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))

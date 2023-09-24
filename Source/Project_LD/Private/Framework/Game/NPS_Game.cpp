@@ -56,12 +56,14 @@ void ANPS_Game::calculationStats()
 
 	TArray<float> EquipmentIndex;
 	EquipmentIndex = mCharacterData.GetEquipment().GetAllItemIndex();
-
 	
+
 	TArray<TArray<float>> IEquipment;
+	TArray<float> EquipmentData;
 	for (int i = 0; i < EquipmentIndex.Num(); i++)
 	{
-		EquipStats.SetStatsData(*Instance->GetEquipmentItemData(EquipmentIndex[i]));
+		FEquipmentItemData equip = *Instance->GetEquipmentItemData(EquipmentIndex[i]);
+		EquipStats.SetStatsData(equip);
 		IEquipment.Add(EquipStats.FDataToFloat());
 	}
 	
@@ -104,4 +106,38 @@ void ANPS_Game::UpdateBuffCheck()
 	{
 		//OnApplyBuffOrDeBuff.Broadcast();
 	}
+}
+
+void ANPS_Game::DetectChangeCurrentStats(FCharacterEquipment oldData, FCharacterEquipment newData)
+{
+	TArray<float> oldIndex = oldData.GetAllItemIndex();
+	TArray<float> newIndex = newData.GetAllItemIndex();
+	
+	for (int i = 0; i < oldIndex.Num(); i++)
+	{
+		if (oldIndex[i] != newIndex[i])
+		{
+			if (oldIndex[i] != 0)
+			{
+				TakeOffEquipment(oldIndex[i]);
+			}
+			if (newIndex[i] != 0)
+			{
+				PutOnEquipment(newIndex[i]);
+			}
+		}
+	}
+}
+
+void ANPS_Game::PutOnEquipment(const int32 InIndex)
+{
+	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+	Instance->GetEquipmentItemData(InIndex);
+	mCharacterStats.PutOnEquipment(*Instance->GetEquipmentItemData(InIndex));
+}
+
+void ANPS_Game::TakeOffEquipment(const int32 InIndex)
+{
+	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+	mCharacterStats.TakeOffEquipment(*Instance->GetEquipmentItemData(InIndex));
 }
