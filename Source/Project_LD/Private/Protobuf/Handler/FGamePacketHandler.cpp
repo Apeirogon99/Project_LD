@@ -417,6 +417,43 @@ bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_P
 
 bool Handle_S2C_PlayerEndAutoAttack(ANetworkController* controller, Protocol::S2C_PlayerEndAutoAttack& pkt)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_PlayerEndAutoAttack"));
+
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 remoteID = pkt.remote_id();
+    AController* remoteController = gameState->FindPlayerController(remoteID);
+    if (nullptr == remoteController)
+    {
+        return true;
+    }
+
+    ANC_Game* player = Cast<ANC_Game>(remoteController->GetPawn());
+    if (nullptr == player)
+    {
+        return true;
+    }
+
+    player->ActiveMovement();
+    player->SetCanMove(true);
+    player->SetUsingSkill(false);
+
     return true;
 }
 
@@ -2690,6 +2727,43 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
 
 bool Handle_S2C_EndReactionSkill(ANetworkController* controller, Protocol::S2C_EndReactionSkill& pkt)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_EndReactionSkill"));
+
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64 remoteID = pkt.remote_id();
+    AController* remoteController = gameState->FindPlayerController(remoteID);
+    if (nullptr == remoteController)
+    {
+        return true;
+    }
+
+    ANC_Game* player = Cast<ANC_Game>(remoteController->GetPawn());
+    if (nullptr == player)
+    {
+        return true;
+    }
+
+    player->ActiveMovement();
+    player->SetCanMove(true);
+    player->SetUsingSkill(false);
+
     return true;
 }
 

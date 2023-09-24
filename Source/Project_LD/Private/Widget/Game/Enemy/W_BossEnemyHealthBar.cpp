@@ -11,6 +11,11 @@ void UW_BossEnemyHealthBar::NativeConstruct()
 	mName = Cast<UTextBlock>(GetWidgetFromName(TEXT("mName")));;
 }
 
+void UW_BossEnemyHealthBar::Init(AEnemyBase* InEnemy)
+{
+	mEnemy = InEnemy;
+}
+
 void UW_BossEnemyHealthBar::SetNameText(const FString& inName)
 {
 	if (mName)
@@ -20,12 +25,7 @@ void UW_BossEnemyHealthBar::SetNameText(const FString& inName)
 	}
 }
 
-void UW_BossEnemyHealthBar::SetEnemyId(const int64 inEnemyId)
+void UW_BossEnemyHealthBar::SetEnemy(AEnemyBase* inEnemy)
 {
-	mEnemyid = inEnemyId;
-}
-
-int64 UW_BossEnemyHealthBar::GetEnemyId()
-{
-	return mEnemyid;
+	mEnemy = inEnemy;
 }

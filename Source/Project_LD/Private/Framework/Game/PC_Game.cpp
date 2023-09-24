@@ -2,10 +2,12 @@
 
 
 #include "Framework/Game/PC_Game.h"
+#include "Framework/Cinematic/CinematicManager.h"
 #include "Framework/AnimInstance/AI_PlayerCharacter.h"
 #include <Network/NetworkGameMode.h>
 #include <Network/NetworkSession.h>
 #include <Network/NetworkController.h>
+
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Main/W_MainGame.h>
 #include <Widget/WidgetUtils.h>
@@ -29,6 +31,8 @@ APC_Game::APC_Game()
 	mRightMouseActions.Add(FName("NPC"), &APC_Game::NPC);
 
 	mLeftMouseActions.Add(FName("Enemy"), &APC_Game::Enemy);
+
+	mCinematicManager = NewObject<UCinematicManager>();
 }
 
 APC_Game::~APC_Game()
@@ -710,4 +714,20 @@ void APC_Game::CameraZoomOut()
 		return;
 	}
 	character->OnCameraZoomOut();
+}
+
+void APC_Game::RequestCinematicPlay(int32 Index)
+{
+	if (mCinematicManager)
+	{
+		mCinematicManager->Play(Index);
+	}
+}
+
+void APC_Game::RequestCinematicStop()
+{
+	if (mCinematicManager)
+	{
+		mCinematicManager->End();
+	}
 }

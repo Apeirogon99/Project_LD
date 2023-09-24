@@ -21,6 +21,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/ProgressBar.h"
+#include <Kismet/GameplayStatics.h>
 #include <NetworkUtils.h>
 
 // Sets default values
@@ -192,9 +193,52 @@ void AEnemyBase::Init()
 	playerState->OnMovementSpeedChanged.AddUFunction(this, FName(TEXT("UpdateMovementSpeed")));
 }
 
+void AEnemyBase::HealthBarActive()
+{
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	TArray<AActor*> localplayer;
+	UGameplayStatics::GetAllActorsOfClass(world, AC_Game::StaticClass(), localplayer);
+	if (localplayer.Num() == 0)
+	{
+		return;
+	}
+	AC_Game* player = Cast<AC_Game>(localplayer[0]);
+	if (nullptr == player)
+	{
+		return;
+	}
+	player->BossHealthBarWidgetActive(this);
+}
+
+void AEnemyBase::HealthBarDeactive()
+{
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	TArray<AActor*> localplayer;
+	UGameplayStatics::GetAllActorsOfClass(world, AC_Game::StaticClass(), localplayer);
+	if (localplayer.Num() == 0)
+	{
+		return;
+	}
+	AC_Game* player = Cast<AC_Game>(localplayer[0]);
+	if (nullptr == player)
+	{
+		return;
+	}
+	player->BossHealthBarWidgetDeactive();
+}
+
 void AEnemyBase::ChangeState(const EEnemyStateType inStateType, float inStartTime)
 {
-
 	UEnemyAnimInstance* enemyAnimationInstance = Cast<UEnemyAnimInstance>(GetMesh()->GetAnimInstance());
 	if (nullptr == enemyAnimationInstance)
 	{

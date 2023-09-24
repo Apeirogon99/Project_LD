@@ -44,7 +44,9 @@ public:
 public:
 	const int64									GetObjectID()							{ return mObjectID; }
 	const FEnemyData&					GetEnemyDatas()					{ return mDatas; }
+	UFUNCTION(BlueprintCallable)
 	const FStatsData							GetEnemyStats()						{ return mStats.GetMaxStats(); }
+	UFUNCTION(BlueprintCallable)
 	const FStatsData							GetEnemyCurrentStats()		{ return mStats.GetCurrentStats(); }
 	const EEnemyStateType&			GetCurrentStateType()			{ return mCurrentState; }
 protected:

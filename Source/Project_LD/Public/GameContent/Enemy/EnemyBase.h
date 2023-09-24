@@ -46,6 +46,12 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual void SetParticleScale(FVector InNewScale);
 
+	UFUNCTION(BlueprintCallable)
+	virtual void HealthBarActive();
+
+	UFUNCTION(BlueprintCallable)
+	virtual void HealthBarDeactive();
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* mHealthBar;

@@ -13,6 +13,7 @@
  */
 class UCameraComponent;
 class USpringArmComponent;
+class AEnemyBase;
 
 UCLASS()
 class PROJECT_LD_API AC_Game : public ANC_Game
@@ -46,6 +47,8 @@ public:
 public:
 	void PlayerLoseEyesight();
 	void PlayerRecoveryEyesight();
+	void BossHealthBarWidgetActive(AEnemyBase* Boss);
+	void BossHealthBarWidgetDeactive();
 
 public:
 	UCameraComponent* GetCameraComponent() { return mGameCameraComponent; }
@@ -61,5 +64,5 @@ protected:
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Zoom", meta = (AllowPrivateAccess = "true"))
-		bool bIsZoom;
+	bool bIsZoom;
 };

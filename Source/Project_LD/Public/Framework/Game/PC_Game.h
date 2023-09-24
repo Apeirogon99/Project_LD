@@ -9,6 +9,8 @@
 /**
  * 
  */
+class UCinematicManager;
+
 UCLASS()
 class PROJECT_LD_API APC_Game : public AMovementController
 {
@@ -46,6 +48,9 @@ public:
 	void CameraZoomIn();
 	void CameraZoomOut();
 
+	void RequestCinematicPlay(int32 Index);
+	void RequestCinematicStop();
+
 public:
 	virtual void BeginPlay() override;
 	void PlayerTick(float DeltaTime) override;
@@ -77,5 +82,9 @@ public:
 	float mMouseTick;
 	bool mIsLeftMouse;
 	bool mIsRightMouse;
+
+	//¿¢¼¿ÀÌ¿ëÇØ¼­ ½Ã³×¸¶Æ½
+	UPROPERTY()
+	UCinematicManager* mCinematicManager;
 };
 	

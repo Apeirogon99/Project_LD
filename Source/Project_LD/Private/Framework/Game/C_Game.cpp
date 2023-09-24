@@ -10,11 +10,13 @@
 
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Main/W_MainGame.h>
+#include <Widget/Game/Enemy/W_BossEnemyHealthBar.h>
 
 #include <Game/GM_Game.h>
 #include <Game/PC_Game.h>
 #include <Game/PS_Game.h>
 
+#include "GameContent/Enemy/EnemyBase.h"
 #include "GameContent/Enemy/E_Slime.h"
 #include "GameContent/Enemy/E_NomalSkeleton.h"
 #include "GameContent/Enemy/E_ArcherSkeleton.h"
@@ -167,4 +169,45 @@ void AC_Game::PlayerRecoveryEyesight()
 	UW_MainGame* maingame = Cast<UW_MainGame>(Widget);
 	UBorder* borderwidget = maingame->GetPlayerSightBorder();
 	borderwidget->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void AC_Game::BossHealthBarWidgetActive(AEnemyBase* Boss)
+{
+	APC_Game* controller = Cast<APC_Game>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+	AClientHUD* clientHud = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHud)
+	{
+		return;
+	}
+	UUserWidget* Widget = clientHud->GetWidgetFromName(TEXT("BossEnemyHealthBar"));
+	if (nullptr == Widget)
+	{
+		return;
+	}
+	UW_BossEnemyHealthBar* HPwidget = Cast<UW_BossEnemyHealthBar>(Widget);
+	if (nullptr == HPwidget)
+	{
+		return;
+	}
+	HPwidget->Init(Boss);
+	clientHud->ShowWidgetFromName(TEXT("BossEnemyHealthBar"));
+}
+
+void AC_Game::BossHealthBarWidgetDeactive()
+{
+	APC_Game* controller = Cast<APC_Game>(GetController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+	AClientHUD* clientHud = Cast<AClientHUD>(controller->GetHUD());
+	if (nullptr == clientHud)
+	{
+		return;
+	}
+	clientHud->CleanWidgetFromName(TEXT("BossEnemyHealthBar"));
 }

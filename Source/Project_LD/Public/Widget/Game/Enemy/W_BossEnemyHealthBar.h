@@ -11,12 +11,16 @@
  */
 class UProgressBar;
 class UTextBlock;
+class AEnemyBase;
 
 UCLASS()
 class PROJECT_LD_API UW_BossEnemyHealthBar : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+	void Init(AEnemyBase* InEnemy);
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (BindWidget))
 	UProgressBar* mBossHealthBar;
@@ -26,18 +30,16 @@ public:
 
 public:
 	void SetNameText(const FString& inName);
-
-	UFUNCTION(BlueprintCallable)
-	void SetEnemyId(const int64 inEnemyId);
+	void SetEnemy(AEnemyBase* inEnemy);
 
 public:
 	UFUNCTION(BlueprintCallable)
-	int64 GetEnemyId();
+	AEnemyBase* GetEnemy() { return mEnemy; }
 
 protected:
 	virtual void NativeConstruct() override;
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	int64 mEnemyid;
+	AEnemyBase* mEnemy;
 };
