@@ -147,9 +147,9 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 
 	character->GetCharacterMovement()->MaxWalkSpeed = speed;
 
-	FVector	direction = inNewMovementLocation - inOldMovementLocation;
-	FRotator rotation = direction.Rotation();
-	FVector foward = rotation.Quaternion().GetForwardVector();
+	FVector		direction = inNewMovementLocation - inOldMovementLocation;
+	FRotator	rotation = direction.Rotation();
+	FVector		foward = rotation.Quaternion().GetForwardVector();
 
 	FVector velocity = foward * speed;
 	float duration = inTime / 1000.0f;
@@ -158,9 +158,6 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 		return;
 	}
 
-	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
-
-	FVector curLocation = character->GetActorLocation();
 	float distance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
 	if (distance <= 1.0f)
 	{
@@ -171,8 +168,14 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	}
 	else
 	{
-		distance = FVector::Dist(curLocation, deadReckoningLocation);
-		if (distance > 1.0f)
+		FVector curLocation = character->GetActorLocation();
+		FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
+		FVector overDeadReckoningLocation = inOldMovementLocation + (velocity * 0.2f);
+
+		float nowDistance = FVector::Dist(curLocation, deadReckoningLocation);
+		float overDistance = FVector::Dist(curLocation, overDeadReckoningLocation);
+
+		if (nowDistance > overDistance)
 		{
 			mIsLocationCorrection = true;
 			mTargetLoction = deadReckoningLocation;
@@ -184,7 +187,7 @@ void AMovementController::MoveDestination(const FVector& inOldMovementLocation, 
 	//mIsRotationCorrection = true;
 	//mTargetRotation = rotation;
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance, duration), ELogLevel::Error);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance, duration), ELogLevel::Error);
 
 }
 

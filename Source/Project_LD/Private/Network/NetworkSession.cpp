@@ -632,7 +632,13 @@ bool FNetworkSession::ClearBuffer()
 {
 	if (nullptr == mRecvBuffer || nullptr == mSendBufferQueue)
 	{
-		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::Connect] : Invalid Buffer", ELogLevel::Error);
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::ClearBuffer] : Invalid Buffer", ELogLevel::Error);
+		return false;
+	}
+
+	if (nullptr == mSocket)
+	{
+		UNetworkUtils::NetworkConsoleLog("[FNetworkSession::ClearBuffer] : Invalid Socket", ELogLevel::Error);
 		return false;
 	}
 

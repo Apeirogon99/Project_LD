@@ -415,6 +415,11 @@ bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_P
     return true;
 }
 
+bool Handle_S2C_PlayerEndAutoAttack(ANetworkController* controller, Protocol::S2C_PlayerEndAutoAttack& pkt)
+{
+    return true;
+}
+
 bool Handle_S2C_UpdateExperience(ANetworkController* controller, Protocol::S2C_UpdateExperience& pkt)
 {
     UWorld* world = controller->GetWorld();
@@ -2678,6 +2683,11 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         break;
     }
   
+    return true;
+}
+
+bool Handle_S2C_EndReactionSkill(ANetworkController* controller, Protocol::S2C_EndReactionSkill& pkt)
+{
     return true;
 }
 
