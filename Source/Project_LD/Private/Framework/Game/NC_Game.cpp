@@ -76,7 +76,9 @@ ANC_Game::ANC_Game()
 	bBuffActive = false;
 
 	bCanMove = true;
+
 	bUsingSkill = false;
+
 	bCanSkillQ = true;
 	bCanSkillW = true;
 	bCanSkillE = true;

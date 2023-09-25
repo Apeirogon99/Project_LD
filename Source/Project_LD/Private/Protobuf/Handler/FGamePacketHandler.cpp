@@ -2603,13 +2603,13 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
 
-        animation->PlaySkillMontage(5, duration);
+        animation->PlayClientSkillMontage(5);
         newActor = gameState->CreateGameObject(ASkill_Dash::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
         {
             return false;
         }
-        Cast<ASkill_Dash>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
+        Cast<ASkill_Dash>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
     default:
         manager->Init();
         newActor = gameState->FindGameObject(remoteID);
@@ -2714,7 +2714,19 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         {
             return false;
         }
+        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
+        if (nullptr == animation)
+        {
+            return false;
+        }
 
+        animation->PlaySkillMontage(5, duration);
+        newActor = gameState->FindGameObject(objectID);
+        if (nullptr == newActor)
+        {
+            return false;
+        }
+        Cast<ASkill_Dash>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
         break;
     default:
         manager->Init();
