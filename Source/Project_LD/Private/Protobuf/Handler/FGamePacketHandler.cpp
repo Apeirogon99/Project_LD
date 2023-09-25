@@ -2604,7 +2604,7 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         }
 
         animation->PlaySkillMontage(5, duration);
-        newActor = gameState->FindGameObject(objectID);
+        newActor = gameState->CreateGameObject(ASkill_Dash::StaticClass(), location, rotation, objectID);
         if (nullptr == newActor)
         {
             return false;
@@ -2714,6 +2714,7 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         {
             return false;
         }
+
         break;
     default:
         manager->Init();
