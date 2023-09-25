@@ -83,11 +83,11 @@ ANC_Game::ANC_Game()
 	bCanSkillR = true;
 	bCanDash = true;
 
-	mQCoolDown = 2.0f;
-	mWCoolDown = 2.0f;
-	mECoolDown = 2.0f;
-	mRCoolDown = 2.0f;
-	mDashCoolDown = 2.0f;
+	mQCoolDown = 2.5f;
+	mWCoolDown = 2.5f;
+	mECoolDown = 2.5f;
+	mRCoolDown = 2.5f;
+	mDashCoolDown = 2.5f;
 }
 
 ANC_Game::~ANC_Game()

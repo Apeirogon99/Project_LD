@@ -89,6 +89,7 @@ void AE_Lich::Destroyed()
 	{
 		return;
 	}
+	HealthBarDeactive();
 
 	controller->UnPossess();
 

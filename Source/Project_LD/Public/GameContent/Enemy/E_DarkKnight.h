@@ -9,6 +9,8 @@
 /**
  * 
  */
+class UNiagaraComponent;
+
 UCLASS()
 class PROJECT_LD_API AE_DarkKnight : public AEnemyBase
 {
@@ -19,11 +21,16 @@ public:
 	~AE_DarkKnight();
 
 	void PlayDarkKnightAnim(int32 Index);
+	void ActiveBerserk();
 
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
-	void DarkKnightBladeParticleToggle();
-	virtual void DarkKnightBladeParticleToggle_Implementation();
+	void DarkKnightBladeParticleActive();
+	virtual void DarkKnightBladeParticleActive_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void DarkKnightBladeParticleDeactive();
+	virtual void DarkKnightBladeParticleDeactive_Implementation();
 
 protected:
 	virtual void BeginPlay() override;
@@ -32,4 +39,8 @@ protected:
 
 public:
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UNiagaraComponent* mBerserkNiagara;
 };

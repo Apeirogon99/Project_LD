@@ -30,6 +30,9 @@
 #include <GameContent/Enemy/Skill/DarkKnight/DarkKnight_UppercutAttack.h>
 #include <GS_Game.h>
 
+#include "Niagara/Classes/NiagaraSystem.h"
+#include <NiagaraFunctionLibrary.h>
+
 #define MINLICHSKILLCODE 6
 #define MAXLICHSKILLCODE 19
 #define MINDARKKNIGHTSKILLCODE 20
@@ -141,7 +144,6 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
     }
     else if ((MINDARKKNIGHTSKILLCODE <= InSkillID) && (InSkillID <= MAXDARKKNIGHTSKILLCODE))
     {
-        UE_LOG(LogTemp, Warning, TEXT("DarkKnight ActivSkill"));
         AE_DarkKnight* actor = Cast<AE_DarkKnight>(InActor);
         if (actor == nullptr)
         {
@@ -161,35 +163,16 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
         case 3:
         case 4:
         case 5:
-            actor->DarkKnightBladeParticleToggle();
             actor->PlayDarkKnightAnim(InSkillID - MINDARKKNIGHTSKILLCODE);
             break;
         }
 
-        UE_LOG(LogTemp,Warning,TEXT("DarkKnight Skill %s"), *mDarkKnightSkillClass[InSkillID - MINDARKKNIGHTSKILLCODE]->GetName());
-
-        //active 
-        /*
         switch (InSkillID - MINDARKKNIGHTSKILLCODE)
         {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
         case 6:
-            object = gameState->CreateGameObject(SkillClass, InLocation, InRotator, InobjectID);
-            if (object && object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
-            {
-                auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
-                InterfaceVariable->mRemoteID = InremoteID;
-                InterfaceVariable->ActiveSkill(InLocation, InRotator);
-            }
+            actor->ActiveBerserk();
             break;
         }
-        */
-        
     }
     else
     {
@@ -251,23 +234,6 @@ void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor
     }
     else if ((MINDARKKNIGHTSKILLCODE <= InSkillID) && (InSkillID <= MAXDARKKNIGHTSKILLCODE))
     {
-        /*
-        AE_DarkKnight* actor = Cast<AE_DarkKnight>(InActor);
-        if (actor == nullptr)
-        {
-            return;
-        }
-
-        UClass* SkillClass = mDarkKnightSkillClass[InSkillID - MINDARKKNIGHTSKILLCODE];
-
-        AActor* object = gameState->FindGameObject(InobjectID);
-        if (object && object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
-        {
-            auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
-            InterfaceVariable->mRemoteID = InremoteID;
-            InterfaceVariable->ReactionSkill(InLocation, InRotator);
-        }
-        */
     }
     else
     {

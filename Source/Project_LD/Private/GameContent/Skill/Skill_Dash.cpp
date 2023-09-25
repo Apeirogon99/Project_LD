@@ -17,7 +17,7 @@ void ASkill_Dash::AppearSkill(const int64 InRemoteID, const int64 InObjectID, co
 void ASkill_Dash::ReactionSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Dash Reaction"));
-	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/Dash/NS_Dash_Hu_M.NS_Dash_Hu_M'")))
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/Dash/NS_Dash_Hu_M_Store.NS_Dash_Hu_M_Store'")))
 	{
 		FVector Vec = InLocation;
 		Vec.Y = InLocation.Y + 40.f;

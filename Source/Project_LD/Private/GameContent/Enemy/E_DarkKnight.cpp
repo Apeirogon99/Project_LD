@@ -7,6 +7,9 @@
 #include <Framework/Game/GS_Game.h>
 #include <GameContent/Enemy/DarkKnightAnimInstance.h>
 
+#include "Niagara/Public/NiagaraComponent.h"
+#include "NiagaraFunctionLibrary.h"
+
 #include <Network/NetworkUtils.h>
 
 AE_DarkKnight::AE_DarkKnight()
@@ -27,7 +30,27 @@ void AE_DarkKnight::PlayDarkKnightAnim(int32 Index)
 	animInstance->PlayDarkKnightAnimMontage(Index);
 }
 
-void AE_DarkKnight::DarkKnightBladeParticleToggle_Implementation()
+void AE_DarkKnight::ActiveBerserk()
+{
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/DarkKnight/Particle/NS_DarkKnight_Berserk.NS_DarkKnight_Berserk'")))
+	{
+		FVector Loc = GetActorLocation();
+		Loc.Z = Loc.Z - 50.f;
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), Niagara, Loc, FRotator(0.f,90.f,0.f), FVector(1), true);
+	}
+	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/DarkKnight/Particle/NS_DarkFlame_1.NS_DarkFlame_1'")))
+	{
+		mBerserkNiagara = UNiagaraFunctionLibrary::SpawnSystemAttached(Niagara, GetMesh(), TEXT("None"), FVector(0.f, 0.f, 55.f), FRotator(0), EAttachLocation::SnapToTarget, false);
+	}
+}
+
+void AE_DarkKnight::DarkKnightBladeParticleActive_Implementation()
+{
+}
+
+
+
+void AE_DarkKnight::DarkKnightBladeParticleDeactive_Implementation()
 {
 }
 
@@ -66,6 +89,14 @@ void AE_DarkKnight::Destroyed()
 	{
 		return;
 	}
+
+	if (mBerserkNiagara)
+	{
+		mBerserkNiagara->Deactivate();
+		mBerserkNiagara->DestroyComponent();
+	}
+
+	HealthBarDeactive();
 
 	controller->UnPossess();
 
