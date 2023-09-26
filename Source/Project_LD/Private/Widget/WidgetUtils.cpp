@@ -159,3 +159,39 @@ bool UWidgetUtils::SetSkipSequence(AClientHUD* inHUD, const int32& inMax, const 
     inHUD->ShowWidgetFromName(TEXT("SkipSequence"));
     return true;
 }
+
+bool UWidgetUtils::SetResponseUseKeyAction(AClientHUD* inHUD, const int32& inKey, const FString& inError)
+{
+    UW_ResponseUseKeyAction* responseUseKeyAction = nullptr;
+    UUserWidget* outWidget = inHUD->GetWidgetFromName(TEXT("ResponseUseKeyAction"));
+    if (outWidget == nullptr)
+    {
+        return false;
+    }
+
+    responseUseKeyAction = Cast<UW_ResponseUseKeyAction>(outWidget);
+    if (responseUseKeyAction == nullptr)
+    {
+        return false;
+    }
+    //responseUseKeyAction->SetResponseUseKeyAction(inKey, inError);
+    responseUseKeyAction->OnActiveAnimation();
+
+    inHUD->ShowWidgetFromName(TEXT("ResponseUseKeyAction"));
+    return true;
+}
+
+bool UWidgetUtils::SetSkillCoolTime(AClientHUD* inHUD, const TArray<int32>& inSkillID, const TArray<int64>& inSkillDuration)
+{
+    return true;
+}
+
+bool UWidgetUtils::SetPushBuff(AClientHUD* inHUD, const int32& inBuffID, const int64& inBuffDuration)
+{
+    return true;
+}
+
+bool UWidgetUtils::SetReleaseBuff(AClientHUD* inHUD, const int32& inBuffID)
+{
+    return true;
+}

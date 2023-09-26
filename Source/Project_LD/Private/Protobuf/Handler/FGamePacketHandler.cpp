@@ -2465,6 +2465,35 @@ bool Handle_S2C_SetUseKeyAction(ANetworkController* controller, Protocol::S2C_Se
     return false;
 }
 
+bool Handle_S2C_ResponseUseKeyAction(ANetworkController* controller, Protocol::S2C_ResponseUseKeyAction& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    bool ret = UWidgetUtils::SetResponseUseKeyAction(clientHUD, pkt.key_id(), UNetworkUtils::GetNetworkErrorToString(pkt.error()));
+    if (ret == false)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_AppearSkill& pkt)
 {
     UE_LOG(LogTemp, Warning, TEXT("AppearSkill Data |||| Remote ID : %d, ||||| Object ID : %d, |||| Skill ID : %d")
@@ -2776,6 +2805,49 @@ bool Handle_S2C_EndReactionSkill(ANetworkController* controller, Protocol::S2C_E
     player->ActiveMovement();
     player->SetCanMove(true);
     player->SetUsingSkill(false);
+
+    return true;
+}
+
+bool Handle_S2C_SkillCoolTime(ANetworkController* controller, Protocol::S2C_SkillCoolTime& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    if (pkt.skill_id_size() != pkt.skill_time_size())
+    {
+        return false;
+    }
+    const int32 indexSize = pkt.skill_id_size();
+
+    TArray<int32> skillIDs;
+    TArray<int64> skillDurations;
+    for (int32 index = 0; index < indexSize; ++index)
+    {
+        skillIDs.Add(pkt.mutable_skill_id()->at(index));
+        skillDurations.Add(pkt.mutable_skill_time()->at(index));
+    }
+
+    bool ret = UWidgetUtils::SetSkillCoolTime(clientHUD, skillIDs, skillDurations);
+    if (ret == false)
+    {
+        return false;
+    }
 
     return true;
 }

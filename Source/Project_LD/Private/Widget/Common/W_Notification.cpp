@@ -26,6 +26,8 @@ void UW_Notification::NativeConstruct()
 
 void UW_Notification::NativeDestruct()
 {
+	Super::NativeDestruct();
+
 	bool isBound = mNotificationDelegate.IsBound();
 	if (false == isBound)
 	{

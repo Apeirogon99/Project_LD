@@ -13,6 +13,7 @@
 #include <Widget/Common/W_LoadingPlayer.h>
 #include <Widget/Common/W_Waiting.h>
 #include <Widget/Common/W_SkipSequence.h>
+#include <Widget/Common/W_ResponseUseKeyAction.h>
 #include "WidgetUtils.generated.h"
 
 /**
@@ -31,4 +32,8 @@ public:
 	static bool SetLoadingPlayer(AClientHUD* inHUD, const int32& inMax, const int32& inLeast);
 	static bool SetWaiting(AClientHUD* inHUD, const FString& inTitle, const int64& inTime);
 	static bool SetSkipSequence(AClientHUD* inHUD, const int32& inMax, const int32& inLeast);
+	static bool SetResponseUseKeyAction(AClientHUD* inHUD, const int32& inKey, const FString& inError);
+	static bool SetSkillCoolTime(AClientHUD* inHUD, const TArray<int32>& inSkillID, const TArray<int64>& inSkillDuration);
+	static bool SetPushBuff(AClientHUD* inHUD, const int32& inBuffID, const int64& inBuffDuration);
+	static bool SetReleaseBuff(AClientHUD* inHUD, const int32& inBuffID);
 };
