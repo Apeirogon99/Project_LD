@@ -84,12 +84,6 @@ ANC_Game::ANC_Game()
 	bCanSkillE = true;
 	bCanSkillR = true;
 	bCanDash = true;
-
-	mQCoolDown = 2.5f;
-	mWCoolDown = 2.5f;
-	mECoolDown = 2.5f;
-	mRCoolDown = 2.5f;
-	mDashCoolDown = 2.5f;
 }
 
 ANC_Game::~ANC_Game()
@@ -189,31 +183,6 @@ void ANC_Game::Destroyed()
 	world->DestroyActor(controller);
 }
 
-void ANC_Game::StartQTimer()
-{
-	GetWorldTimerManager().SetTimer(mQTimer, this, &ANC_Game::EndQ, mQCoolDown, false);
-}
-
-void ANC_Game::StartWTimer()
-{
-	GetWorldTimerManager().SetTimer(mWTimer, this, &ANC_Game::EndW, mWCoolDown, false);
-}
-
-void ANC_Game::StartETimer()
-{
-	GetWorldTimerManager().SetTimer(mETimer, this, &ANC_Game::EndE, mECoolDown, false);
-}
-
-void ANC_Game::StartRTimer()
-{
-	GetWorldTimerManager().SetTimer(mRTimer, this, &ANC_Game::EndR, mRCoolDown, false);
-}
-
-void ANC_Game::StartDashTimer()
-{
-	GetWorldTimerManager().SetTimer(mDashTimer, this, &ANC_Game::EndDash, mDashCoolDown, false);
-}
-
 void ANC_Game::EndQ()
 {
 	bCanSkillQ = true;
@@ -237,4 +206,26 @@ void ANC_Game::EndR()
 void ANC_Game::EndDash()
 {
 	bCanDash = true;
+}
+
+void ANC_Game::ManageSkill(int32 InSkillCode)
+{
+	switch (InSkillCode)
+	{
+	case 1:
+		EndE();
+		break;
+	case 2:
+		EndQ();
+		break;
+	case 3:
+		EndW();
+		break;
+	case 4:
+		EndR();
+		break;
+	case 5:
+		EndDash();
+		break;
+	}
 }

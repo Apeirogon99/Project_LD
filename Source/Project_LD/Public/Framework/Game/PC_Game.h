@@ -51,6 +51,8 @@ public:
 	void RequestCinematicPlay(int32 Index);
 	void RequestCinematicStop();
 
+	void SkillCoolTime(int32 InSkillCode);
+
 public:
 	virtual void BeginPlay() override;
 	void PlayerTick(float DeltaTime) override;

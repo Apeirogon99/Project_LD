@@ -2769,8 +2769,6 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
 
 bool Handle_S2C_EndReactionSkill(ANetworkController* controller, Protocol::S2C_EndReactionSkill& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_EndReactionSkill"));
-
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2841,6 +2839,14 @@ bool Handle_S2C_SkillCoolTime(ANetworkController* controller, Protocol::S2C_Skil
     {
         skillIDs.Add(pkt.mutable_skill_id()->at(index));
         skillDurations.Add(pkt.mutable_skill_time()->at(index));
+        if (pkt.mutable_skill_time()->at(index) <= 0)
+        {
+            APC_Game* control = Cast<APC_Game>(controller);
+            if(nullptr != control)
+            {
+                control->SkillCoolTime(pkt.mutable_skill_id()->at(index));
+            }
+        }
     }
 
     bool ret = UWidgetUtils::SetSkillCoolTime(clientHUD, skillIDs, skillDurations);

@@ -26,7 +26,6 @@ void UCinematicManager::Play(int32 InCinematicNumber, UWorld* InWorld)
 		ULevelSequence* mSequence = LoadObject<ULevelSequence>(nullptr, *data.GetLevelSequencePath());
 		if (mSequence)
 		{
-			LevelSequenceActor;
 			LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(InWorld, mSequence,FMovieSceneSequencePlaybackSettings(),LevelSequenceActor);
 			LevelSequencePlayer->Play();
 		}

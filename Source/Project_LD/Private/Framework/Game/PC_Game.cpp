@@ -193,6 +193,17 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 	FHitResult hitResult;
 	GetHitResultUnderCursor(ECC_Visibility, false, hitResult);
 
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (nullptr == character)
+	{
+		return;
+	}
+	
+	if (character->GetUsingSkill())
+	{
+		return;
+	}
+
 	if (false == hitResult.bBlockingHit)
 	{
 		return;
@@ -478,8 +489,6 @@ void APC_Game::UseSkill_Q_Released()
 		return;
 	}
 
-	character->StartQTimer();
-
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(81);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
@@ -530,8 +539,6 @@ void APC_Game::UseSkill_W_Released()
 		return;
 	}
 
-	character->StartWTimer();
-
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(87);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
@@ -581,8 +588,6 @@ void APC_Game::UseSkill_E_Released()
 	{
 		return;
 	}
-
-	character->StartETimer();
 
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(69);
@@ -639,7 +644,6 @@ void APC_Game::UseSkill_R_Released()
 		return;
 	}
 
-	character->StartRTimer();
 	playerAnim->PlayClientSkillMontage(4);
 
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
@@ -691,8 +695,6 @@ void APC_Game::UseSkill_Dash_Released()
 		return;
 	}
 
-	character->StartDashTimer();
-
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(0xA2);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
@@ -734,4 +736,15 @@ void APC_Game::RequestCinematicStop()
 	{
 		mCinematicManager->End();
 	}
+}
+
+void APC_Game::SkillCoolTime(int32 InSkillCode)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Code %d Cool Time"),InSkillCode);
+	ANC_Game* character = Cast<ANC_Game>(GetCharacter());
+	if (nullptr == character)
+	{
+		return;
+	}
+	character->ManageSkill(InSkillCode);
 }

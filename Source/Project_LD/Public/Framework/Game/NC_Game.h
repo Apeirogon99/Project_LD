@@ -51,18 +51,14 @@ public:
 	void DeActiveBuffParticle();
 	void StopMovement();
 
-	void StartQTimer();
-	void StartWTimer();
-	void StartETimer();
-	void StartRTimer();
-	void StartDashTimer();
-
 	void EndQ();
 	void EndW();
 	void EndE();
 	void EndR();
 	void EndDash();
 	
+	void ManageSkill(int32 InSkillCode);
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void ActiveMovement();
@@ -111,16 +107,4 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "SkillTime", meta = (AllowPrivateAccess = "true"))
 	bool bCanMove;
-
-	FTimerHandle mQTimer;
-	FTimerHandle mWTimer;
-	FTimerHandle mETimer;
-	FTimerHandle mRTimer;
-	FTimerHandle mDashTimer;
-
-	float mQCoolDown;
-	float mWCoolDown;
-	float mECoolDown;
-	float mRCoolDown;
-	float mDashCoolDown;
 };
