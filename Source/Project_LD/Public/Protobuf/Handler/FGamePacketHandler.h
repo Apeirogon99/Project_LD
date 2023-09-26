@@ -88,20 +88,22 @@ enum class EPakcetID: uint16
 	S2C_ReactionSkill = 2078,
 	S2C_EndReactionSkill = 2079,
 	S2C_SkillCoolTime = 2080,
-	S2C_DebugBox = 2081,
-	S2C_DebugCircle = 2082,
-	C2S_RequestEnterDungeon = 2083,
-	S2C_RequestEnterDungeon = 2084,
-	S2C_ResponseEnterDungeon = 2085,
-	C2S_CompleteLoadDungeon = 2086,
-	S2C_WaitingLoadDungeon = 2087,
-	S2C_CompleteLoadDungeon = 2088,
-	S2C_EnterPortal = 2089,
-	S2C_LeavePortal = 2090,
-	S2C_PlaySequence = 2091,
-	C2S_SkipSequence = 2092,
-	S2C_SkipSequence = 2093,
-	S2C_EndSequence = 2094,
+	S2C_PushBuff = 2081,
+	S2C_ReleaseBuff = 2082,
+	S2C_DebugBox = 2083,
+	S2C_DebugCircle = 2084,
+	C2S_RequestEnterDungeon = 2085,
+	S2C_RequestEnterDungeon = 2086,
+	S2C_ResponseEnterDungeon = 2087,
+	C2S_CompleteLoadDungeon = 2088,
+	S2C_WaitingLoadDungeon = 2089,
+	S2C_CompleteLoadDungeon = 2090,
+	S2C_EnterPortal = 2091,
+	S2C_LeavePortal = 2092,
+	S2C_PlaySequence = 2093,
+	C2S_SkipSequence = 2094,
+	S2C_SkipSequence = 2095,
+	S2C_EndSequence = 2096,
 };
 */
 
@@ -162,6 +164,8 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_ReactionSkill& pkt);
 bool Handle_S2C_EndReactionSkill(ANetworkController* controller, Protocol::S2C_EndReactionSkill& pkt);
 bool Handle_S2C_SkillCoolTime(ANetworkController* controller, Protocol::S2C_SkillCoolTime& pkt);
+bool Handle_S2C_PushBuff(ANetworkController* controller, Protocol::S2C_PushBuff& pkt);
+bool Handle_S2C_ReleaseBuff(ANetworkController* controller, Protocol::S2C_ReleaseBuff& pkt);
 bool Handle_S2C_DebugBox(ANetworkController* controller, Protocol::S2C_DebugBox& pkt);
 bool Handle_S2C_DebugCircle(ANetworkController* controller, Protocol::S2C_DebugCircle& pkt);
 bool Handle_S2C_RequestEnterDungeon(ANetworkController* controller, Protocol::S2C_RequestEnterDungeon& pkt);
@@ -235,6 +239,8 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_ReactionSkill)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_ReactionSkill>(Handle_S2C_ReactionSkill, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_EndReactionSkill)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_EndReactionSkill>(Handle_S2C_EndReactionSkill, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_SkillCoolTime)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_SkillCoolTime>(Handle_S2C_SkillCoolTime, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_PushBuff)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_PushBuff>(Handle_S2C_PushBuff, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_ReleaseBuff)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_ReleaseBuff>(Handle_S2C_ReleaseBuff, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DebugBox)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DebugBox>(Handle_S2C_DebugBox, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_DebugCircle)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_DebugCircle>(Handle_S2C_DebugCircle, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_RequestEnterDungeon)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_RequestEnterDungeon>(Handle_S2C_RequestEnterDungeon, controller, buffer, len); };

@@ -2852,6 +2852,64 @@ bool Handle_S2C_SkillCoolTime(ANetworkController* controller, Protocol::S2C_Skil
     return true;
 }
 
+bool Handle_S2C_PushBuff(ANetworkController* controller, Protocol::S2C_PushBuff& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    bool ret = UWidgetUtils::SetPushBuff(clientHUD, pkt.buff_id(), pkt.duration());
+    if (ret == false)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Handle_S2C_ReleaseBuff(ANetworkController* controller, Protocol::S2C_ReleaseBuff& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    bool ret = UWidgetUtils::SetReleaseBuff(clientHUD, pkt.buff_id());
+    if (ret == false)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool Handle_S2C_DebugBox(ANetworkController* controller, Protocol::S2C_DebugBox& pkt)
 {
 
