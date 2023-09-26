@@ -45,6 +45,10 @@ void APC_Game::BeginPlay()
 
 	SwitchMovementMode();
 	SwitchUIMode();
+	if (mCinematicManager == nullptr)
+	{
+		mCinematicManager = NewObject<UCinematicManager>();
+	}
 }
 
 void APC_Game::PlayerTick(float DeltaTime)
@@ -720,7 +724,7 @@ void APC_Game::RequestCinematicPlay(int32 Index)
 {
 	if (mCinematicManager)
 	{
-		mCinematicManager->Play(Index);
+		mCinematicManager->Play(Index, GetWorld());
 	}
 }
 

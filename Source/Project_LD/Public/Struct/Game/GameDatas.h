@@ -192,6 +192,22 @@ private:
 	EItemObjectType mType;
 };
 
+USTRUCT(BlueprintType)
+struct FLevelSequenceDataTable : public FTableRowBase
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	FLevelSequenceDataTable() : levelSequencePath() {}
+
+public:
+	FString GetLevelSequencePath() { return levelSequencePath; }
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FString levelSequencePath;
+};
+
 UCLASS()
 class PROJECT_LD_API ACustomDataTables : public AActor
 {

@@ -3227,6 +3227,13 @@ bool Handle_S2C_PlaySequence(ANetworkController* controller, Protocol::S2C_PlayS
         return false;
     }
 
+    APC_Game* PC_Controller = Cast<APC_Game>(controller);
+    if (nullptr == PC_Controller)
+    {
+        return false;
+    }
+
+    PC_Controller->RequestCinematicPlay(sequence);
 
     return true;
 }
@@ -3285,6 +3292,14 @@ bool Handle_S2C_EndSequence(ANetworkController* controller, Protocol::S2C_EndSeq
     clientHUD->ShowWidgetFromName(TEXT("MainGame"));
 
     //TODO end sequence
+
+    APC_Game* PC_Controller = Cast<APC_Game>(controller);
+    if (nullptr == PC_Controller)
+    {
+        return false;
+    }
+
+    PC_Controller->RequestCinematicStop();
 
     clientHUD->FadeOut();
     return true;

@@ -9,6 +9,7 @@
 /**
  * 
  */
+class ULevelSequencePlayer;
 class ALevelSequenceActor;
 
 UCLASS()
@@ -21,15 +22,13 @@ public:
 	~UCinematicManager();
 
 public:
-	void Init();
-	void Play(int32 InCinematicNumber);
+	void Play(int32 InCinematicNumber, UWorld* InWorld);
 	void End();
-
-public:
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite)
-	TArray<ALevelSequenceActor*> mCinematica;
 
 private:
 	UPROPERTY()
-	int32 mCurrentNum;
+	ULevelSequencePlayer* LevelSequencePlayer;
+
+	UPROPERTY()
+	ALevelSequenceActor* LevelSequenceActor;
 };

@@ -40,13 +40,14 @@ public:
 public:
 	FItemData*						GetItemData(int32 inCode);
 	FEquipmentItemData*				GetEquipmentItemData(int32 inCode);
-	FStatsBaseData*				GetBaseData(int32 inCode);
+	FStatsBaseData*					GetBaseData(int32 inCode);
 	FStatsGrowthData*				GetGrowthData(int32 inCode);
 	FEnemyData*						GetEnemyData(int32 inCode);
 	FEnemyStatData*					GetEnemyStatData(int32 inCode);
 	FLevelDataTable*				GetLevelDataTable(int32 inLevel);
 	FBuffData*						GetBuffData(int32 inCode);
 	FObstructionData*				GetObstructionData(int32 inObstructionType);
+	FLevelSequenceDataTable*		GetLevelSequenceData(int32 inLevelSequence);
 	FString							GetToken();
 	UServerData*					GetServerData();
 
@@ -80,6 +81,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
 	UDataTable* mObstructionTable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Data")
+	UDataTable* mLevelSequenceDataTable;
 
 private:
 	UPROPERTY()

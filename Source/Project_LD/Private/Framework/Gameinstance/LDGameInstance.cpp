@@ -93,6 +93,11 @@ FObstructionData* ULDGameInstance::GetObstructionData(int32 inObstructionType)
 	return mObstructionTable->FindRow<FObstructionData>(*FString::FromInt(inObstructionType), TEXT(""));
 }
 
+FLevelSequenceDataTable* ULDGameInstance::GetLevelSequenceData(int32 inLevelSequence)
+{
+	return mLevelSequenceDataTable->FindRow<FLevelSequenceDataTable>(*FString::FromInt(inLevelSequence), TEXT(""));
+}
+
 FString ULDGameInstance::GetToken()
 {
 	return mToken;

@@ -83,7 +83,6 @@ public:
 	bool mIsLeftMouse;
 	bool mIsRightMouse;
 
-	//¿¢¼¿ÀÌ¿ëÇØ¼­ ½Ã³×¸¶Æ½
 	UPROPERTY()
 	UCinematicManager* mCinematicManager;
 };

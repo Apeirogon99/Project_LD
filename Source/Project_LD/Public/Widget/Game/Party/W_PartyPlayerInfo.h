@@ -52,10 +52,10 @@ public:
 		void SetPlayerInfo(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf);
 
 	//UFUNCTION()
-	//	void PushBuff(const UTexture2D* inTexture2D, const int32& inSkillID, const float inDuration = MAX_FLT);
+	//	void PushBuff(const int32& inBuffID, const float inDuration = MAX_FLT);
 
 	//UFUNCTION()
-	//	void ReleaseBuff(const int32& inSkillID);
+	//	void ReleaseBuff(const int32& inBuffID);
 
 	UFUNCTION()
 	void UpdateHealthBar();

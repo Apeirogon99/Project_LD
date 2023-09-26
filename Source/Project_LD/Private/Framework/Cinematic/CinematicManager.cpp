@@ -4,42 +4,42 @@
 #include "Framework/Cinematic/CinematicManager.h"
 #include <LevelSequence/Public/LevelSequenceActor.h>
 #include <LevelSequence/Public/LevelSequencePlayer.h>
+#include <LDGameInstance.h>
 #include <Kismet/GameplayStatics.h>
 
 UCinematicManager::UCinematicManager()
 {
-	mCurrentNum = -1;
+	LevelSequencePlayer = nullptr;
+	LevelSequenceActor = nullptr;
 }
 
 UCinematicManager::~UCinematicManager()
 {
 }
 
-void UCinematicManager::Init()
+void UCinematicManager::Play(int32 InCinematicNumber, UWorld* InWorld)
 {
-	TArray<AActor*> Cinematicas;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALevelSequenceActor::StaticClass(), Cinematicas);
-
-	for (AActor* Actor : Cinematicas)
+	if ((0 < InCinematicNumber) && (InCinematicNumber < 5))
 	{
-		mCinematica.Push(Cast<ALevelSequenceActor>(Actor));
+		ULDGameInstance* Instance = Cast<ULDGameInstance>(InWorld->GetGameInstance());
+		FLevelSequenceDataTable data = *Instance->GetLevelSequenceData(InCinematicNumber);
+		ULevelSequence* mSequence = LoadObject<ULevelSequence>(nullptr, *data.GetLevelSequencePath());
+		if (mSequence)
+		{
+			LevelSequenceActor;
+			LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(InWorld, mSequence,FMovieSceneSequencePlaybackSettings(),LevelSequenceActor);
+			LevelSequencePlayer->Play();
+		}
 	}
-}
-
-void UCinematicManager::Play(int32 InCinematicNumber)
-{
-	// 1, 2, 3, 4
-	mCurrentNum = InCinematicNumber;
-	mCinematica[InCinematicNumber]->SequencePlayer->Play();
 }
 
 void UCinematicManager::End()
 {
-	if (mCurrentNum == -1)
+	if (LevelSequenceActor && LevelSequencePlayer)
 	{
-		return;
-	}
+		LevelSequencePlayer->Stop();
 
-	mCinematica[mCurrentNum]->GetSequencePlayer()->Stop();
-	mCurrentNum = -1;
+		LevelSequenceActor = nullptr;
+		LevelSequencePlayer = nullptr;
+	}
 }
