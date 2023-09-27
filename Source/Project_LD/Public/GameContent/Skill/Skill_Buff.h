@@ -24,13 +24,6 @@ public:
 	virtual void ReactionSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration) override;
 
 public:
-	UFUNCTION(BlueprintCallable)
-	void Appear();
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float aa;
-
-public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -48,6 +41,10 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	USphereComponent* mPlayerInCheckCollision;
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TArray<int32> mActivePlayerId;
 
 private:
 	void CheckApplyPlayerBuff();
