@@ -191,19 +191,7 @@ void UW_PartyPlayerInfo::UpdateBuffInfo()
 		return;
 	}
 
-	float C_AttackDamage = playerState->GetCharacterStats().GetCurrentStats().GetAttackDamage();
-	float C_Armor = playerState->GetCharacterStats().GetCurrentStats().GetArmor();
-	float C_MovementSPeed = playerState->GetCharacterStats().GetCurrentStats().GetMovementSpeed();
-
-	float M_AttackDamage = playerState->GetCharacterStats().GetMaxStats().GetAttackDamage();
-	float M_Armor = playerState->GetCharacterStats().GetMaxStats().GetArmor();
-	float M_MovementSPeed = playerState->GetCharacterStats().GetMaxStats().GetMovementSpeed();
-
-	UE_LOG(LogTemp, Warning, TEXT("C_Attack %f M_Attack %f"), C_AttackDamage, M_AttackDamage);
-	if (C_AttackDamage > M_AttackDamage && buffArr[0] == 0)
-	{
-		buffArr[0] = 1;
-		FBuffData buffdata = *Instance->GetBuffData(0);
+		/*
 		UW_PlayerBuffInfo* childWidget = CreateWidget<UW_PlayerBuffInfo>(this, UW_PlayerBuffInfo::StaticClass());
 		if (childWidget)
 		{
@@ -212,70 +200,8 @@ void UW_PartyPlayerInfo::UpdateBuffInfo()
 
 			BuffList->AddChild(childWidget);
 		}
-	}
-	else if (C_AttackDamage < M_AttackDamage)
-	{
-		buffArr[0] = -1;
-		FBuffData buffdata = *Instance->GetBuffData(1);
-		UW_PlayerBuffInfo* childWidget = NewObject<UW_PlayerBuffInfo>();
-		if (childWidget->mBuffImage)
-		{
-			
-		}
-		//->SetBrushFromTexture(buffdata.GetImage());
+		*/
 
-		BuffList->AddChild(childWidget);
-	}
-	else
-	{
-		buffArr[0] = 0;
-	}
-	/*
-	if (C_Armor > M_Armor && buffArr[1] == 0)
-	{
-		buffArr[1] = 1;
-		FBuffData buffdata = *Instance->GetBuffData(2);
-		//UW_PlayerBuffInfo* childWidget = NewObject<UW_PlayerBuffInfo>();
-		//childWidget->mBuffImage->SetBrushFromTexture(buffdata.GetImage());
-
-		//BuffList->AddChild(childWidget);
-	}
-	else if (C_Armor < M_Armor)
-	{
-		buffArr[1] = -1;
-		FBuffData buffdata = *Instance->GetBuffData(3);
-		UW_PlayerBuffInfo* childWidget = NewObject<UW_PlayerBuffInfo>();
-		childWidget->mBuffImage->SetBrushFromTexture(buffdata.GetImage());
-
-		BuffList->AddChild(childWidget);
-	}
-	else
-	{
-		buffArr[1] = 0;
-	}
-
-	if (C_MovementSPeed > M_MovementSPeed && buffArr[2] == 0)
-	{
-		buffArr[2] = 1;
-		FBuffData buffdata = *Instance->GetBuffData(4);
-		UW_PlayerBuffInfo* childWidget = NewObject<UW_PlayerBuffInfo>();
-		childWidget->mBuffImage->SetBrushFromTexture(buffdata.GetImage());
-
-		BuffList->AddChild(childWidget);
-	}
-	else if (C_MovementSPeed < M_MovementSPeed)
-	{
-		buffArr[2] = -1;
-		FBuffData buffdata = *Instance->GetBuffData(5);
-		UW_PlayerBuffInfo* childWidget = NewObject<UW_PlayerBuffInfo>();
-		childWidget->mBuffImage->SetBrushFromTexture(buffdata.GetImage());
-
-		BuffList->AddChild(childWidget);
-	}
-	else
-	{
-		buffArr[2] = 0;
-	}*/
 }
 
 const int64& UW_PartyPlayerInfo::GetRemoteID()

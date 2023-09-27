@@ -155,24 +155,25 @@ void ASkill_Buff::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 		{
 			mActivePlayerId.Add(mRemoteID);
 			OtherPlayer->ActiveBuffParticle();
-			return;
 		}
-
-		for (APlayerState* partyplayer : PartyPlayers)
+		else
 		{
-			ANPS_Game* partyplayerState = Cast<ANPS_Game>(partyplayer);
-			if (nullptr == partyplayerState)
+			for (APlayerState* partyplayer : PartyPlayers)
 			{
-				return;
-			}
-			if (OtherPlayerId == partyplayerState->GetRemoteID())
-			{
-				if (mActivePlayerId.Find(OtherPlayerId) == INDEX_NONE)
+				ANPS_Game* partyplayerState = Cast<ANPS_Game>(partyplayer);
+				if (nullptr == partyplayerState)
 				{
-					mActivePlayerId.Add(OtherPlayerId);
-					OtherPlayer->ActiveBuffParticle();
+					return;
 				}
-				break;
+				if (OtherPlayerId == partyplayerState->GetRemoteID())
+				{
+					if (mActivePlayerId.Find(OtherPlayerId) == INDEX_NONE)
+					{
+						mActivePlayerId.Add(OtherPlayerId);
+						OtherPlayer->ActiveBuffParticle();
+					}
+					break;
+				}
 			}
 		}
 	}
@@ -241,24 +242,25 @@ void ASkill_Buff::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Othe
 			int32 Index = mActivePlayerId.Find(OtherPlayerId);
 			mActivePlayerId.Remove(Index);
 			OtherPlayer->DeActiveBuffParticle();
-			return;
 		}
-
-		for (APlayerState* partyplayer : PartyPlayers)
+		else
 		{
-			ANPS_Game* partyplayerState = Cast<ANPS_Game>(partyplayer);
-			if (nullptr == partyplayerState)
+			for (APlayerState* partyplayer : PartyPlayers)
 			{
-				return;
-			}
-			if (OtherPlayerId == partyplayerState->GetRemoteID())
-			{
-				if (mActivePlayerId.Find(OtherPlayerId) != INDEX_NONE)
+				ANPS_Game* partyplayerState = Cast<ANPS_Game>(partyplayer);
+				if (nullptr == partyplayerState)
 				{
-					int32 Index = mActivePlayerId.Find(OtherPlayerId);
-					mActivePlayerId.Remove(Index);
-					OtherPlayer->DeActiveBuffParticle();
-					break;
+					return;
+				}
+				if (OtherPlayerId == partyplayerState->GetRemoteID())
+				{
+					if (mActivePlayerId.Find(OtherPlayerId) != INDEX_NONE)
+					{
+						int32 Index = mActivePlayerId.Find(OtherPlayerId);
+						mActivePlayerId.Remove(Index);
+						OtherPlayer->DeActiveBuffParticle();
+						break;
+					}
 				}
 			}
 		}

@@ -2496,9 +2496,6 @@ bool Handle_S2C_ResponseUseKeyAction(ANetworkController* controller, Protocol::S
 
 bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_AppearSkill& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("AppearSkill Data |||| Remote ID : %d, ||||| Object ID : %d, |||| Skill ID : %d")
-        , pkt.remote_id(), pkt.object_id(), pkt.skill_id());
-
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2651,8 +2648,6 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
 bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_ReactionSkill& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Reaction Data |||| Remote ID : %d, ||||| Object ID : %d, |||| Skill ID : %d ||||||||| duration %f")
-        , pkt.remote_id(), pkt.object_id(), pkt.skill_id(),pkt.duration()/1000.f);
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2860,6 +2855,8 @@ bool Handle_S2C_SkillCoolTime(ANetworkController* controller, Protocol::S2C_Skil
 
 bool Handle_S2C_PushBuff(ANetworkController* controller, Protocol::S2C_PushBuff& pkt)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_PushBuff pkt buff id %d pkt buff duration %f"), pkt.buff_id(), pkt.duration());
+
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2889,6 +2886,8 @@ bool Handle_S2C_PushBuff(ANetworkController* controller, Protocol::S2C_PushBuff&
 
 bool Handle_S2C_ReleaseBuff(ANetworkController* controller, Protocol::S2C_ReleaseBuff& pkt)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_ReleaseBuff pkt buff id %d"), pkt.buff_id());
+
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
