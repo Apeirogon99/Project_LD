@@ -43,22 +43,20 @@ void APS_Game::InitializeLocalPlayerState()
 	if (gameMode->GetNetworkController() == GetPawn()->GetController())
 	{
 		mInventoryComponent = NewObject<UACInventoryComponent>(this,TEXT("Inventory"));
-		this->AddOwnedComponent(mInventoryComponent);
-		mInventoryComponent->RegisterComponent();
-
 		if (mInventoryComponent == nullptr)
 		{
 			return;
 		}
+		this->AddOwnedComponent(mInventoryComponent);
+		mInventoryComponent->RegisterComponent();
 
 		mEquipmentComponent = NewObject<UACEquipment>(this, TEXT("Equipment"));
-		this->AddOwnedComponent(mEquipmentComponent);
-		mEquipmentComponent->RegisterComponent();
-
 		if (mEquipmentComponent == nullptr)
 		{
 			return;
 		}
+		this->AddOwnedComponent(mEquipmentComponent);
+		mEquipmentComponent->RegisterComponent();
 
 		mPartyComponent = NewObject<UACPartyComponent>(this, TEXT("Party"));
 		if (mPartyComponent == nullptr)

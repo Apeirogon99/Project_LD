@@ -9,6 +9,7 @@
 #include "EnemyBase.generated.h"
 
 class UWidgetComponent;
+class UACPointOfInterest;
 
 UCLASS()
 class PROJECT_LD_API AEnemyBase : public ACharacter, public IInteractiveInterface
@@ -64,6 +65,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UParticleSystem* mSlowParticle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UACPointOfInterest* mPOI;
 
 	bool bSpeedCheck;
 };

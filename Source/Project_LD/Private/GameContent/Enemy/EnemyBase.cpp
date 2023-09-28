@@ -18,6 +18,7 @@
 #include "Particles/ParticleSystemComponent.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Component/ACPointOfInterest.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Components/ProgressBar.h"
@@ -66,6 +67,8 @@ AEnemyBase::AEnemyBase()
 		mSlowParticle = SLOWPARTICLE.Object;
 	}
 
+	mPOI = CreateDefaultSubobject<UACPointOfInterest>(TEXT("POI"));
+
 	bSpeedCheck = false;
 }
 
@@ -76,6 +79,16 @@ AEnemyBase::~AEnemyBase()
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
+
+	/*
+	mPOI = NewObject<UACPointOfInterest>(this, TEXT("POI"));
+	if (mPOI == nullptr)
+	{
+		return;
+	}
+	this->AddOwnedComponent(mPOI);
+	mPOI->RegisterComponent();
+	*/
 }
 
 void AEnemyBase::EndPlay(const EEndPlayReason::Type EndPlayReason)

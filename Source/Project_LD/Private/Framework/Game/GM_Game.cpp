@@ -116,6 +116,7 @@ void AGM_Game::BeginNetwork()
 	controller->Send(FGamePacketHandler::MakeSendBuffer(controller, enterPacket));
 
 	GetClientHUD()->ShowWidgetFromName(FString(TEXT("MainGame")));
+	GetClientHUD()->ShowWidgetFromName(FString(TEXT("Minimap")));
 }
 
 ACharacter* AGM_Game::SpawnCharacter(FVector inLocation, FRotator inRotator)
