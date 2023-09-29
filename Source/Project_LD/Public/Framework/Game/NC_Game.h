@@ -63,6 +63,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ActiveMovement();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ReplaceIconParty();
+	virtual void ReplaceIconParty_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void ReplaceIconOtherPlayer();
+	virtual void ReplaceIconOtherPlayer_Implementation();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

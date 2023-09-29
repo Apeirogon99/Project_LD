@@ -133,6 +133,14 @@ void ANC_Game::ActiveMovement()
 	this->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
 }
 
+void ANC_Game::ReplaceIconParty_Implementation()
+{
+}
+
+void ANC_Game::ReplaceIconOtherPlayer_Implementation()
+{
+}
+
 void ANC_Game::BeginPlay()
 {
 	Super::BeginPlay();

@@ -26,10 +26,10 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsStatic;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* IconImage;
 
 private:
