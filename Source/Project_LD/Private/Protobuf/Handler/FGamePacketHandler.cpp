@@ -190,6 +190,19 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     const int64 durationTimeStamp = nowServerTimeStamp - lastMovementTimeStamp;
     npcController->NPCMoveDestination(oldMovementLocation, newMovementLocation, durationTimeStamp);
 
+    ANPS_Game* playerState = npcController->GetPlayerState<ANPS_Game>();
+    if (nullptr == playerState)
+    {
+        return false;
+    }
+
+    const int32 indexSize = pkt.stats_size();
+    for (int32 index = 0; index < indexSize; ++index)
+    {
+        const Protocol::SStat& stat = pkt.stats().Get(index);
+        playerState->GetCharacterStats().UpdateCurrentStats(StaticCast<ECharacterStatus>(stat.stat_type()), stat.stat_value());
+    }
+
     return true;
 }
 
