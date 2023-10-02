@@ -108,6 +108,43 @@ void UW_PartyPlayerInfoList::RemovePartyPlayerInfo(const int64& inRemoteID)
 	}
 }
 
+void UW_PartyPlayerInfoList::RequestPushBuff(const int64 inRemoteID, const int32& inBuffID, const int64& inBuffDuration)
+{
+	for (UUserWidget* PlayerInfo : mPartyPlayerInfoLists)
+	{
+		UW_PartyPlayerInfo* PlayerData = Cast<UW_PartyPlayerInfo>(PlayerInfo);
+		if(nullptr == PlayerData)
+		{
+			return;
+		}
+
+		/*
+		if (inRemoteID == PlayerData->GetRemoteID())
+		{
+			PlayerData->PushBuff(inBuffID, inBuffDuration);
+		}
+		*/
+		PlayerData->PushBuff(inBuffID, inBuffDuration);
+	}
+}
+
+void UW_PartyPlayerInfoList::RequestReleaseBuff(const int64 inRemoteID, const int32& inBuffID)
+{
+	for (UUserWidget* PlayerInfo : mPartyPlayerInfoLists)
+	{
+		UW_PartyPlayerInfo* PlayerData = Cast<UW_PartyPlayerInfo>(PlayerInfo);
+		if (nullptr == PlayerData)
+		{
+			return;
+		}
+
+		if (inRemoteID == PlayerData->GetRemoteID())
+		{
+			PlayerData->ReleaseBuff(inBuffID);
+		}
+	}
+}
+
 void UW_PartyPlayerInfoList::UpdateLocation()
 {
 	float WaitTime = 0.01f;

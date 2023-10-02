@@ -19,7 +19,6 @@ void ANPS_Game::UpdateCurrentStatsBar()
 {
 	UpdateHealthBar();
 	UpdateManaBar();
-	UpdateBuffCheck();
 }
 
 void ANPS_Game::SetRemotePlayerID(const int64 inRemoteID)
@@ -97,14 +96,6 @@ void ANPS_Game::UpdateManaBar()
 	if (OnCharacterManaChanged.IsBound())
 	{
 		OnCharacterManaChanged.Broadcast();
-	}
-}
-
-void ANPS_Game::UpdateBuffCheck()
-{
-	if (OnApplyBuffOrDeBuff.IsBound())
-	{
-		//OnApplyBuffOrDeBuff.Broadcast();
 	}
 }
 

@@ -49,22 +49,19 @@ public:
 
 public:
 	UFUNCTION()
-		void SetPlayerInfo(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf);
+	void SetPlayerInfo(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf);
 
-	//UFUNCTION()
-	//	void PushBuff(const int32& inBuffID, const float inDuration = MAX_FLT);
+	UFUNCTION()
+	void PushBuff(const int32& inBuffID, const float inDuration = MAX_FLT);
 
-	//UFUNCTION()
-	//	void ReleaseBuff(const int32& inBuffID);
+	UFUNCTION()
+	void ReleaseBuff(const int32& inBuffID);
 
 	UFUNCTION()
 	void UpdateHealthBar();
 
 	UFUNCTION()
 	void UpdateManaBar();
-
-	UFUNCTION()
-	void UpdateBuffInfo();
 
 public:
 	const int64& GetRemoteID();
@@ -76,9 +73,17 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Widget")
 		UTexture2D* mWizardClassTexture;
 
-	int buffArr[3];
+private:
+	void UpdateBuff();
+	void ClearBuff();
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
 	int64 mRemoteID;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	TArray<int32> mBuffDatas;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Data", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UUserWidget> mBuffDataWidget;
 };

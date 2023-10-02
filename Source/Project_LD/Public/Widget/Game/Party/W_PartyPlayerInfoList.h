@@ -41,6 +41,10 @@ public:
 		void RemovePartyPlayerInfo(const int64& inRemoteID);
 
 public:
+	void RequestPushBuff(const int64 inRemoteID, const int32& inBuffID, const int64& inBuffDuration);
+	void RequestReleaseBuff(const int64 inRemoteID, const int32& inBuffID);
+
+public:
 	UFUNCTION()
 		void UpdateLocation();
 

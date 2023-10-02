@@ -2,6 +2,8 @@
 
 
 #include "Widget/WidgetUtils.h"
+#include <Game/Main/W_MainGame.h>
+#include <Game/Party/W_PartyPlayerInfoList.h>
 
 bool UWidgetUtils::SetEditBox(AClientHUD* inHUD, const FString& inTitle, const FString& inHint, const FString& inButtonText, const FButtonDelegate& inDelegate)
 {
@@ -188,10 +190,40 @@ bool UWidgetUtils::SetSkillCoolTime(AClientHUD* inHUD, const TArray<int32>& inSk
 
 bool UWidgetUtils::SetPushBuff(AClientHUD* inHUD, const int32& inBuffID, const int64& inBuffDuration)
 {
+    //duration 0인지 비교 (0이 아니면 Timer) 
+    // - 누구인지 알아야함 (버프 대상이 파티원인가?)
+    UW_MainGame* widget = Cast<UW_MainGame>(inHUD->GetWidgetFromName(TEXT("MainGame")));
+    if (nullptr == widget)
+    {
+        return false;
+    }
+
+    UW_PartyPlayerInfoList* partyPlayerInfoList = Cast<UW_PartyPlayerInfoList>(widget->GetPartyPlayerInfoList());
+    if (nullptr == partyPlayerInfoList)
+    {
+        return false;
+    }
+
+    partyPlayerInfoList->RequestPushBuff(0, inBuffID, inBuffDuration);
+
     return true;
 }
 
 bool UWidgetUtils::SetReleaseBuff(AClientHUD* inHUD, const int32& inBuffID)
 {
+    UW_MainGame* widget = Cast<UW_MainGame>(inHUD->GetWidgetFromName(TEXT("MainGame")));
+    if (nullptr == widget)
+    {
+        return false;
+    }
+
+    UW_PartyPlayerInfoList* partyPlayerInfoList = Cast<UW_PartyPlayerInfoList>(widget->GetPartyPlayerInfoList());
+    if (nullptr == partyPlayerInfoList)
+    {
+        return false;
+    }
+
+    partyPlayerInfoList->RequestReleaseBuff(0, inBuffID);
+
     return true;
 }

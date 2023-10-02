@@ -29,6 +29,7 @@ public:
 
 public:
 	UBorder* GetPlayerSightBorder() const { return PlayerSightBorder; }
+	UWidget* GetPartyPlayerInfoList() const { return mPartyPlayerInfoList; }
 
 public:
 	UFUNCTION()

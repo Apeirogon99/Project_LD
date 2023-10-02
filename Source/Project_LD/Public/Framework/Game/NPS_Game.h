@@ -14,7 +14,6 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnCharacterHealthChanged)
 DECLARE_MULTICAST_DELEGATE(FOnCharacterManaChanged)
-DECLARE_MULTICAST_DELEGATE(FOnApplyBuffOrDeBuff)
 
 UCLASS()
 class PROJECT_LD_API ANPS_Game : public ANetworkPlayerState
@@ -28,7 +27,6 @@ public:
 public:
 	FOnCharacterHealthChanged		OnCharacterHealthChanged;
 	FOnCharacterManaChanged			OnCharacterManaChanged;
-	FOnApplyBuffOrDeBuff			OnApplyBuffOrDeBuff;
 
 public:
 	void UpdateCurrentStatsBar(); // stats Update
@@ -58,5 +56,4 @@ protected:
 protected:
 	virtual void UpdateHealthBar();
 	virtual void UpdateManaBar();
-	virtual void UpdateBuffCheck();
 };

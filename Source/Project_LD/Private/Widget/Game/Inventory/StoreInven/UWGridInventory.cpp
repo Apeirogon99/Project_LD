@@ -355,7 +355,7 @@ void UUWGridInventory::Refresh()
 				}
 			}
 		}
-	}
+	}					
 }
 
 //아이템 데이터 받아오기

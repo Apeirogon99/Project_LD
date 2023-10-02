@@ -19,6 +19,12 @@ void UW_PartyPlayerInfo::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	TSubclassOf<UW_PlayerBuffInfo> BuffClass = StaticLoadClass(UW_PlayerBuffInfo::StaticClass(), nullptr, TEXT("WidgetBlueprint'/Game/Blueprint/Widget/Game/Party/BW_PlayerBuffInfo.BW_PlayerBuffInfo_C'"));
+	if (BuffClass)
+	{
+		mBuffDataWidget = BuffClass;
+	}
+
 	mLevel = Cast<UTextBlock>(GetWidgetFromName(TEXT("mLevel")));
 	mName = Cast<UTextBlock>(GetWidgetFromName(TEXT("mName")));
 
@@ -56,14 +62,8 @@ void UW_PartyPlayerInfo::SetPlayerInfo(const int64& inRemoteID, const int64& inL
 
 	mRemoteID = inRemoteID;
 
-	for (int i = 0; i < 3; i++)
-	{
-		buffArr[i] = 0;
-	}
-
 	playerState->OnCharacterHealthChanged.AddUFunction(this, FName(TEXT("UpdateHealthBar")));
 	playerState->OnCharacterManaChanged.AddUFunction(this, FName(TEXT("UpdateManaBar")));
-	playerState->OnApplyBuffOrDeBuff.AddUFunction(this, FName(TEXT("UpdateBuffInfo")));
 
 	FString tempText;
 	tempText.Append(FString::FromInt(inLevel));
@@ -99,7 +99,21 @@ void UW_PartyPlayerInfo::SetPlayerInfo(const int64& inRemoteID, const int64& inL
 
 	UpdateHealthBar();
 	UpdateManaBar();
-	UpdateBuffInfo();
+}
+
+void UW_PartyPlayerInfo::PushBuff(const int32& inBuffID, const float inDuration)
+{
+	mBuffDatas.Add(inBuffID);
+	UpdateBuff();
+}
+
+void UW_PartyPlayerInfo::ReleaseBuff(const int32& inBuffID)
+{
+	if (int index = mBuffDatas.Find(inBuffID) != INDEX_NONE)
+	{
+		mBuffDatas.RemoveAt(index);
+	}
+	UpdateBuff();
 }
 
 void UW_PartyPlayerInfo::UpdateHealthBar()
@@ -109,6 +123,7 @@ void UW_PartyPlayerInfo::UpdateHealthBar()
 	{
 		return;
 	}
+
 	AController* controller = gameState->FindPlayerController(mRemoteID);
 	if (nullptr == controller)
 	{
@@ -129,10 +144,6 @@ void UW_PartyPlayerInfo::UpdateHealthBar()
 	}
 	float HealthPercent = CurrentHealthPercent / MaxHealthPercent;
 
-	/*
-	UE_LOG(LogTemp, Warning, TEXT("Update Character HP ID : %d M HP %f C HP %f Percent %f"),
-		mRemoteID, MaxHealthPercent, CurrentHealthPercent, HealthPercent);
-		*/
 	mHP->SetPercent(HealthPercent);
 }
 
@@ -166,45 +177,30 @@ void UW_PartyPlayerInfo::UpdateManaBar()
 	mMP->SetPercent(ManaPercent);
 }
 
-void UW_PartyPlayerInfo::UpdateBuffInfo()
-{
-	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
-	if (nullptr == Instance)
-	{
-		return;
-	}
-
-	AGS_Game* gameState = GetWorld()->GetGameState<AGS_Game>();
-	if (nullptr == gameState)
-	{
-		return;
-	}
-	AController* controller = gameState->FindPlayerController(mRemoteID);
-	if (nullptr == controller)
-	{
-		return;
-	}
-
-	ANPS_Game* playerState = controller->GetPlayerState<ANPS_Game>();
-	if (nullptr == playerState)
-	{
-		return;
-	}
-
-		/*
-		UW_PlayerBuffInfo* childWidget = CreateWidget<UW_PlayerBuffInfo>(this, UW_PlayerBuffInfo::StaticClass());
-		if (childWidget)
-		{
-			UTexture2D* texture = buffdata.GetImage();
-			childWidget->mBuffImage->SetBrushFromTexture(texture);
-
-			BuffList->AddChild(childWidget);
-		}
-		*/
-
-}
-
 const int64& UW_PartyPlayerInfo::GetRemoteID()
 {
 	return mRemoteID;
+}
+
+void UW_PartyPlayerInfo::UpdateBuff()
+{
+	ClearBuff();
+	for (int32 dataIndex : mBuffDatas)
+	{
+		UW_PlayerBuffInfo* BuffInfo = nullptr;
+		BuffInfo = Cast<UW_PlayerBuffInfo>(CreateWidget(GetWorld(), mBuffDataWidget));
+		if (BuffInfo)
+		{
+			ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
+			FBuffData data = *Instance->GetBuffData(dataIndex);
+			BuffInfo->mBuffImage->SetBrushFromTexture(data.GetImage());
+
+			BuffList->AddChild(BuffInfo);
+		}
+	}
+}
+
+void UW_PartyPlayerInfo::ClearBuff()
+{
+	BuffList->ClearChildren();
 }
