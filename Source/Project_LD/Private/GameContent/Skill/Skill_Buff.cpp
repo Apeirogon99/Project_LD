@@ -83,11 +83,6 @@ void ASkill_Buff::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	}
 }
 
-void ASkill_Buff::CheckApplyPlayerBuff()
-{
-
-}
-
 void ASkill_Buff::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (Cast<ANC_Game>(OtherActor) != nullptr)

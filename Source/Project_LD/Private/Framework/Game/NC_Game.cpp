@@ -217,7 +217,14 @@ void ANC_Game::DoAppearSkill(const FVector& inLocation, const FRotator& inRotati
 	{
 		return;
 	}
-	animation->PlaySkillMontage(inSkillID - 1, inDuration);
+
+	int32 skillID = inSkillID;
+	if (skillID != 5)
+	{
+		skillID--;
+	}
+
+	animation->PlaySkillMontage(skillID, inDuration);
 
 	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
 	if (nullptr == animation)
@@ -225,7 +232,7 @@ void ANC_Game::DoAppearSkill(const FVector& inLocation, const FRotator& inRotati
 		return;
 	}
 
-	AActor* newActor = gameState->CreateGameObject(skillClass[inSkillID], inLocation, inRotation, inGameOjbectID);
+	AActor* newActor = gameState->CreateGameObject(skillClass[skillID], inLocation, inRotation, inGameOjbectID);
 	if (nullptr == newActor)
 	{
 		return;
@@ -259,7 +266,14 @@ void ANC_Game::DoActionSkill(const FVector& inLocation, const FRotator& inRotati
 	{
 		return;
 	}
-	animation->PlaySkillMontage(inSkillID, inDuration);
+
+	int32 skillID = inSkillID;
+	if (skillID != 5)
+	{
+		skillID--;
+	}
+
+	animation->PlaySkillMontage(skillID, inDuration);
 
 	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
 	if (nullptr == animation)
@@ -267,7 +281,7 @@ void ANC_Game::DoActionSkill(const FVector& inLocation, const FRotator& inRotati
 		return;
 	}
 
-	AActor* newActor = gameState->CreateGameObject(skillClass[inSkillID], inLocation, inRotation, inGameOjbectID);
+	AActor* newActor = gameState->CreateGameObject(skillClass[skillID], inLocation, inRotation, inGameOjbectID);
 	if (nullptr == newActor)
 	{
 		return;

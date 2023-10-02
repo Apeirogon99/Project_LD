@@ -2517,13 +2517,34 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
 
     if (skillID <= 5)
     {
-        ANPC_Game* nonController = Cast<ANPC_Game>(gameState->FindPlayerController(remoteID));
-        if (nullptr == nonController)
+        AController* Control = gameState->FindPlayerController(remoteID);
+        if (nullptr == Control)
         {
             return false;
         }
 
-        ANC_Game* nonCharacter = Cast<ANC_Game>(nonController->GetCharacter());
+        ACharacter* character = nullptr;
+
+        if (controller == Control)
+        {
+            APC_Game* playerController = Cast<APC_Game>(Control);
+            if (nullptr == playerController)
+            {
+                return false;
+            }
+            character = playerController->GetCharacter();
+        }
+        else
+        {
+            ANPC_Game* nonController = Cast<ANPC_Game>(Control);
+            if (nullptr == nonController)
+            {
+                return false;
+            }
+            character = nonController->GetCharacter();
+        }
+
+        ANC_Game* nonCharacter = Cast<ANC_Game>(character);
         if (nullptr == nonCharacter)
         {
             return false;
@@ -2572,13 +2593,34 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
 
     if (skillID <= 5)
     {
-        ANPC_Game* nonController = Cast<ANPC_Game>(gameState->FindPlayerController(remoteID));
-        if (nullptr == nonController)
+        AController* Control = gameState->FindPlayerController(remoteID);
+        if (nullptr == Control)
         {
             return false;
         }
 
-        ANC_Game* nonCharacter = Cast<ANC_Game>(nonController->GetCharacter());
+        ACharacter* character = nullptr;
+
+        if (controller == Control)
+        {
+            APC_Game* playerController = Cast<APC_Game>(Control);
+            if (nullptr == playerController)
+            {
+                return false;
+            }
+            character = playerController->GetCharacter();
+        }
+        else
+        {
+            ANPC_Game* nonController = Cast<ANPC_Game>(Control);
+            if (nullptr == nonController)
+            {
+                return false;
+            }
+            character = nonController->GetCharacter();
+        }
+
+        ANC_Game* nonCharacter = Cast<ANC_Game>(character);
         if (nullptr == nonCharacter)
         {
             return false;
