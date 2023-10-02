@@ -17,6 +17,13 @@
 #include "Particles/ParticleSystemComponent.h"
 
 #include <UObject/ConstructorHelpers.h>
+#include <AnimInstance/AI_PlayerCharacter.h>
+
+#include <GameContent/Skill/Skill_Buff.h>
+#include <GameContent/Skill/Skill_Counter.h>
+#include <GameContent/Skill/Skill_SlamAttack.h>
+#include <GameContent/Skill/Skill_SwordSpirit.h>
+#include <GameContent/Skill/Skill_Dash.h>
 
 ANC_Game::ANC_Game()
 {
@@ -189,6 +196,89 @@ void ANC_Game::Destroyed()
 	world->DestroyActor(playerState);
 
 	world->DestroyActor(controller);
+}
+
+void ANC_Game::DoAppearSkill(const FVector& inLocation, const FRotator& inRotation, const int64& inRemoteID, const int64& inGameOjbectID, const int32& inSkillID, const float& inDuration)
+{
+	UWorld* world = this->GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+	static TArray<UClass*> skillClass;
+	skillClass.Push(ASkill_Buff::StaticClass());
+	skillClass.Push(ASkill_Counter::StaticClass());
+	skillClass.Push(ASkill_SlamAttack::StaticClass());
+	skillClass.Push(ASkill_SwordSpirit::StaticClass());
+	skillClass.Push(ASkill_Dash::StaticClass());
+
+	UAI_PlayerCharacter* animation = Cast<UAI_PlayerCharacter>(this->GetMesh()->GetAnimInstance());
+	if (nullptr == animation)
+	{
+		return;
+	}
+	animation->PlaySkillMontage(inSkillID - 1, inDuration);
+
+	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	if (nullptr == animation)
+	{
+		return;
+	}
+
+	AActor* newActor = gameState->CreateGameObject(skillClass[inSkillID], inLocation, inRotation, inGameOjbectID);
+	if (nullptr == newActor)
+	{
+		return;
+	}
+
+	ASkill_Parent* newSkill = Cast<ASkill_Parent>(newActor);
+	if (nullptr == newSkill)
+	{
+		return;
+	}
+	newSkill->AppearSkill(inRemoteID, inGameOjbectID, inSkillID, inLocation, inRotation, inDuration);
+
+}
+
+void ANC_Game::DoActionSkill(const FVector& inLocation, const FRotator& inRotation, const int64& inRemoteID, const int64& inGameOjbectID, const int32& inSkillID, const float& inDuration)
+{
+	UWorld* world = this->GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+	static TArray<UClass*> skillClass;
+	skillClass.Push(ASkill_Buff::StaticClass());
+	skillClass.Push(ASkill_Counter::StaticClass());
+	skillClass.Push(ASkill_SlamAttack::StaticClass());
+	skillClass.Push(ASkill_SwordSpirit::StaticClass());
+	skillClass.Push(ASkill_Dash::StaticClass());
+
+	UAI_PlayerCharacter* animation = Cast<UAI_PlayerCharacter>(this->GetMesh()->GetAnimInstance());
+	if (nullptr == animation)
+	{
+		return;
+	}
+	animation->PlaySkillMontage(inSkillID, inDuration);
+
+	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	if (nullptr == animation)
+	{
+		return;
+	}
+
+	AActor* newActor = gameState->CreateGameObject(skillClass[inSkillID], inLocation, inRotation, inGameOjbectID);
+	if (nullptr == newActor)
+	{
+		return;
+	}
+
+	ASkill_Parent* newSkill = Cast<ASkill_Parent>(newActor);
+	if (nullptr == newSkill)
+	{
+		return;
+	}
+	newSkill->ReactionSkill(inRemoteID, inGameOjbectID, inSkillID, inLocation, inRotation, inDuration);
 }
 
 void ANC_Game::EndQ()

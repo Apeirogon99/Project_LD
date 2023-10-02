@@ -76,6 +76,10 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	virtual void Destroyed() override;
 
+public:
+	void DoAppearSkill(const FVector& inLocation, const FRotator& inRotation, const int64& inRemoteID, const int64& inGameOjbectID, const int32& inSkillID, const float& inDuration);
+	void DoActionSkill(const FVector& inLocation, const FRotator& inRotation, const int64& inRemoteID, const int64& inGameOjbectID, const int32& inSkillID, const float& inDuration);
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget", meta = (AllowPrivateAccess = "true"))
 	UWidgetComponent* mChatWidget;

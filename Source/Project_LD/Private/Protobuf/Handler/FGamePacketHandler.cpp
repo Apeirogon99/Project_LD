@@ -32,12 +32,6 @@
 #include <GameContent/Enemy/DarkKnightAnimInstance.h>
 #include <GameContent/Projectile/ArcherSkeletonArrow.h>
 
-#include <GameContent/Skill/Skill_Buff.h>
-#include <GameContent/Skill/Skill_Counter.h>
-#include <GameContent/Skill/Skill_SlamAttack.h>
-#include <GameContent/Skill/Skill_SwordSpirit.h>
-#include <GameContent/Skill/Skill_Dash.h>
-
 #include <GameContent/Item/ItemParent.h>
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Main/W_MainGame.h>
@@ -2521,128 +2515,28 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
         return true;
     }
 
-    AActor* newActor;
-    ANC_Game* character;
-    UAI_PlayerCharacter* animation;
-    UEnemySkillManager* manager = NewObject<UEnemySkillManager>();
-
-    switch (skillID)
+    if (skillID <= 5)
     {
-    case 1:
-        /* 버프 */
-        character = Cast<ANC_Game>(controller->GetCharacter());
-        if (nullptr == character)
+        ANPC_Game* nonController = Cast<ANPC_Game>(gameState->FindPlayerController(remoteID));
+        if (nullptr == nonController)
         {
             return false;
         }
 
-        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-        if (nullptr == animation)
+        ANC_Game* nonCharacter = Cast<ANC_Game>(nonController->GetCharacter());
+        if (nullptr == nonCharacter)
         {
             return false;
         }
-
-        animation->PlaySkillMontage(0, duration);
-        newActor = gameState->CreateGameObject(ASkill_Buff::StaticClass(), location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
-        Cast<ASkill_Buff>(newActor)->AppearSkill(remoteID, objectID, skillID, location, FRotator(), duration);
-        break;
-    case 2:
-        /* 패링 */
-        character = Cast<ANC_Game>(controller->GetCharacter());
-        if (nullptr == character)
-        {
-            return false;
-        }
-
-        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-        if (nullptr == animation)
-        {
-            return false;
-        }
-
-        animation->PlaySkillMontage(1, duration);
-        newActor = gameState->CreateGameObject(ASkill_Counter::StaticClass(), location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
-        Cast<ASkill_Counter>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
-        break;
-    case 3:
-        /* 바닥 */
-        character = Cast<ANC_Game>(controller->GetCharacter());
-        if (nullptr == character)
-        {
-            return false;
-        }
-
-        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-        if (nullptr == animation)
-        {
-            return false;
-        }
-
-        animation->PlaySkillMontage(2, duration);
-        newActor = gameState->CreateGameObject(ASkill_SlamAttack::StaticClass(), location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
-        Cast<ASkill_SlamAttack>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
-        break;
-    case 4:
-        /* 검기 */
-        character = Cast<ANC_Game>(controller->GetCharacter());
-        if (nullptr == character)
-        {
-            return false;
-        }
-
-        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-        if (nullptr == animation)
-        {
-            return false;
-        }
-
-        animation->PlaySkillMontage(3, duration);
-        newActor = gameState->CreateGameObject(ASkill_SwordSpirit::StaticClass(), location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
-        Cast<ASkill_SwordSpirit>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
-        break;
-    case 5:
-        /* 대시 */
-        character = Cast<ANC_Game>(controller->GetCharacter());
-        if (nullptr == character)
-        {
-            return false;
-        }
-        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-        if (nullptr == animation)
-        {
-            return false;
-        }
-
-        animation->PlayClientSkillMontage(5);
-        newActor = gameState->CreateGameObject(ASkill_Dash::StaticClass(), location, rotation, objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
-        Cast<ASkill_Dash>(newActor)->AppearSkill(remoteID, objectID, skillID, location, rotation, duration);
-    default:
-        manager->Init();
-        newActor = gameState->FindGameObject(remoteID);
-        manager->InputActiveSkillData(world, newActor, skillID, location, rotation, objectID, remoteID);
-        break;
+        nonCharacter->DoAppearSkill(location, rotation, remoteID, objectID, skillID, duration);
     }
-
+    else
+    {
+        UEnemySkillManager* manager = NewObject<UEnemySkillManager>();
+        manager->Init();
+        AActor* enemy = gameState->FindGameObject(remoteID);
+        manager->InputActiveSkillData(world, enemy, skillID, location, rotation, objectID, remoteID);
+    }
     return true;
 }
 
@@ -2665,7 +2559,9 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
     const int32&    skillID     = pkt.skill_id();
     const FVector&  location    = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
     const FRotator& rotation    = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
-    const float&    duration    = pkt.duration() / 1000.0f;
+
+    const float& serverDuration = pkt.duration() / 1000.0f;
+    const float& clientDuration = controller->GetServerTimeStamp() / 1000.0f;
 
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
@@ -2674,91 +2570,28 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         return true;
     }
 
-    float ClientDuration;
-    AActor* newActor;
-    ANC_Game* character;
-    UAI_PlayerCharacter* animation;
-    UEnemySkillManager* manager = NewObject<UEnemySkillManager>();
-
-    switch (skillID)
+    if (skillID <= 5)
     {
-    case 1:
-        break;
-    case 2:
-        /* 패링 */
-        character = Cast<ANC_Game>(controller->GetCharacter());
-        if (nullptr == character)
+        ANPC_Game* nonController = Cast<ANPC_Game>(gameState->FindPlayerController(remoteID));
+        if (nullptr == nonController)
         {
             return false;
         }
 
-        newActor = gameState->FindGameObject(objectID);
-        if (nullptr == newActor)
+        ANC_Game* nonCharacter = Cast<ANC_Game>(nonController->GetCharacter());
+        if (nullptr == nonCharacter)
         {
             return false;
         }
-        Cast<ASkill_Counter>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
-        break;
-    case 3:
-        break;
-    case 4:
-        /* 검기 */
-        character = Cast<ANC_Game>(controller->GetCharacter());
-        if (nullptr == character)
-        {
-            return false;
-        }
-
-        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-        if (nullptr == animation)
-        {
-            return false;
-        }
-
-        animation->PlaySkillMontage(4, duration);
-        newActor = gameState->FindGameObject(objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
-
-        ClientDuration = Cast<ASkill_SwordSpirit>(newActor)->GetActiveTime();
-        if (ClientDuration >= duration)
-        {
-            ClientDuration = duration;
-        }
-        animation->PlaySkillMontage(4, duration - ClientDuration);
-
-        Cast<ASkill_SwordSpirit>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
-        break;
-    case 5:
-        /* 대시 */
-        character = Cast<ANC_Game>(controller->GetCharacter());
-        if (nullptr == character)
-        {
-            return false;
-        }
-        animation = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
-        if (nullptr == animation)
-        {
-            return false;
-        }
-
-        animation->PlaySkillMontage(5, duration);
-        newActor = gameState->FindGameObject(objectID);
-        if (nullptr == newActor)
-        {
-            return false;
-        }
-        Cast<ASkill_Dash>(newActor)->ReactionSkill(remoteID, objectID, skillID, location, rotation, duration);
-        break;
-    default:
-        manager->Init();
-        newActor = gameState->FindGameObject(remoteID);
-        manager->InputReactionSkillData(world, newActor, skillID, location, rotation, objectID, remoteID);
-        break;
+        nonCharacter->DoActionSkill(location, rotation, remoteID, objectID, skillID, serverDuration);
     }
-  
+    else
+    {
+        UEnemySkillManager* manager = NewObject<UEnemySkillManager>();
+        manager->Init();
+        AActor* enemy = gameState->FindGameObject(remoteID);
+        manager->InputReactionSkillData(world, enemy, skillID, location, rotation, objectID, remoteID);
+    }
     return true;
 }
 
