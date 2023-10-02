@@ -1600,7 +1600,7 @@ bool Handle_S2C_AppearItem(ANetworkController* controller, Protocol::S2C_AppearI
     if (nullptr != gameState->FindGameObject(objectID))
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearItem] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     const Protocol::SVector& itemPosition = curItem.world_position();
@@ -1641,7 +1641,7 @@ bool Handle_S2C_AppearArrow(ANetworkController* controller, Protocol::S2C_Appear
     if (nullptr != gameState->FindGameObject(objectID))
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearItem] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     AActor* newActor = gameState->CreateGameObject(AArcherSkeletonArrow::StaticClass(), location, rotation, objectID);
@@ -1677,7 +1677,7 @@ bool Handle_S2C_AppearProtal(ANetworkController* controller, Protocol::S2C_Appea
     if (nullptr != gameState->FindGameObject(objectID))
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearProtal] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     AActor* newActor = gameState->CreateGameObject(APortal::StaticClass(), location, rotation, objectID);
@@ -1712,7 +1712,7 @@ bool Handle_S2C_AppearObstruction(ANetworkController* controller, Protocol::S2C_
     if (nullptr != gameState->FindGameObject(objectID))
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearObstruction] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     AActor* newActor = gameState->CreateGameObject(AObstructionBase::StaticClass(), location, rotation, objectID);
@@ -1756,7 +1756,7 @@ bool Handle_S2C_MovementProjectile(ANetworkController* controller, Protocol::S2C
     if (nullptr == actor)
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     ALineProjectile* lineProjectile = Cast<ALineProjectile>(actor);
@@ -1967,7 +1967,7 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
     if (nullptr == actor)
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     AEnemyBase* enemy = Cast<AEnemyBase>(actor);
