@@ -37,6 +37,7 @@ public:
 	void DetectChangeCurrentStats(FCharacterEquipment oldData, FCharacterEquipment newData);
 	void PutOnEquipment(const int32 InIndex);
 	void TakeOffEquipment(const int32 InIndex);
+	void InitCurrentStats();
 
 public:
 	const int64			GetRemoteID() const		{ return mRemoteID; }

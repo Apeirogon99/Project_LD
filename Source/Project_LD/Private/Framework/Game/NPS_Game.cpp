@@ -132,3 +132,8 @@ void ANPS_Game::TakeOffEquipment(const int32 InIndex)
 	ULDGameInstance* Instance = Cast<ULDGameInstance>(GetWorld()->GetGameInstance());
 	mCharacterStats.TakeOffEquipment(*Instance->GetEquipmentItemData(InIndex));
 }
+
+void ANPS_Game::InitCurrentStats()
+{
+	mCharacterStats.SetCurrentStats(mCharacterStats.GetMaxStats());
+}

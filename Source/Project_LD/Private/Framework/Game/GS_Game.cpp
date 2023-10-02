@@ -87,6 +87,8 @@ AActor* AGS_Game::CreateNPCCharacter(FVector inLocation, FRotator inRotator, FCh
     }
     npcState->SetRemotePlayerID(inRemoteID);
     npcState->SetCharacterData(inCharacterData);
+    npcState->calculationStats();
+    //npcState->InitCurrentStats();
 
     newNPC->SetPlayerState(npcState);
     npcController->PlayerState = npcState;

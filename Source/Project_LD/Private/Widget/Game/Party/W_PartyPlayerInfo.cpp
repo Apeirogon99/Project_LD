@@ -109,8 +109,9 @@ void UW_PartyPlayerInfo::PushBuff(const int32& inBuffID, const float inDuration)
 
 void UW_PartyPlayerInfo::ReleaseBuff(const int32& inBuffID)
 {
-	if (int index = mBuffDatas.Find(inBuffID) != INDEX_NONE)
+	if (mBuffDatas.Find(inBuffID) != INDEX_NONE)
 	{
+		int index = mBuffDatas.Find(inBuffID);
 		mBuffDatas.RemoveAt(index);
 	}
 	UpdateBuff();
