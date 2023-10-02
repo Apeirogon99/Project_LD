@@ -13,8 +13,7 @@
 
 ANPC_Game::ANPC_Game()
 {
-	IsCorrection = false;
-	mTeleport = false;
+	mIsLocationCorrection = false;
 	mCorrectionVelocity = 0.0f;
 }
 
@@ -24,48 +23,33 @@ ANPC_Game::~ANPC_Game()
 
 void ANPC_Game::Tick(float DeltaTime)
 {
-	if (IsCorrection)
+	if (mIsLocationCorrection)
 	{
 		MoveCorrection(DeltaTime);
 	}
-
-	if (mTeleport)
-	{
-		static float tpTime = 0.0f;
-		tpTime += DeltaTime;
-		if (tpTime >= 10.0f)
-		{
-			mTeleport = false;
-		}
-		tpTime = 0.0f;
-	}
-
 }
 
-void ANPC_Game::OnTeleport_Implementation(const FVector& DestLocation)
+void ANPC_Game::OnTeleport(const FVector& DestLocation)
 {
-	APawn* pawn = this->GetPawn();
-	if (nullptr == pawn)
+	ACharacter* character = Cast<ACharacter>(this->GetPawn());
+	if (nullptr == character)
 	{
 		return;
 	}
 
-	mTeleport = true;
+	mIsLocationCorrection = false;
+	mTargetLoction = DestLocation;
+	character->SetActorLocation(DestLocation, false, nullptr, ETeleportType::ResetPhysics);
+	this->StopMovement();
 
-	pawn->GetMovementComponent()->StopActiveMovement();
-
-	pawn->SetActorLocation(DestLocation, false, nullptr, ETeleportType::ResetPhysics);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("NPC OnTeleport")), ELogLevel::Error);
 }
 
 void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
 {
-	if (mTeleport)
-	{
-		return;
-	}
 
-	APawn* pawn = this->GetPawn();
-	if (nullptr == pawn)
+	ACharacter* character = Cast<ACharacter>(this->GetPawn());
+	if (nullptr == character)
 	{
 		return;
 	}
@@ -75,34 +59,48 @@ void ANPC_Game::NPCMoveDestination(const FVector inOldMovementLocation, const FV
 	{
 		return;
 	}
+	FCharacterStats stats = playerState->GetCharacterStats();
+	float speed = stats.GetCurrentStats().GetMovementSpeed();
 
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
+	character->GetCharacterMovement()->MaxWalkSpeed = speed;
 
-	float movedistance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
-	if (movedistance < 1.0f)
+	FVector		direction = inNewMovementLocation - inOldMovementLocation;
+	FRotator	rotation = direction.Rotation();
+	FVector		foward = rotation.Quaternion().GetForwardVector();
+
+	FVector curLocation;
+	FVector deadReckoningLocation;
+	FVector overDeadReckoningLocation;
+
+	FVector velocity = foward * speed;
+	float duration = inTime / 1000.0f;
+
+
+	float distance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
+	if (distance <= 1.0f)
 	{
-		pawn->SetActorLocation(inNewMovementLocation, false, nullptr, ETeleportType::ResetPhysics);
-		return;
+		mIsLocationCorrection = false;
+		mTargetLoction = inNewMovementLocation;
+		character->SetActorLocation(inNewMovementLocation);
+		this->StopMovement();
 	}
-
-	FVector	direction = inNewMovementLocation - inOldMovementLocation;
-	FRotator rotation = direction.Rotation();
-	FVector foward = rotation.Quaternion().GetForwardVector();
-
-	FVector velocity = foward * 330.0f;
-	float	duration = inTime / 1000.0f;
-
-	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
-
-	//현재 위치와 비교하여 차이가 얼마나 나는지 판단
-	FVector curLocation = pawn->GetActorLocation();
-	float locationDistance = FVector::Dist(curLocation, deadReckoningLocation);
-	if (locationDistance > 1.0f)
+	else
 	{
-		IsCorrection = true;
-		mTargetLoction = deadReckoningLocation;
-		mCorrectionVelocity = 0.2f;
-		//pawn->SetActorRotation(direction.Rotation());
+		curLocation = character->GetActorLocation();
+		deadReckoningLocation = inOldMovementLocation + (velocity * duration);
+		overDeadReckoningLocation = inOldMovementLocation + (velocity * 0.2f);
+
+		float nowDistance = FVector::Dist(curLocation, deadReckoningLocation);
+		float overDistance = FVector::Dist(curLocation, overDeadReckoningLocation);
+
+		if (nowDistance > overDistance)
+		{
+			mIsLocationCorrection = true;
+			mTargetLoction = deadReckoningLocation;
+			mCorrectionVelocity = 0.1f;
+		}
+
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 	}
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], old[%ws], new[%ws], vel[%ws], dead[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString() , *velocity.ToString(), *deadReckoningLocation.ToString(), locationDistance, duration), ELogLevel::Error);
@@ -116,7 +114,7 @@ void ANPC_Game::MoveCorrection(const float inDeltaTime)
 		return;
 	}
 
-	if (false == IsCorrection)
+	if (false == mIsLocationCorrection)
 	{
 		return;
 	}
@@ -129,14 +127,14 @@ void ANPC_Game::MoveCorrection(const float inDeltaTime)
 	if (distance <= 1.0f)
 	{
 		pawn->SetActorLocation(mTargetLoction, false, nullptr, ETeleportType::ResetPhysics);
-		IsCorrection = false;
+		mIsLocationCorrection = false;
 	}
 	else
 	{
 		pawn->SetActorLocation(correctionLocation, false, nullptr, ETeleportType::ResetPhysics);
 	}
 
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("NPC Pos %ws"), *correctionLocation.ToString()), ELogLevel::Warning);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws], distance[%f], duration[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance, duration), ELogLevel::Error);
 }
 
 void ANPC_Game::StopMovementController(const FVector& inStopLocation)
@@ -147,11 +145,9 @@ void ANPC_Game::StopMovementController(const FVector& inStopLocation)
 		return;
 	}
 
-	IsCorrection = false;
+	mIsLocationCorrection = false;
 	mTargetLoction = inStopLocation;
 	character->SetActorLocation(inStopLocation);
-
-	UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inStopLocation);
 
 	this->StopMovement();
 }
