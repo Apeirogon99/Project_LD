@@ -157,6 +157,7 @@ void UW_BottomUI::NativePreConstruct()
 	{
 		mSkillTextureArray.Add(T_SKILL_Dash);
 	}
+	/*
 	UTexture2D* T_ItemPotion1 = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, TEXT("Texture2D'/Game/CraftResourcesIcons/Textures/Tex_reagent_12_b.Tex_reagent_12_b'")));
 	if (T_ItemPotion1)
 	{
@@ -167,7 +168,7 @@ void UW_BottomUI::NativePreConstruct()
 	{
 		mSkillTextureArray.Add(T_ItemPotion2);
 	}
-
+	*/
 	mPlayerBar = this->WidgetTree->FindWidget(FName(TEXT("BW_PlayerBar")));
 	if (mPlayerBar == nullptr)
 	{
@@ -203,7 +204,7 @@ void UW_BottomUI::NativePreConstruct()
 	{
 		return;
 	}
-
+	/*
 	mSkill_UseItem1 = this->WidgetTree->FindWidget(FName(TEXT("BW_UseItem1")));
 	if (mSkill_UseItem1 == nullptr)
 	{
@@ -215,22 +216,22 @@ void UW_BottomUI::NativePreConstruct()
 	{
 		return;
 	}
-
+	*/
 	Cast<UW_Skill>(mSkill_Q)->TB_KeyBind->SetText(FText::FromString(TEXT("Q")));
 	Cast<UW_Skill>(mSkill_W)->TB_KeyBind->SetText(FText::FromString(TEXT("W")));
 	Cast<UW_Skill>(mSkill_E)->TB_KeyBind->SetText(FText::FromString(TEXT("E")));
 	Cast<UW_Skill>(mSkill_R)->TB_KeyBind->SetText(FText::FromString(TEXT("R")));
 	Cast<UW_Skill>(mSkill_BasicAttack)->TB_KeyBind->SetText(FText::FromString(TEXT("Ctrl")));
-	Cast<UW_Skill>(mSkill_UseItem1)->TB_KeyBind->SetText(FText::FromString(TEXT("1")));
-	Cast<UW_Skill>(mSkill_UseItem2)->TB_KeyBind->SetText(FText::FromString(TEXT("2")));
+	//Cast<UW_Skill>(mSkill_UseItem1)->TB_KeyBind->SetText(FText::FromString(TEXT("1")));
+	//Cast<UW_Skill>(mSkill_UseItem2)->TB_KeyBind->SetText(FText::FromString(TEXT("2")));
 
 	Cast<UW_Skill>(mSkill_Q)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[0]);
 	Cast<UW_Skill>(mSkill_W)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[1]);
 	Cast<UW_Skill>(mSkill_E)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[2]);
 	Cast<UW_Skill>(mSkill_R)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[3]);
 	Cast<UW_Skill>(mSkill_BasicAttack)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[4]);
-	Cast<UW_Skill>(mSkill_UseItem1)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[5]);
-	Cast<UW_Skill>(mSkill_UseItem2)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[6]);
+	//Cast<UW_Skill>(mSkill_UseItem1)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[5]);
+	//Cast<UW_Skill>(mSkill_UseItem2)->Img_Skill->SetBrushFromTexture(mSkillTextureArray[6]);
 }
 
 void UW_BottomUI::NativeDestruct()

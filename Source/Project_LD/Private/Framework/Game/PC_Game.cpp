@@ -178,6 +178,9 @@ void APC_Game::SetupInputComponent()
 	InputComponent->BindAction("SkillR", IE_Released, this, &APC_Game::UseSkill_R_Released);
 	InputComponent->BindAction("Dash", IE_Released, this, &APC_Game::UseSkill_Dash_Released);
 
+	InputComponent->BindAction("Use1", IE_Pressed, this, &APC_Game::UseItem1);
+	InputComponent->BindAction("Use2", IE_Pressed, this, &APC_Game::UseItem2);
+
 	InputComponent->BindAction("ZoomIn", IE_Pressed, this, &APC_Game::CameraZoomIn);
 	InputComponent->BindAction("ZoomOut", IE_Pressed, this, &APC_Game::CameraZoomOut);
 
@@ -697,6 +700,24 @@ void APC_Game::UseSkill_Dash_Released()
 
 	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
 	keyActionPacket.set_key_id(0xA2);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
+}
+
+void APC_Game::UseItem1()
+{
+	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(0x31);
+	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
+	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
+	this->Send(pakcetBuffer);
+}
+
+void APC_Game::UseItem2()
+{
+	Protocol::C2S_ReleaseUseKeyAction keyActionPacket;
+	keyActionPacket.set_key_id(0x32);
 	keyActionPacket.set_timestamp(this->GetServerTimeStamp());
 	SendBufferPtr pakcetBuffer = FGamePacketHandler::MakeSendBuffer(this, keyActionPacket);
 	this->Send(pakcetBuffer);

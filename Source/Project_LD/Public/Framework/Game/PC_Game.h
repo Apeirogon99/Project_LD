@@ -45,6 +45,9 @@ public:
 	void UseSkill_Dash_Pressed();
 	void UseSkill_Dash_Released();
 
+	void UseItem1();
+	void UseItem2();
+
 	void CameraZoomIn();
 	void CameraZoomOut();
 

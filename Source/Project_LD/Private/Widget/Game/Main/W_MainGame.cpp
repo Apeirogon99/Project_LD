@@ -344,6 +344,7 @@ void UW_MainGame::InventoryOpenRequest()
 	{
 		misInventoryOpen = !misInventoryOpen;
 		clientHUD->CleanWidgetFromName(FString(TEXT("Inventory")));
+		clientHUD->ShowWidgetFromName(FString(TEXT("Minimap")));
 		playerController->SwitchMovementMode();
 	}
 	else
@@ -376,6 +377,7 @@ void UW_MainGame::InventoryOpenResponse()
 	}
 
 	misInventoryOpen = !misInventoryOpen;
+	clientHUD->CleanWidgetFromName(FString(TEXT("Minimap")));
 	clientHUD->ShowWidgetFromName(FString(TEXT("Inventory")));
 	playerController->SwitchUIMode();
 	

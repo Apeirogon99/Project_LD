@@ -188,10 +188,10 @@ bool UWidgetUtils::SetSkillCoolTime(AClientHUD* inHUD, const TArray<int32>& inSk
     return true;
 }
 
-bool UWidgetUtils::SetPushBuff(AClientHUD* inHUD, const int32& inBuffID, const int64& inBuffDuration)
+bool UWidgetUtils::SetPushBuff(AClientHUD* inHUD, const int64& inRemoteID, const int32& inBuffID, const int64& inBuffDuration)
 {
-    //duration 0인지 비교 (0이 아니면 Timer) 
-    // - 누구인지 알아야함 (버프 대상이 파티원인가?)
+    UE_LOG(LogTemp, Warning, TEXT("Push Buff %f, Duration %f ID %d"), inBuffID, inBuffDuration, inRemoteID);
+ 
     UW_MainGame* widget = Cast<UW_MainGame>(inHUD->GetWidgetFromName(TEXT("MainGame")));
     if (nullptr == widget)
     {
@@ -204,13 +204,15 @@ bool UWidgetUtils::SetPushBuff(AClientHUD* inHUD, const int32& inBuffID, const i
         return false;
     }
 
-    partyPlayerInfoList->RequestPushBuff(0, inBuffID, inBuffDuration);
+    partyPlayerInfoList->RequestPushBuff(inRemoteID, inBuffID, inBuffDuration);
 
     return true;
 }
 
-bool UWidgetUtils::SetReleaseBuff(AClientHUD* inHUD, const int32& inBuffID)
+bool UWidgetUtils::SetReleaseBuff(AClientHUD* inHUD, const int64& inRemoteID, const int32& inBuffID)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Release Buff %f, ID %d"), inBuffID, inRemoteID);
+
     UW_MainGame* widget = Cast<UW_MainGame>(inHUD->GetWidgetFromName(TEXT("MainGame")));
     if (nullptr == widget)
     {
@@ -223,7 +225,7 @@ bool UWidgetUtils::SetReleaseBuff(AClientHUD* inHUD, const int32& inBuffID)
         return false;
     }
 
-    partyPlayerInfoList->RequestReleaseBuff(0, inBuffID);
+    partyPlayerInfoList->RequestReleaseBuff(inRemoteID, inBuffID);
 
     return true;
 }

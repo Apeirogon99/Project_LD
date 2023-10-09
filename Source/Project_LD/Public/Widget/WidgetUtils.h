@@ -34,6 +34,6 @@ public:
 	static bool SetSkipSequence(AClientHUD* inHUD, const int32& inMax, const int32& inLeast);
 	static bool SetResponseUseKeyAction(AClientHUD* inHUD, const int32& inKey, const FString& inError);
 	static bool SetSkillCoolTime(AClientHUD* inHUD, const TArray<int32>& inSkillID, const TArray<int64>& inSkillDuration);
-	static bool SetPushBuff(AClientHUD* inHUD, const int32& inBuffID, const int64& inBuffDuration);
-	static bool SetReleaseBuff(AClientHUD* inHUD, const int32& inBuffID);
+	static bool SetPushBuff(AClientHUD* inHUD, const int64& inRemoteID, const int32& inBuffID, const int64& inBuffDuration);
+	static bool SetReleaseBuff(AClientHUD* inHUD, const int64& inRemoteID, const int32& inBuffID);
 };

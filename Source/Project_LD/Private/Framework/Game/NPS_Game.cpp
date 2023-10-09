@@ -137,3 +137,16 @@ void ANPS_Game::InitCurrentStats()
 {
 	mCharacterStats.SetCurrentStats(mCharacterStats.GetMaxStats());
 }
+
+void ANPS_Game::InitCurrentEquipmentStats()
+{
+	TArray<float> dataIndexs = mCharacterData.GetEquipment().GetAllItemIndex();
+	for (float index : dataIndexs)
+	{
+		if (index == 0)
+		{
+			continue;
+		}
+		PutOnEquipment(index);
+	}
+}

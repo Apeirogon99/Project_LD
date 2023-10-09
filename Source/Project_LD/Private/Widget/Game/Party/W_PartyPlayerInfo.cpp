@@ -103,6 +103,16 @@ void UW_PartyPlayerInfo::SetPlayerInfo(const int64& inRemoteID, const int64& inL
 
 void UW_PartyPlayerInfo::PushBuff(const int32& inBuffID, const float inDuration)
 {
+	if (inDuration > 0)
+	{
+		FTimerHandle TimerHandle;
+		FTimerDelegate DurationTimer;
+		DurationTimer.BindLambda([=]() {
+			ReleaseBuff(inBuffID);
+			});
+		GetWorld()->GetTimerManager().SetTimer(TimerHandle, DurationTimer, inDuration, false);
+	}
+
 	mBuffDatas.Add(inBuffID);
 	UpdateBuff();
 }

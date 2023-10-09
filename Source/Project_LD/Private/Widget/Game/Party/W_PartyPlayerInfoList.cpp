@@ -118,13 +118,11 @@ void UW_PartyPlayerInfoList::RequestPushBuff(const int64 inRemoteID, const int32
 			return;
 		}
 
-		/*
+		
 		if (inRemoteID == PlayerData->GetRemoteID())
 		{
 			PlayerData->PushBuff(inBuffID, inBuffDuration);
 		}
-		*/
-		PlayerData->PushBuff(inBuffID, inBuffDuration);
 	}
 }
 

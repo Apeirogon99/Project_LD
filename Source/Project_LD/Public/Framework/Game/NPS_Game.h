@@ -38,6 +38,7 @@ public:
 	void PutOnEquipment(const int32 InIndex);
 	void TakeOffEquipment(const int32 InIndex);
 	void InitCurrentStats();
+	void InitCurrentEquipmentStats();
 
 public:
 	const int64			GetRemoteID() const		{ return mRemoteID; }

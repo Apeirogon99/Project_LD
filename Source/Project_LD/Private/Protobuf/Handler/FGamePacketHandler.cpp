@@ -202,6 +202,7 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
         const Protocol::SStat& stat = pkt.stats().Get(index);
         playerState->GetCharacterStats().UpdateCurrentStats(StaticCast<ECharacterStatus>(stat.stat_type()), stat.stat_value());
     }
+    playerState->InitCurrentEquipmentStats();
 
     return true;
 }
@@ -1029,6 +1030,15 @@ bool Handle_S2C_RequestParty(ANetworkController* controller, Protocol::S2C_Reque
             return false;
         }
         partyMainWidget->PushRequestList(remoteID, level, characterClass, name);
+
+        ANC_Game* player =  Cast<ANC_Game>(controller->GetCharacter());
+        if (nullptr == player)
+        {
+            return false;
+        }
+
+        player->ReplaceIconParty();
+
         return true;
     }
 }
@@ -1151,6 +1161,15 @@ bool Handle_S2C_RequestLeaveParty(ANetworkController* controller, Protocol::S2C_
                 playerState->GetPartyComponent()->ClearParty();
             }
 
+            {
+                ANC_Game* player = Cast<ANC_Game>(controller->GetCharacter());
+                if (nullptr == player)
+                {
+                    return false;
+                }
+
+                player->ReplaceIconOtherPlayer();
+            }
         }
     }
 
@@ -2536,25 +2555,10 @@ bool Handle_S2C_AppearSkill(ANetworkController* controller, Protocol::S2C_Appear
             return false;
         }
 
-        ACharacter* character = nullptr;
-
-        if (controller == Control)
+        ACharacter* character = Control->GetCharacter();
+        if (nullptr == character)
         {
-            APC_Game* playerController = Cast<APC_Game>(Control);
-            if (nullptr == playerController)
-            {
-                return false;
-            }
-            character = playerController->GetCharacter();
-        }
-        else
-        {
-            ANPC_Game* nonController = Cast<ANPC_Game>(Control);
-            if (nullptr == nonController)
-            {
-                return false;
-            }
-            character = nonController->GetCharacter();
+            return false;
         }
 
         ANC_Game* nonCharacter = Cast<ANC_Game>(character);
@@ -2594,8 +2598,8 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
     const FVector&  location    = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
     const FRotator& rotation    = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
 
-    const float& serverDuration = pkt.duration() / 1000.0f;
-    const float& clientDuration = controller->GetServerTimeStamp() / 1000.0f;
+    const float& Duration = pkt.duration() / 1000.0f;
+   // const float& clientDuration = controller->GetServerTimeStamp() / 1000.0f;
 
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
@@ -2612,25 +2616,10 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
             return false;
         }
 
-        ACharacter* character = nullptr;
-
-        if (controller == Control)
+        ACharacter* character = Control->GetCharacter();
+        if (nullptr == character)
         {
-            APC_Game* playerController = Cast<APC_Game>(Control);
-            if (nullptr == playerController)
-            {
-                return false;
-            }
-            character = playerController->GetCharacter();
-        }
-        else
-        {
-            ANPC_Game* nonController = Cast<ANPC_Game>(Control);
-            if (nullptr == nonController)
-            {
-                return false;
-            }
-            character = nonController->GetCharacter();
+            return false;
         }
 
         ANC_Game* nonCharacter = Cast<ANC_Game>(character);
@@ -2638,7 +2627,7 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         {
             return false;
         }
-        nonCharacter->DoActionSkill(location, rotation, remoteID, objectID, skillID, serverDuration);
+        nonCharacter->DoActionSkill(location, rotation, remoteID, objectID, skillID, Duration);
     }
     else
     {
@@ -2743,8 +2732,6 @@ bool Handle_S2C_SkillCoolTime(ANetworkController* controller, Protocol::S2C_Skil
 
 bool Handle_S2C_PushBuff(ANetworkController* controller, Protocol::S2C_PushBuff& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_PushBuff pkt buff id %d pkt buff duration %f"), pkt.buff_id(), pkt.duration());
-
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2763,7 +2750,7 @@ bool Handle_S2C_PushBuff(ANetworkController* controller, Protocol::S2C_PushBuff&
         return false;
     }
 
-    bool ret = UWidgetUtils::SetPushBuff(clientHUD, pkt.buff_id(), pkt.duration());
+    bool ret = UWidgetUtils::SetPushBuff(clientHUD, pkt.remote_id(), pkt.buff_id(), pkt.duration());
     if (ret == false)
     {
         return false;
@@ -2774,8 +2761,6 @@ bool Handle_S2C_PushBuff(ANetworkController* controller, Protocol::S2C_PushBuff&
 
 bool Handle_S2C_ReleaseBuff(ANetworkController* controller, Protocol::S2C_ReleaseBuff& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_ReleaseBuff pkt buff id %d"), pkt.buff_id());
-
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2794,7 +2779,7 @@ bool Handle_S2C_ReleaseBuff(ANetworkController* controller, Protocol::S2C_Releas
         return false;
     }
 
-    bool ret = UWidgetUtils::SetReleaseBuff(clientHUD, pkt.buff_id());
+    bool ret = UWidgetUtils::SetReleaseBuff(clientHUD, pkt.remote_id(), pkt.buff_id());
     if (ret == false)
     {
         return false;

@@ -26,6 +26,9 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
+
+
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool IsStatic;
 

@@ -219,7 +219,7 @@ void ANC_Game::DoAppearSkill(const FVector& inLocation, const FRotator& inRotati
 	}
 
 	int32 skillID = inSkillID;
-	if (skillID != 5)
+	if (skillID < 5)
 	{
 		skillID--;
 	}
@@ -232,7 +232,7 @@ void ANC_Game::DoAppearSkill(const FVector& inLocation, const FRotator& inRotati
 		return;
 	}
 
-	AActor* newActor = gameState->CreateGameObject(skillClass[skillID], inLocation, inRotation, inGameOjbectID);
+	AActor* newActor = gameState->CreateGameObject(skillClass[inSkillID - 1], inLocation, inRotation, inGameOjbectID);
 	if (nullptr == newActor)
 	{
 		return;
@@ -254,12 +254,6 @@ void ANC_Game::DoActionSkill(const FVector& inLocation, const FRotator& inRotati
 	{
 		return;
 	}
-	static TArray<UClass*> skillClass;
-	skillClass.Push(ASkill_Buff::StaticClass());
-	skillClass.Push(ASkill_Counter::StaticClass());
-	skillClass.Push(ASkill_SlamAttack::StaticClass());
-	skillClass.Push(ASkill_SwordSpirit::StaticClass());
-	skillClass.Push(ASkill_Dash::StaticClass());
 
 	UAI_PlayerCharacter* animation = Cast<UAI_PlayerCharacter>(this->GetMesh()->GetAnimInstance());
 	if (nullptr == animation)
@@ -267,13 +261,12 @@ void ANC_Game::DoActionSkill(const FVector& inLocation, const FRotator& inRotati
 		return;
 	}
 
-	int32 skillID = inSkillID;
-	if (skillID != 5)
+	switch (inSkillID)
 	{
-		skillID--;
+	case 4:
+		animation->PlaySkillMontage(4, 0.f);
+		break;
 	}
-
-	animation->PlaySkillMontage(skillID, inDuration);
 
 	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
 	if (nullptr == animation)
@@ -281,7 +274,7 @@ void ANC_Game::DoActionSkill(const FVector& inLocation, const FRotator& inRotati
 		return;
 	}
 
-	AActor* newActor = gameState->CreateGameObject(skillClass[skillID], inLocation, inRotation, inGameOjbectID);
+	AActor* newActor = gameState->FindGameObject(inGameOjbectID);
 	if (nullptr == newActor)
 	{
 		return;
