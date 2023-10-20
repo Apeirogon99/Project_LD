@@ -23,6 +23,9 @@
 #include <Game/GS_Game.h>
 #include <Game/C_Game.h>
 
+#include <DrawDebugHelpers.h>
+#include "Components/CapsuleComponent.h"
+
 APC_Game::APC_Game()
 {
 	mRightMouseActions.Add(FName("Ground"), &APC_Game::MoveToMouseCursor);
@@ -201,7 +204,7 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 	{
 		return;
 	}
-	
+
 	if (character->GetUsingSkill())
 	{
 		return;
@@ -212,33 +215,98 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 		return;
 	}
 
-	AActor* hitActor = hitResult.Actor.Get();
-	if (nullptr == hitActor)
+	float hitDistance = FVector::Dist(hitResult.ImpactPoint, character->GetActorLocation());
+
+	TArray<FHitResult> obstacleResults;
+	FVector startTrace = character->GetActorLocation();
+	FVector endTrace = FVector(hitResult.ImpactPoint.X, hitResult.ImpactPoint.Y, hitResult.ImpactPoint.Z + character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight());
+
+	UWorld* world = this->GetWorld();
+	if (!world)
 	{
 		return;
 	}
+	world->LineTraceMultiByObjectType(obstacleResults, character->GetActorLocation(), hitResult.ImpactPoint, ECollisionChannel::ECC_WorldStatic);
+	DrawDebugLine(world, startTrace, endTrace, FColor::Red, true, -1.0f, 0.0f, 10.0f);
+	obstacleResults.Add(hitResult);
 
-	TArray<FName> tags = hitActor->Tags;
-	if (0 == tags.Num())
+	for (FHitResult& obstacle : obstacleResults)
 	{
-		return;
-	}
 
-	int32 findTargetTag = INDEX_NONE;
-	for (auto targetTag : inMouseActions)
-	{
-		int32 tempCompareTag = tags.Find(targetTag.Key);
-		if (INDEX_NONE != tempCompareTag)
+		AActor* hitActor = obstacle.Actor.Get();
+		if (nullptr == hitActor)
 		{
-			TFunction<void(APC_Game&, AActor*, FHitResult)> actionFunction = *inMouseActions.Find(targetTag.Key);
-			actionFunction(*this, hitActor, hitResult);
+			continue;
+		}
+
+		if (hitActor == character)
+		{
+			continue;
+		}
+
+		TArray<FName> tags = hitActor->Tags;
+		if (0 == tags.Num())
+		{
+			float radius = character->GetCapsuleComponent()->GetScaledCapsuleRadius();
+			FVector dir = (endTrace - startTrace).Rotation().Quaternion().GetForwardVector() * 42.0f;
+			FVector doubleImpactPoint = obstacle.ImpactPoint - dir;
+			FVector doubleStartTrace = FVector(doubleImpactPoint.X, doubleImpactPoint.Y, doubleImpactPoint.Z + 500.0f);
+			FVector doubleEndTrace = FVector(doubleImpactPoint.X, doubleImpactPoint.Y, doubleImpactPoint.Z - 500.0f);
+
+			TArray<FHitResult> doubleHitResults;
+			world->LineTraceMultiByObjectType(doubleHitResults, doubleStartTrace, doubleEndTrace, ECollisionChannel::ECC_WorldStatic);
+			DrawDebugLine(world, doubleStartTrace, doubleEndTrace, FColor::Blue, true, -1.0f, 0.0f, 10.0f);
+
+			UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Hit Obstacles %d"), doubleHitResults.Num()), ELogLevel::Error);
+
+			for (FHitResult& doubleHit : doubleHitResults)
+			{
+				AActor* dobueHitActor = doubleHit.Actor.Get();
+				if (nullptr == dobueHitActor)
+				{
+					continue;
+				}
+
+				if (dobueHitActor == character)
+				{
+					continue;
+				}
+				UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Hit Actor : %s"), *dobueHitActor->GetName()), ELogLevel::Error);
+
+				TArray<FName> doubleTags = dobueHitActor->Tags;
+				if (0 == doubleTags.Num())
+				{
+					continue;
+				}
+
+				int32 tempCompareTag = doubleTags.Find(FName("Ground"));
+				if (INDEX_NONE == tempCompareTag)
+				{
+					continue;
+				}
+
+				MoveToMouseCursor(dobueHitActor, doubleHit);
+			}
+
 			return;
 		}
-	}
 
-	if (INDEX_NONE == findTargetTag)
-	{
-		return;
+		int32 findTargetTag = INDEX_NONE;
+		for (auto targetTag : inMouseActions)
+		{
+			int32 tempCompareTag = tags.Find(targetTag.Key);
+			if (INDEX_NONE != tempCompareTag)
+			{
+				TFunction<void(APC_Game&, AActor*, FHitResult)> actionFunction = *inMouseActions.Find(targetTag.Key);
+				actionFunction(*this, hitActor, obstacle);
+				return;
+			}
+		}
+
+		if (INDEX_NONE == findTargetTag)
+		{
+			return;
+		}
 	}
 
 }

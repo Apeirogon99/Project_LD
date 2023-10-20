@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "NetworkGameMode.generated.h"
 
-#define NETWORK_LOCAL 1
+#define NETWORK_LOCAL 0
 
 /**
  * 

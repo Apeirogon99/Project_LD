@@ -87,6 +87,7 @@ void AMovementController::MoveToMouseCursor(AActor* inHitActor, FHitResult inHit
 	const float halfHeight = character->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 
 	mDestLocation = inHitResult.ImpactPoint;
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Hit Des Impact : %s"), *mDestLocation.ToString()), ELogLevel::Error);
 	mCurLocation = character->GetActorLocation();
 
 	Protocol::C2S_MovementCharacter movementPacket;
