@@ -14,7 +14,7 @@ void UW_PointOfInterest::GetMinMapWidget(UUserWidget*& InWidget)
 		return;
 	}
 
-	AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
 	if (nullptr == gameMode)
 	{
 		return;

@@ -11,7 +11,7 @@ UACPointOfInterest::UACPointOfInterest()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 	IsStatic = false;
@@ -46,7 +46,7 @@ void UACPointOfInterest::Init()
 		return;
 	}
 
-	AGM_Game* gameMode = Cast<AGM_Game>(world->GetAuthGameMode());
+	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
 	if (nullptr == gameMode)
 	{
 		return;
