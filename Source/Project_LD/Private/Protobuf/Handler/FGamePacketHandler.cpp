@@ -36,6 +36,7 @@
 #include <Widget/Handler/ClientHUD.h>
 #include <Widget/Game/Main/W_MainGame.h>
 #include <Widget/Game/Party/W_PartyMain.h>
+#include <Widget/Game/MiniMap/W_MiniMap.h>
 
 #include "CommonErrorTypes.h"
 #include <GameErrorTypes.h>
@@ -2941,7 +2942,7 @@ bool Handle_S2C_ResponseEnterDungeon(ANetworkController* controller, Protocol::S
             return false;
         }
     }
-
+    UE_LOG(LogTemp, Warning, TEXT("DungeonID %d"), pkt.dungeon_id());
     ULDGameInstance* instance = Cast<ULDGameInstance>(world->GetGameInstance());
     if (nullptr == instance)
     {
@@ -2992,6 +2993,7 @@ bool Handle_S2C_WaitingLoadDungeon(ANetworkController* controller, Protocol::S2C
 
 bool Handle_S2C_CompleteLoadDungeon(ANetworkController* controller, Protocol::S2C_CompleteLoadDungeon& pkt)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Dungeon Trap"));
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -3013,6 +3015,14 @@ bool Handle_S2C_CompleteLoadDungeon(ANetworkController* controller, Protocol::S2
     clientHUD->CleanWidgetFromName(TEXT("LoadingPlayer"));
     clientHUD->ShowWidgetFromName(FString(TEXT("MainGame")));
     clientHUD->FadeOut();
+
+    UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("Minimap")));
+    if (widget)
+    {
+        UW_MiniMap* minimap = Cast<UW_MiniMap>(widget);
+        minimap->InstanceMapSetting();
+    }
+    clientHUD->ShowWidgetFromName(FString(TEXT("Minimap")));
 
     return true;
 }

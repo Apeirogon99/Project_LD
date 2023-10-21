@@ -25,10 +25,16 @@ public:
 	void Play(int32 InCinematicNumber, UWorld* InWorld);
 	void End();
 
+	void SceneSpawnActor(int32 InCinematicNumber, UWorld* InWorld);
+	void DestorySpawnActor();
+
 private:
 	UPROPERTY()
 	ULevelSequencePlayer* LevelSequencePlayer;
 
 	UPROPERTY()
 	ALevelSequenceActor* LevelSequenceActor;
+
+	UPROPERTY()
+	AActor* mSpawnActor;
 };

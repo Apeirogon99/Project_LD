@@ -103,6 +103,11 @@ void UW_PartyPlayerInfo::SetPlayerInfo(const int64& inRemoteID, const int64& inL
 
 void UW_PartyPlayerInfo::PushBuff(const int32& inBuffID, const float inDuration)
 {
+	if (mBuffDatas.Find(inBuffID) != INDEX_NONE)
+	{
+		return;
+	}
+
 	if (inDuration > 0)
 	{
 		FTimerHandle TimerHandle;

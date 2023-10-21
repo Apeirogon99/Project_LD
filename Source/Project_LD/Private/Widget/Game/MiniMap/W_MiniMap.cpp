@@ -6,3 +6,11 @@
 void UW_MiniMap::AddPOI_Implementation(AActor* Actor)
 {
 }
+
+void UW_MiniMap::MainMapSetting_Implementation()
+{
+}
+
+void UW_MiniMap::InstanceMapSetting_Implementation()
+{
+}
