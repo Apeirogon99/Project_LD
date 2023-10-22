@@ -72,7 +72,7 @@ void UCinematicManager::SceneSpawnActor(int32 InCinematicNumber, UWorld* InWorld
 		{
 			return;
 		}
-		mSpawnActor = InWorld->SpawnActor<AActor>(ActorClass, FVector(10050, 10050, 201), FRotator(0, 180, 0));
+		mSpawnActor = InWorld->SpawnActor<AActor>(ActorClass, FVector(10050, 10050, 201), FRotator(0, 0, 0));
 	}
 }
 
