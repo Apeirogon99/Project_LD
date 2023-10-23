@@ -12,11 +12,15 @@ AObstructionBase::AObstructionBase()
 	mBlocking = CreateDefaultSubobject<UBoxComponent>(TEXT("Blocking"));
 	mBlocking->InitBoxExtent(FVector(50.0f, 50.0f, 50.0f));
 	mBlocking->SetHiddenInGame(false);
+	mBlocking->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
+	mBlocking->SetCollisionProfileName(FName("BlockAll"));
 
 	RootComponent = mBlocking;
 
 	mMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	mMesh->SetupAttachment(RootComponent);
+	mMesh->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
+	mMesh->SetCollisionProfileName(FName("BlockAll"));
 }
 
 void AObstructionBase::BeginPlay()

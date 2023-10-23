@@ -257,8 +257,6 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 			world->LineTraceMultiByObjectType(doubleHitResults, doubleStartTrace, doubleEndTrace, ECollisionChannel::ECC_WorldStatic);
 			DrawDebugLine(world, doubleStartTrace, doubleEndTrace, FColor::Blue, true, -1.0f, 0.0f, 10.0f);
 
-			UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Hit Obstacles %d"), doubleHitResults.Num()), ELogLevel::Error);
-
 			for (FHitResult& doubleHit : doubleHitResults)
 			{
 				AActor* dobueHitActor = doubleHit.Actor.Get();
@@ -271,7 +269,6 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 				{
 					continue;
 				}
-				UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Hit Actor : %s"), *dobueHitActor->GetName()), ELogLevel::Error);
 
 				TArray<FName> doubleTags = dobueHitActor->Tags;
 				if (0 == doubleTags.Num())
