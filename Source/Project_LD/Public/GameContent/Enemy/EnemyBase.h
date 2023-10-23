@@ -22,7 +22,7 @@ public:
 
 public:
 	UFUNCTION()
-	void UpdateHealthBar() const;
+	void UpdateHealthBar();
 
 	UFUNCTION()
 	void UpdateMovementSpeed();
@@ -31,6 +31,11 @@ public:
 	void ChangeState(const EEnemyStateType inStateType, float inStartTime);
 	virtual void Interactive(ANC_Game* inPlayer) override; 
 	virtual void Init();
+
+public:
+	UFUNCTION(BlueprintNativeEvent)
+	void OnEnemyHit();
+	virtual void OnEnemyHit_Implementation();
 
 protected:
 	virtual void BeginPlay() override;

@@ -76,6 +76,10 @@ AEnemyBase::~AEnemyBase()
 {
 }
 
+void AEnemyBase::OnEnemyHit_Implementation()
+{
+}
+
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -295,7 +299,7 @@ void AEnemyBase::ChangeState(const EEnemyStateType inStateType, float inStartTim
 	}
 }
 
-void AEnemyBase::UpdateHealthBar() const
+void AEnemyBase::UpdateHealthBar()
 {
 	UWorld* world = GetWorld();
 	if (nullptr == world)
@@ -320,6 +324,7 @@ void AEnemyBase::UpdateHealthBar() const
 	{
 		return;
 	}
+
 	UW_HealthBar* healthbar = Cast<UW_HealthBar>(mHealthBar->GetUserWidgetObject());
 	if(nullptr == healthbar)
 	{
@@ -331,6 +336,8 @@ void AEnemyBase::UpdateHealthBar() const
 	float HealthPercent = CurrentHealth / MaxHealth;
 
 	healthbar->HealthBar->SetPercent(HealthPercent);
+
+	this->OnEnemyHit();
 }
 
 void AEnemyBase::UpdateMovementSpeed()
