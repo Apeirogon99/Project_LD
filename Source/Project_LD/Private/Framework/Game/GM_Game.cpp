@@ -18,6 +18,7 @@
 #include <Struct/Identity/ServerData.h>
 
 #include <UObject/ConstructorHelpers.h>
+#include <Game/MiniMap/W_MiniMap.h>
 
 AGM_Game::AGM_Game()
 {
@@ -45,6 +46,19 @@ AGM_Game::~AGM_Game()
 void AGM_Game::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetClientHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("Minimap")));
+	if (widget)
+	{
+		UW_MiniMap* minimap = Cast<UW_MiniMap>(widget);
+		minimap->MainMapSetting();
+	}
 }
 
 void AGM_Game::EndPlay(const EEndPlayReason::Type EndPlayReason)

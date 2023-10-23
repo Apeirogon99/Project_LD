@@ -2942,7 +2942,6 @@ bool Handle_S2C_ResponseEnterDungeon(ANetworkController* controller, Protocol::S
             return false;
         }
     }
-    UE_LOG(LogTemp, Warning, TEXT("DungeonID %d"), pkt.dungeon_id());
     ULDGameInstance* instance = Cast<ULDGameInstance>(world->GetGameInstance());
     if (nullptr == instance)
     {
@@ -2993,7 +2992,6 @@ bool Handle_S2C_WaitingLoadDungeon(ANetworkController* controller, Protocol::S2C
 
 bool Handle_S2C_CompleteLoadDungeon(ANetworkController* controller, Protocol::S2C_CompleteLoadDungeon& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Dungeon Trap"));
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
