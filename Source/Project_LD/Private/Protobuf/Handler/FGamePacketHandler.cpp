@@ -3190,3 +3190,28 @@ bool Handle_S2C_EndSequence(ANetworkController* controller, Protocol::S2C_EndSeq
     clientHUD->FadeOut();
     return true;
 }
+
+bool Handle_S2C_StartPack(ANetworkController* controller, Protocol::S2C_StartPack& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    return true;
+}

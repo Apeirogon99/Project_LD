@@ -185,6 +185,7 @@ bool UWidgetUtils::SetResponseUseKeyAction(AClientHUD* inHUD, const int32& inKey
 
 bool UWidgetUtils::SetSkillCoolTime(AClientHUD* inHUD, const TArray<int32>& inSkillID, const TArray<int64>& inSkillDuration)
 {
+    UE_LOG(LogTemp, Warning, TEXT("Skill %d, Duration %d"), inSkillID[0], inSkillDuration[0]);
     return true;
 }
 
