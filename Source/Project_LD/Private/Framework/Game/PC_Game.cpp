@@ -227,7 +227,7 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 		return;
 	}
 	world->LineTraceMultiByObjectType(obstacleResults, character->GetActorLocation(), hitResult.ImpactPoint, ECollisionChannel::ECC_WorldStatic);
-	DrawDebugLine(world, startTrace, endTrace, FColor::Red, true, -1.0f, 0.0f, 10.0f);
+	//DrawDebugLine(world, startTrace, endTrace, FColor::Red, true, -1.0f, 0.0f, 10.0f);
 	obstacleResults.Add(hitResult);
 
 	for (FHitResult& obstacle : obstacleResults)
@@ -255,7 +255,7 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 
 			TArray<FHitResult> doubleHitResults;
 			world->LineTraceMultiByObjectType(doubleHitResults, doubleStartTrace, doubleEndTrace, ECollisionChannel::ECC_WorldStatic);
-			DrawDebugLine(world, doubleStartTrace, doubleEndTrace, FColor::Blue, true, -1.0f, 0.0f, 10.0f);
+			//DrawDebugLine(world, doubleStartTrace, doubleEndTrace, FColor::Blue, true, -1.0f, 0.0f, 10.0f);
 
 			for (FHitResult& doubleHit : doubleHitResults)
 			{
