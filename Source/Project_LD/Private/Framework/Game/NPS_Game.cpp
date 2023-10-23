@@ -5,6 +5,7 @@
 #include "Framework/Game/NPS_Game.h"
 
 #include <LDGameInstance.h>
+#include <Component/ACPartyComponent.h>
 
 ANPS_Game::ANPS_Game()
 {
@@ -149,4 +150,20 @@ void ANPS_Game::InitCurrentEquipmentStats()
 		}
 		PutOnEquipment(index);
 	}
+}
+
+void ANPS_Game::InitPartySetting()
+{
+	mPartyComponent = NewObject<UACPartyComponent>(this, TEXT("Party"));
+	if (mPartyComponent == nullptr)
+	{
+		return;
+	}
+	this->AddOwnedComponent(mPartyComponent);
+	mPartyComponent->RegisterComponent();
+}
+
+UACPartyComponent* ANPS_Game::GetPartyComponent()
+{
+	return mPartyComponent;
 }

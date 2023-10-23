@@ -10,6 +10,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include <GS_Game.h>
 #include <C_Game.h>
+#include <NetworkGameMode.h>
+#include <PC_Game.h>
 
 // Sets default values
 ASkill_Buff::ASkill_Buff()
@@ -29,6 +31,8 @@ ASkill_Buff::ASkill_Buff()
 	{
 		mSummonParticle = SUMMON_PARTICLE.Object;
 	}
+
+	IsLocalParty = false;
 }
 
 void ASkill_Buff::AppearSkill(const int64 InRemoteID, const int64 InObjectID, const int32 InSkillID, const FVector InLocation, const FRotator InRotation, const float InDuration)
@@ -63,7 +67,54 @@ void ASkill_Buff::Tick(float DeltaTime)
 void ASkill_Buff::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	/*
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return;
+	}
+ 
+	APC_Game* localPlayerController = Cast<APC_Game>(gamemode->GetNetworkController());
+	if (nullptr == localPlayerController)
+	{
+		return;
+	}
+
+	APS_Game* localPlayerState = localPlayerController->GetPlayerState<APS_Game>();
+	if (nullptr == localPlayerState)
+	{
+		return;
+	}
+
+	TArray<APlayerState*> PartyPlayers;
+	TArray<FPartyPlayerInfo> PartyPlayerInfos;
+	UACPartyComponent* PartyComponent = localPlayerState->GetPartyComponent();
+	if (nullptr == PartyComponent)
+	{
+		return;
+	}
+
+	PartyComponent->GetPartyPlayers(PartyPlayers, PartyPlayerInfos);
+	for (auto partyplayer : PartyPlayers)
+	{
+		ANPS_Game* nonPlayerState = Cast<ANPS_Game>(partyplayer);
+		if (nullptr == nonPlayerState)
+		{
+			return;
+		}
+
+		if (nonPlayerState->GetRemoteID() == mRemoteID)
+		{
+			IsLocalParty = true;
+		}
+	}
+	*/
 }
 
 void ASkill_Buff::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -85,6 +136,9 @@ void ASkill_Buff::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
 void ASkill_Buff::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	//if(IsLocalParty)
+
+	/*
 	if (Cast<ANC_Game>(OtherActor) != nullptr)
 	{
 		if ((mRemoteID == 0) && (mObjectID == 0))
@@ -116,13 +170,13 @@ void ASkill_Buff::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 			return;
 		}
 
-		AC_Game* localPlayer = Cast<AC_Game>(player);
+		ANC_Game* localPlayer = Cast<ANC_Game>(player);
 		if(nullptr == localPlayer)
 		{
 			return;
 		}
 
-		APS_Game* playerState = localPlayer->GetPlayerState<APS_Game>();
+		ANPS_Game* playerState = localPlayer->GetPlayerState<ANPS_Game>();
 		if (nullptr == playerState)
 		{
 			return;
@@ -172,10 +226,12 @@ void ASkill_Buff::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 			}
 		}
 	}
+	*/
 }
 
 void ASkill_Buff::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
+	/*
 	if (Cast<ANC_Game>(OtherActor) != nullptr)
 	{
 		UWorld* world = GetWorld();
@@ -260,4 +316,5 @@ void ASkill_Buff::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Othe
 			}
 		}
 	}
+	*/
 }

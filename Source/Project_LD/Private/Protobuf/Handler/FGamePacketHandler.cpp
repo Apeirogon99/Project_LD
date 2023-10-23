@@ -426,8 +426,6 @@ bool Handle_S2C_PlayerAutoAttack(ANetworkController* controller, Protocol::S2C_P
 
 bool Handle_S2C_PlayerEndAutoAttack(ANetworkController* controller, Protocol::S2C_PlayerEndAutoAttack& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Handle_S2C_PlayerEndAutoAttack"));
-
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2733,6 +2731,7 @@ bool Handle_S2C_SkillCoolTime(ANetworkController* controller, Protocol::S2C_Skil
 
 bool Handle_S2C_PushBuff(ANetworkController* controller, Protocol::S2C_PushBuff& pkt)
 {
+    UE_LOG(LogTemp, Warning, TEXT("PushBuff Remote ID : %d"), pkt.remote_id());
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {

@@ -4,6 +4,7 @@
 #include "Widget/WidgetUtils.h"
 #include <Game/Main/W_MainGame.h>
 #include <Game/Party/W_PartyPlayerInfoList.h>
+#include <Game/Main/W_BottomUI.h>
 
 bool UWidgetUtils::SetEditBox(AClientHUD* inHUD, const FString& inTitle, const FString& inHint, const FString& inButtonText, const FButtonDelegate& inDelegate)
 {
@@ -186,6 +187,21 @@ bool UWidgetUtils::SetResponseUseKeyAction(AClientHUD* inHUD, const int32& inKey
 bool UWidgetUtils::SetSkillCoolTime(AClientHUD* inHUD, const TArray<int32>& inSkillID, const TArray<int64>& inSkillDuration)
 {
     UE_LOG(LogTemp, Warning, TEXT("Skill %d, Duration %d"), inSkillID[0], inSkillDuration[0]);
+
+    UW_MainGame* mainwidget = Cast<UW_MainGame>(inHUD->GetWidgetFromName(TEXT("MainGame")));
+    if (nullptr == mainwidget)
+    {
+        return false;
+    }
+
+    UW_BottomUI* bottomUI = Cast<UW_BottomUI>(mainwidget->mBottomUI);
+    if (nullptr == bottomUI)
+    {
+        return false;
+    }
+
+    bottomUI->SetWidgetCoolTime(inSkillID, inSkillDuration);
+
     return true;
 }
 

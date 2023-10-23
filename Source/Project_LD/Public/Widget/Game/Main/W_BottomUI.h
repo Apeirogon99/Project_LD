@@ -26,6 +26,8 @@ public:
 	UFUNCTION()
 	void UpdateManaBar();
 
+	void SetWidgetCoolTime(const TArray<int32>& inSkillID, const TArray<int64>& inSkillDuration);
+
 public:
 	UPROPERTY()
 	UWidget* mPlayerBar;

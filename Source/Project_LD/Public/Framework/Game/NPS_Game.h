@@ -12,6 +12,8 @@
  * 
  */
 
+class UACPartyComponent;
+
 DECLARE_MULTICAST_DELEGATE(FOnCharacterHealthChanged)
 DECLARE_MULTICAST_DELEGATE(FOnCharacterManaChanged)
 
@@ -39,11 +41,15 @@ public:
 	void TakeOffEquipment(const int32 InIndex);
 	void InitCurrentStats();
 	void InitCurrentEquipmentStats();
+	void InitPartySetting();
 
 public:
 	const int64			GetRemoteID() const		{ return mRemoteID; }
 	FCharacterData&		GetCharacterData()		{ return mCharacterData; }
 	FCharacterStats&	GetCharacterStats()		{ return mCharacterStats; }
+
+public:
+	UACPartyComponent* GetPartyComponent();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState")
@@ -54,6 +60,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Status")
 	FCharacterStats	mCharacterStats;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component", meta = (AllowPrivateAccess = "true"))
+	UACPartyComponent* mPartyComponent;
 
 protected:
 	virtual void UpdateHealthBar();

@@ -125,6 +125,54 @@ void UW_BottomUI::UpdateManaBar()
 	playerBar->ManaBar->SetPercent(ManaPercent);
 }
 
+void UW_BottomUI::SetWidgetCoolTime(const TArray<int32>& inSkillID, const TArray<int64>& inSkillDuration)
+{
+	UWidget* widget = nullptr;
+
+	int i = 0;
+	for (int32 id : inSkillID)
+	{
+		switch (id)
+		{
+		case 1:
+			widget = mSkill_E;
+			break;
+		case 2:
+			widget = mSkill_Q;
+			break;
+		case 3:
+			widget = mSkill_W;
+			break;
+		case 4:
+			widget = mSkill_R;
+			break;
+		case 5:
+			widget = mSkill_BasicAttack;
+			break;
+		}
+
+		UW_Skill* skill = Cast<UW_Skill>(widget);
+		if (nullptr == skill)
+		{
+			return;
+		}
+
+		int intCoolTime = static_cast<int>(inSkillDuration[i] / 1000.f);
+		if (intCoolTime <= 0)
+		{
+			intCoolTime = 0;
+			skill->TB_CoolTime->SetOpacity(0.f);
+		}
+		else
+		{
+			skill->TB_CoolTime->SetOpacity(0.8);
+		}
+
+		skill->TB_CoolTime->SetText(FText::FromString(FString::FromInt(intCoolTime)));
+		i++;
+	}
+}
+
 void UW_BottomUI::NativeConstruct()
 {
 

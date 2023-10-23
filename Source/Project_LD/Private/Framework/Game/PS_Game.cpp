@@ -121,11 +121,6 @@ void APS_Game::InitializeLocalPlayerData()
 	UpdateCurrentStatsBar();
 }
 
-UACPartyComponent* APS_Game::GetPartyComponent()
-{
-	return mPartyComponent;
-}
-
 void APS_Game::UpdateExpBar()
 {
 	if (OnCharacterExpChanged.IsBound())

@@ -43,13 +43,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component")
 	UACEquipment* mEquipmentComponent;
 
-public:
-	UACPartyComponent* GetPartyComponent();
-
 protected:
 	virtual void UpdateExpBar();
-
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState | Component", meta = (AllowPrivateAccess = "true"))
-		UACPartyComponent* mPartyComponent;
 };

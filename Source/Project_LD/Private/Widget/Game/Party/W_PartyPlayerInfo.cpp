@@ -13,6 +13,7 @@
 #include <GM_Game.h>
 #include <Widget/Game/Party/W_PlayerBuffInfo.h>
 #include <LDGameInstance.h>
+#include <NC_Game.h>
 
 
 void UW_PartyPlayerInfo::NativeConstruct()
@@ -108,6 +109,26 @@ void UW_PartyPlayerInfo::PushBuff(const int32& inBuffID, const float inDuration)
 		return;
 	}
 
+	AGS_Game* gameState = GetWorld()->GetGameState<AGS_Game>();
+	if (nullptr == gameState)
+	{
+		return;
+	}
+
+	AController* controller = gameState->FindPlayerController(mRemoteID);
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	ANC_Game* character = Cast<ANC_Game>(controller->GetCharacter());
+	if (nullptr == character)
+	{
+		return;
+	}
+
+	character->ActiveBuffParticle();
+
 	if (inDuration > 0)
 	{
 		FTimerHandle TimerHandle;
@@ -124,11 +145,34 @@ void UW_PartyPlayerInfo::PushBuff(const int32& inBuffID, const float inDuration)
 
 void UW_PartyPlayerInfo::ReleaseBuff(const int32& inBuffID)
 {
-	if (mBuffDatas.Find(inBuffID) != INDEX_NONE)
+	if (mBuffDatas.Find(inBuffID) == INDEX_NONE)
 	{
-		int index = mBuffDatas.Find(inBuffID);
-		mBuffDatas.RemoveAt(index);
+		return;
 	}
+
+	AGS_Game* gameState = GetWorld()->GetGameState<AGS_Game>();
+	if (nullptr == gameState)
+	{
+		return;
+	}
+
+	AController* controller = gameState->FindPlayerController(mRemoteID);
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	ANC_Game* character = Cast<ANC_Game>(controller->GetCharacter());
+	if (nullptr == character)
+	{
+		return;
+	}
+
+	character->DeActiveBuffParticle();
+
+	int index = mBuffDatas.Find(inBuffID);
+	mBuffDatas.RemoveAt(index);
+
 	UpdateBuff();
 }
 

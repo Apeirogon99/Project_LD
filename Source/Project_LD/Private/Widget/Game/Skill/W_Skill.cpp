@@ -9,4 +9,5 @@ void UW_Skill::NativeConstruct()
 {
 	Img_Skill = Cast<UImage>(GetWidgetFromName(TEXT("Img_Skill")));
 	TB_KeyBind = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_KeyBind")));
+	TB_CoolTime = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_CoolTime")));
 }
