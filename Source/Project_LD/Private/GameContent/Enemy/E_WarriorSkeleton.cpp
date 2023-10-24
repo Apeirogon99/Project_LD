@@ -10,6 +10,13 @@
 
 AE_WarriorSkeleton::AE_WarriorSkeleton()
 {
+	//static ConstructorHelpers::FObjectFinder<UMaterialInterface> materialInterface(TEXT("MaterialInstanceConstant'/Game/GameContent/Mat/HitMat/MI_SkeletonHit.MI_SkeletonHit'"));
+	//if (materialInterface.Succeeded())
+	//{
+	//	mHitMaterialInstance = GetMesh()->CreateDynamicMaterialInstance(0, materialInterface.Object);
+	//	mHitMaterialInstance->SetVectorParameterValue(FName("EmissiveColor"), FLinearColor::Transparent);
+	//	mHitMaterialInstance->SetScalarParameterValue(FName("EmissiveMul"), 0.0f);
+	//}
 }
 
 AE_WarriorSkeleton::~AE_WarriorSkeleton()

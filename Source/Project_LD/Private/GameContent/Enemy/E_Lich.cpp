@@ -25,6 +25,14 @@ AE_Lich::AE_Lich()
 	mLichCheckCollider->SetBoxExtent(FVector(70.f, 60.f, 90.f));
 	mLichCheckCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	mLichCheckCollider->OnComponentBeginOverlap.AddDynamic(this, &AE_Lich::OnOverlapBegin);
+
+	//static ConstructorHelpers::FObjectFinder<UMaterialInterface> materialInterface(TEXT("MaterialInstanceConstant'/Game/GameContent/Mat/HitMat/MI_LichHit.MI_LichHit'"));
+	//if (materialInterface.Succeeded())
+	//{
+	//	mHitMaterialInstance = GetMesh()->CreateDynamicMaterialInstance(0, materialInterface.Object);
+	//	mHitMaterialInstance->SetVectorParameterValue(FName("EmissiveColor"), FLinearColor::Transparent);
+	//	mHitMaterialInstance->SetScalarParameterValue(FName("EmissiveMul"), 0.0f);
+	//}
 }
 
 AE_Lich::~AE_Lich()

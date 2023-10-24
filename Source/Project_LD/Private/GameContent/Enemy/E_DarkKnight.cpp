@@ -14,6 +14,13 @@
 
 AE_DarkKnight::AE_DarkKnight()
 {
+	//static ConstructorHelpers::FObjectFinder<UMaterialInterface> materialInterface(TEXT("MaterialInstanceConstant'/Game/GameContent/Mat/HitMat/MI_DarkKnightHit.MI_DarkKnightHit'"));
+	//if (materialInterface.Succeeded())
+	//{
+	//	mHitMaterialInstance = GetMesh()->CreateDynamicMaterialInstance(0, materialInterface.Object);
+	//	mHitMaterialInstance->SetVectorParameterValue(FName("EmissiveColor"), FLinearColor::Transparent);
+	//	mHitMaterialInstance->SetScalarParameterValue(FName("EmissiveMul"), 0.0f);
+	//}
 }
 
 AE_DarkKnight::~AE_DarkKnight()

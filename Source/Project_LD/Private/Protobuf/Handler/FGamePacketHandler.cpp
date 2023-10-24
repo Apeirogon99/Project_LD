@@ -2121,10 +2121,7 @@ bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy&
         return false;
     }
 
-    const int64     objectID        = pkt.object_id();
-    const int64     timestamp       = pkt.timestamp();
-    const int64     durationTime    = controller->GetServerTimeStamp() - timestamp;
-
+    const int64  objectID = pkt.object_id();
     AActor* actor = gameState->FindGameObject(objectID);
     if (nullptr == actor)
     {
@@ -2137,6 +2134,7 @@ bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy&
     {
         return false;
     }
+    enemy->OnEnemyHit();
 
     //AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
     //if (nullptr == enemyState)

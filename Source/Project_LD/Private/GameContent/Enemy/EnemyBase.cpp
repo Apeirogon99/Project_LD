@@ -78,6 +78,16 @@ AEnemyBase::~AEnemyBase()
 
 void AEnemyBase::OnEnemyHit_Implementation()
 {
+	if (mHitMaterialInstance)
+	{
+		mHitMaterialInstance->SetVectorParameterValue(FName("EmissiveColor"), FLinearColor::Red);
+		mHitMaterialInstance->SetScalarParameterValue(FName("EmissiveMul"), 100.0f);
+	}
+	else
+	{
+		//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Can't find hit material instance")), ELogLevel::Error);
+	}
+
 }
 
 void AEnemyBase::BeginPlay()
@@ -336,8 +346,6 @@ void AEnemyBase::UpdateHealthBar()
 	float HealthPercent = CurrentHealth / MaxHealth;
 
 	healthbar->HealthBar->SetPercent(HealthPercent);
-
-	this->OnEnemyHit();
 }
 
 void AEnemyBase::UpdateMovementSpeed()

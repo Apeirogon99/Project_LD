@@ -74,5 +74,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UACPointOfInterest* mPOI;
 
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UMaterialInstanceDynamic* mHitMaterialInstance;
+
 	bool bSpeedCheck;
 };
