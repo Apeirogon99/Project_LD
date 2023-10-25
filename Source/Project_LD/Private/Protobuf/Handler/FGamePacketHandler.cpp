@@ -2440,7 +2440,7 @@ bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_Re
 
     FCharacterEquipment updateEquipment = pkt.eqipment();
 
-    APS_Game* playerState = Cast<APS_Game>(remoteController->PlayerState);
+    ANPS_Game* playerState = Cast<ANPS_Game>(remoteController->PlayerState);
     if (nullptr == playerState)
     {
         return false;
@@ -2450,7 +2450,7 @@ bool Handle_S2C_ReplaceEqipment(ANetworkController* controller, Protocol::S2C_Re
     playerState->calculationStats();
     playerState->DetectChangeCurrentStats(oldDatas, updateEquipment);
 
-    AC_Game* character = Cast<AC_Game>(remoteController->GetPawn());
+    ANC_Game* character = Cast<ANC_Game>(remoteController->GetPawn());
     if (nullptr == character)
     {
         return false;
