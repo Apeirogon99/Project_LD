@@ -211,11 +211,6 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 		return;
 	}
 
-	if (character->IsAttack)
-	{
-		return;
-	}
-
 	if (false == hitResult.bBlockingHit)
 	{
 		return;
@@ -280,7 +275,7 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 				if (0 == doubleTags.Num())
 				{
 					continue;
-				}
+				}	
 
 				int32 tempCompareTag = doubleTags.Find(FName("Ground"));
 				if (INDEX_NONE == tempCompareTag)
@@ -509,6 +504,17 @@ void APC_Game::ReleasedLeftMouse()
 
 void APC_Game::PressedRightMouse()
 {
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
+	if (character == nullptr)
+	{
+		return;
+	}
+	
+	if (character->IsAttack)
+	{
+		return;
+	}
+
 	CheackMouseTrace(mRightMouseActions);
 
 	mIsRightMouse = true;
