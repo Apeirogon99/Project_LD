@@ -92,6 +92,7 @@ ANC_Game::ANC_Game()
 	bCanSkillR = true;
 	bCanDash = true;
 
+	RCharage = false;
 	IsAttack = false;
 }
 

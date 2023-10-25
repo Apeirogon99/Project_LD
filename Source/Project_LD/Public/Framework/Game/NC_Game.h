@@ -61,6 +61,7 @@ public:
 
 public:
 	bool IsAttack;
+	bool RCharage;
 
 public:
 	UFUNCTION(BlueprintCallable)

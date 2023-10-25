@@ -826,6 +826,7 @@ void APC_Game::UseSkill_R_Pressed()
 		character->SetUsingSkill(true);
 		character->SetCanMove(false);
 		character->StopMovement();
+		character->RCharage = true;
 		playerAnim->PlayClientSkillMontage(3);
 
 		Protocol::C2S_PressedUseKeyAction keyActionPacket;
@@ -842,6 +843,12 @@ void APC_Game::UseSkill_R_Released()
 	{
 		return;
 	}
+
+	if (character->RCharage == false)
+	{
+		return;
+	}
+	character->RCharage = false;
 
 	if (character->GetCanUseSkillR() == true)
 	{
