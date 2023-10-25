@@ -138,7 +138,6 @@ void ASkill_Buff::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	//if(IsLocalParty)
 
-	/*
 	if (Cast<ANC_Game>(OtherActor) != nullptr)
 	{
 		if ((mRemoteID == 0) && (mObjectID == 0))
@@ -146,94 +145,6 @@ void ASkill_Buff::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 			return;
 		}
 
-		UWorld* world = GetWorld();
-		if (nullptr == world)
-		{
-			return;
-		}
-
-		AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
-		if (nullptr == gameState)
-		{
-			return;
-		}
-
-		AController* playercontroller = gameState->FindPlayerController(mRemoteID);
-		if (nullptr == playercontroller)
-		{
-			return;
-		}
-
-		AActor* player = playercontroller->GetCharacter();
-		if (nullptr == player)
-		{
-			return;
-		}
-
-		ANC_Game* localPlayer = Cast<ANC_Game>(player);
-		if(nullptr == localPlayer)
-		{
-			return;
-		}
-
-		ANPS_Game* playerState = localPlayer->GetPlayerState<ANPS_Game>();
-		if (nullptr == playerState)
-		{
-			return;
-		}
-
-		TArray<APlayerState*> PartyPlayers;
-		TArray<FPartyPlayerInfo> PartyPlayerInfos;
-		UACPartyComponent* partyComponent = playerState->GetPartyComponent();
-		if (nullptr == partyComponent)
-		{
-			return;
-		}
-		partyComponent->GetPartyPlayers(PartyPlayers, PartyPlayerInfos);
-
-		ANC_Game* OtherPlayer = Cast<ANC_Game>(OtherActor);
-		ANPS_Game* OtherPlayerState = OtherPlayer->GetPlayerState<ANPS_Game>();
-		if (nullptr == OtherPlayerState)
-		{
-			return;
-		}
-
-		int32 OtherPlayerId = OtherPlayerState->GetRemoteID();
-
-		if (mRemoteID == OtherPlayerId)
-		{
-			mActivePlayerId.Add(mRemoteID);
-			OtherPlayer->ActiveBuffParticle();
-		}
-		else
-		{
-			for (APlayerState* partyplayer : PartyPlayers)
-			{
-				ANPS_Game* partyplayerState = Cast<ANPS_Game>(partyplayer);
-				if (nullptr == partyplayerState)
-				{
-					return;
-				}
-				if (OtherPlayerId == partyplayerState->GetRemoteID())
-				{
-					if (mActivePlayerId.Find(OtherPlayerId) == INDEX_NONE)
-					{
-						mActivePlayerId.Add(OtherPlayerId);
-						OtherPlayer->ActiveBuffParticle();
-					}
-					break;
-				}
-			}
-		}
-	}
-	*/
-}
-
-void ASkill_Buff::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	/*
-	if (Cast<ANC_Game>(OtherActor) != nullptr)
-	{
 		UWorld* world = GetWorld();
 		if (nullptr == world)
 		{
@@ -270,51 +181,83 @@ void ASkill_Buff::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* Othe
 			return;
 		}
 
-		TArray<APlayerState*> PartyPlayers;
-		TArray<FPartyPlayerInfo> PartyPlayerInfos;
-		UACPartyComponent* partyComponent = playerState->GetPartyComponent();
-		if (nullptr == partyComponent)
-		{
-			return;
-		}
-		partyComponent->GetPartyPlayers(PartyPlayers, PartyPlayerInfos);
-
-		ANC_Game* OtherPlayer = Cast<ANC_Game>(OtherActor);
-		ANPS_Game* OtherPlayerState = OtherPlayer->GetPlayerState<ANPS_Game>();
-		if (nullptr == OtherPlayerState)
+		UACPartyComponent* party = playerState->GetPartyComponent();
+		if (nullptr == party)
 		{
 			return;
 		}
 
-		int32 OtherPlayerId = OtherPlayerState->GetRemoteID();
+		TArray<APlayerState*>			outPartyPlayers;
+		TArray<FPartyPlayerInfo>		outPartyPlayerInfos;
 
-		if (mRemoteID == OtherPlayerId)
+		party->GetPartyPlayers(outPartyPlayers, outPartyPlayerInfos);
+
+		if (outPartyPlayers.Num() == 0)
 		{
-			int32 Index = mActivePlayerId.Find(OtherPlayerId);
-			mActivePlayerId.Remove(Index);
-			OtherPlayer->DeActiveBuffParticle();
-		}
-		else
-		{
-			for (APlayerState* partyplayer : PartyPlayers)
-			{
-				ANPS_Game* partyplayerState = Cast<ANPS_Game>(partyplayer);
-				if (nullptr == partyplayerState)
-				{
-					return;
-				}
-				if (OtherPlayerId == partyplayerState->GetRemoteID())
-				{
-					if (mActivePlayerId.Find(OtherPlayerId) != INDEX_NONE)
-					{
-						int32 Index = mActivePlayerId.Find(OtherPlayerId);
-						mActivePlayerId.Remove(Index);
-						OtherPlayer->DeActiveBuffParticle();
-						break;
-					}
-				}
-			}
+			Cast<AC_Game>(OtherActor)->ActiveBuffParticle();
 		}
 	}
-	*/
+}
+
+void ASkill_Buff::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (Cast<ANC_Game>(OtherActor) != nullptr)
+	{
+		if ((mRemoteID == 0) && (mObjectID == 0))
+		{
+			return;
+		}
+
+		UWorld* world = GetWorld();
+		if (nullptr == world)
+		{
+			return;
+		}
+
+		AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+		if (nullptr == gameState)
+		{
+			return;
+		}
+
+		AController* playercontroller = gameState->FindPlayerController(mRemoteID);
+		if (nullptr == playercontroller)
+		{
+			return;
+		}
+
+		AActor* player = playercontroller->GetCharacter();
+		if (nullptr == player)
+		{
+			return;
+		}
+
+		AC_Game* localPlayer = Cast<AC_Game>(player);
+		if (nullptr == localPlayer)
+		{
+			return;
+		}
+
+		APS_Game* playerState = localPlayer->GetPlayerState<APS_Game>();
+		if (nullptr == playerState)
+		{
+			return;
+		}
+
+		UACPartyComponent* party = playerState->GetPartyComponent();
+		if (nullptr == party)
+		{
+			return;
+		}
+
+		TArray<APlayerState*>			outPartyPlayers;
+		TArray<FPartyPlayerInfo>		outPartyPlayerInfos;
+
+		party->GetPartyPlayers(outPartyPlayers, outPartyPlayerInfos);
+
+		if (outPartyPlayers.Num() == 0)
+		{
+			Cast<AC_Game>(OtherActor)->DeActiveBuffParticle();
+		}
+	}
 }
