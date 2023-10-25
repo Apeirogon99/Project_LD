@@ -58,11 +58,11 @@ AAppearanceCharacter::AAppearanceCharacter()
 		mQuiver->SetupAttachment(meshRoot);
 		mWeapon_R_Arrow->SetupAttachment(meshRoot);
 		mWeapon_Shield->SetupAttachment(meshRoot);
-		mWeapon_L->SetupAttachment(meshRoot);
-		mWeapon_R->SetupAttachment(meshRoot);
+		mWeapon_L->SetupAttachment(meshRoot, "Weapon_RSocket");
+		mWeapon_R->SetupAttachment(meshRoot, "Weapon_LSocket");
 		mHip_L->SetupAttachment(meshRoot);
 		mHip_R->SetupAttachment(meshRoot);
-
+	
 	}
 
 	//mCharacterPoses.Reserve(StaticCast<int32>(ECharacterPose::None));
