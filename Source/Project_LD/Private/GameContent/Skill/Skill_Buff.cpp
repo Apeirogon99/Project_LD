@@ -138,7 +138,7 @@ void ASkill_Buff::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 {
 	//if(IsLocalParty)
 
-	if (Cast<ANC_Game>(OtherActor) != nullptr)
+	if (Cast<AC_Game>(OtherActor) != nullptr)
 	{
 		if ((mRemoteID == 0) && (mObjectID == 0))
 		{
@@ -201,7 +201,7 @@ void ASkill_Buff::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* Ot
 
 void ASkill_Buff::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	if (Cast<ANC_Game>(OtherActor) != nullptr)
+	if (Cast<AC_Game>(OtherActor) != nullptr)
 	{
 		if ((mRemoteID == 0) && (mObjectID == 0))
 		{
