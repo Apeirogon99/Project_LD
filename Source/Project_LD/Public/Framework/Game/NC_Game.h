@@ -60,6 +60,9 @@ public:
 	void ManageSkill(int32 InSkillCode);
 
 public:
+	bool IsAttack;
+
+public:
 	UFUNCTION(BlueprintCallable)
 	void ActiveMovement();
 

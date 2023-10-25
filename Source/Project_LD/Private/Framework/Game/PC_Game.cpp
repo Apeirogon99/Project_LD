@@ -25,6 +25,7 @@
 
 #include <DrawDebugHelpers.h>
 #include "Components/CapsuleComponent.h"
+#include <Game/Main/W_BottomUI.h>
 
 APC_Game::APC_Game()
 {
@@ -206,6 +207,11 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 	}
 
 	if (character->GetUsingSkill())
+	{
+		return;
+	}
+
+	if (character->IsAttack)
 	{
 		return;
 	}
@@ -522,6 +528,40 @@ void APC_Game::UseSkill_Q_Pressed()
 		return;
 	}
 
+	APS_Game* playerState = character->GetPlayerState<APS_Game>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	if (playerState->GetCharacterStats().GetCurrentStats().GetMana() - 75.f < 0)
+	{
+		UWorld* world = GetWorld();
+		if (nullptr == world)
+		{
+			return ;
+		}
+
+		ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+		if (nullptr == gameMode)
+		{
+			return ;
+		}
+
+		AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+		if (nullptr == clientHUD)
+		{
+			return ;
+		}
+
+		bool ret = UWidgetUtils::SetResponseUseKeyAction(clientHUD, 81, FString(TEXT("마나가 부족합니다.")));
+		if (ret == false)
+		{
+			return ;
+		}
+		return;
+	}
+
 	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
 	if (playerAnim == nullptr)
 	{
@@ -569,6 +609,40 @@ void APC_Game::UseSkill_W_Pressed()
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
 	{
+		return;
+	}
+
+	APS_Game* playerState = character->GetPlayerState<APS_Game>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	if (playerState->GetCharacterStats().GetCurrentStats().GetMana() - 175.f < 0)
+	{
+		UWorld* world = GetWorld();
+		if (nullptr == world)
+		{
+			return;
+		}
+
+		ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+		if (nullptr == gameMode)
+		{
+			return;
+		}
+
+		AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+		if (nullptr == clientHUD)
+		{
+			return;
+		}
+
+		bool ret = UWidgetUtils::SetResponseUseKeyAction(clientHUD, 81, FString(TEXT("마나가 부족합니다.")));
+		if (ret == false)
+		{
+			return;
+		}
 		return;
 	}
 
@@ -622,6 +696,40 @@ void APC_Game::UseSkill_E_Pressed()
 		return;
 	}
 
+	APS_Game* playerState = character->GetPlayerState<APS_Game>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	if (playerState->GetCharacterStats().GetCurrentStats().GetMana() - 250.f < 0)
+	{
+		UWorld* world = GetWorld();
+		if (nullptr == world)
+		{
+			return;
+		}
+
+		ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+		if (nullptr == gameMode)
+		{
+			return;
+		}
+
+		AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+		if (nullptr == clientHUD)
+		{
+			return;
+		}
+
+		bool ret = UWidgetUtils::SetResponseUseKeyAction(clientHUD, 81, FString(TEXT("마나가 부족합니다.")));
+		if (ret == false)
+		{
+			return;
+		}
+		return;
+	}
+
 	UAI_PlayerCharacter* playerAnim = Cast<UAI_PlayerCharacter>(character->GetMesh()->GetAnimInstance());
 	if (playerAnim == nullptr)
 	{
@@ -669,6 +777,40 @@ void APC_Game::UseSkill_R_Pressed()
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
 	{
+		return;
+	}
+
+	APS_Game* playerState = character->GetPlayerState<APS_Game>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	if (playerState->GetCharacterStats().GetCurrentStats().GetMana() - 200.f < 0)
+	{
+		UWorld* world = GetWorld();
+		if (nullptr == world)
+		{
+			return;
+		}
+
+		ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+		if (nullptr == gameMode)
+		{
+			return;
+		}
+
+		AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+		if (nullptr == clientHUD)
+		{
+			return;
+		}
+
+		bool ret = UWidgetUtils::SetResponseUseKeyAction(clientHUD, 81, FString(TEXT("마나가 부족합니다.")));
+		if (ret == false)
+		{
+			return;
+		}
 		return;
 	}
 
@@ -726,6 +868,40 @@ void APC_Game::UseSkill_Dash_Pressed()
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (character == nullptr)
 	{
+		return;
+	}
+
+	APS_Game* playerState = character->GetPlayerState<APS_Game>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	if (playerState->GetCharacterStats().GetCurrentStats().GetMana() - 75.f < 0)
+	{
+		UWorld* world = GetWorld();
+		if (nullptr == world)
+		{
+			return;
+		}
+
+		ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+		if (nullptr == gameMode)
+		{
+			return;
+		}
+
+		AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+		if (nullptr == clientHUD)
+		{
+			return;
+		}
+
+		bool ret = UWidgetUtils::SetResponseUseKeyAction(clientHUD, 81, FString(TEXT("마나가 부족합니다.")));
+		if (ret == false)
+		{
+			return;
+		}
 		return;
 	}
 
@@ -827,10 +1003,30 @@ void APC_Game::RequestCinematicStop()
 void APC_Game::SkillCoolTime(int32 InSkillCode)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Code %d Cool Time"),InSkillCode);
-	ANC_Game* character = Cast<ANC_Game>(GetCharacter());
+	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (nullptr == character)
 	{
 		return;
 	}
 	character->ManageSkill(InSkillCode);
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("MainGame")));
+	if (nullptr == widget)
+	{
+		return;
+	}
+
+	UW_MainGame* mainGame = Cast<UW_MainGame>(widget);
+	if (nullptr == mainGame)
+	{
+		return;
+	}
+
+	Cast<UW_BottomUI>(mainGame->mBottomUI)->CoolTimeisDone(InSkillCode);
 }

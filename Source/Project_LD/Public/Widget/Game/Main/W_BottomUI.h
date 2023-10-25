@@ -28,6 +28,8 @@ public:
 
 	void SetWidgetCoolTime(const TArray<int32>& inSkillID, const TArray<int64>& inSkillDuration);
 
+	void CoolTimeisDone(int32 SkillCode);
+
 public:
 	UPROPERTY()
 	UWidget* mPlayerBar;

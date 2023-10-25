@@ -460,6 +460,7 @@ bool Handle_S2C_PlayerEndAutoAttack(ANetworkController* controller, Protocol::S2
     player->ActiveMovement();
     player->SetCanMove(true);
     player->SetUsingSkill(false);
+    player->IsAttack = false;
 
     return true;
 }
@@ -2638,6 +2639,7 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
 
 bool Handle_S2C_EndReactionSkill(ANetworkController* controller, Protocol::S2C_EndReactionSkill& pkt)
 {
+    UE_LOG(LogTemp, Warning, TEXT("End Reaction %d"), pkt.remote_id());
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {

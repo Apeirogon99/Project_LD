@@ -446,6 +446,7 @@ void AEnemyBase::Interactive(ANC_Game* inPlayer)
 	if (distance <= range)
 	{
 		animInstance->PlayClientAttackMontage();
+		inPlayer->IsAttack = true;
 	}
 	Protocol::C2S_PlayerAutoAttack attackPacket;
 	attackPacket.set_object_id(state->GetObjectID());

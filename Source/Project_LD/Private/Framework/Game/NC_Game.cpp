@@ -91,6 +91,8 @@ ANC_Game::ANC_Game()
 	bCanSkillE = true;
 	bCanSkillR = true;
 	bCanDash = true;
+
+	IsAttack = false;
 }
 
 ANC_Game::~ANC_Game()
