@@ -422,6 +422,7 @@ void APC_Game::SwitchChat()
 
 void APC_Game::SwitchSkillTree()
 {
+	/*
 	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetHUD());
 	if (nullptr == clientHUD)
 	{
@@ -441,6 +442,7 @@ void APC_Game::SwitchSkillTree()
 	}
 
 	maingame->SkillTreeOpenRequest();
+	*/
 }
 
 void APC_Game::SwitchFriend()
