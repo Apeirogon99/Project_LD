@@ -356,7 +356,7 @@ void FNetworkSession::ProcessRecv(int32 numOfBytes)
 		mRecvBuffer->Enqueue(&mTempBuffer[0], numOfBytes);
 		//mRecvBuffer->MoveRear(static_cast<uint32>(numOfBytes));
 
-		//mRecvBuffer->TestPrintLog();
+		mRecvBuffer->TestPrintLog();
 
 		int32 usedSize = mRecvBuffer->GetUsedSize();
 		bool recvResult = mController->OnRecv(mRecvBuffer, usedSize);
