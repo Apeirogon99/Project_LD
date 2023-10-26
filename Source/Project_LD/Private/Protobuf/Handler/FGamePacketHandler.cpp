@@ -234,12 +234,6 @@ bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C
 
     gameState->RemoveNPCCharacter(remoteID);
 
-    APawn* character = remoteController->GetPawn();
-    if (character)
-    {
-        character->Destroy();
-    }
-
     UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_DisAppearCharacter [REMOTE_ID::%lld]"), remoteID), ELogLevel::Warning);
 
     return true;

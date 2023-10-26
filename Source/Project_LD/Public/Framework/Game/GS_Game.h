@@ -22,7 +22,7 @@ public:
 
 public:
 	AActor*		CreateNPCCharacter(FVector inLocation, FRotator inRotator, FCharacterData& inCharacterData, const int64 inRemoteID);
-	void		RemoveNPCCharacter(const int64 inRemoteID);
+	bool		RemoveNPCCharacter(const int64 inRemoteID);
 
 	AActor*		CreateEnemyCharacter(const int32 inEnemyID, FVector inLocation, FRotator inRotator, const int64 inGameObjectID);
 	AActor*		CreateGameObject(UClass* inUClass, FVector inLocation, FRotator inRotator, const int64 inGameObjectID);
