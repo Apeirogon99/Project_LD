@@ -10,6 +10,7 @@
  * 
  */
 class UUserWidget;
+class ACharacter;
 
 UCLASS()
 class PROJECT_LD_API UW_PointOfInterest : public UUserWidget
@@ -19,4 +20,7 @@ class PROJECT_LD_API UW_PointOfInterest : public UUserWidget
 private:
 	UFUNCTION(BlueprintCallable)
 	void GetMinMapWidget(UUserWidget*& InWidget);
+
+	UFUNCTION(BlueprintCallable)
+	ACharacter* GetLocalPlayerCharacter();
 };
