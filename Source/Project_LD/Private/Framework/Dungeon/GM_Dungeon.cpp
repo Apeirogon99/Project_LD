@@ -107,6 +107,8 @@ void AGM_Dungeon::BeginNetwork()
 		return;
 	}
 
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("C2S_CompleteLoadDungeon")), ELogLevel::Warning);
+
 	Protocol::C2S_CompleteLoadDungeon loadDungeon;
 	loadDungeon.set_dungeon_id(instance->GetDungeonID());
 

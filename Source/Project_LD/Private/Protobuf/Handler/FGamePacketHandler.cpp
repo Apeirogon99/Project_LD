@@ -150,6 +150,7 @@ bool Handle_S2C_Tick(ANetworkController* controller, Protocol::S2C_Tick& pkt)
 
 bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_AppearCharacter& pkt)
 {
+
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -173,6 +174,8 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     FVector                         oldMovementLocation     = FVector(pkt.cur_location().x(), pkt.cur_location().y(), pkt.cur_location().z());
     FVector                         newMovementLocation     = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
     FCharacterData                  characterData           = pkt.character_data();
+
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_AppearCharacter [REMOTE_ID::%lld]"), newRemoteID), ELogLevel::Warning);
 
     FVector	direction = newMovementLocation - oldMovementLocation;
 
@@ -223,6 +226,8 @@ bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C
     }
     const int64 remoteID = pkt.remote_id();
 
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_DisAppearCharacter [REMOTE_ID::%lld]"), remoteID), ELogLevel::Warning);
+
     AController* remoteController = gameState->FindPlayerController(remoteID);
     if (nullptr == remoteController)
     {
@@ -267,6 +272,8 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     {
         return true;
     }
+
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_DisAppearCharacter [REMOTE_ID::%lld]"), remoteID), ELogLevel::Warning);
 
     const int64 lastMovementTimeStamp = pkt.timestamp();
     const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
