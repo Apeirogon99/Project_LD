@@ -175,8 +175,6 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     FVector                         newMovementLocation     = FVector(pkt.move_location().x(), pkt.move_location().y(), pkt.move_location().z());
     FCharacterData                  characterData           = pkt.character_data();
 
-    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_AppearCharacter [REMOTE_ID::%lld]"), newRemoteID), ELogLevel::Warning);
-
     FVector	direction = newMovementLocation - oldMovementLocation;
 
     ANC_Game* character = Cast<ANC_Game>(gameState->CreateNPCCharacter(oldMovementLocation, direction.Rotation(), characterData, newRemoteID));
@@ -208,6 +206,8 @@ bool Handle_S2C_AppearCharacter(ANetworkController* controller, Protocol::S2C_Ap
     }
     playerState->InitCurrentEquipmentStats();
 
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_AppearCharacter [REMOTE_ID::%lld]"), newRemoteID), ELogLevel::Warning);
+
     return true;
 }
 
@@ -226,8 +226,6 @@ bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C
     }
     const int64 remoteID = pkt.remote_id();
 
-    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_DisAppearCharacter [REMOTE_ID::%lld]"), remoteID), ELogLevel::Warning);
-
     AController* remoteController = gameState->FindPlayerController(remoteID);
     if (nullptr == remoteController)
     {
@@ -239,6 +237,8 @@ bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C
     {
         character->Destroy();
     }
+
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_DisAppearCharacter [REMOTE_ID::%lld]"), remoteID), ELogLevel::Warning);
 
     return true;
 }
