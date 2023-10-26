@@ -273,7 +273,7 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
         return true;
     }
 
-    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_DisAppearCharacter [REMOTE_ID::%lld]"), remoteID), ELogLevel::Warning);
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_MovementCharacter [REMOTE_ID::%lld]"), remoteID), ELogLevel::Warning);
 
     const int64 lastMovementTimeStamp = pkt.timestamp();
     const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
