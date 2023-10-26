@@ -139,6 +139,8 @@ bool AGS_Game::RemoveNPCCharacter(const int64 inRemoteID)
     world->DestroyActor(npcController);
 
     UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("RemoveNPCCharacter [REMOTE_ID::%lld] [PLAYER_STATE::%d]"), inRemoteID, PlayerArray.Num()), ELogLevel::Warning);
+
+    return true;
 }
 
 AActor* AGS_Game::CreateEnemyCharacter(const int32 inEnemyID, FVector inLocation, FRotator inRotator, const int64 inGameObjectID)

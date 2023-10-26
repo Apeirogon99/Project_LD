@@ -266,10 +266,13 @@ bool Handle_S2C_MovementCharacter(ANetworkController* controller, Protocol::S2C_
     AController* remoteController = gameState->FindPlayerController(remoteID);
     if (nullptr == remoteController)
     {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_MovementCharacter [REMOTE_ID:%lld] is nullptr"), remoteID), ELogLevel::Warning);
         return true;
     }
-
-    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_MovementCharacter [REMOTE_ID::%lld]"), remoteID), ELogLevel::Warning);
+    else
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Handle_S2C_MovementCharacter [REMOTE_ID::%lld] is valid"), remoteID), ELogLevel::Warning);
+    }
 
     const int64 lastMovementTimeStamp = pkt.timestamp();
     const int64 nowServerTimeStamp = controller->GetServerTimeStamp();
