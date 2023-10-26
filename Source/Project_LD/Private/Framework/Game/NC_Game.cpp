@@ -166,39 +166,39 @@ void ANC_Game::Destroyed()
 
 	//Super::Destroyed();
 
-	UWorld* world = GetWorld();
-	if (nullptr == world)
-	{
-		return;
-	}
+	//UWorld* world = GetWorld();
+	//if (nullptr == world)
+	//{
+	//	return;
+	//}
 
-	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
-	if (nullptr == gameState)
-	{
-		return;
-	}
+	//AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+	//if (nullptr == gameState)
+	//{
+	//	return;
+	//}
 
-	ANPC_Game* controller = Cast<ANPC_Game>(GetController());
-	if (nullptr == controller)
-	{
-		return;
-	}
+	//ANPC_Game* controller = Cast<ANPC_Game>(GetController());
+	//if (nullptr == controller)
+	//{
+	//	return;
+	//}
 
-	ANPS_Game* playerState = controller->GetPlayerState<ANPS_Game>();
-	if (nullptr == playerState)
-	{
-		return;
-	}
+	//ANPS_Game* playerState = controller->GetPlayerState<ANPS_Game>();
+	//if (nullptr == playerState)
+	//{
+	//	return;
+	//}
 
-	controller->UnPossess();
+	//controller->UnPossess();
 
-	gameState->RemovePlayerState(playerState);
+	//gameState->RemovePlayerState(playerState);
 
-	playerState->Destroy();
+	//playerState->Destroy();
 
-	world->DestroyActor(playerState);
+	//world->DestroyActor(playerState);
 
-	world->DestroyActor(controller);
+	//world->DestroyActor(controller);
 }
 
 void ANC_Game::DoAppearSkill(const FVector& inLocation, const FRotator& inRotation, const int64& inRemoteID, const int64& inGameOjbectID, const int32& inSkillID, const float& inDuration)

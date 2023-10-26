@@ -232,6 +232,8 @@ bool Handle_S2C_DisAppearCharacter(ANetworkController* controller, Protocol::S2C
         return true;
     }
 
+    gameState->RemoveNPCCharacter(remoteID);
+
     APawn* character = remoteController->GetPawn();
     if (character)
     {

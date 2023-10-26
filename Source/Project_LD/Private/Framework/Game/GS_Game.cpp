@@ -38,6 +38,7 @@
 
 #include <Framework/Gameinstance/LDGameInstance.h>
 #include <Kismet/GameplayStatics.h>
+#include <NetworkUtils.h>
 
 AGS_Game::AGS_Game()
 {
@@ -94,7 +95,49 @@ AActor* AGS_Game::CreateNPCCharacter(FVector inLocation, FRotator inRotator, FCh
     npcController->PlayerState = npcState;
 
     AddPlayerState(npcState);
+
+    UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("CreateNPCCharacter [REMOTE_ID::%lld] [PLAYER_STATE::%d]"), inRemoteID, PlayerArray.Num()), ELogLevel::Warning);
+
     return newNPC;
+}
+
+bool AGS_Game::RemoveNPCCharacter(const int64 inRemoteID)
+{
+    UWorld* world = GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AController* remoteController = FindPlayerController(inRemoteID);
+    if (nullptr == remoteController)
+    {
+        return false;
+    }
+
+    ANPC_Game* npcController = Cast<ANPC_Game>(remoteController);
+    if (nullptr == npcController)
+    {
+        return false;
+    }
+    npcController->UnPossess();
+    world->DestroyActor(npcController);
+
+    ANPS_Game* npcState = world->SpawnActor<ANPS_Game>();
+    if (nullptr == npcState)
+    {
+        return false;
+    }
+    RemovePlayerState(npcState);
+    world->DestroyActor(npcState);
+
+    ANC_Game* character = Cast<ANC_Game>(remoteController->GetPawn());
+    if (nullptr == character)
+    {
+        return false;
+    }
+
+    character->Destroy();
 }
 
 AActor* AGS_Game::CreateEnemyCharacter(const int32 inEnemyID, FVector inLocation, FRotator inRotator, const int64 inGameObjectID)
