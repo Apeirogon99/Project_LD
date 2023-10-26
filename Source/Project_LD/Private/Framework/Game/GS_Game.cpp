@@ -120,14 +120,12 @@ bool AGS_Game::RemoveNPCCharacter(const int64 inRemoteID)
     {
         return false;
     }
-    npcController->UnPossess();
 
-    ANPS_Game* npcState = world->SpawnActor<ANPS_Game>();
+    ANPS_Game* npcState = npcController->GetPlayerState<ANPS_Game>();
     if (nullptr == npcState)
     {
         return false;
     }
-    RemovePlayerState(npcState);
 
     ANC_Game* character = Cast<ANC_Game>(remoteController->GetPawn());
     if (nullptr == character)
@@ -135,7 +133,11 @@ bool AGS_Game::RemoveNPCCharacter(const int64 inRemoteID)
         return false;
     }
     character->Destroy();
+
+    RemovePlayerState(npcState);
     npcState->Destroy();
+
+    npcController->UnPossess();
     npcController->Destroy();
 
     UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("RemoveNPCCharacter [REMOTE_ID::%lld] [PLAYER_STATE::%d]"), inRemoteID, PlayerArray.Num()), ELogLevel::Warning);
