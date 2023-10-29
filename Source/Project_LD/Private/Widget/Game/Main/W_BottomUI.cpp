@@ -315,5 +315,9 @@ void UW_BottomUI::NativeDestruct()
 {
 	Super::NativeDestruct();
 
+	for (auto& Texture : mSkillTextureArray)
+	{
+		Texture = nullptr;
+	}
 	mSkillTextureArray.Empty();
 }
