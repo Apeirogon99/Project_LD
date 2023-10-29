@@ -205,6 +205,15 @@ void AAppearanceCharacter::UpdateCharacterPose(const ECharacterPose InCharacterP
 		USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
 		if (partMesh)
 		{
+			if (partMesh->GetName() == "mWeapon_L")
+			{
+				continue;
+			}
+			else if (partMesh->GetName() == "mWeapon_R")
+			{
+				continue;
+			}
+
 			partMesh->SetAnimationMode(EAnimationMode::AnimationSingleNode);
 			partMesh->SetAnimation(animationAsset);
 			partMesh->PlayAnimation(animationAsset, inIsLoop);
@@ -221,6 +230,15 @@ void AAppearanceCharacter::UpdateCharacterMontage(UAnimMontage* inMontageToPlay,
 	for (int32 indexNumber = 0; indexNumber < maxChild; ++indexNumber)
 	{
 		USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
+		if (partMesh->GetName() == "mWeapon_L")
+		{
+			continue;
+		}
+		else if (partMesh->GetName() == "mWeapon_R")
+		{
+			continue;
+		}
+
 		if (partMesh->GetAnimInstance())
 		{
 			partMesh->GetAnimInstance()->Montage_Play(inMontageToPlay, 1.0f, EMontagePlayReturnType::MontageLength, inStartAtTime);
@@ -251,6 +269,14 @@ void AAppearanceCharacter::UpdateDefaultAnimation()
 		USkeletalMeshComponent* partMesh = StaticCast<USkeletalMeshComponent*>(meshRoot->GetChildComponent(indexNumber));
 		if (partMesh)
 		{
+			if (partMesh->GetName() == "mWeapon_L")
+			{
+				continue;
+			}
+			else if (partMesh->GetName() == "mWeapon_R")
+			{
+				continue;
+			}
 			partMesh->SetAnimationMode(EAnimationMode::AnimationBlueprint);
 			partMesh->SetAnimClass(mAnimationInstance);
 		}
