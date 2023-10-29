@@ -41,7 +41,7 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 	}
 	else
 	{
-		if (predict - serverTimeStamp <= 500)
+		if (predict - serverTimeStamp <= 500 && rtt <= 500)
 		{
 			timeStamp->UpdateTimeStamp(serverTimeStamp, clinetUtcTime, rtt);
 		}
