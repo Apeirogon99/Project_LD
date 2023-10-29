@@ -56,5 +56,5 @@ ACharacter* UW_PointOfInterest::GetLocalPlayerCharacter()
 		return false;
 	}
 
-	return localController->GetCharacter();;
+	return localController->GetCharacter();
 }

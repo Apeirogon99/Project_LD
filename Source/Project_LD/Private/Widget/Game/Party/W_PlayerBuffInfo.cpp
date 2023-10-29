@@ -6,9 +6,12 @@
 
 void UW_PlayerBuffInfo::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	mBuffImage = Cast<UImage>(GetWidgetFromName(TEXT("mBuffImage")));
 }
 
 void UW_PlayerBuffInfo::NativeDestruct()
 {
+	Super::NativeDestruct();
 }

@@ -7,6 +7,8 @@
 
 void UW_SkillTree::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	Btn_Reset = Cast<UButton>(GetWidgetFromName(TEXT("Btn_Reset")));
 	Btn_Apply = Cast<UButton>(GetWidgetFromName(TEXT("Btn_Apply")));
 	Btn_Exit = Cast<UButton>(GetWidgetFromName(TEXT("Btn_Exit")));
