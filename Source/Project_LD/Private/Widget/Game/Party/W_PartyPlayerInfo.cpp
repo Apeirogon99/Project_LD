@@ -41,6 +41,29 @@ void UW_PartyPlayerInfo::NativeConstruct()
 void UW_PartyPlayerInfo::NativeDestruct()
 {
 	Super::NativeDestruct();
+
+	AGS_Game* gameState = GetWorld()->GetGameState<AGS_Game>();
+	if (nullptr == gameState)
+	{
+		return;
+	}
+	AController* controller = gameState->FindPlayerController(mRemoteID);
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	ANPS_Game* playerState = controller->GetPlayerState<ANPS_Game>();
+	if (nullptr == playerState)
+	{
+		return;
+	}
+
+	FDelegateHandle HPDelegateHandle = playerState->OnCharacterHealthChanged.AddUObject(this, &UW_PartyPlayerInfo::UpdateHealthBar);
+	playerState->OnCharacterHealthChanged.Remove(HPDelegateHandle);
+
+	FDelegateHandle MPDelegateHandle = playerState->OnCharacterHealthChanged.AddUObject(this, &UW_PartyPlayerInfo::UpdateManaBar);
+	playerState->OnCharacterManaChanged.Remove(MPDelegateHandle);
 }
 
 void UW_PartyPlayerInfo::SetPlayerInfo(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf)

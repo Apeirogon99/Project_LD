@@ -37,6 +37,16 @@ void UACInventoryComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
+	/*
+	for (int i = 0; i < mInventoryObjectArr.Num(); i++)
+	{
+		if (mInventoryObjectArr[i]->IsValid())
+		{
+			mInventoryObjectArr[i]->ConditionalBeginDestroy();
+			mInventoryObjectArr[i] = nullptr;
+		}
+	}
+	*/
 	if (OnInventoryChanged.IsBound())
 	{
 		OnInventoryChanged.Unbind();

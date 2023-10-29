@@ -38,6 +38,20 @@ void UW_PartyPlayerCell::NativeConstruct()
 	mRemoteID = 0;
 }
 
+void UW_PartyPlayerCell::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	if (mActionButtonDelegateA.IsBound())
+	{
+		mActionButtonDelegateA.Unbind();
+	}
+	if (mActionButtonDelegateB.IsBound())
+	{
+		mActionButtonDelegateB.Unbind();
+	}
+}
+
 void UW_PartyPlayerCell::Click_ActionButtonA()
 {
 	bool isBound = mActionButtonDelegateA.IsBound();

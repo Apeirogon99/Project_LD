@@ -33,8 +33,13 @@ void UACEquipment::BeginPlay()
 void UACEquipment::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-
-
+	/*
+	for (auto& Data : mEquipmentData)
+	{
+		Data->BeginDestroy();
+		Data = nullptr;
+	}
+	*/
 }
 
 void UACEquipment::Init(UUWInventory* inventory)
