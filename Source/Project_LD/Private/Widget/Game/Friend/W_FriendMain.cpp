@@ -72,6 +72,7 @@ void UW_FriendMain::NativeConstruct()
 
 void UW_FriendMain::NativeDestruct()
 {
+	Super::NativeDestruct();
 }
 
 void UW_FriendMain::Click_FriendTab()

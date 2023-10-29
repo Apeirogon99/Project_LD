@@ -17,6 +17,9 @@
 
 void UW_MainPlayerInfo::NativeConstruct()
 {
+
+	Super::NativeConstruct();
+
 	mExpBar = this->WidgetTree->FindWidget(FName(TEXT("BW_ExpBar")));
 	if (mExpBar == nullptr)
 	{

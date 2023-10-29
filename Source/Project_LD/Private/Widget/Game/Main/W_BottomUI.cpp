@@ -202,11 +202,13 @@ void UW_BottomUI::CoolTimeisDone(int32 SkillCode)
 
 void UW_BottomUI::NativeConstruct()
 {
-
+	Super::NativeConstruct();
 }
 
 void UW_BottomUI::NativePreConstruct()
 {
+	Super::NativePreConstruct();
+
 	UTexture2D* T_SKILL_Q = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), nullptr, TEXT("Texture2D'/Game/GameContent/WidgetAssets/T_Skill_Q.T_Skill_Q'")));
 	if (T_SKILL_Q)
 	{
@@ -311,5 +313,7 @@ void UW_BottomUI::NativePreConstruct()
 
 void UW_BottomUI::NativeDestruct()
 {
+	Super::NativeDestruct();
+
 	mSkillTextureArray.Empty();
 }

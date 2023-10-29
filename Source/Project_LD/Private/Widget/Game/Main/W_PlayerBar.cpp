@@ -6,6 +6,8 @@
 
 void UW_PlayerBar::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	HealthBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HealthBar")));
 	ManaBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("ManaBar")));
 }

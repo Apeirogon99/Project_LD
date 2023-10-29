@@ -6,6 +6,8 @@
 
 void UW_ItemName::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	mName = Cast<UTextBlock>(GetWidgetFromName(TEXT("Name")));
 }
 

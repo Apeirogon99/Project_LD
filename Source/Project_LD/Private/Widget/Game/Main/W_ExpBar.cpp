@@ -6,5 +6,7 @@
 
 void UW_ExpBar::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	ExpBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("ExpBar")));
 }

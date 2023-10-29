@@ -98,6 +98,8 @@ void UW_PartyMain::NativeConstruct()
 
 void UW_PartyMain::NativeDestruct()
 {
+	Super::NativeDestruct();
+
 	UW_PartyPlayerList* playerList = Cast<UW_PartyPlayerList>(mPartyPlayerList);
 	if (nullptr == playerList)
 	{

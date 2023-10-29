@@ -40,6 +40,7 @@ void UW_PartyPlayerInfo::NativeConstruct()
 
 void UW_PartyPlayerInfo::NativeDestruct()
 {
+	Super::NativeDestruct();
 }
 
 void UW_PartyPlayerInfo::SetPlayerInfo(const int64& inRemoteID, const int64& inLeaderRemoteID, const int32& inLevel, const int32& inClass, const FString& inPlayerName, const bool& inIsSelf)

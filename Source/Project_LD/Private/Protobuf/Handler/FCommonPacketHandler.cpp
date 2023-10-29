@@ -37,7 +37,7 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 	if (false == timeStamp->IsInit())
 	{
 		timeStamp->InitTimeStamp(serverTimeStamp, clinetUtcTime, rtt);
-		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("InitTimeStamp")), ELogLevel::Warning);
+		//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("InitTimeStamp")), ELogLevel::Warning);
 	}
 	else
 	{
@@ -49,7 +49,7 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[SUTC::%lld] [CUTC::%lld]"), serverUtcTime, clinetUtcTime), ELogLevel::Warning);
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[RTT::%lld] [HRTT::%lld] [CRTT::%lld]"), timeStamp->GetRTT(), timeStamp->GetRTT() / 2, rtt), ELogLevel::Warning);
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Server : %lld] - [Client : %lld] = [Diff : %lld]"), serverTimeStamp, predict, predict - serverTimeStamp), ELogLevel::Warning);
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Server : %lld] - [Client : %lld] = [Diff : %lld]"), serverTimeStamp, predict, predict - serverTimeStamp), ELogLevel::Warning);
 
 	return true;
 }
