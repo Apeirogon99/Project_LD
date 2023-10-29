@@ -63,12 +63,21 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Default")
 	TSubclassOf<class UUserWidget> mFadeWidgetClass;
+
+	UPROPERTY()
 	class UW_Fade* mFadeWidget;
 
 private:
+	UPROPERTY()
 	TArray<UUserWidget*>	mWidgets;
+
+	UPROPERTY()
 	TArray<FString>			mWidgetNames;
+	
+	UPROPERTY()
 	bool					mIsInit;
 
+	UPROPERTY()
 	TArray<bool>			mUsedWidgets;
+
 };
