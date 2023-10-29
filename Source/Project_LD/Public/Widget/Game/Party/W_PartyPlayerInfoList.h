@@ -62,6 +62,10 @@ private:
 		TArray<UUserWidget*> mPartyPlayerInfoLists;
 
 private:
+	UPROPERTY()
 	FVector2D		mPressedMousePoint;
+
+	UPROPERTY()
 	FTimerHandle	mUpdateLocationTimerHandle;
+
 };
