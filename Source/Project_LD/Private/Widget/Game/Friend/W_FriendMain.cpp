@@ -236,35 +236,35 @@ void UW_FriendMain::LoadFriendListType(const google::protobuf::RepeatedPtrField<
 
 void UW_FriendMain::UpdateLocation()
 {
-	float WaitTime = 0.01f;
-	GetWorld()->GetTimerManager().SetTimer(mUpdateLocationTimerHandle, FTimerDelegate::CreateLambda([&]()
-		{
-			FVector2D currentMousePoint = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
+	//float WaitTime = 0.01f;
+	//GetWorld()->GetTimerManager().SetTimer(mUpdateLocationTimerHandle, FTimerDelegate::CreateLambda([&]()
+	//	{
+	//		FVector2D currentMousePoint = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
 
-			FWidgetTransform widgetTransform;
-			widgetTransform.Translation = currentMousePoint - mPressedMousePoint;
-			widgetTransform.Scale = FVector2D(1, 1);
-			widgetTransform.Shear = FVector2D(0, 0);
-			widgetTransform.Angle = 0.0f;
-			SetRenderTransform(widgetTransform);
+	//		FWidgetTransform widgetTransform;
+	//		widgetTransform.Translation = currentMousePoint - mPressedMousePoint;
+	//		widgetTransform.Scale = FVector2D(1, 1);
+	//		widgetTransform.Shear = FVector2D(0, 0);
+	//		widgetTransform.Angle = 0.0f;
+	//		SetRenderTransform(widgetTransform);
 
-		}), WaitTime, true);
+	//	}), WaitTime, true);
 }
 
 void UW_FriendMain::Pressed_Drag()
 {
-	FVector2D currentMousePoint = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
-	FVector2D currentViewportPoint = RenderTransform.Translation;
-	mPressedMousePoint = currentMousePoint - currentViewportPoint;
-	UpdateLocation();
+	//FVector2D currentMousePoint = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
+	//FVector2D currentViewportPoint = RenderTransform.Translation;
+	//mPressedMousePoint = currentMousePoint - currentViewportPoint;
+	//UpdateLocation();
 }
 
 void UW_FriendMain::Released_Drag()
 {
-	if (true == GetWorld()->GetTimerManager().IsTimerActive(mUpdateLocationTimerHandle))
-	{
-		GetWorld()->GetTimerManager().ClearTimer(mUpdateLocationTimerHandle);
-	}
+	//if (true == GetWorld()->GetTimerManager().IsTimerActive(mUpdateLocationTimerHandle))
+	//{
+	//	GetWorld()->GetTimerManager().ClearTimer(mUpdateLocationTimerHandle);
+	//}
 }
 
 const int32& UW_FriendMain::GetFriendListType()

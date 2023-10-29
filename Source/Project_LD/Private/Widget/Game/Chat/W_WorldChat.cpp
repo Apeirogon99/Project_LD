@@ -19,7 +19,7 @@ void UW_WorldChat::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
 
-	if (nullptr == this->GetOwningPlayer())
+	if (this->GetOwningPlayer()->IsActorBeingDestroyed())
 	{
 		return;
 	}
