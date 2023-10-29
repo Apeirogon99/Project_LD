@@ -62,6 +62,7 @@ void APS_Game::InitializeLocalPlayerState()
 		this->AddOwnedComponent(mEquipmentComponent);
 		mEquipmentComponent->RegisterComponent();
 
+		InitPartySetting();
 	}
 	APC_Game* playercontroller = Cast<APC_Game>(gameMode->GetNetworkController());
 	if (nullptr == playercontroller)

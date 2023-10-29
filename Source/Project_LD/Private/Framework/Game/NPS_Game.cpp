@@ -172,5 +172,5 @@ void ANPS_Game::Destroyed()
 {
 	Super::Destroyed();
 
-	mPartyComponent->ClearParty();
+	//mPartyComponent->ClearParty();
 }
