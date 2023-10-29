@@ -21,9 +21,11 @@ public:
 
 public:
 	void		ResetTimeStamp();
+	void		InitTimeStamp(const int64 inServerTimeStamp, const int64 inUtcTimeStmap, const int64 inRtt);
 	void		UpdateTimeStamp(const int64 inServerTimeStamp, const int64 inUtcTimeStmap, const int64 inRtt);
 
 public:
+	const bool	IsInit();
 	const int64 GetUtcTimeStmap();
 	const int64	GetServerTimeStamp();
 	const int64 GetRTT();
@@ -32,6 +34,8 @@ protected:
 	const int64 GetDurationUtcTimeStamp();
 
 public:
+	bool isInit;
+
 	std::chrono::steady_clock::time_point mClock;
 	int64 mServerTimeStamp;
 	int64 mOldUtcTimeStamp;

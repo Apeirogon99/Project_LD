@@ -33,12 +33,22 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 	const int64 clinetUtcTime	= timeStamp->GetUtcTimeStmap();
 
 	const int64 rtt				= clinetUtcTime - serverUtcTime;
-
-	timeStamp->UpdateTimeStamp(serverTimeStamp, clinetUtcTime, rtt);
+	
+	if (false == timeStamp->IsInit())
+	{
+		timeStamp->InitTimeStamp(serverTimeStamp, clinetUtcTime, rtt);
+	}
+	else
+	{
+		if (predict - serverTimeStamp <= 250)
+		{
+			timeStamp->UpdateTimeStamp(serverTimeStamp, clinetUtcTime, rtt);
+		}
+	}
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[SUTC::%lld] [CUTC::%lld]"), serverUtcTime, clinetUtcTime), ELogLevel::Warning);
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[RTT::%lld] [HRTT::%lld] [CRTT::%lld]"), timeStamp->GetRTT(), timeStamp->GetRTT() / 2, rtt), ELogLevel::Warning);
-	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Server : %lld] - [Client : %lld] = [Diff : %lld]"), serverTimeStamp, predict, predict - serverTimeStamp), ELogLevel::Warning);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Server : %lld] - [Client : %lld] = [Diff : %lld]"), serverTimeStamp, predict, predict - serverTimeStamp), ELogLevel::Warning);
 
 	return true;
 }
