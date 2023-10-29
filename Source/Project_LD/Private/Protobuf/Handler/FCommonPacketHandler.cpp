@@ -37,6 +37,7 @@ bool Handle_S2C_ReplicatedServerTimeStamp(ANetworkController* controller, Protoc
 	if (false == timeStamp->IsInit())
 	{
 		timeStamp->InitTimeStamp(serverTimeStamp, clinetUtcTime, rtt);
+		UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("InitTimeStamp")), ELogLevel::Warning);
 	}
 	else
 	{
