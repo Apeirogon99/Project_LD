@@ -105,7 +105,9 @@ private:
 	UNetworkService*		mService;
 	ANetworkController*		mController;
 
+	UPROPERTY()
 	UNetworkTimeStamp*		mTimeStamp;
+
 	int64					mPacketTimeStmap;
 
 	float					mTickDelayTime;
