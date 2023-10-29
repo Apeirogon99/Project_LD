@@ -71,6 +71,8 @@ void UW_Chat::NativeDestruct()
 	{
 		widget->RemoveFromParent();
 	}
+
+	mMessageLogs.Empty();
 }
 
 void UW_Chat::Committed_Message(const FText& inEditValue, ETextCommit::Type inCommitType)
