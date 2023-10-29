@@ -21,6 +21,8 @@ void UW_Button::NativeConstruct()
 
 void UW_Button::NativeDestruct()
 {
+	Super::NativeDestruct();
+
 	bool isBound = mButtonDelegate.IsBound();
 	if (false == isBound)
 	{

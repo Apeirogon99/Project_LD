@@ -5,5 +5,7 @@
 
 void UW_Fade::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	this->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 }

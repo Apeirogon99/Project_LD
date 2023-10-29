@@ -31,6 +31,8 @@ void UW_Reconfirm::NativeConstruct()
 
 void UW_Reconfirm::NativeDestruct()
 {
+	Super::NativeDestruct();
+
 	bool isCancleBound = mCancleDelegate.IsBound();
 	if (isCancleBound)
 	{

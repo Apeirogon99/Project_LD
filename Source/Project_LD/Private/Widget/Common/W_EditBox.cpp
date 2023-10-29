@@ -30,6 +30,8 @@ void UW_EditBox::NativeConstruct()
 
 void UW_EditBox::NativeDestruct()
 {
+	Super::NativeDestruct();
+
 	bool isBound = mConfirmDelegate.IsBound();
 	if (false == isBound)
 	{

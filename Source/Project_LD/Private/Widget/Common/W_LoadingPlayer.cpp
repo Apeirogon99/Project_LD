@@ -5,6 +5,7 @@
 
 void UW_LoadingPlayer::NativeConstruct()
 {
+	Super::NativeConstruct();
 }
 
 void UW_LoadingPlayer::UpdateLoadingPlayer(FString inMaxNumber, FString inLeastNumber)

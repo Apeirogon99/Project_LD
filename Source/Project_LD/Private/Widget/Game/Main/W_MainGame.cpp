@@ -98,6 +98,11 @@ void UW_MainGame::NativeConstruct()
 	misPartyOpen = false;
 }
 
+void UW_MainGame::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 void UW_MainGame::Init()
 {
 	Cast<UW_BottomUI>(mBottomUI)->Init();

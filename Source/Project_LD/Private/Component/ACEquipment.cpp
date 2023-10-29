@@ -33,6 +33,8 @@ void UACEquipment::BeginPlay()
 void UACEquipment::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+
+
 }
 
 void UACEquipment::Init(UUWInventory* inventory)

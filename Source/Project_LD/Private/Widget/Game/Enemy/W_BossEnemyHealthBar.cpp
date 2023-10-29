@@ -7,6 +7,8 @@
 
 void UW_BossEnemyHealthBar::NativeConstruct()
 {
+	Super::NativeConstruct();
+
 	mBossHealthBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("mBossHealthBar")));
 	mName = Cast<UTextBlock>(GetWidgetFromName(TEXT("mName")));;
 }

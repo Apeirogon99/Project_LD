@@ -15,7 +15,6 @@
 
 void UW_ColorPicker::NativeConstruct()
 {
-
 	Super::NativeConstruct();
 
 	mDragButton		= Cast<UButton>(GetWidgetFromName(TEXT("mDragButton")));
@@ -60,7 +59,7 @@ void UW_ColorPicker::NativeConstruct()
 
 void UW_ColorPicker::NativeDestruct()
 {
-	
+	Super::NativeDestruct();
 }
 
 void UW_ColorPicker::Pressed_Drag()
