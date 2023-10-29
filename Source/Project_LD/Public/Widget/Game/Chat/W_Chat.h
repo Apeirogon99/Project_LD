@@ -112,6 +112,9 @@ private:
 	EChat mChatType;
 
 private:
+	UPROPERTY()
 	FVector2D		mPressedMousePoint;
+
+	UPROPERTY()
 	FTimerHandle	mUpdateLocationTimerHandle;
 };

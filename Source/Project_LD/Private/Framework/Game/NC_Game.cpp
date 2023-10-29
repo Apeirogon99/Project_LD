@@ -159,6 +159,9 @@ void ANC_Game::BeginPlay()
 void ANC_Game::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
+
+	mChatWidget->DestroyComponent();
+
 }
 
 void ANC_Game::Destroyed()

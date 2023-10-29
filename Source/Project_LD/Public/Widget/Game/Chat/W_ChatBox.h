@@ -36,5 +36,6 @@ public:
 	const EChat& GetChatType() const;
 
 private:
+	UPROPERTY()
 	EChat mChatType;
 };
