@@ -89,6 +89,9 @@ private:
 		int32	mFriendListType;
 
 private:
+	UPROPERTY()
 	FVector2D		mPressedMousePoint;
+
+	UPROPERTY()
 	FTimerHandle	mUpdateLocationTimerHandle;
 };
