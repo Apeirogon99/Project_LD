@@ -52,6 +52,9 @@ public:
 	UACPartyComponent* GetPartyComponent();
 
 protected:
+	virtual void Destroyed() override;
+
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerState")
 	int64 mRemoteID;
 

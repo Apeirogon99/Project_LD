@@ -25,6 +25,11 @@ void APS_Game::BeginPlay()
 	Super::BeginPlay();
 }
 
+void APS_Game::Destroyed()
+{
+	Super::Destroyed();
+}
+
 void APS_Game::UpdateExpValue(int InExp)
 {
 	mCharacterData.SetExp(InExp);
@@ -56,14 +61,6 @@ void APS_Game::InitializeLocalPlayerState()
 		}
 		this->AddOwnedComponent(mEquipmentComponent);
 		mEquipmentComponent->RegisterComponent();
-
-		mPartyComponent = NewObject<UACPartyComponent>(this, TEXT("Party"));
-		if (mPartyComponent == nullptr)
-		{
-			return;
-		}
-		this->AddOwnedComponent(mPartyComponent);
-		mPartyComponent->RegisterComponent();
 
 	}
 	APC_Game* playercontroller = Cast<APC_Game>(gameMode->GetNetworkController());

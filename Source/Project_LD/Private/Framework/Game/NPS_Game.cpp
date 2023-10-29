@@ -167,3 +167,10 @@ UACPartyComponent* ANPS_Game::GetPartyComponent()
 {
 	return mPartyComponent;
 }
+
+void ANPS_Game::Destroyed()
+{
+	Super::Destroyed();
+
+	mPartyComponent->ClearParty();
+}
