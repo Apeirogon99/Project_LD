@@ -5,5 +5,5 @@
 
 void ANCI_Game::Interactive(ANC_Game* Player)
 {
-	UE_LOG(LogTemp, Warning, (TEXT("NPC CLick")));
+
 }

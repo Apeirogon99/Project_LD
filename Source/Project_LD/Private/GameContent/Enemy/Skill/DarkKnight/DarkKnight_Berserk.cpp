@@ -18,10 +18,8 @@ ADarkKnight_Berserk::ADarkKnight_Berserk()
 
 void ADarkKnight_Berserk::ActiveSkill(FVector InLocation, FRotator InRotation)
 {
-	UE_LOG(LogTemp, Warning, TEXT(" AE_DarkKnight::ActiveSkill() "));
 	if (UNiagaraSystem* Niagara = LoadObject<UNiagaraSystem>(nullptr, TEXT("NiagaraSystem'/Game/GameContent/Animation/Enemy/DarkKnight/Particle/NS_DarkKnight_Berserk.NS_DarkKnight_Berserk'")))
 	{
-		UE_LOG(LogTemp, Warning, TEXT(" AE_DarkKnight::ActiveSkill() Succ Load"));
 		FTimerHandle AttachTimer;
 		FVector Loc = InLocation;
 		Loc.Z = Loc.Z - 50.f;

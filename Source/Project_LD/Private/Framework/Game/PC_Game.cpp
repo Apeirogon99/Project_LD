@@ -1017,7 +1017,6 @@ void APC_Game::RequestCinematicStop()
 
 void APC_Game::SkillCoolTime(int32 InSkillCode)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Code %d Cool Time"),InSkillCode);
 	AC_Game* character = Cast<AC_Game>(GetCharacter());
 	if (nullptr == character)
 	{

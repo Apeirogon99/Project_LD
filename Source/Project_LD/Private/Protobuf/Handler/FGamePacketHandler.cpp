@@ -2645,7 +2645,6 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
 
 bool Handle_S2C_EndReactionSkill(ANetworkController* controller, Protocol::S2C_EndReactionSkill& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("End Reaction %d"), pkt.remote_id());
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {
@@ -2737,7 +2736,6 @@ bool Handle_S2C_SkillCoolTime(ANetworkController* controller, Protocol::S2C_Skil
 
 bool Handle_S2C_PushBuff(ANetworkController* controller, Protocol::S2C_PushBuff& pkt)
 {
-    UE_LOG(LogTemp, Warning, TEXT("PushBuff Remote ID : %d"), pkt.remote_id());
     UWorld* world = controller->GetWorld();
     if (nullptr == world)
     {

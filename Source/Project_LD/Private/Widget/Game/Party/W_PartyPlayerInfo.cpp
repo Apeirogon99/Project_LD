@@ -151,7 +151,10 @@ void UW_PartyPlayerInfo::PushBuff(const int32& inBuffID, const float inDuration)
 		return;
 	}
 
-	character->ActiveBuffParticle();
+	if (inBuffID == 7)
+	{
+		character->ActiveBuffParticle();
+	}
 
 	if (inDuration > 0)
 	{
@@ -192,7 +195,10 @@ void UW_PartyPlayerInfo::ReleaseBuff(const int32& inBuffID)
 		return;
 	}
 
-	character->DeActiveBuffParticle();
+	if (inBuffID == 7)
+	{
+		character->DeActiveBuffParticle();
+	}
 
 	int index = mBuffDatas.Find(inBuffID);
 	mBuffDatas.RemoveAt(index);

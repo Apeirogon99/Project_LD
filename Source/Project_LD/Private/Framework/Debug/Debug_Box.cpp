@@ -13,7 +13,6 @@ ADebug_Box::ADebug_Box()
 
 void ADebug_Box::DebugInit_Implementation(FVector StartVector, FVector EndVector, FVector BoxVector, float duration)
 {
-	UE_LOG(LogTemp, Warning, TEXT("ADebug_Box::Init_Implementation"));
 }
 
 // Called when the game starts or when spawned
