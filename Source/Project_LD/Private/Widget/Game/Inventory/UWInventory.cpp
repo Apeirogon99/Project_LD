@@ -76,7 +76,7 @@ void UUWInventory::NativeConstruct()
 
 	if (Btn_CloseInventory != nullptr)
 	{
-		Btn_CloseInventory->OnClicked.AddDynamic(this, &UUWInventory::CloseInventory);
+		Btn_CloseInventory->OnClicked.AddUniqueDynamic(this, &UUWInventory::CloseInventory);
 	}
 	else
 	{
@@ -84,7 +84,7 @@ void UUWInventory::NativeConstruct()
 	}
 	if (Btn_DetailStatus != nullptr)
 	{
-		Btn_DetailStatus->OnClicked.AddDynamic(this, &UUWInventory::ToggleDetailPanel);
+		Btn_DetailStatus->OnClicked.AddUniqueDynamic(this, &UUWInventory::ToggleDetailPanel);
 	}
 	else
 	{
@@ -318,11 +318,18 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		return;
 	}
 
-	mPlayerState = playerController->GetPlayerState<APS_Game>();
-	if (mPlayerState == nullptr)
-	{
-		return;
-	}
+	//APS_Game* playerState = playerController->GetPlayerState<APS_Game>();
+	//if (playerState == nullptr)
+	//{
+	//	return;
+	//}
+	//mPlayerState = playerState;
+
+	//mPlayerState = playerController->GetPlayerState<APS_Game>();
+	//if (mPlayerState == nullptr)
+	//{
+	//	return;
+	//}
 }
 
 void UUWInventory::CloseInventory()

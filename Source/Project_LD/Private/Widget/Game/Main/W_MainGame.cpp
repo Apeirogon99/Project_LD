@@ -39,7 +39,7 @@ void UW_MainGame::NativeConstruct()
 	Btn_Inventory = Cast<UButton>(GetWidgetFromName(TEXT("Btn_Inventory")));
 	if (Btn_Inventory != nullptr)
 	{
-		Btn_Inventory->OnClicked.AddDynamic(this, &UW_MainGame::InventoryOpenRequest);
+		Btn_Inventory->OnClicked.AddUniqueDynamic(this, &UW_MainGame::InventoryOpenRequest);
 	}
 
 	Btn_Chat = Cast<UButton>(GetWidgetFromName(TEXT("Btn_Chat")));

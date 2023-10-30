@@ -24,7 +24,7 @@ AE_Lich::AE_Lich()
 	mLichCheckCollider->SetRelativeLocation(FVector(0.f, 0.f, 130.f));
 	mLichCheckCollider->SetBoxExtent(FVector(70.f, 60.f, 90.f));
 	mLichCheckCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	mLichCheckCollider->OnComponentBeginOverlap.AddDynamic(this, &AE_Lich::OnOverlapBegin);
+	mLichCheckCollider->OnComponentBeginOverlap.AddUniqueDynamic(this, &AE_Lich::OnOverlapBegin);
 
 	//static ConstructorHelpers::FObjectFinder<UMaterialInterface> materialInterface(TEXT("MaterialInstanceConstant'/Game/GameContent/Mat/HitMat/MI_LichHit.MI_LichHit'"));
 	//if (materialInterface.Succeeded())
