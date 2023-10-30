@@ -175,13 +175,13 @@ public:
 	FORCEINLINE float												GetTileSize() const							{ return mTileSize; }
 	FORCEINLINE UACInventoryComponent*			GetInventoryComponent() const		{ return mInvenComponent; }
 	FORCEINLINE UACEquipment*							GetEquipmentComponent() const		{ return mEquipmentComponent; }
-	FORCEINLINE ANPS_Game*									GetPlayerState()	const						{ return mPlayerState; }
+	FORCEINLINE APS_Game*									GetPlayerState()	const						{ return mPlayerState; }
 
 public:
 	void		SetTileSize(const float TileSize)																			{ mTileSize = TileSize; }
 	void		SetInventoryComponent(UACInventoryComponent* InventoryComponent)		{ mInvenComponent = InventoryComponent; }
 	void		SetEquipmentComponent(UACEquipment* EquipmentComponent)						{ mEquipmentComponent = EquipmentComponent; }
-	void		SetPlayerState(ANPS_Game* playerstate)															{ mPlayerState = playerstate; }
+	void		SetPlayerState(APS_Game* playerstate)																{ mPlayerState = playerstate; }
 
 public:
 	UFUNCTION()
@@ -217,5 +217,5 @@ private:
 	UACEquipment* mEquipmentComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "State", meta = (AllowPrivateAccess = "true"))
-	ANPS_Game* mPlayerState;
+	APS_Game* mPlayerState;
 };

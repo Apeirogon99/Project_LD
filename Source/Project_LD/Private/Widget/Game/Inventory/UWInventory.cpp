@@ -103,6 +103,21 @@ void UUWInventory::NativeOnInitialized()
 void UUWInventory::NativeDestruct()
 {
 	Super::NativeDestruct();
+
+	if (Btn_CloseInventory->OnClicked.IsBound())
+	{
+		Btn_CloseInventory->OnClicked.Clear();
+	}
+
+	if (Btn_DetailStatus->OnClicked.IsBound())
+	{
+		Btn_DetailStatus->OnClicked.Clear();
+	}
+
+	if (mInvenComponent->OnMoneyChanged.IsBound())
+	{
+		mInvenComponent->OnMoneyChanged.Unbind();
+	}
 }
 
 FReply UUWInventory::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
@@ -138,7 +153,7 @@ bool UUWInventory::NativeOnDrop(const FGeometry& InGeometry, const FDragDropEven
 	}
 
 	mEquipmentComponent->DropItemWidget();
-
+	
 	return true;
 }
 

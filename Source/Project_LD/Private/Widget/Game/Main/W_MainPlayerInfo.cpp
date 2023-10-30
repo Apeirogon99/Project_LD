@@ -33,6 +33,38 @@ void UW_MainPlayerInfo::NativeConstruct()
 	}
 }
 
+void UW_MainPlayerInfo::NativeDestruct()
+{
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return;
+	}
+
+	APC_Game* controller = Cast<APC_Game>(gamemode->GetNetworkController());
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	APS_Game* playerstate = controller->GetPlayerState<APS_Game>();
+	if (playerstate == nullptr)
+	{
+		return;
+	}
+
+	if (playerstate->OnCharacterExpChanged.IsBound())
+	{
+		playerstate->OnCharacterExpChanged.Clear();
+	}
+}
+
 void UW_MainPlayerInfo::Init()
 {
 	UWorld* world = GetWorld();
@@ -59,8 +91,11 @@ void UW_MainPlayerInfo::Init()
 		return;
 	}
 	
-	playerstate->OnCharacterExpChanged.AddUFunction(this, FName(TEXT("UpdateExpBar")));
-	
+	if (!playerstate->OnCharacterExpChanged.IsBound())
+	{
+		playerstate->OnCharacterExpChanged.AddUFunction(this, FName(TEXT("UpdateExpBar")));
+	}
+
 	TB_Name->SetText(FText::FromString(playerstate->GetCharacterData().GetName()));
 
 	UpdateExpBar();
