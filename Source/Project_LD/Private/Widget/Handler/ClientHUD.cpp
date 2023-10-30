@@ -229,6 +229,8 @@ void AClientHUD::BeginPlay()
 
 void AClientHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	HUD_LOG(TEXT("ClientHUD End Play : %d"), mWidgets.Num());
+
 	for (UUserWidget* widget : mWidgets)
 	{
 		widget->RemoveFromParent();
@@ -237,6 +239,7 @@ void AClientHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	mWidgetNames.Empty();
 
 	mUsedWidgets.Empty();
+
 }
 
 void AClientHUD::DrawHUD()
