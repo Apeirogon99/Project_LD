@@ -19,6 +19,9 @@ void UNetworkUtils::NetworkScreenLog(const FString& inScreenLog)
 
 void UNetworkUtils::NetworkConsoleLog(const FString& inConsoleLog, const ELogLevel& level)
 {
+
+	return;
+
 	switch (level)
 	{
 	case ELogLevel::Fatal:

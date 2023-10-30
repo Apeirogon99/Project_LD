@@ -22,8 +22,8 @@ ASkill_Buff::ASkill_Buff()
 	mPlayerInCheckCollision = CreateDefaultSubobject<USphereComponent>(TEXT("CheckCollision"));
 	mPlayerInCheckCollision->SetupAttachment(RootComponent);
 	mPlayerInCheckCollision->SetSphereRadius(430.f);
-	mPlayerInCheckCollision->OnComponentBeginOverlap.AddDynamic(this, &ASkill_Buff::OnOverlapBegin);
-	mPlayerInCheckCollision->OnComponentEndOverlap.AddDynamic(this, &ASkill_Buff::OnOverlapEnd);
+	mPlayerInCheckCollision->OnComponentBeginOverlap.AddUniqueDynamic(this, &ASkill_Buff::OnOverlapBegin);
+	mPlayerInCheckCollision->OnComponentEndOverlap.AddUniqueDynamic(this, &ASkill_Buff::OnOverlapEnd);
 	mPlayerInCheckCollision->SetGenerateOverlapEvents(false);
 
 	static ConstructorHelpers::FObjectFinder<UNiagaraSystem> SUMMON_PARTICLE(TEXT("NiagaraSystem'/Game/GameContent/Animation/Male/Skill/Buff/NS_Buff_Summon.NS_Buff_Summon'"));
