@@ -114,6 +114,12 @@ void UUWInventory::NativeDestruct()
 		Btn_DetailStatus->OnClicked.Clear();
 	}
 
+	
+	if (mInvenComponent == nullptr)
+	{
+		return;
+	}
+
 	if (mInvenComponent->OnMoneyChanged.IsBound())
 	{
 		mInvenComponent->OnMoneyChanged.Unbind();

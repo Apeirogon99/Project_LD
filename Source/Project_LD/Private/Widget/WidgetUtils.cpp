@@ -186,8 +186,6 @@ bool UWidgetUtils::SetResponseUseKeyAction(AClientHUD* inHUD, const int32& inKey
 
 bool UWidgetUtils::SetSkillCoolTime(AClientHUD* inHUD, const TArray<int32>& inSkillID, const TArray<int64>& inSkillDuration)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Skill %d, Duration %d"), inSkillID[0], inSkillDuration[0]);
-
     UW_MainGame* mainwidget = Cast<UW_MainGame>(inHUD->GetWidgetFromName(TEXT("MainGame")));
     if (nullptr == mainwidget)
     {
@@ -207,8 +205,6 @@ bool UWidgetUtils::SetSkillCoolTime(AClientHUD* inHUD, const TArray<int32>& inSk
 
 bool UWidgetUtils::SetPushBuff(AClientHUD* inHUD, const int64& inRemoteID, const int32& inBuffID, const int64& inBuffDuration)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Push Buff %f, Duration %f ID %d"), inBuffID, inBuffDuration, inRemoteID);
- 
     UW_MainGame* widget = Cast<UW_MainGame>(inHUD->GetWidgetFromName(TEXT("MainGame")));
     if (nullptr == widget)
     {
@@ -228,8 +224,6 @@ bool UWidgetUtils::SetPushBuff(AClientHUD* inHUD, const int64& inRemoteID, const
 
 bool UWidgetUtils::SetReleaseBuff(AClientHUD* inHUD, const int64& inRemoteID, const int32& inBuffID)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Release Buff %f, ID %d"), inBuffID, inRemoteID);
-
     UW_MainGame* widget = Cast<UW_MainGame>(inHUD->GetWidgetFromName(TEXT("MainGame")));
     if (nullptr == widget)
     {

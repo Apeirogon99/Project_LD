@@ -101,6 +101,47 @@ void UW_MainGame::NativeConstruct()
 void UW_MainGame::NativeDestruct()
 {
 	Super::NativeDestruct();
+
+	if (mBottomUI != nullptr)
+	{
+		mBottomUI = nullptr;
+	}
+	if (mMainPlayerInfo != nullptr)
+	{
+		mMainPlayerInfo = nullptr;
+	}
+	if (PlayerSightBorder != nullptr)
+	{
+		PlayerSightBorder = nullptr;
+	}
+	if (Btn_Chat != nullptr)
+	{
+		Btn_Chat = nullptr;
+	}
+	if (Btn_Inventory != nullptr)
+	{
+		Btn_Inventory = nullptr;
+	}
+	if (Btn_Friend != nullptr)
+	{
+		Btn_Friend = nullptr;
+	}
+	if (Btn_Party != nullptr)
+	{
+		Btn_Party = nullptr;
+	}
+	if (mNotifyFriend != nullptr)
+	{
+		mNotifyFriend = nullptr;
+	}
+	if (mNotifyParty != nullptr)
+	{
+		mNotifyParty = nullptr;
+	}
+	if (mPartyPlayerInfoList != nullptr)
+	{
+		mPartyPlayerInfoList = nullptr;
+	}
 }
 
 void UW_MainGame::Init()
