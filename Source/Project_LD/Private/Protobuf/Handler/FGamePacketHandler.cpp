@@ -2133,14 +2133,15 @@ bool Handle_S2C_HitEnemy(ANetworkController* controller, Protocol::S2C_HitEnemy&
     if (nullptr == actor)
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     AEnemyBase* enemy = Cast<AEnemyBase>(actor);
     if (nullptr == enemy)
     {
-        return false;
+        return true;
     }
+
     enemy->OnEnemyHit();
 
     //AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
