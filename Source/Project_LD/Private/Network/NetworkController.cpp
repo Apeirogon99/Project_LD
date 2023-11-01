@@ -25,6 +25,7 @@ void ANetworkController::BeginPlay()
 
 void ANetworkController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	Super::EndPlay(EndPlayReason);
 }
 
 bool ANetworkController::IsConnectedToSession()
