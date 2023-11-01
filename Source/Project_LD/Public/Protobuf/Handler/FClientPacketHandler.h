@@ -167,7 +167,7 @@ public:
 	static bool HandlePacket(ANetworkController* controller, BYTE* buffer, int32 len)
 	{
 		PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
-		UE_LOG(LogTemp, Warning, TEXT("Recv Packet [ID::%d]"), header->id);
+		//UE_LOG(LogTemp, Warning, TEXT("Recv Packet [ID::%d]"), header->id);
 		return PacketHandler[header->id](controller, buffer, len);
 	}
 
