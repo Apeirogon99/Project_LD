@@ -74,6 +74,7 @@ public:
 	void SkillTreeOpenResponse();
 
 public:
+	UFUNCTION()
 	void Init();
 
 protected:
@@ -81,10 +82,19 @@ protected:
 	virtual void NativeDestruct() override;
 
 private:
+	UPROPERTY()
 	bool misInventoryOpen;
+
+	UPROPERTY()
 	bool misSkillTreeOpen;
+
+	UPROPERTY()
 	bool misChatOpen;
+
+	UPROPERTY()
 	bool misFriendOpen;
+
+	UPROPERTY()
 	bool misPartyOpen;
 
 private:

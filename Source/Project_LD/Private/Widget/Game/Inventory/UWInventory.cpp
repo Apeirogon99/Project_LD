@@ -103,6 +103,8 @@ void UUWInventory::NativeOnInitialized()
 void UUWInventory::NativeDestruct()
 {
 	Super::NativeDestruct();
+	
+	UE_LOG(LogTemp, Warning, TEXT("Widget Destruct Called"));
 
 	if (Btn_CloseInventory->OnClicked.IsBound())
 	{

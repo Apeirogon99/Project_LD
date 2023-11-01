@@ -115,8 +115,8 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     playerState->SetCharacterData(newCharacterData);
 
     //Load
-    playerState->mInventoryComponent->LoadItem(pkt.item(), pkt.money());
-    playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
+   //playerState->mInventoryComponent->LoadItem(pkt.item(), pkt.money());
+    //playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
 
     playerState->InitializeLocalPlayerData();
 
