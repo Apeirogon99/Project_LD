@@ -229,6 +229,8 @@ void AClientHUD::BeginPlay()
 
 void AClientHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	Super::EndPlay(EndPlayReason);
+
 	HUD_LOG(TEXT("ClientHUD End Play : %d"), mWidgets.Num());
 	mWidgetNames.Empty();
 	mUsedWidgets.Empty();
