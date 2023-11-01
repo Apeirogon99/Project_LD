@@ -2309,7 +2309,7 @@ bool Handle_S2C_InsertInventory(ANetworkController* controller, Protocol::S2C_In
     }
 
     const int64 remoteID = pkt.remote_id();
-    APC_Game* findController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
+    AController* findController = gameState->FindPlayerController(remoteID);
     if (nullptr == findController)
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_InsertInventory] INVALID RemotePlayer : %d"), remoteID), ELogLevel::Error);
@@ -2379,7 +2379,7 @@ bool Handle_S2C_DeleteInventory(ANetworkController* controller, Protocol::S2C_De
     }
 
     const int64 remoteID = pkt.remote_id();
-    APC_Game* gameController = Cast<APC_Game>(gameState->FindPlayerController(remoteID));
+    AController* gameController = gameState->FindPlayerController(remoteID);
     if (nullptr == gameController)
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_DeleteInventory] INVALID RemotePlayer : %d"), remoteID), ELogLevel::Error);
