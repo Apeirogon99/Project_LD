@@ -60,38 +60,6 @@ void UW_MainGame::NativeConstruct()
 		Btn_Party->OnClicked.AddUniqueDynamic(this, &UW_MainGame::PartyOpenRequest);
 	}
 
-	mBottomUI = this->WidgetTree->FindWidget(FName(TEXT("BW_BottomUI")));
-	if (mBottomUI == nullptr)
-	{
-		return;
-	}
-
-	mMainPlayerInfo = this->WidgetTree->FindWidget(FName(TEXT("BW_MainPlayerInfo")));
-	if (mMainPlayerInfo == nullptr)
-	{
-		return;
-	}
-
-	mPartyPlayerInfoList = this->WidgetTree->FindWidget(FName(TEXT("mPartyPlayerInfoList")));
-	if (mPartyPlayerInfoList == nullptr)
-	{
-		return;
-	}
-	
-	mNotifyFriend = this->WidgetTree->FindWidget(FName(TEXT("mNotifyFriend")));
-	if (mNotifyFriend != nullptr)
-	{
-		UW_NotifyFriend* notify = Cast<UW_NotifyFriend>(mNotifyFriend);
-		notify->SetVisibility(ESlateVisibility::Hidden);
-	}
-
-	mNotifyParty = this->WidgetTree->FindWidget(FName(TEXT("mNotifyParty")));
-	if (mNotifyParty != nullptr)
-	{
-		UW_PartyNotify* notify = Cast<UW_PartyNotify>(mNotifyParty);
-		notify->SetVisibility(ESlateVisibility::Hidden);
-	}
-
 	misInventoryOpen = false;
 	misChatOpen = false;
 	misFriendOpen = false;
@@ -146,6 +114,38 @@ void UW_MainGame::NativeDestruct()
 
 void UW_MainGame::Init()
 {
+	mBottomUI = this->WidgetTree->FindWidget(FName(TEXT("BottomUI")));
+	if (mBottomUI == nullptr)
+	{
+		return;
+	}
+
+	mMainPlayerInfo = this->WidgetTree->FindWidget(FName(TEXT("MainPlayerInfo")));
+	if (mMainPlayerInfo == nullptr)
+	{
+		return;
+	}
+
+	mPartyPlayerInfoList = this->WidgetTree->FindWidget(FName(TEXT("PartyPlayerInfoList")));
+	if (mPartyPlayerInfoList == nullptr)
+	{
+		return;
+	}
+
+	mNotifyFriend = this->WidgetTree->FindWidget(FName(TEXT("NotifyFriend")));
+	if (mNotifyFriend != nullptr)
+	{
+		UW_NotifyFriend* notify = Cast<UW_NotifyFriend>(mNotifyFriend);
+		notify->SetVisibility(ESlateVisibility::Hidden);
+	}
+
+	mNotifyParty = this->WidgetTree->FindWidget(FName(TEXT("NotifyParty")));
+	if (mNotifyParty != nullptr)
+	{
+		UW_PartyNotify* notify = Cast<UW_PartyNotify>(mNotifyParty);
+		notify->SetVisibility(ESlateVisibility::Hidden);
+	}
+
 	Cast<UW_BottomUI>(mBottomUI)->Init();
 	Cast<UW_MainPlayerInfo>(mMainPlayerInfo)->Init();
 }
