@@ -21,11 +21,35 @@ class PROJECT_LD_API UW_MainGame : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(meta = (BindWidget))
+	UBorder* PlayerSightBorder;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* Btn_Chat;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* Btn_Inventory;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* Btn_Friend;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* Btn_Party;
+
 	UPROPERTY()
 	UWidget* mBottomUI;
 
 	UPROPERTY()
 	UWidget* mMainPlayerInfo;
+
+	UPROPERTY()
+	UWidget* mNotifyFriend;
+
+	UPROPERTY()
+	UWidget* mNotifyParty;
+
+	UPROPERTY()
+	UWidget* mPartyPlayerInfoList;
 
 public:
 	UBorder* GetPlayerSightBorder() const { return PlayerSightBorder; }
@@ -82,43 +106,9 @@ protected:
 	virtual void NativeDestruct() override;
 
 private:
-	UPROPERTY()
 	bool misInventoryOpen;
-
-	UPROPERTY()
 	bool misSkillTreeOpen;
-
-	UPROPERTY()
 	bool misChatOpen;
-
-	UPROPERTY()
 	bool misFriendOpen;
-
-	UPROPERTY()
 	bool misPartyOpen;
-
-private:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (BindWidget, AllowPrivateAccess = "true"))
-	UBorder* PlayerSightBorder;
-
-	UPROPERTY(meta = (BindWidget))
-	UButton* Btn_Chat;
-
-	UPROPERTY(meta = (BindWidget))
-	UButton* Btn_Inventory;
-
-	UPROPERTY(meta = (BindWidget))
-	UButton* Btn_Friend;
-
-	UPROPERTY(meta = (BindWidget))
-	UButton* Btn_Party;
-
-	UPROPERTY(meta = (BindWidget))
-	UWidget* mNotifyFriend;
-
-	UPROPERTY(meta = (BindWidget))
-	UWidget* mNotifyParty;
-	
-	UPROPERTY(meta = (BindWidget))
-	UWidget* mPartyPlayerInfoList;
 };
