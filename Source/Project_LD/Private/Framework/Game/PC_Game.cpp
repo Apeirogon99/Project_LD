@@ -55,6 +55,11 @@ void APC_Game::BeginPlay()
 	}
 }
 
+void APC_Game::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+}
+
 void APC_Game::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
