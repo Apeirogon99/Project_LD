@@ -183,20 +183,6 @@ void AClientHUD::BeginPlay()
 	AGameModeBase* gameMode = GetWorld()->GetAuthGameMode();
 	ANetworkGameMode* networkGameMode = Cast<ANetworkGameMode>(gameMode);
 
-	//Driven
-	for (TSubclassOf<UUserWidget> widgetClass : mAllUIWidgets)
-	{
-		UUserWidget* newWidget = CreateWidget<UUserWidget>(GetWorld(), widgetClass);
-		newWidget->AddToViewport();
-		newWidget->SetVisibility(ESlateVisibility::Collapsed);
-		mWidgets.Add(newWidget);
-
-		FString newWidgetName = newWidget->GetClass()->GetName();
-		newWidgetName.RemoveAt(0, 3);
-		newWidgetName.RemoveAt(newWidgetName.Len() - 2 , newWidgetName.Len());
-		mWidgetNames.Add(newWidgetName);
-	}
-
 	//Base
 	for (TSubclassOf<UUserWidget> widgetClass : mCommonUIWidgets)
 	{
@@ -208,6 +194,20 @@ void AClientHUD::BeginPlay()
 		FString newWidgetName = newWidget->GetClass()->GetName();
 		newWidgetName.RemoveAt(0, 3);
 		newWidgetName.RemoveAt(newWidgetName.Len() - 2, newWidgetName.Len());
+		mWidgetNames.Add(newWidgetName);
+	}
+
+	//Driven
+	for (TSubclassOf<UUserWidget> widgetClass : mAllUIWidgets)
+	{
+		UUserWidget* newWidget = CreateWidget<UUserWidget>(GetWorld(), widgetClass);
+		newWidget->AddToViewport();
+		newWidget->SetVisibility(ESlateVisibility::Collapsed);
+		mWidgets.Add(newWidget);
+
+		FString newWidgetName = newWidget->GetClass()->GetName();
+		newWidgetName.RemoveAt(0, 3);
+		newWidgetName.RemoveAt(newWidgetName.Len() - 2 , newWidgetName.Len());
 		mWidgetNames.Add(newWidgetName);
 	}
 
@@ -230,18 +230,15 @@ void AClientHUD::BeginPlay()
 void AClientHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	HUD_LOG(TEXT("ClientHUD End Play : %d"), mWidgets.Num());
-
-	for (UUserWidget* widget : mWidgets)
-	{
-		widget->RemoveFromParent();
-		widget = nullptr;
-	}
-
-	mWidgets.Empty();
-
 	mWidgetNames.Empty();
-
 	mUsedWidgets.Empty();
+
+	for (UUserWidget* userWidget : mWidgets)
+	{
+		userWidget->RemoveFromParent();
+		userWidget = nullptr;
+	}
+	mWidgets.Empty();
 
 }
 
