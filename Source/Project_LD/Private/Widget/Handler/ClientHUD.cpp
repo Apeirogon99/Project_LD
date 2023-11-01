@@ -234,7 +234,10 @@ void AClientHUD::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	for (UUserWidget* widget : mWidgets)
 	{
 		widget->RemoveFromParent();
+		widget = nullptr;
 	}
+
+	mWidgets.Empty();
 
 	mWidgetNames.Empty();
 
