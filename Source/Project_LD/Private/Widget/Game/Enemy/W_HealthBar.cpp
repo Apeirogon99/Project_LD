@@ -10,3 +10,8 @@ void UW_HealthBar::NativeConstruct()
 
 	HealthBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HealthBar")));
 }
+
+void UW_HealthBar::NativeDestruct()
+{
+	Super::NativeDestruct();
+}

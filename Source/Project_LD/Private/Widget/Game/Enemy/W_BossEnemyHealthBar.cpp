@@ -13,6 +13,11 @@ void UW_BossEnemyHealthBar::NativeConstruct()
 	mName = Cast<UTextBlock>(GetWidgetFromName(TEXT("mName")));;
 }
 
+void UW_BossEnemyHealthBar::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 void UW_BossEnemyHealthBar::Init(AEnemyBase* InEnemy)
 {
 	mEnemy = InEnemy;

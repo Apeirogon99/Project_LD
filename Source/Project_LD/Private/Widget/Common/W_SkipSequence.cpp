@@ -24,6 +24,11 @@ void UW_SkipSequence::NativeConstruct()
 void UW_SkipSequence::NativeDestruct()
 {
 	Super::NativeDestruct();
+
+	if (mSkipButton->OnClicked.IsBound())
+	{
+		mSkipButton->OnClicked.Clear();
+	}
 }
 
 void UW_SkipSequence::UpdateSkipSequence(FString inMaxNumber, FString inLeastNumber)

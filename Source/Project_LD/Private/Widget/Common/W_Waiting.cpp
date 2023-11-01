@@ -21,6 +21,12 @@ void UW_Waiting::NativeConstruct()
 	mDeltaCount = 0.0f;
 }
 
+void UW_Waiting::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+}
+
 //void UW_Waiting::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 //{
 //	Super::NativeTick(MyGeometry, InDeltaTime);

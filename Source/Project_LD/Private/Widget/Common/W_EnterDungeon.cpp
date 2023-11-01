@@ -32,6 +32,21 @@ void UW_EnterDungeon::NativeConstruct()
 	}
 }
 
+void UW_EnterDungeon::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	if (mEnter->OnClicked.IsBound())
+	{
+		mEnter->OnClicked.Clear();
+	}
+
+	if (mCancle->OnClicked.IsBound())
+	{
+		mCancle->OnClicked.Clear();
+	}
+}
+
 void UW_EnterDungeon::SetTitle(const FString& inTitle)
 {
 	if (mTitle != nullptr)

@@ -11,6 +11,11 @@ void UW_NotifyFriend::NativeConstruct()
 	mNotifyFriend = Cast<UTextBlock>(GetWidgetFromName(TEXT("mNotifyFriend")));
 }
 
+void UW_NotifyFriend::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 void UW_NotifyFriend::SetNotifyFriend(const FString& inPlayerName, const bool& inConnect)
 {
 	FString tempText;

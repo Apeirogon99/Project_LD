@@ -35,6 +35,11 @@ void UW_Notification::NativeDestruct()
 	}
 
 	mNotificationDelegate.Unbind();
+
+	if (mConfirmButton->OnClicked.IsBound())
+	{
+		mConfirmButton->OnClicked.Clear();
+	}
 }
 
 void UW_Notification::SetNotification(const FString& inNotification)

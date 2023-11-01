@@ -25,6 +25,11 @@ void UW_FriendCell::NativeConstruct()
 	}
 }
 
+void UW_FriendCell::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 void UW_FriendCell::Click_ActionButton()
 {
 	bool isBound = mActionButtonDelegate.IsBound();

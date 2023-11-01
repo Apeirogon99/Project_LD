@@ -15,3 +15,8 @@ void UW_SkillTree::NativeConstruct()
 
 	TB_SkillPoints = Cast<UTextBlock>(GetWidgetFromName(TEXT("TB_SkillPoints")));
 }
+
+void UW_SkillTree::NativeDestruct()
+{
+	Super::NativeDestruct();
+}

@@ -60,6 +60,36 @@ void UW_ColorPicker::NativeConstruct()
 void UW_ColorPicker::NativeDestruct()
 {
 	Super::NativeDestruct();
+
+	if (mDragButton->OnPressed.IsBound())
+	{
+		mDragButton->OnPressed.Clear();
+	}
+
+	if (mDragButton->OnReleased.IsBound())
+	{
+		mDragButton->OnReleased.Clear();
+	}
+
+	if (mRefreshButton->OnPressed.IsBound())
+	{
+		mRefreshButton->OnPressed.Clear();
+	}
+
+	if (mRandomButton->OnPressed.IsBound())
+	{
+		mRandomButton->OnPressed.Clear();
+	}
+
+	if (mPickerButton->OnPressed.IsBound())
+	{
+		mPickerButton->OnPressed.Clear();
+	}
+
+	if (mColorEdit->OnTextChanged.IsBound())
+	{
+		mColorEdit->OnTextChanged.Clear();
+	}
 }
 
 void UW_ColorPicker::Pressed_Drag()

@@ -79,6 +79,10 @@ void UUWItem::NativeDestruct()
 	{
 		OnRemoved.Clear();
 	}
+	if (mItemObjectData->IsValid())
+	{
+		mItemObjectData->IsPendingKill();
+	}
 }
 
 void UUWItem::NativeOnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)

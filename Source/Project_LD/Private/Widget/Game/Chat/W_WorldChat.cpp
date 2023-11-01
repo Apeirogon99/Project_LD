@@ -15,6 +15,11 @@ void UW_WorldChat::NativeConstruct()
 	this->SetVisibility(ESlateVisibility::Hidden);
 }
 
+void UW_WorldChat::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 void UW_WorldChat::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);

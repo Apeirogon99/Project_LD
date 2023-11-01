@@ -39,6 +39,16 @@ void UW_EditBox::NativeDestruct()
 	}
 
 	mConfirmDelegate.Unbind();
+
+	if (mEditbox->OnTextChanged.IsBound())
+	{
+		mEditbox->OnTextChanged.Clear();
+	}
+
+	if (mConfirmButton->OnClicked.IsBound())
+	{
+		mConfirmButton->OnClicked.Clear();
+	}
 }
 
 void UW_EditBox::Committed_Editbox(const FText& inEditValue)

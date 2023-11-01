@@ -10,3 +10,8 @@ void UW_ExpBar::NativeConstruct()
 
 	ExpBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("ExpBar")));
 }
+
+void UW_ExpBar::NativeDestruct()
+{
+	Super::NativeDestruct();
+}

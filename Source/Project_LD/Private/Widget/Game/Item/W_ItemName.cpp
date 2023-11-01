@@ -11,6 +11,11 @@ void UW_ItemName::NativeConstruct()
 	mName = Cast<UTextBlock>(GetWidgetFromName(TEXT("Name")));
 }
 
+void UW_ItemName::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 void UW_ItemName::SetNameText(const FString& inName)
 {
 	if (mName)

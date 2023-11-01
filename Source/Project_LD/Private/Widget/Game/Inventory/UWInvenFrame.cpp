@@ -13,6 +13,11 @@ void UUWInvenFrame::NativeConstruct()
 	Super::NativeConstruct();
 }
 
+void UUWInvenFrame::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 FReply UUWInvenFrame::NativeOnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent)
 {
 	Super::NativeOnMouseButtonDown(MyGeometry, MouseEvent);

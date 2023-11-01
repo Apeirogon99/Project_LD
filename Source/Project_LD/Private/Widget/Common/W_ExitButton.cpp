@@ -24,6 +24,16 @@ void UW_ExitButton::NativeConstruct()
 	}	
 }
 
+void UW_ExitButton::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	if (mExitButton->OnClicked.IsBound())
+	{
+		mExitButton->OnClicked.Clear();
+	}
+}
+
 void UW_ExitButton::SetExitText(const FString& inText)
 {
 	FText text = FText::FromString(inText);

@@ -23,7 +23,16 @@ void UW_BackButton::NativeConstruct()
 	{
 
 	}
+}
 
+void UW_BackButton::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	if (mBackButton->OnClicked.IsBound())
+	{
+		mBackButton->OnClicked.Clear();
+	}
 }
 
 void UW_BackButton::SetBackText(const FString& inText)

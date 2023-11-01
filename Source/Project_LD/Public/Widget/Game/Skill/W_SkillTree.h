@@ -32,4 +32,5 @@ public:
 
 protected:
 	void NativeConstruct() override;
+	void NativeDestruct() override;
 };

@@ -13,6 +13,11 @@ void UW_ChatBox::NativeConstruct()
 	mChatType		= EChat::Chat_Unspecified;
 }
 
+void UW_ChatBox::NativeDestruct()
+{
+	Super::NativeDestruct();
+}
+
 void UW_ChatBox::SetChatBox(const FString& inPlayerName, const FString& inMessage, const EChat& inChatType)
 {
 

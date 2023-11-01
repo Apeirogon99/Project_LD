@@ -73,6 +73,39 @@ void UW_Chat::NativeDestruct()
 	}
 
 	mMessageLogs.Empty();
+
+	if (mEditMessage->OnTextCommitted.IsBound())
+	{
+		mEditMessage->OnTextCommitted.Clear();
+	}
+	if (mEditMessage->OnTextChanged.IsBound())
+	{
+		mEditMessage->OnTextChanged.Clear();
+	}
+	if (mSendButton->OnClicked.IsBound())
+	{
+		mSendButton->OnClicked.Clear();
+	}
+	if (mWorldTab->OnClicked.IsBound())
+	{
+		mWorldTab->OnClicked.Clear();
+	}
+	if (mPartyTab->OnClicked.IsBound())
+	{
+		mPartyTab->OnClicked.Clear();
+	}
+	if (mFriendTab->OnClicked.IsBound())
+	{
+		mFriendTab->OnClicked.Clear();
+	}
+	if (mDragButton->OnPressed.IsBound())
+	{
+		mDragButton->OnPressed.Clear();
+	}
+	if (mDragButton->OnReleased.IsBound())
+	{
+		mDragButton->OnReleased.Clear();
+	}
 }
 
 void UW_Chat::Committed_Message(const FText& inEditValue, ETextCommit::Type inCommitType)
