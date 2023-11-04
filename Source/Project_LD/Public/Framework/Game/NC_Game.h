@@ -50,6 +50,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE bool GetIsDashEnd() const { return mDashEndCheck; }
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE bool GetIsDeath() const { return bIsDeath; }
+
 public:
 	void ShowWorldChat(const FString& inPlayerName, const FString& inMessage, const float& inDuration);
 	void ShowLevelUpParticle();
@@ -66,6 +69,7 @@ public:
 	void ManageSkill(int32 InSkillCode);
 
 public:
+	bool bIsDeath;
 	bool IsAttack;
 	bool RCharage;
 	bool mDashEndCheck;

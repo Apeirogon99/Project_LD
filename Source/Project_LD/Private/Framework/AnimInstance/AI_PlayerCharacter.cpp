@@ -111,6 +111,8 @@ void UAI_PlayerCharacter::UpdateProperties()
 
 		FRotator BaseRotation = UKismetMathLibrary::MakeRotator(0.f,0.f, mMainCharacter->GetBaseAimRotation().Yaw);
 		mMovementDirection = CalculateDirection(Velocity, BaseRotation);
+
+		bIsDeath = mMainCharacter->GetIsDeath();
 	}
 }
 

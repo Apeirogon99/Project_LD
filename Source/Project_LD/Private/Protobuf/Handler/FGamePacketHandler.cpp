@@ -590,6 +590,32 @@ bool Handle_S2C_DeathPlayer(ANetworkController* controller, Protocol::S2C_DeathP
         return false;
     }
 
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    AController* DeathPlayerController = gameState->FindPlayerController(pkt.remote_id());
+    if (nullptr == DeathPlayerController)
+    {
+        return false;
+    }
+
+    ACharacter* character = DeathPlayerController->GetCharacter();
+    if (nullptr == character)
+    {
+        return false;
+    }
+
+    ANC_Game* player = Cast<ANC_Game>(character);
+    if (nullptr == player)
+    {
+        return false;
+    }
+
+    player->bIsDeath = true;
+
     FNotificationDelegate notificationDelegate;
     notificationDelegate.BindLambda([=]()
         {
@@ -599,7 +625,7 @@ bool Handle_S2C_DeathPlayer(ANetworkController* controller, Protocol::S2C_DeathP
             Protocol::C2S_RevivePlayer revivePlayer;
             const int64 serverTimeStamp = controller->GetServerTimeStamp();
             revivePlayer.set_timestamp(serverTimeStamp);
-            controller->Send(FGamePacketHandler::MakeSendBuffer(controller, revivePlayer));
+            controller->Send(FGamePacketHandler::MakeSendBuffer(controller, revivePlayer)); 
         });
 
     bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("사망"), TEXT("현재 위치에서 부활하시겠습니까?"), TEXT("부활"), notificationDelegate);
@@ -632,6 +658,32 @@ bool Handle_S2C_RevivePlayer(ANetworkController* controller, Protocol::S2C_Reviv
     }
 
     clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    AController* DeathPlayerController = gameState->FindPlayerController(pkt.remote_id());
+    if (nullptr == DeathPlayerController)
+    {
+        return false;
+    }
+
+    ACharacter* character = DeathPlayerController->GetCharacter();
+    if (nullptr == character)
+    {
+        return false;
+    }
+
+    ANC_Game* player = Cast<ANC_Game>(character);
+    if (nullptr == player)
+    {
+        return false;
+    }
+
+    player->bIsDeath = false;
 
     return true;
 }

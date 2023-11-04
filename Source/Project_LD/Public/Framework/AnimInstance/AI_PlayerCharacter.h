@@ -64,6 +64,9 @@ private:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", meta = (AllowPrivateAccess = "true"))
 	bool bSaveAttack;
 
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Bool", meta = (AllowPrivateAccess = "true"))
+	bool bIsDeath;
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Attack | Int", meta = (AllowPrivateAccess = "true"))
 	int32 mAttackCount;
 

@@ -95,6 +95,7 @@ ANC_Game::ANC_Game()
 	RCharage = false;
 	IsAttack = false;
 	mDashEndCheck = false;
+	bIsDeath = false;
 }
 
 ANC_Game::~ANC_Game()

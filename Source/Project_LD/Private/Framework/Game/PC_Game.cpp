@@ -106,7 +106,6 @@ bool APC_Game::OnRecvPacket(BYTE* buffer, const uint32 len)
 				clientHUD->CleanWidgetFromName(TEXT("Notification"));
 				FGenericPlatformMisc::RequestExit(false);
 			});
-
 		bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("Error"), FString::Printf(TEXT("Failed to handle packet [%d]"), header->id), TEXT("Confirm"), notificationDelegate);
 		if (ret == false)
 		{
