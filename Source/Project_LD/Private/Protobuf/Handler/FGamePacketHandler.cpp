@@ -570,6 +570,72 @@ bool Handle_S2C_LevelUp(ANetworkController* controller, Protocol::S2C_LevelUp& p
     return true;
 }
 
+bool Handle_S2C_DeathPlayer(ANetworkController* controller, Protocol::S2C_DeathPlayer& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    FNotificationDelegate notificationDelegate;
+    notificationDelegate.BindLambda([=]()
+        {
+            clientHUD->CleanWidgetFromName(TEXT("Notification"));
+            clientHUD->ShowWidgetFromName(TEXT("LoadingServer"));
+
+            Protocol::C2S_RevivePlayer revivePlayer;
+            const int64 serverTimeStamp = controller->GetServerTimeStamp();
+            revivePlayer.set_timestamp(serverTimeStamp);
+            controller->Send(FGamePacketHandler::MakeSendBuffer(controller, revivePlayer));
+        });
+
+    bool ret = UWidgetUtils::SetNotification(clientHUD, TEXT("사망"), TEXT("현재 위치에서 부활하시겠습니까?"), TEXT("부활"), notificationDelegate);
+    if (ret == false)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Handle_S2C_RevivePlayer(ANetworkController* controller, Protocol::S2C_RevivePlayer& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+    if (nullptr == gameMode)
+    {
+        return false;
+    }
+
+    AClientHUD* clientHUD = Cast<AClientHUD>(gameMode->GetClientHUD());
+    if (nullptr == clientHUD)
+    {
+        return false;
+    }
+
+    clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    return true;
+}
+
 bool Handle_S2C_Chat(ANetworkController* controller, Protocol::S2C_Chat& pkt)
 {
     UWorld* world = controller->GetWorld();
