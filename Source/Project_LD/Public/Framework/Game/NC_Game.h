@@ -35,6 +35,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetCanMove(const bool& InCanMove) { bCanMove = InCanMove; }
 
+	UFUNCTION(BlueprintCallable)
+	void SetIsDashEnd(const bool& InIsDashEnd) { mDashEndCheck = InIsDashEnd; }
+
 public:
 	FORCEINLINE bool GetUsingSkill()			const { return bUsingSkill; }
 	FORCEINLINE bool GetCanUseSkillQ()	const { return bCanSkillQ; }
@@ -43,6 +46,9 @@ public:
 	FORCEINLINE bool GetCanUseSkillR()	const { return bCanSkillR; }
 	FORCEINLINE bool GetCanUseDash()		const { return bCanDash; }
 	FORCEINLINE bool GetCanMove()			const { return bCanMove; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE bool GetIsDashEnd() const { return mDashEndCheck; }
 
 public:
 	void ShowWorldChat(const FString& inPlayerName, const FString& inMessage, const float& inDuration);
@@ -62,6 +68,7 @@ public:
 public:
 	bool IsAttack;
 	bool RCharage;
+	bool mDashEndCheck;
 
 public:
 	UFUNCTION(BlueprintCallable)

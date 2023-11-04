@@ -220,6 +220,10 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 	{
 		return;
 	}
+	if (character->GetIsDashEnd())
+	{
+		return;
+	}
 
 	float hitDistance = FVector::Dist(hitResult.ImpactPoint, character->GetActorLocation());
 
@@ -933,6 +937,7 @@ void APC_Game::UseSkill_Dash_Pressed()
 
 	if ((character->GetCanUseDash()) && (!character->GetUsingSkill()) && (!playerAnim->GetIsAttack()))
 	{
+		character->SetIsDashEnd(true);
 		character->SetCanUseDash(false);
 		character->SetUsingSkill(true);
 		character->SetCanMove(false);

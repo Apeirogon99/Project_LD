@@ -94,6 +94,7 @@ ANC_Game::ANC_Game()
 
 	RCharage = false;
 	IsAttack = false;
+	mDashEndCheck = false;
 }
 
 ANC_Game::~ANC_Game()
