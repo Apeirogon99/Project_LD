@@ -24,11 +24,8 @@ public:
 protected:
 	virtual void Destroyed() override;
 
-	UFUNCTION(BlueprintNativeEvent)
-		void OnTeleport(const FVector& DestLocation);
-	virtual void OnTeleport_Implementation(const FVector& DestLocation);
-
 public:
+	void OnTeleport(const FVector& DestLocation, const FRotator& DestRotation);
 	void MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime);
 	void AnimationMoveDestination(const FVector inStartLocation, const FVector inEndLocation, const int64 inMoveDuration, const int64 inTimeDuration);
 	void MoveCorrection(const float inDeltaTime);

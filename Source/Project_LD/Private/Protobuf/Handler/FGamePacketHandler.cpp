@@ -2319,6 +2319,48 @@ bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEn
     return true;
 }
 
+bool Handle_S2C_EnemyTeleport(ANetworkController* controller, Protocol::S2C_EnemyTeleport& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64     objectID = pkt.object_id();
+    const FVector   location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    const FRotator  rotation = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
+
+    AActor* actor = gameState->FindGameObject(objectID);
+    if (nullptr == actor)
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_EnemyTeleport] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+        return false;
+    }
+
+    AEnemyBase* enemy = Cast<AEnemyBase>(actor);
+    if (nullptr == enemy)
+    {
+        return false;
+    }
+
+    AEnemyController* enemyController = Cast<AEnemyController>(enemy->GetController());
+    if (nullptr == enemyController)
+    {
+        return false;
+    }
+
+    enemyController->OnTeleport(location, rotation);
+
+    return true;
+}
+
 bool Handle_S2C_DisAppearGameObject(ANetworkController* controller, Protocol::S2C_DisAppearGameObject& pkt)
 {
     UWorld* world = controller->GetWorld();

@@ -124,7 +124,7 @@ void AMovementController::OnTeleport(const FVector& DestLocation)
 	character->SetActorLocation(DestLocation, false, nullptr, ETeleportType::ResetPhysics);
 	this->StopMovement();
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("PC OnTeleport")), ELogLevel::Error);
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("PC OnTeleport")), ELogLevel::Warning);
 }
 
 void AMovementController::MoveDestination(const FVector& inOldMovementLocation, const FVector& inNewMovementLocation, const int64& inTime)

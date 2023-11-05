@@ -31,72 +31,50 @@ AEnemyController::~AEnemyController()
 
 void AEnemyController::Destroyed()
 {
-
+	Super::Destroyed();
 }
 
-void AEnemyController::Tick(float DeltaTime)
+void AEnemyController::OnTeleport(const FVector& DestLocation, const FRotator& DestRotation)
 {
-
-	if (false == mTeleport)
-	{
-		if (IsMoveCorrection || IsLocationCorrection)
-		{
-			MoveCorrection(DeltaTime);
-		}
-
-		if (IsRotationCorrection)
-		{
-			RotationCorrection(DeltaTime);
-		}
-	}
-	else
-	{
-		mTeleportCool += DeltaTime;
-		if (mTeleportCool >= 1.0f)
-		{
-			mTeleport = true;
-			mTeleportCool = 0.0f;
-		}
-	}
-
-}
-
-void AEnemyController::OnTeleport_Implementation(const FVector& DestLocation)
-{
-	APawn* pawn = this->GetPawn();
-	if (nullptr == pawn)
+	ACharacter* character = Cast<ACharacter>(this->GetPawn());
+	if (nullptr == character)
 	{
 		return;
 	}
-
-	ACharacter* character = Cast<ACharacter>(pawn);
-	if (nullptr == pawn)
-	{
-		return;
-	}
-	character->GetCharacterMovement()->MaxWalkSpeed = 0.0f;
-
-	character->TeleportTo(DestLocation, character->GetActorRotation(), false, false);
-	this->StopMovement();
 
 	mTargetLoction = DestLocation;
 	IsMoveCorrection = false;
 	IsLocationCorrection = false;
-	mTeleport = true;
+
+	character->TeleportTo(DestLocation, DestRotation, false, false);
+	this->StopMovement();
+
+	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("Enemy OnTeleport")), ELogLevel::Warning);
+}
+
+void AEnemyController::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+
+	if (IsMoveCorrection || IsLocationCorrection)
+	{
+		MoveCorrection(DeltaTime);
+	}
+
+	if (IsRotationCorrection)
+	{
+		RotationCorrection(DeltaTime);
+	}
+
 }
 
 void AEnemyController::MoveDestination(const FVector inOldMovementLocation, const FVector inNewMovementLocation, const int64 inTime)
 {
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("MoveDestination")), ELogLevel::Warning);
 
-	APawn* pawn = this->GetPawn();
-	if (nullptr == pawn)
-	{
-		return;
-	}
-
-	ACharacter* character = Cast<ACharacter>(pawn);
-	if (nullptr == pawn)
+	ACharacter* character = Cast<ACharacter>(this->GetPawn());
+	if (nullptr == character)
 	{
 		return;
 	}
@@ -113,13 +91,13 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	FRotator rotation = direction.Rotation();
 	FVector foward = rotation.Quaternion().GetForwardVector();
 
-	//FVector velocity = foward * speed;
-	FVector velocity = character->GetVelocity();
+	FVector curLocation;
+	FVector deadReckoningLocation;
+	FVector overDeadReckoningLocation;
+
+	FVector velocity = foward * speed;
 	float	duration = inTime / 1000.0f;
 
-	FVector deadReckoningLocation = inOldMovementLocation + (velocity * duration);
-
-	FVector curLocation = character->GetActorLocation();
 	float distance = FVector::Dist(inOldMovementLocation, inNewMovementLocation);
 	if (distance <= 1.0f)
 	{
@@ -131,19 +109,26 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 	}
 	else
 	{
-		distance = FVector::Dist(curLocation, deadReckoningLocation);
-		if (distance > 1.0f)
+
+		curLocation = character->GetActorLocation();
+		deadReckoningLocation = inOldMovementLocation + (velocity * duration);
+		overDeadReckoningLocation = inOldMovementLocation + (velocity * 0.2f);
+
+		float nowDistance = FVector::Dist(curLocation, deadReckoningLocation);
+		float overDistance = FVector::Dist(curLocation, overDeadReckoningLocation);
+
+		if (nowDistance > overDistance)
 		{
 			IsMoveCorrection = true;
 			IsLocationCorrection = false;
 			mTargetLoction = deadReckoningLocation;
 			mCorrectionVelocity = 0.1f;
 
-			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
+			IsRotationCorrection = true;
+			mTargetRotation = direction.Rotation();
 		}
 
-		IsRotationCorrection = true;
-		mTargetRotation = direction.Rotation();
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 	}
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws] distance[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance), ELogLevel::Error);
