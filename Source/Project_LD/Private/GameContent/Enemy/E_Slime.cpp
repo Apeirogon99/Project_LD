@@ -10,13 +10,7 @@
 
 AE_Slime::AE_Slime()
 {
-	//static ConstructorHelpers::FObjectFinder<UMaterialInterface> materialInterface(TEXT("MaterialInstanceConstant'/Game/GameContent/Mat/HitMat/MI_SlimeHit.MI_SlimeHit'"));
-	//if (materialInterface.Succeeded())
-	//{
-	//	mHitMaterialInstance = GetMesh()->CreateDynamicMaterialInstance(0, materialInterface.Object);
-	//	mHitMaterialInstance->SetVectorParameterValue(FName("EmissiveColor"), FLinearColor::Transparent);
-	//	mHitMaterialInstance->SetScalarParameterValue(FName("EmissiveMul"), 0.0f);
-	//}
+
 }
 
 AE_Slime::~AE_Slime()

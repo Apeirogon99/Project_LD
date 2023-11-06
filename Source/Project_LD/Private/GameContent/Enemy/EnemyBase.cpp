@@ -93,16 +93,6 @@ void AEnemyBase::OnEnemyHit_Implementation()
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
-
-	/*
-	mPOI = NewObject<UACPointOfInterest>(this, TEXT("POI"));
-	if (mPOI == nullptr)
-	{
-		return;
-	}
-	this->AddOwnedComponent(mPOI);
-	mPOI->RegisterComponent();
-	*/
 }
 
 void AEnemyBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -137,6 +127,8 @@ void AEnemyBase::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		playerState->OnMovementSpeedChanged.Clear();
 	}
+
+	mHealthBar->SetVisibility(false);
 }
 
 void AEnemyBase::Destroyed()
@@ -311,23 +303,11 @@ void AEnemyBase::ChangeState(const EEnemyStateType inStateType, float inStartTim
 
 void AEnemyBase::UpdateHealthBar()
 {
-	UWorld* world = GetWorld();
-	if (nullptr == world)
-	{
-		return;
-	}
-
-	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
-	if (nullptr == gameState)
-	{
-		return;
-	}
-
-	AEnemyController* controller = Cast<AEnemyController>(GetController());
+	AController* controller = GetController();
 	if (nullptr == controller)
 	{
 		return;
-	}
+	} 
 
 	AEnemyState* playerState = controller->GetPlayerState<AEnemyState>();
 	if (nullptr == playerState)
@@ -350,19 +330,7 @@ void AEnemyBase::UpdateHealthBar()
 
 void AEnemyBase::UpdateMovementSpeed()
 {
-	UWorld* world = GetWorld();
-	if (nullptr == world)
-	{
-		return;
-	}
-
-	AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
-	if (nullptr == gameState)
-	{
-		return;
-	}
-
-	AEnemyController* controller = Cast<AEnemyController>(GetController());
+	AController* controller = GetController();
 	if (nullptr == controller)
 	{
 		return;
