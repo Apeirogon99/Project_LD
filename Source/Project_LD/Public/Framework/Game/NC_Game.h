@@ -69,7 +69,9 @@ public:
 	void ManageSkill(int32 InSkillCode);
 
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsDeath;
+
 	bool IsAttack;
 	bool RCharage;
 	bool mDashEndCheck;
