@@ -613,8 +613,13 @@ bool Handle_S2C_DeathPlayer(ANetworkController* controller, Protocol::S2C_DeathP
     {
         return false;
     }
-
     player->bIsDeath = true;
+
+
+    if (DeathPlayerController != controller)
+    {
+        return true;
+    }
 
     FNotificationDelegate notificationDelegate;
     notificationDelegate.BindLambda([=]()
