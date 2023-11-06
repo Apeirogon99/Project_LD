@@ -324,18 +324,12 @@ void UUWInventory::InitInventory(UACInventoryComponent* InventoryComponent, floa
 		return;
 	}
 
-	//APS_Game* playerState = playerController->GetPlayerState<APS_Game>();
-	//if (playerState == nullptr)
-	//{
-	//	return;
-	//}
-	//mPlayerState = playerState;
-
-	//mPlayerState = playerController->GetPlayerState<APS_Game>();
-	//if (mPlayerState == nullptr)
-	//{
-	//	return;
-	//}
+	APS_Game* playerState = playerController->GetPlayerState<APS_Game>();
+	if (playerState == nullptr)
+	{
+		return;
+	}
+	mPlayerState = playerState;
 }
 
 void UUWInventory::CloseInventory()
