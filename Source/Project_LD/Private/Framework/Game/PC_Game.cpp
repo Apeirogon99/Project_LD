@@ -223,6 +223,10 @@ void APC_Game::CheackMouseTrace(TMap<FName, TFunction<void(APC_Game&, AActor*, F
 	{
 		return;
 	}
+	if (character->GetIsDeath())
+	{
+		return;
+	}
 
 	float hitDistance = FVector::Dist(hitResult.ImpactPoint, character->GetActorLocation());
 

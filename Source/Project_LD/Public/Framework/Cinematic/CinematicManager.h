@@ -36,5 +36,11 @@ private:
 	ALevelSequenceActor* LevelSequenceActor;
 
 	UPROPERTY()
+	UWorld* mCurrentWorld;
+
+	UPROPERTY()
 	AActor* mSpawnActor;
+
+	UPROPERTY()
+	AActor* mSmokeActor;
 };

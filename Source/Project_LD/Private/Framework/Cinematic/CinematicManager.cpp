@@ -26,6 +26,7 @@ void UCinematicManager::Play(int32 InCinematicNumber, UWorld* InWorld)
 		ULevelSequence* mSequence = LoadObject<ULevelSequence>(nullptr, *data.GetLevelSequencePath());
 		if (mSequence)
 		{
+			mCurrentWorld = InWorld;
 			SceneSpawnActor(InCinematicNumber, InWorld);
 			LevelSequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(InWorld, mSequence,FMovieSceneSequencePlaybackSettings(),LevelSequenceActor);
 			LevelSequencePlayer->Play();
@@ -48,6 +49,7 @@ void UCinematicManager::End()
 void UCinematicManager::SceneSpawnActor(int32 InCinematicNumber, UWorld* InWorld)
 {
 	UBlueprint* BlueprintObj = nullptr;
+	UBlueprint* SmokeObj = nullptr;
 	UClass* ActorClass;
 
 	switch (InCinematicNumber)
@@ -60,6 +62,7 @@ void UCinematicManager::SceneSpawnActor(int32 InCinematicNumber, UWorld* InWorld
 		break;
 	case 3:
 		BlueprintObj = Cast<UBlueprint>(StaticLoadObject(UBlueprint::StaticClass(), nullptr, TEXT("Blueprint'/Game/Blueprint/GameContent/CutSceneActor/Scene3Actor.Scene3Actor'")));
+		SmokeObj = Cast<UBlueprint>(StaticLoadObject(UBlueprint::StaticClass(), nullptr, TEXT("Blueprint'/Game/GameContent/Actor/Smoke/BA_Smoke_Sequence.BA_Smoke_Sequence'")));
 		break;
 	case 4:
 		BlueprintObj = Cast<UBlueprint>(StaticLoadObject(UBlueprint::StaticClass(), nullptr, TEXT("Blueprint'/Game/Blueprint/GameContent/CutSceneActor/Scene4Actor.Scene4Actor'")));
@@ -74,6 +77,15 @@ void UCinematicManager::SceneSpawnActor(int32 InCinematicNumber, UWorld* InWorld
 		}
 		mSpawnActor = InWorld->SpawnActor<AActor>(ActorClass, FVector(10050, 10050, 201), FRotator(0, 0, 0));
 	}
+	if (SmokeObj)
+	{
+		ActorClass = SmokeObj->GeneratedClass;
+		if (nullptr == ActorClass)
+		{
+			return;
+		}
+		mSmokeActor = InWorld->SpawnActor<AActor>(ActorClass, FVector(10050, 10050, 201), FRotator(0, 0, 0));
+	}
 }
 
 void UCinematicManager::DestorySpawnActor()
@@ -82,5 +94,18 @@ void UCinematicManager::DestorySpawnActor()
 	{
 		mSpawnActor->Destroy();
 		mSpawnActor = nullptr;
+	}
+	if (mSmokeActor)
+	{
+		FTimerHandle smokeTimerHandle;
+		mCurrentWorld->GetTimerManager().SetTimer(smokeTimerHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			// 코드 구현
+			mSmokeActor->Destroy();
+			mSmokeActor = nullptr;
+
+			// TimerHandle 초기화
+			mCurrentWorld->GetTimerManager().ClearTimer(smokeTimerHandle);
+		}), 0.8f, false);
 	}
 }

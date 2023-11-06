@@ -123,17 +123,14 @@ void AEnemyController::MoveDestination(const FVector inOldMovementLocation, cons
 			IsLocationCorrection = false;
 			mTargetLoction = deadReckoningLocation;
 			mCorrectionVelocity = 0.1f;
-
-			IsRotationCorrection = true;
-			mTargetRotation = direction.Rotation();
 		}
 
+		IsRotationCorrection = true;
+		mTargetRotation = rotation;
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, inNewMovementLocation);
 	}
 
 	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("cur[%ws], dead[%ws], old[%ws], new[%ws] distance[%f]"), *curLocation.ToString(), *deadReckoningLocation.ToString(), *inOldMovementLocation.ToString(), *inNewMovementLocation.ToString(), distance), ELogLevel::Error);
-
-
 }
 
 void AEnemyController::AnimationMoveDestination(const FVector inStartLocation, const FVector inEndLocation, const int64 inMoveDuration, const int64 inTimeDuration)
@@ -240,7 +237,7 @@ void AEnemyController::RotationCorrection(const float inDeltaTime)
 	}
 
 	FRotator curRotation = pawn->GetActorRotation();
-	float	velocity = 1.0f;
+	float	velocity = 1.2f;
 
 	FRotator correctionRotation = FMath::Lerp(curRotation, mTargetRotation, velocity * inDeltaTime);
 
