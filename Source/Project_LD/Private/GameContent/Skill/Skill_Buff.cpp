@@ -60,6 +60,12 @@ void ASkill_Buff::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (mSpawnedParticle)
+	{
+		FRotator Rot = mSpawnedParticle->GetRelativeRotation();
+		Rot.Yaw = 0.f;
+		mSpawnedParticle->SetRelativeRotation(Rot);
+	}
 }
 
 // protected //

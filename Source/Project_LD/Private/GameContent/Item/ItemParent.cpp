@@ -11,6 +11,7 @@
 #include "Blueprint/WidgetBlueprintLibrary.h"
 #include <Widget/Game/Item/W_ItemName.h>
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 #include <Game/PS_Game.h>
 #include <Game/GM_Game.h>
@@ -35,7 +36,7 @@ AItemParent::AItemParent()
 
 	//Sphere Collision
 	mSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
-	mSphere->InitSphereRadius(20.0f);
+	mSphere->InitSphereRadius(30.0f);
 	mSphere->SetupAttachment(RootComponent);
 	mSphere->SetCollisionProfileName(TEXT("ItemCollision"));
 
@@ -103,6 +104,30 @@ void AItemParent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	UWorld* world = GetWorld();
+	if (nullptr == world)
+	{
+		return;
+	}
+
+	ANetworkGameMode* gamemode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
+	if (nullptr == gamemode)
+	{
+		return;
+	}
+
+	AController* controller = gamemode->GetNetworkController();
+	if (nullptr == controller)
+	{
+		return;
+	}
+
+	mPlayer = Cast<AC_Game>(controller->GetCharacter());
+	if (nullptr == mPlayer)
+	{
+		return;
+	}
+
 	FVector location = this->GetActorLocation();
 
 	TArray<TEnumAsByte<EObjectTypeQuery>> objectTypes;
@@ -121,16 +146,15 @@ void AItemParent::BeginPlay()
 void AItemParent::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	/*
+	
 	if (mPlayer)
 	{
-		mItemNameWidgetComponent->SetWorldRotation((mPlayer->GetCameraComponent()->GetComponentLocation() - mItemNameWidgetComponent->GetComponentLocation()).Rotation());
+		FRotator playerSpringRot = mPlayer->GetSpringArm()->GetRelativeRotation();
+		playerSpringRot.Roll = 0;
+		playerSpringRot.Pitch = 30.f;
+		playerSpringRot.Yaw = playerSpringRot.Yaw + 180.f;
+		mItemNameWidgetComponent->SetRelativeRotation(playerSpringRot);
 	}
-	else
-	{
-		FindPlayer();
-	}
-	*/
 }
 
 void AItemParent::Destroyed()
@@ -148,6 +172,7 @@ void AItemParent::Destroyed()
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), mItemGainParticle, GetActorLocation(), FRotator::ZeroRotator, true);
 
 	mItemNameWidgetComponent->DestroyComponent();
+	mDataTable = nullptr;
 }
 
 void AItemParent::Interactive(ANC_Game* inPlayer)
@@ -228,33 +253,6 @@ void AItemParent::Init(int32 Code, int32 GameObjectId)
 
 void AItemParent::FindPlayer()
 {
-	/*
-	UWorld* world = GetWorld();
-	if (nullptr == world)
-	{
-		return;
-	}
-
-	ANetworkGameMode* gameMode = Cast<ANetworkGameMode>(world->GetAuthGameMode());
-	if (nullptr == gameMode)
-	{
-		return;
-	}
-
-	ANetworkController* controller = gameMode->GetNetworkController();
-	if (nullptr == controller)
-	{
-		return;
-	}
-
-	AC_Game* player = Cast<AC_Game>(controller->GetPawn());
-	if (nullptr == player)
-	{
-		return;
-	}
-
-	mPlayer = player;
-	*/
 }
 
 void AItemParent::ItemObjectDataInit(int32 Categoryid)

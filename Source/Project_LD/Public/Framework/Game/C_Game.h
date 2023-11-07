@@ -34,6 +34,8 @@ public:
 
 public:
 	FORCEINLINE bool GetIsZoom() const { return bIsZoom; }
+	FORCEINLINE USpringArmComponent* GetSpringArm() const { return mCameraBoom; }
+	UCameraComponent* GetCameraComponent() { return mGameCameraComponent; }
 
 public:
 	UFUNCTION(BlueprintNativeEvent, Category = "Camera Control")
@@ -49,9 +51,6 @@ public:
 	void PlayerRecoveryEyesight();
 	void BossHealthBarWidgetActive(AEnemyBase* Boss);
 	void BossHealthBarWidgetDeactive();
-
-public:
-	UCameraComponent* GetCameraComponent() { return mGameCameraComponent; }
 
 protected:
 	/** Top down camera */
