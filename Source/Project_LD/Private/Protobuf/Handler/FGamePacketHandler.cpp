@@ -621,6 +621,8 @@ bool Handle_S2C_DeathPlayer(ANetworkController* controller, Protocol::S2C_DeathP
         return true;
     }
 
+    clientHUD->ShowWidgetFromName(TEXT("DeadScreen"));
+
     FNotificationDelegate notificationDelegate;
     notificationDelegate.BindLambda([=]()
         {
@@ -662,6 +664,7 @@ bool Handle_S2C_RevivePlayer(ANetworkController* controller, Protocol::S2C_Reviv
         return false;
     }
 
+    clientHUD->CleanWidgetFromName(TEXT("DeadScreen"));
     clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
 
     AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
