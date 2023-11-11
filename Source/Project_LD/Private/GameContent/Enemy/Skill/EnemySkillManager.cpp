@@ -28,6 +28,7 @@
 #include <GameContent/Enemy/Skill/DarkKnight/DarkKnight_SwingAndSlamAttack.h>
 #include <GameContent/Enemy/Skill/DarkKnight/DarkKnight_SwingAttack.h>
 #include <GameContent/Enemy/Skill/DarkKnight/DarkKnight_UppercutAttack.h>
+#include <GameContent/Enemy/Skill/DarkKnight/DarkKnight_Extermination.h>
 #include <GS_Game.h>
 
 #include "Niagara/Classes/NiagaraSystem.h"
@@ -36,7 +37,7 @@
 #define MINLICHSKILLCODE 6
 #define MAXLICHSKILLCODE 19
 #define MINDARKKNIGHTSKILLCODE 20
-#define MAXDARKKNIGHTSKILLCODE 26
+#define MAXDARKKNIGHTSKILLCODE 27
 
 UEnemySkillManager::UEnemySkillManager()
 {
@@ -72,6 +73,7 @@ void UEnemySkillManager::Init()
         mDarkKnightSkillClass.Add(ADarkKnight_SwingAndSlamAttack::StaticClass());
         mDarkKnightSkillClass.Add(ADarkKnight_HandSwordSwipeAttack::StaticClass());
         mDarkKnightSkillClass.Add(ADarkKnight_Berserk::StaticClass());
+        mDarkKnightSkillClass.Add(ADarkKnight_Extermination::StaticClass());
     }
 }
 
@@ -172,6 +174,15 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
         case 6:
             actor->ActiveBerserk();
             break;
+        case 7:
+            object = gameState->CreateGameObject(SkillClass, InLocation, InRotator, InobjectID);
+            if (object && (object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass())))
+            {
+                auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
+                InterfaceVariable->mRemoteID = InremoteID;
+                InterfaceVariable->ActiveSkill(InLocation, InRotator);
+            }
+            break;
         }
     }
     else
@@ -180,7 +191,7 @@ void UEnemySkillManager::InputActiveSkillData(UWorld* InWorld, AActor* InActor, 
     }
 }
 
-void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID, const int64 InremoteID)
+void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor, const int32 InSkillID, FVector InLocation, FRotator InRotator, const int64 InobjectID, const int64 InremoteID, const float InDuration)
 {
     AGS_Game* gameState = Cast<AGS_Game>(InWorld->GetGameState());
     if (nullptr == gameState)
@@ -234,6 +245,20 @@ void UEnemySkillManager::InputReactionSkillData(UWorld* InWorld, AActor* InActor
     }
     else if ((MINDARKKNIGHTSKILLCODE <= InSkillID) && (InSkillID <= MAXDARKKNIGHTSKILLCODE))
     {
+        switch (InSkillID - MINDARKKNIGHTSKILLCODE)
+        {
+        case 7:
+            AActor* object = nullptr;
+            object = gameState->FindGameObject(InobjectID);
+            if (object && object->GetClass()->ImplementsInterface(UEnemySkillInterface::StaticClass()))
+            {
+                auto InterfaceVariable = Cast<IEnemySkillInterface>(object);
+                InterfaceVariable->mRemoteID = InremoteID;
+                InRotator.Roll = InDuration;
+                InterfaceVariable->ReactionSkill(InLocation, InRotator);
+            }
+            break;
+        }
     }
     else
     {

@@ -14,6 +14,9 @@
 
 AE_DarkKnight::AE_DarkKnight()
 {
+	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bStartWithTickEnabled = true;
+
 	//static ConstructorHelpers::FObjectFinder<UMaterialInterface> materialInterface(TEXT("MaterialInstanceConstant'/Game/GameContent/Mat/HitMat/MI_DarkKnightHit.MI_DarkKnightHit'"));
 	//if (materialInterface.Succeeded())
 	//{
@@ -118,4 +121,5 @@ void AE_DarkKnight::Destroyed()
 
 void AE_DarkKnight::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
 }

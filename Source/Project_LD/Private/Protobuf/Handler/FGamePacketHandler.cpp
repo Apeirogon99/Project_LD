@@ -2807,7 +2807,7 @@ bool Handle_S2C_ReactionSkill(ANetworkController* controller, Protocol::S2C_Reac
         UEnemySkillManager* manager = NewObject<UEnemySkillManager>();
         manager->Init();
         AActor* enemy = gameState->FindGameObject(remoteID);
-        manager->InputReactionSkillData(world, enemy, skillID, location, rotation, objectID, remoteID);
+        manager->InputReactionSkillData(world, enemy, skillID, location, rotation, objectID, remoteID, pkt.duration());
     }
     return true;
 }
