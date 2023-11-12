@@ -8,6 +8,7 @@
 #include <Framework/AnimInstance/AI_PlayerCharacter.h>
 #include <Framework/Controller/MovementController.h>
 #include <GameContent/Projectile/LineProjectile.h>
+#include <GameContent/Projectile/AttackTestUnit.h>
 
 #include <Game/GM_Game.h>
 #include <Game/C_Game.h>
@@ -115,8 +116,8 @@ bool Handle_S2C_EnterGameServer(ANetworkController* controller, Protocol::S2C_En
     playerState->SetCharacterData(newCharacterData);
 
     //Load
-   //playerState->mInventoryComponent->LoadItem(pkt.item(), pkt.money());
-    //playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
+    playerState->mInventoryComponent->LoadItem(pkt.item(), pkt.money());
+    playerState->mEquipmentComponent->LoadEquipment(pkt.eqipment());
 
     playerState->InitializeLocalPlayerData();
 
@@ -3384,6 +3385,172 @@ bool Handle_S2C_StartPack(ANetworkController* controller, Protocol::S2C_StartPac
     }
 
     clientHUD->CleanWidgetFromName(TEXT("LoadingServer"));
+
+    return true;
+}
+
+bool Handle_S2C_ApeearAttackTestUnit(ANetworkController* controller, Protocol::S2C_ApeearAttackTestUnit& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int64     objectID = pkt.object_id();
+    const FVector   extent = FVector(pkt.extent().x(), pkt.extent().y(), pkt.extent().z());
+    const FVector   velocity = FVector(pkt.velocity().x(), pkt.velocity().y(), pkt.velocity().z());
+    const FVector   location = FVector(pkt.location().x(), pkt.location().y(), pkt.location().z());
+    const FRotator  rotation = FRotator(pkt.rotation().pitch(), pkt.rotation().yaw(), pkt.rotation().roll());
+    const int64     timeStamp = pkt.timestamp();
+    const int64     durationTime = controller->GetServerTimeStamp() - timeStamp;
+
+    if (nullptr != gameState->FindGameObject(objectID))
+    {
+        UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_ApeearAttackTestUnit] ALREADY GameObject : %d"), objectID), ELogLevel::Error);
+        return true;
+    }
+
+    AActor* newActor = gameState->CreateGameObject(AAttackTestUnit::StaticClass(), location, rotation, objectID);
+    AAttackTestUnit* newTestUnit = Cast<AAttackTestUnit>(newActor);
+    if (nullptr == newTestUnit)
+    {
+        return false;
+    }
+    newTestUnit->InitProjectile(pkt.velocity().x(), pkt.velocity().x());
+    newTestUnit->ChangeMovement(location, rotation);
+    newTestUnit->SetExtent(extent);
+    newTestUnit->LineProjectileMovement(location, rotation, durationTime / 1000.0f);
+
+    return true;
+}
+
+bool Handle_S2C_MovementAttackTestUnit(ANetworkController* controller, Protocol::S2C_MovementAttackTestUnit& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int32 maxObjectIdSize = pkt.object_id_size();
+    for (int32 index = 0; index < maxObjectIdSize; ++index)
+    {
+        const int64     objectID = pkt.object_id().Get(index);
+
+        const Protocol::SVector& SLocation = pkt.location().Get(index);
+        const FVector   location = FVector(SLocation.x(), SLocation.y(), SLocation.z());
+
+        const Protocol::SRotator& SRotation = pkt.rotation().Get(index);
+        const FRotator  rotation = FRotator(SRotation.pitch(), SRotation.yaw(), SRotation.roll());
+
+        const int64     timeStamp = pkt.timestamp().Get(index);
+        const int64     durationTime = controller->GetServerTimeStamp() - timeStamp;
+
+        AActor* actor = gameState->FindGameObject(objectID);
+        if (nullptr == actor)
+        {
+            UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_BeginOverlapAttackTestUnit] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+            continue;
+        }
+
+        AAttackTestUnit* testUnit = Cast<AAttackTestUnit>(actor);
+        if (nullptr == testUnit)
+        {
+            continue;
+        }
+        testUnit->ChangeMovement(location, rotation);
+        testUnit->LineProjectileMovement(location, rotation, durationTime / 1000.0f);
+
+    }
+
+    return true;
+}
+
+bool Handle_S2C_BeginOverlapAttackTestUnit(ANetworkController* controller, Protocol::S2C_BeginOverlapAttackTestUnit& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int32 maxObjectIdSize = pkt.object_id_size();
+    for (int32 index = 0; index < maxObjectIdSize; ++index)
+    {
+        const int64  objectID = pkt.object_id().Get(index);
+
+        AActor* actor = gameState->FindGameObject(objectID);
+        if (nullptr == actor)
+        {
+            UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_BeginOverlapAttackTestUnit] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+            continue;
+        }
+
+        AAttackTestUnit* testUnit = Cast<AAttackTestUnit>(actor);
+        if (nullptr == testUnit)
+        {
+            continue;
+        }
+        testUnit->BeginOverlapUnit();
+
+    }
+
+    return true;
+}
+
+bool Handle_S2C_EndOverlapAttackTestUnit(ANetworkController* controller, Protocol::S2C_EndOverlapAttackTestUnit& pkt)
+{
+    UWorld* world = controller->GetWorld();
+    if (nullptr == world)
+    {
+        return false;
+    }
+
+    AGS_Game* gameState = Cast<AGS_Game>(world->GetGameState());
+    if (nullptr == gameState)
+    {
+        return false;
+    }
+
+    const int32 maxObjectIdSize = pkt.object_id_size();
+    for (int32 index = 0; index < maxObjectIdSize; ++index)
+    {
+        const int64  objectID = pkt.object_id().Get(index);
+
+        AActor* actor = gameState->FindGameObject(objectID);
+        if (nullptr == actor)
+        {
+            UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_BeginOverlapAttackTestUnit] INVALID GameObject : %d"), objectID), ELogLevel::Error);
+            continue;
+        }
+
+        AAttackTestUnit* testUnit = Cast<AAttackTestUnit>(actor);
+        if (nullptr == testUnit)
+        {
+            continue;
+        }
+        testUnit->EndOverlapUnit();
+
+    }
 
     return true;
 }

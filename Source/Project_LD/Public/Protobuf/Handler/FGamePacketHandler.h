@@ -110,6 +110,10 @@ enum class EPakcetID: uint16
 	S2C_EndSequence = 2100,
 	C2S_StartPack = 2101,
 	S2C_StartPack = 2102,
+	S2C_ApeearAttackTestUnit = 2103,
+	S2C_MovementAttackTestUnit = 2104,
+	S2C_BeginOverlapAttackTestUnit = 2105,
+	S2C_EndOverlapAttackTestUnit = 2106,
 };
 */
 
@@ -187,6 +191,10 @@ bool Handle_S2C_PlaySequence(ANetworkController* controller, Protocol::S2C_PlayS
 bool Handle_S2C_SkipSequence(ANetworkController* controller, Protocol::S2C_SkipSequence& pkt);
 bool Handle_S2C_EndSequence(ANetworkController* controller, Protocol::S2C_EndSequence& pkt);
 bool Handle_S2C_StartPack(ANetworkController* controller, Protocol::S2C_StartPack& pkt);
+bool Handle_S2C_ApeearAttackTestUnit(ANetworkController* controller, Protocol::S2C_ApeearAttackTestUnit& pkt);
+bool Handle_S2C_MovementAttackTestUnit(ANetworkController* controller, Protocol::S2C_MovementAttackTestUnit& pkt);
+bool Handle_S2C_BeginOverlapAttackTestUnit(ANetworkController* controller, Protocol::S2C_BeginOverlapAttackTestUnit& pkt);
+bool Handle_S2C_EndOverlapAttackTestUnit(ANetworkController* controller, Protocol::S2C_EndOverlapAttackTestUnit& pkt);
 
 class FGamePacketHandler
 {
@@ -266,6 +274,10 @@ public:
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_SkipSequence)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_SkipSequence>(Handle_S2C_SkipSequence, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_EndSequence)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_EndSequence>(Handle_S2C_EndSequence, controller, buffer, len); };
 		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_StartPack)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_StartPack>(Handle_S2C_StartPack, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_ApeearAttackTestUnit)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_ApeearAttackTestUnit>(Handle_S2C_ApeearAttackTestUnit, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_MovementAttackTestUnit)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_MovementAttackTestUnit>(Handle_S2C_MovementAttackTestUnit, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_BeginOverlapAttackTestUnit)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_BeginOverlapAttackTestUnit>(Handle_S2C_BeginOverlapAttackTestUnit, controller, buffer, len); };
+		inPacketFunc[static_cast<uint16>(EPakcetID::S2C_EndOverlapAttackTestUnit)] = [](ANetworkController* controller, BYTE* buffer, int32 len) { return FClientPacketHandler::HandlePacket<Protocol::S2C_EndOverlapAttackTestUnit>(Handle_S2C_EndOverlapAttackTestUnit, controller, buffer, len); };
 	}
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_EnterGameServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_EnterGameServer)); }
 	static SendBufferPtr MakeSendBuffer(ANetworkController* controller, Protocol::C2S_LeaveGameServer& pkt) { return FClientPacketHandler::MakeSendBuffer(controller, pkt, static_cast<uint16>(EPakcetID::C2S_LeaveGameServer)); }
