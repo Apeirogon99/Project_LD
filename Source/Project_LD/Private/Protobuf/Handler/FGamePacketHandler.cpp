@@ -2092,13 +2092,13 @@ bool Handle_S2C_DetectChangeEnemy(ANetworkController* controller, Protocol::S2C_
     AEnemyBase* enemy = Cast<AEnemyBase>(actor);
     if (nullptr == enemy)
     {
-        return false;
+        return true;
     }
 
     AEnemyState* enemyState = enemy->GetPlayerState<AEnemyState>();
     if (nullptr == enemyState)
     {
-        return false;
+        return true;
     }
     enemyState->SetEnemyState(state, durationTime / 1000.0f);
     enemyState->UpdateCurrentStats(stats);
@@ -2138,13 +2138,13 @@ bool Handle_S2C_MovementEnemy(ANetworkController* controller, Protocol::S2C_Move
     AEnemyBase* enemy = Cast<AEnemyBase>(actor);
     if (nullptr == enemy)
     {
-        return false;
+        return true;
     }
 
     AEnemyController* enemyController = Cast<AEnemyController>(enemy->GetController());
     if (nullptr == enemyController)
     {
-        return false;
+        return true;
     }
     enemyController->MoveDestination(curLocation, moveLocation, durationTime);
 
@@ -2178,19 +2178,19 @@ bool Handle_S2C_AnimationMovementEnemy(ANetworkController* controller, Protocol:
     if (nullptr == actor)
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AnimationMovementEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     AEnemyBase* enemy = Cast<AEnemyBase>(actor);
     if (nullptr == enemy)
     {
-        return false;
+        return true;
     }
 
     AEnemyController* enemyController = Cast<AEnemyController>(enemy->GetController());
     if (nullptr == enemyController)
     {
-        return false;
+        return true;
     }
     enemyController->AnimationMoveDestination(startLocation, endLocation, moveDuration, durationTime);
 
@@ -2221,13 +2221,13 @@ bool Handle_S2C_EnemyAutoAttack(ANetworkController* controller, Protocol::S2C_En
     if (nullptr == actor)
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     AEnemyBase* enemy = Cast<AEnemyBase>(actor);
     if (nullptr == enemy)
     {
-        return false;
+        return true;
     }
     enemy->SetActorRotation(rotation);
 
@@ -2303,13 +2303,13 @@ bool Handle_S2C_DeathEnemy(ANetworkController* controller, Protocol::S2C_DeathEn
     if (nullptr == actor)
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_AppearEnemy] INVALID GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     AEnemyBase* enemy = Cast<AEnemyBase>(actor);
     if (nullptr == enemy)
     {
-        return false;
+        return true;
     }
 
    bool ret = gameState->RemoveGameObject(objectID);
@@ -2350,19 +2350,19 @@ bool Handle_S2C_EnemyTeleport(ANetworkController* controller, Protocol::S2C_Enem
     if (nullptr == actor)
     {
         UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("[Handle_S2C_EnemyTeleport] INVALID GameObject : %d"), objectID), ELogLevel::Error);
-        return false;
+        return true;
     }
 
     AEnemyBase* enemy = Cast<AEnemyBase>(actor);
     if (nullptr == enemy)
     {
-        return false;
+        return true;
     }
 
     AEnemyController* enemyController = Cast<AEnemyController>(enemy->GetController());
     if (nullptr == enemyController)
     {
-        return false;
+        return true;
     }
 
     enemyController->OnTeleport(location, rotation);
