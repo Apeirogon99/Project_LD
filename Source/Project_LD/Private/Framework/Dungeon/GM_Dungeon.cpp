@@ -56,7 +56,7 @@ void AGM_Dungeon::BeginPlay()
 	if (widget)
 	{
 		UW_MiniMap* minimap = Cast<UW_MiniMap>(widget);
-		minimap->MainMapSetting();
+		minimap->InstanceMapSetting();
 	}
 }
 
