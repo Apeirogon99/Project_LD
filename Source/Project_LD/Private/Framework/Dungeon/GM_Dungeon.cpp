@@ -93,8 +93,7 @@ void AGM_Dungeon::InitNetwork()
 
 	if (true == IsConnectedServer())
 	{
-		this->RequestKeepConnectServer(ip, port);
-		//this->ProcessConnect(true);
+		this->ProcessConnect(true);
 	}
 	else
 	{
@@ -121,12 +120,21 @@ void AGM_Dungeon::BeginNetwork()
 		return;
 	}
 
-	UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("C2S_CompleteLoadDungeon")), ELogLevel::Warning);
+	std::string token = UNetworkUtils::ConvertString(instance->GetToken());
 
-	Protocol::C2S_CompleteLoadDungeon loadDungeon;
-	loadDungeon.set_dungeon_id(instance->GetDungeonID());
+	Protocol::C2S_EnterGameServer enterPacket;
+	enterPacket.set_token(token);
+	controller->Send(FGamePacketHandler::MakeSendBuffer(controller, enterPacket));
 
-	controller->Send(FGamePacketHandler::MakeSendBuffer(controller, loadDungeon));
+	GetClientHUD()->ShowWidgetFromName(FString(TEXT("MainGame")));
+	GetClientHUD()->ShowWidgetFromName(FString(TEXT("Minimap")));
+
+	//UNetworkUtils::NetworkConsoleLog(FString::Printf(TEXT("C2S_CompleteLoadDungeon")), ELogLevel::Warning);
+
+	//Protocol::C2S_CompleteLoadDungeon loadDungeon;
+	//loadDungeon.set_dungeon_id(instance->GetDungeonID());
+
+	//controller->Send(FGamePacketHandler::MakeSendBuffer(controller, loadDungeon));
 
 }
 
