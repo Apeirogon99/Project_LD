@@ -120,6 +120,19 @@ void AGM_Dungeon::BeginNetwork()
 		return;
 	}
 
+	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetClientHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("Minimap")));
+	if (widget)
+	{
+		UW_MiniMap* minimap = Cast<UW_MiniMap>(widget);
+		minimap->InstanceMapSetting();
+	}
+
 	std::string token = UNetworkUtils::ConvertString(instance->GetToken());
 
 	Protocol::C2S_EnterGameServer enterPacket;
