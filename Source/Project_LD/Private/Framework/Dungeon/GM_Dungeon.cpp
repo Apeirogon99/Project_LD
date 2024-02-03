@@ -10,6 +10,7 @@
 #include <GameContent/Enemy/EnemyBase.h>
 #include "GameFramework/SpectatorPawn.h"
 #include <Widget/Handler/ClientHUD.h>
+#include <Game/MiniMap/W_MiniMap.h>
 
 #include <Protobuf/Handler/FClientPacketHandler.h>
 #include <Protobuf/Handler/FGamePacketHandler.h>
@@ -44,6 +45,19 @@ AGM_Dungeon::~AGM_Dungeon()
 void AGM_Dungeon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AClientHUD* clientHUD = Cast<AClientHUD>(this->GetClientHUD());
+	if (nullptr == clientHUD)
+	{
+		return;
+	}
+
+	UUserWidget* widget = clientHUD->GetWidgetFromName(FString(TEXT("Minimap")));
+	if (widget)
+	{
+		UW_MiniMap* minimap = Cast<UW_MiniMap>(widget);
+		minimap->MainMapSetting();
+	}
 }
 
 void AGM_Dungeon::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -79,8 +93,8 @@ void AGM_Dungeon::InitNetwork()
 
 	if (true == IsConnectedServer())
 	{
-		//this->RequestKeepConnectServer(ip, port);
-		this->ProcessConnect(true);
+		this->RequestKeepConnectServer(ip, port);
+		//this->ProcessConnect(true);
 	}
 	else
 	{
